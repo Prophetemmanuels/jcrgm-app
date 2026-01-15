@@ -26,14 +26,38 @@ header {
     text-align: center;
 }
 
-button {
+/* Buttons */
+header button {
     padding: 10px 18px;
     border: none;
-    background: #1f3c88;
-    color: #fff;
+    background: #ffd700; /* Gold for toggle & programme button */
+    color: #1f3c88;      /* Dark text for contrast */
     cursor: pointer;
     border-radius: 4px;
-    margin: 10px;
+    margin: 10px 5px 0 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+header button:hover {
+    background: #ffcc00; /* Hover effect */
+}
+
+/* Social buttons */
+.youtube-btn {
+    background: #FF0000;
+    color: #fff;
+}
+.youtube-btn:hover {
+    background: #cc0000;
+}
+
+.facebook-btn {
+    background: #3b5998;
+    color: #fff;
+}
+.facebook-btn:hover {
+    background: #2d4373;
 }
 
 .container {
@@ -57,6 +81,19 @@ button {
 .timer-box span {
     color: #ffd700;
     font-weight: bold;
+}
+
+.programme-box {
+    background: #f1f1f1;
+    padding: 20px;
+    border-radius: 6px;
+    margin-top: 20px;
+    display: none;
+}
+
+.programme-box h3 {
+    color: #1f3c88;
+    margin-bottom: 15px;
 }
 
 .current-program {
@@ -89,9 +126,26 @@ footer {
 <body>
 
 <header>
-<h1>Jesus Christ Redeems Global Ministries</h1>
-<p id="serviceDate"></p>
-<button onclick="toggleProjector()">Toggle Projector Mode</button>
+  <h1>Jesus Christ Redeems Global Ministries</h1>
+  <p id="serviceDate"></p>
+
+  <!-- Toggle button -->
+  <button onclick="toggleProjector()">Toggle Projector Mode</button>
+
+  <!-- Social Links -->
+  <div style="margin-top:15px;">
+    <a href="https://www.youtube.com/@officialjcrgmtv" target="_blank">
+      <button class="youtube-btn">YouTube</button>
+    </a>
+    <a href="https://web.facebook.com/pedahzurchurch/" target="_blank">
+      <button class="facebook-btn">Facebook</button>
+    </a>
+  </div>
+
+  <!-- Church Programme Button -->
+  <div style="margin-top:15px;">
+    <button onclick="showProgramme()">View Sunday Programme</button>
+  </div>
 </header>
 
 <div class="container">
@@ -101,6 +155,24 @@ footer {
 <div id="serviceContent">
 <h2>Sunday Services Ongoing</h2>
 <p class="service-time">Morning 09:00 – 12:30 | Afternoon 15:00 – 18:30</p>
+</div>
+
+<!-- Sunday Programme -->
+<div class="programme-box" id="programmeBox">
+  <h3>Sunday Service Programme</h3>
+  <ul>
+    <li>09:00 – 09:30: Worship & Praise</li>
+    <li>09:30 – 10:15: Opening Prayer & Scripture Reading</li>
+    <li>10:15 – 11:00: Sermon</li>
+    <li>11:00 – 11:30: Testimonies</li>
+    <li>11:30 – 12:00: Special Announcements</li>
+    <li>12:00 – 12:30: Closing Prayer</li>
+    <li>15:00 – 15:30: Afternoon Worship & Praise</li>
+    <li>15:30 – 16:15: Afternoon Sermon</li>
+    <li>16:15 – 16:45: Prayer & Intercession</li>
+    <li>16:45 – 17:30: Fellowship & Ministry Updates</li>
+    <li>17:30 – 18:30: Evening Worship & Closing</li>
+  </ul>
 </div>
 
 </div>
@@ -125,6 +197,12 @@ if (isSunday) {
 
 function toggleProjector() {
     document.documentElement.classList.toggle("projector");
+}
+
+/* Show Sunday Programme */
+function showProgramme() {
+    const programme = document.getElementById("programmeBox");
+    programme.style.display = (programme.style.display === "none") ? "block" : "none";
 }
 
 /* DAILY SCRIPTURES (MON–SAT) */
