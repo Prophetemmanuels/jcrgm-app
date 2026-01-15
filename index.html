@@ -1,205 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Jesus Christ Redeems Global Ministries | Service Timer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JCRGM App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
 
-<!-- PWA manifest -->
-<link rel="manifest" href="manifest.json">
-<!-- iPhone / Apple touch icon -->
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+    header {
+      width: 100%;
+      background-color: #004aad;
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+    }
 
-<meta name="theme-color" content="#1f3c88">
+    header img {
+      height: 60px;
+      margin-bottom: 10px;
+    }
 
-<style>
-body {
-    font-family: "Segoe UI", Arial, sans-serif;
-    background-color: #f4f6f8;
-    margin: 0;
-    color: #333;
-}
+    h1 {
+      margin: 5px 0;
+      font-size: 22px;
+    }
 
-header {
-    background: linear-gradient(90deg, #1f3c88, #2c3e50);
-    color: #fff;
-    padding: 30px 20px;
-    text-align: center;
-}
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+    }
 
-button {
-    padding: 10px 18px;
-    border: none;
-    background: #1f3c88;
-    color: #fff;
-    cursor: pointer;
-    border-radius: 4px;
-    margin: 10px;
-}
+    button {
+      padding: 12px 25px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background-color: #004aad;
+      color: white;
+      transition: background-color 0.3s;
+    }
 
-.container {
-    max-width: 1000px;
-    margin: 30px auto;
-    background: #fff;
-    padding: 30px;
-    box-shadow: 0 0 12px rgba(0,0,0,0.1);
-}
-
-.timer-box {
-    background: #1f3c88;
-    color: #fff;
-    padding: 25px;
-    font-size: 26px;
-    text-align: center;
-    border-radius: 6px;
-    margin-bottom: 30px;
-}
-
-.timer-box span {
-    color: #ffd700;
-    font-weight: bold;
-}
-
-.current-program {
-    background: #fff3cd !important;
-    font-weight: bold;
-    border-left: 6px solid #e67e22;
-}
-
-footer {
-    background: #2c3e50;
-    color: #fff;
-    text-align: center;
-    padding: 15px;
-}
-
-/* PROJECTOR MODE */
-.projector header,
-.projector footer,
-.projector h2,
-.projector .service-time {
-    display: none;
-}
-
-.projector .timer-box {
-    font-size: 36px;
-}
-</style>
+    button:hover {
+      background-color: #002f6c;
+    }
+  </style>
 </head>
-
 <body>
 
-<header>
-<h1>Jesus Christ Redeems Global Ministries</h1>
-<p id="serviceDate"></p>
-<button onclick="toggleProjector()">Toggle Projector Mode</button>
-</header>
+  <header>
+    <!-- Logo -->
+    <img src="logo.png" alt="JCRGM Logo">
+    <h1>Jesus Christ Redeems Global Ministries</h1>
+  </header>
 
-<div class="container">
+  <main>
+    <h2>Welcome to the App</h2>
+    
+    <!-- Back Button -->
+    <button id="backBtn">Go Back</button>
 
-<div class="timer-box" id="timerBox">Loading…</div>
+    <!-- Close App Button -->
+    <button id="closeAppBtn">Close App</button>
+  </main>
 
-<div id="serviceContent">
-<h2>Sunday Services Ongoing</h2>
-<p class="service-time">Morning 09:00 – 12:30 | Afternoon 15:00 – 18:30</p>
-</div>
+  <script>
+    // Back Button
+    document.getElementById('backBtn').addEventListener('click', function() {
+      window.history.back();
+    });
 
-</div>
-
-<footer>
-© <span id="year"></span> Jesus Christ Redeems Global Ministries
-</footer>
-
-<script>
-const now = new Date();
-const day = now.getDay(); // 0 = Sunday
-const isSunday = day === 0;
-
-document.getElementById("serviceDate").innerText =
-"Today: " + now.toDateString();
-document.getElementById("year").innerText = now.getFullYear();
-
-/* AUTO PROJECTOR ON SUNDAY */
-if (isSunday) {
-    document.documentElement.classList.add("projector");
-}
-
-function toggleProjector() {
-    document.documentElement.classList.toggle("projector");
-}
-
-/* DAILY SCRIPTURES (MON–SAT) */
-const scriptures = {
-    1: "📖 Psalm 1:1–2 – Blessed is the man who delights in the law of the Lord.",
-    2: "📖 Isaiah 40:31 – They that wait upon the Lord shall renew their strength.",
-    3: "📖 Proverbs 3:5–6 – Trust in the Lord with all your heart.",
-    4: "📖 Matthew 11:28 – Come unto me, all ye that labour.",
-    5: "📖 Hebrews 10:25 – Not forsaking the assembling of ourselves together.",
-    6: "📖 Joshua 24:15 – As for me and my house, we will serve the Lord."
-};
-
-function getNextSundayMorning() {
-    const d = new Date();
-    const days = (7 - d.getDay()) % 7 || 7;
-    d.setDate(d.getDate() + days);
-    d.setHours(9, 0, 0, 0);
-    return d;
-}
-
-function getAfternoonService() {
-    const d = new Date();
-    d.setHours(15, 0, 0, 0);
-    return d;
-}
-
-function formatCountdown(diff) {
-    const d = Math.floor(diff / 86400);
-    const h = Math.floor((diff % 86400) / 3600);
-    const m = Math.floor((diff % 3600) / 60);
-    const s = diff % 60;
-    return `${d}d ${h}h ${m}m ${s}s`;
-}
-
-function updateDisplay() {
-    const now = new Date();
-
-    /* WEEKDAYS */
-    if (!isSunday) {
-        document.getElementById("serviceContent").style.display = "none";
-        const nextSunday = getNextSundayMorning();
-        const diff = Math.floor((nextSunday - now) / 1000);
-
-        document.getElementById("timerBox").innerHTML = `
-        🌿 <strong>Scripture for Meditation</strong><br><br>
-        ${scriptures[day]}<br><br>
-        ⏳ <strong>Countdown to Sunday Service</strong><br>
-        <span>${formatCountdown(diff)}</span>
-        `;
-        return;
-    }
-
-    /* SUNDAY */
-    document.getElementById("serviceContent").style.display = "block";
-
-    const afternoon = getAfternoonService();
-
-    if (now < afternoon) {
-        const diff = Math.floor((afternoon - now) / 1000);
-        document.getElementById("timerBox").innerHTML = `
-        🙏 <strong>Sunday Morning Service Ongoing</strong><br><br>
-        ⏳ Afternoon Service starts in<br>
-        <span>${formatCountdown(diff)}</span>
-        `;
-    } else {
-        document.getElementById("timerBox").innerHTML = `
-        🙌 <strong>Sunday Afternoon Service Ongoing</strong><br><br>
-        🔥 Expect a move of God
-        `;
-    }
-}
-
-setInterval(updateDisplay, 1000);
-updateDisplay();
-</script>
+    // Close App Button
+    document.getElementById('closeAppBtn').addEventListener('click', function() {
+      window.close();
+      alert("You can now close the app manually if it didn't close automatically.");
+    });
+  </script>
 
 </body>
 </html>
