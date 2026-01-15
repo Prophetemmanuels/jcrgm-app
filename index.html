@@ -26,38 +26,14 @@ header {
     text-align: center;
 }
 
-/* Buttons */
-header button {
+button {
     padding: 10px 18px;
     border: none;
-    background: #ffd700; /* Gold for toggle & programme button */
-    color: #1f3c88;      /* Dark text for contrast */
+    background: #1f3c88;
+    color: #fff;
     cursor: pointer;
     border-radius: 4px;
-    margin: 10px 5px 0 5px;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-header button:hover {
-    background: #ffcc00; /* Hover effect */
-}
-
-/* Social buttons */
-.youtube-btn {
-    background: #FF0000;
-    color: #fff;
-}
-.youtube-btn:hover {
-    background: #cc0000;
-}
-
-.facebook-btn {
-    background: #3b5998;
-    color: #fff;
-}
-.facebook-btn:hover {
-    background: #2d4373;
+    margin: 10px;
 }
 
 .container {
@@ -81,19 +57,6 @@ header button:hover {
 .timer-box span {
     color: #ffd700;
     font-weight: bold;
-}
-
-.programme-box {
-    background: #f1f1f1;
-    padding: 20px;
-    border-radius: 6px;
-    margin-top: 20px;
-    display: none;
-}
-
-.programme-box h3 {
-    color: #1f3c88;
-    margin-bottom: 15px;
 }
 
 .current-program {
@@ -126,26 +89,9 @@ footer {
 <body>
 
 <header>
-  <h1>Jesus Christ Redeems Global Ministries</h1>
-  <p id="serviceDate"></p>
-
-  <!-- Toggle button -->
-  <button id="toggleBtn">Toggle Projector Mode</button>
-
-  <!-- Social Links -->
-  <div style="margin-top:15px;">
-    <a href="https://www.youtube.com/@officialjcrgmtv" target="_blank">
-      <button class="youtube-btn">YouTube</button>
-    </a>
-    <a href="https://web.facebook.com/pedahzurchurch/" target="_blank">
-      <button class="facebook-btn">Facebook</button>
-    </a>
-  </div>
-
-  <!-- Church Programme Button -->
-  <div style="margin-top:15px;">
-    <button id="programmeBtn">View Sunday Programme</button>
-  </div>
+<h1>Jesus Christ Redeems Global Ministries</h1>
+<p id="serviceDate"></p>
+<button onclick="toggleProjector()">Toggle Projector Mode</button>
 </header>
 
 <div class="container">
@@ -157,24 +103,6 @@ footer {
 <p class="service-time">Morning 09:00 – 12:30 | Afternoon 15:00 – 18:30</p>
 </div>
 
-<!-- Sunday Programme -->
-<div class="programme-box" id="programmeBox">
-  <h3>Sunday Service Programme</h3>
-  <ul>
-    <li>09:00 – 09:30: Worship & Praise</li>
-    <li>09:30 – 10:15: Opening Prayer & Scripture Reading</li>
-    <li>10:15 – 11:00: Sermon</li>
-    <li>11:00 – 11:30: Testimonies</li>
-    <li>11:30 – 12:00: Special Announcements</li>
-    <li>12:00 – 12:30: Closing Prayer</li>
-    <li>15:00 – 15:30: Afternoon Worship & Praise</li>
-    <li>15:30 – 16:15: Afternoon Sermon</li>
-    <li>16:15 – 16:45: Prayer & Intercession</li>
-    <li>16:45 – 17:30: Fellowship & Ministry Updates</li>
-    <li>17:30 – 18:30: Evening Worship & Closing</li>
-  </ul>
-</div>
-
 </div>
 
 <footer>
@@ -182,108 +110,95 @@ footer {
 </footer>
 
 <script>
-// Wait until DOM is loaded to attach events
-document.addEventListener("DOMContentLoaded", function() {
+const now = new Date();
+const day = now.getDay(); // 0 = Sunday
+const isSunday = day === 0;
 
-    const toggleBtn = document.getElementById("toggleBtn");
-    const programmeBtn = document.getElementById("programmeBtn");
-    const programmeBox = document.getElementById("programmeBox");
+document.getElementById("serviceDate").innerText =
+"Today: " + now.toDateString();
+document.getElementById("year").innerText = now.getFullYear();
 
-    // Toggle Projector Mode
-    toggleBtn.addEventListener("click", function() {
-        document.documentElement.classList.toggle("projector");
-    });
+/* AUTO PROJECTOR ON SUNDAY */
+if (isSunday) {
+    document.documentElement.classList.add("projector");
+}
 
-    // Show/hide Sunday Programme
-    programmeBtn.addEventListener("click", function() {
-        programmeBox.style.display = (programmeBox.style.display === "none" || programmeBox.style.display === "") ? "block" : "none";
-    });
+function toggleProjector() {
+    document.documentElement.classList.toggle("projector");
+}
 
-    // Initialize service timer and display
+/* DAILY SCRIPTURES (MON–SAT) */
+const scriptures = {
+    1: "📖 Psalm 1:1–2 – Blessed is the man who delights in the law of the Lord.",
+    2: "📖 Isaiah 40:31 – They that wait upon the Lord shall renew their strength.",
+    3: "📖 Proverbs 3:5–6 – Trust in the Lord with all your heart.",
+    4: "📖 Matthew 11:28 – Come unto me, all ye that labour.",
+    5: "📖 Hebrews 10:25 – Not forsaking the assembling of ourselves together.",
+    6: "📖 Joshua 24:15 – As for me and my house, we will serve the Lord."
+};
+
+function getNextSundayMorning() {
+    const d = new Date();
+    const days = (7 - d.getDay()) % 7 || 7;
+    d.setDate(d.getDate() + days);
+    d.setHours(9, 0, 0, 0);
+    return d;
+}
+
+function getAfternoonService() {
+    const d = new Date();
+    d.setHours(15, 0, 0, 0);
+    return d;
+}
+
+function formatCountdown(diff) {
+    const d = Math.floor(diff / 86400);
+    const h = Math.floor((diff % 86400) / 3600);
+    const m = Math.floor((diff % 3600) / 60);
+    const s = diff % 60;
+    return `${d}d ${h}h ${m}m ${s}s`;
+}
+
+function updateDisplay() {
     const now = new Date();
-    const day = now.getDay(); // 0 = Sunday
-    const isSunday = day === 0;
 
-    document.getElementById("serviceDate").innerText = "Today: " + now.toDateString();
-    document.getElementById("year").innerText = now.getFullYear();
+    /* WEEKDAYS */
+    if (!isSunday) {
+        document.getElementById("serviceContent").style.display = "none";
+        const nextSunday = getNextSundayMorning();
+        const diff = Math.floor((nextSunday - now) / 1000);
 
-    if (isSunday) {
-        document.documentElement.classList.add("projector");
+        document.getElementById("timerBox").innerHTML = `
+        🌿 <strong>Scripture for Meditation</strong><br><br>
+        ${scriptures[day]}<br><br>
+        ⏳ <strong>Countdown to Sunday Service</strong><br>
+        <span>${formatCountdown(diff)}</span>
+        `;
+        return;
     }
 
-    const scriptures = {
-        1: "📖 Psalm 1:1–2 – Blessed is the man who delights in the law of the Lord.",
-        2: "📖 Isaiah 40:31 – They that wait upon the Lord shall renew their strength.",
-        3: "📖 Proverbs 3:5–6 – Trust in the Lord with all your heart.",
-        4: "📖 Matthew 11:28 – Come unto me, all ye that labour.",
-        5: "📖 Hebrews 10:25 – Not forsaking the assembling of ourselves together.",
-        6: "📖 Joshua 24:15 – As for me and my house, we will serve the Lord."
-    };
+    /* SUNDAY */
+    document.getElementById("serviceContent").style.display = "block";
 
-    function getNextSundayMorning() {
-        const d = new Date();
-        const days = (7 - d.getDay()) % 7 || 7;
-        d.setDate(d.getDate() + days);
-        d.setHours(9, 0, 0, 0);
-        return d;
+    const afternoon = getAfternoonService();
+
+    if (now < afternoon) {
+        const diff = Math.floor((afternoon - now) / 1000);
+        document.getElementById("timerBox").innerHTML = `
+        🙏 <strong>Sunday Morning Service Ongoing</strong><br><br>
+        ⏳ Afternoon Service starts in<br>
+        <span>${formatCountdown(diff)}</span>
+        `;
+    } else {
+        document.getElementById("timerBox").innerHTML = `
+        🙌 <strong>Sunday Afternoon Service Ongoing</strong><br><br>
+        🔥 Expect a move of God
+        `;
     }
+}
 
-    function getAfternoonService() {
-        const d = new Date();
-        d.setHours(15, 0, 0, 0);
-        return d;
-    }
-
-    function formatCountdown(diff) {
-        const d = Math.floor(diff / 86400);
-        const h = Math.floor((diff % 86400) / 3600);
-        const m = Math.floor((diff % 3600) / 60);
-        const s = diff % 60;
-        return `${d}d ${h}h ${m}m ${s}s`;
-    }
-
-    function updateDisplay() {
-        const now = new Date();
-
-        // WEEKDAYS
-        if (!isSunday) {
-            document.getElementById("serviceContent").style.display = "none";
-            const nextSunday = getNextSundayMorning();
-            const diff = Math.floor((nextSunday - now) / 1000);
-
-            document.getElementById("timerBox").innerHTML = `
-            🌿 <strong>Scripture for Meditation</strong><br><br>
-            ${scriptures[day]}<br><br>
-            ⏳ <strong>Countdown to Sunday Service</strong><br>
-            <span>${formatCountdown(diff)}</span>
-            `;
-            return;
-        }
-
-        // SUNDAY
-        document.getElementById("serviceContent").style.display = "block";
-
-        const afternoon = getAfternoonService();
-
-        if (now < afternoon) {
-            const diff = Math.floor((afternoon - now) / 1000);
-            document.getElementById("timerBox").innerHTML = `
-            🙏 <strong>Sunday Morning Service Ongoing</strong><br><br>
-            ⏳ Afternoon Service starts in<br>
-            <span>${formatCountdown(diff)}</span>
-            `;
-        } else {
-            document.getElementById("timerBox").innerHTML = `
-            🙌 <strong>Sunday Afternoon Service Ongoing</strong><br><br>
-            🔥 Expect a move of God
-            `;
-        }
-    }
-
-    setInterval(updateDisplay, 1000);
-    updateDisplay();
-
-});
+setInterval(updateDisplay, 1000);
+updateDisplay();
 </script>
 
 </body>
