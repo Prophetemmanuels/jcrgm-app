@@ -1,19 +1,14 @@
 {
   "name": "Jesus Christ Redeems Global Ministries",
   "short_name": "JCRGM",
-  "start_url": "index.html",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#1f3c88",
+  "background_color": "#ffffff",
   "theme_color": "#1f3c88",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "apple-touch-icon.png",
       "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
       "type": "image/png"
     }
   ]

@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <title>Jesus Christ Redeems Global Ministries | Service Timer</title>
 
-<!-- PWA manifest -->
-<link rel="manifest" href="manifest.json">
-<!-- iPhone / Apple touch icon -->
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#1f3c88">
 
 <style>
@@ -33,7 +33,24 @@ button {
     color: #fff;
     cursor: pointer;
     border-radius: 4px;
-    margin: 10px;
+    margin: 6px;
+    font-size: 14px;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.social-buttons {
+    margin-top: 15px;
+}
+
+.social-buttons a {
+    text-decoration: none;
+}
+
+.whatsapp {
+    background: #25D366;
 }
 
 .container {
@@ -59,12 +76,6 @@ button {
     font-weight: bold;
 }
 
-.current-program {
-    background: #fff3cd !important;
-    font-weight: bold;
-    border-left: 6px solid #e67e22;
-}
-
 footer {
     background: #2c3e50;
     color: #fff;
@@ -76,7 +87,8 @@ footer {
 .projector header,
 .projector footer,
 .projector h2,
-.projector .service-time {
+.projector .service-time,
+.projector .social-buttons {
     display: none;
 }
 
@@ -91,7 +103,22 @@ footer {
 <header>
 <h1>Jesus Christ Redeems Global Ministries</h1>
 <p id="serviceDate"></p>
+
 <button onclick="toggleProjector()">Toggle Projector Mode</button>
+
+<div class="social-buttons">
+    <a href="https://web.facebook.com/pedahzurchurch" target="_blank" rel="noopener">
+        <button>📘 Facebook</button>
+    </a>
+
+    <a href="https://www.youtube.com/@officialjcrgmtv" target="_blank" rel="noopener">
+        <button>📺 YouTube</button>
+    </a>
+
+    <a href="https://wa.me/260979554970" target="_blank" rel="noopener">
+        <button class="whatsapp">💬 WhatsApp Office</button>
+    </a>
+</div>
 </header>
 
 <div class="container">
@@ -110,8 +137,13 @@ footer {
 </footer>
 
 <script>
+/* REGISTER SERVICE WORKER */
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js');
+}
+
 const now = new Date();
-const day = now.getDay(); // 0 = Sunday
+const day = now.getDay();
 const isSunday = day === 0;
 
 document.getElementById("serviceDate").innerText =
@@ -127,7 +159,7 @@ function toggleProjector() {
     document.documentElement.classList.toggle("projector");
 }
 
-/* DAILY SCRIPTURES (MON–SAT) */
+/* DAILY SCRIPTURES */
 const scriptures = {
     1: "📖 Psalm 1:1–2 – Blessed is the man who delights in the law of the Lord.",
     2: "📖 Isaiah 40:31 – They that wait upon the Lord shall renew their strength.",
@@ -162,7 +194,6 @@ function formatCountdown(diff) {
 function updateDisplay() {
     const now = new Date();
 
-    /* WEEKDAYS */
     if (!isSunday) {
         document.getElementById("serviceContent").style.display = "none";
         const nextSunday = getNextSundayMorning();
@@ -177,9 +208,7 @@ function updateDisplay() {
         return;
     }
 
-    /* SUNDAY */
     document.getElementById("serviceContent").style.display = "block";
-
     const afternoon = getAfternoonService();
 
     if (now < afternoon) {
