@@ -1,24 +1,18 @@
-const CACHE_NAME = "jcrgm-app-v1";
-const FILES_TO_CACHE = [
+const CACHE_NAME = "jcrgm-v1";
+const FILES = [
   "./",
   "./index.html",
-  "./manifest.json",
-  "./apple-touch-icon.png"
+  "./manifest.json"
 ];
 
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
+self.addEventListener("install", e => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES))
   );
-  self.skipWaiting();
 });
 
-self.addEventListener("fetch", event => {
-  if (event.request.url.startsWith("http")) {
-    event.respondWith(
-      caches.match(event.request).then(response => {
-        return response || fetch(event.request);
-      })
-    );
-  }
+self.addEventListener("fetch", e => {
+  e.respondWith(
+    caches.match(e.request).then(res => res || fetch(e.request))
+  );
 });

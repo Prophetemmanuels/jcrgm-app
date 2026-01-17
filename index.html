@@ -18,14 +18,12 @@ body {
     margin: 0;
     color: #333;
 }
-
 header {
     background: linear-gradient(90deg, #1f3c88, #2c3e50);
     color: #fff;
     padding: 30px 20px;
     text-align: center;
 }
-
 button {
     padding: 10px 18px;
     border: none;
@@ -34,25 +32,8 @@ button {
     cursor: pointer;
     border-radius: 4px;
     margin: 6px;
-    font-size: 14px;
 }
-
-button:hover {
-    opacity: 0.9;
-}
-
-.social-buttons {
-    margin-top: 15px;
-}
-
-.social-buttons a {
-    text-decoration: none;
-}
-
-.whatsapp {
-    background: #25D366;
-}
-
+.whatsapp { background: #25D366; }
 .container {
     max-width: 1000px;
     margin: 30px auto;
@@ -60,7 +41,6 @@ button:hover {
     padding: 30px;
     box-shadow: 0 0 12px rgba(0,0,0,0.1);
 }
-
 .timer-box {
     background: #1f3c88;
     color: #fff;
@@ -70,20 +50,31 @@ button:hover {
     border-radius: 6px;
     margin-bottom: 30px;
 }
-
 .timer-box span {
     color: #ffd700;
     font-weight: bold;
 }
-
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+}
+th { background: #ecf0f1; }
+.current-program {
+    background: #fff3cd !important;
+    font-weight: bold;
+    border-left: 6px solid #e67e22;
+}
 footer {
     background: #2c3e50;
     color: #fff;
     text-align: center;
     padding: 15px;
 }
-
-/* PROJECTOR MODE */
 .projector header,
 .projector footer,
 .projector h2,
@@ -91,9 +82,9 @@ footer {
 .projector .social-buttons {
     display: none;
 }
-
-.projector .timer-box {
-    font-size: 36px;
+.projector .timer-box,
+.projector table {
+    font-size: 28px;
 }
 </style>
 </head>
@@ -103,21 +94,12 @@ footer {
 <header>
 <h1>Jesus Christ Redeems Global Ministries</h1>
 <p id="serviceDate"></p>
-
 <button onclick="toggleProjector()">Toggle Projector Mode</button>
 
 <div class="social-buttons">
-    <a href="https://web.facebook.com/pedahzurchurch" target="_blank" rel="noopener">
-        <button>📘 Facebook</button>
-    </a>
-
-    <a href="https://www.youtube.com/@officialjcrgmtv" target="_blank" rel="noopener">
-        <button>📺 YouTube</button>
-    </a>
-
-    <a href="https://wa.me/260979554970" target="_blank" rel="noopener">
-        <button class="whatsapp">💬 WhatsApp Office</button>
-    </a>
+<a href="https://web.facebook.com/pedahzurchurch" target="_blank"><button>📘 Facebook</button></a>
+<a href="https://www.youtube.com/@officialjcrgmtv" target="_blank"><button>📺 YouTube</button></a>
+<a href="https://wa.me/260979554970" target="_blank"><button class="whatsapp">💬 WhatsApp Office</button></a>
 </div>
 </header>
 
@@ -125,109 +107,119 @@ footer {
 
 <div class="timer-box" id="timerBox">Loading…</div>
 
-<div id="serviceContent">
-<h2>Sunday Services Ongoing</h2>
-<p class="service-time">Morning 09:00 – 12:30 | Afternoon 15:00 – 18:30</p>
+<div id="weekdayContent"></div>
+
+<div id="sundayContent" style="display:none">
+
+<h2>Morning Worship Service</h2>
+<p class="service-time">09:00 – 12:30</p>
+
+<table>
+<tr><th>Time</th><th>Program</th></tr>
+<tr data-start="09:00" data-end="09:15"><td>09:00 – 09:15</td><td>Opening Prayer</td></tr>
+<tr data-start="09:15" data-end="09:45"><td>09:15 – 09:45</td><td>Praise & Worship</td></tr>
+<tr data-start="09:45" data-end="10:05"><td>09:45 – 10:05</td><td>Scripture & Intercession</td></tr>
+<tr data-start="10:05" data-end="10:25"><td>10:05 – 10:25</td><td>Testimonies</td></tr>
+<tr data-start="10:25" data-end="10:45"><td>10:25 – 10:45</td><td>Choir Ministration</td></tr>
+<tr data-start="10:45" data-end="11:00"><td>10:45 – 11:00</td><td>Offering & Tithes</td></tr>
+<tr data-start="11:00" data-end="12:00"><td>11:00 – 12:00</td><td>Sermon</td></tr>
+<tr data-start="12:00" data-end="12:30"><td>12:00 – 12:30</td><td>Closing Prayers</td></tr>
+</table>
+
+<h2>Afternoon Prophetic Service</h2>
+<p class="service-time">15:00 – 18:30</p>
+
+<table>
+<tr><th>Time</th><th>Program</th></tr>
+<tr data-start="15:00" data-end="15:45"><td>15:00 – 15:45</td><td>Opening Prayer</td></tr>
+<tr data-start="15:45" data-end="16:15"><td>15:45 – 16:15</td><td>Worship</td></tr>
+<tr data-start="16:15" data-end="16:30"><td>16:15 – 16:30</td><td>Prophetic Scriptures</td></tr>
+<tr data-start="16:30" data-end="17:10"><td>16:30 – 17:10</td><td>Ministration</td></tr>
+<tr data-start="17:10" data-end="18:00"><td>17:10 – 18:00</td><td>Deliverance</td></tr>
+<tr data-start="18:00" data-end="18:30"><td>18:00 – 18:30</td><td>Final Blessing</td></tr>
+</table>
+
 </div>
 
 </div>
 
 <footer>
+Phone: 0979554970 | Email: pedahzurministries@gmail.com<br>
 © <span id="year"></span> Jesus Christ Redeems Global Ministries
 </footer>
 
 <script>
-/* REGISTER SERVICE WORKER */
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js');
+  navigator.serviceWorker.register('service-worker.js');
 }
 
 const now = new Date();
 const day = now.getDay();
 const isSunday = day === 0;
 
-document.getElementById("serviceDate").innerText =
-"Today: " + now.toDateString();
+document.getElementById("serviceDate").innerText = "Today: " + now.toDateString();
 document.getElementById("year").innerText = now.getFullYear();
 
-/* AUTO PROJECTOR ON SUNDAY */
-if (isSunday) {
-    document.documentElement.classList.add("projector");
-}
-
 function toggleProjector() {
-    document.documentElement.classList.toggle("projector");
+  document.documentElement.classList.toggle("projector");
 }
 
-/* DAILY SCRIPTURES */
 const scriptures = {
-    1: "📖 Psalm 1:1–2 – Blessed is the man who delights in the law of the Lord.",
-    2: "📖 Isaiah 40:31 – They that wait upon the Lord shall renew their strength.",
-    3: "📖 Proverbs 3:5–6 – Trust in the Lord with all your heart.",
-    4: "📖 Matthew 11:28 – Come unto me, all ye that labour.",
-    5: "📖 Hebrews 10:25 – Not forsaking the assembling of ourselves together.",
-    6: "📖 Joshua 24:15 – As for me and my house, we will serve the Lord."
+  1:"Psalm 1:1–2",2:"Isaiah 40:31",3:"Proverbs 3:5–6",
+  4:"Matthew 11:28",5:"Hebrews 10:25",6:"Joshua 24:15"
 };
 
-function getNextSundayMorning() {
-    const d = new Date();
-    const days = (7 - d.getDay()) % 7 || 7;
-    d.setDate(d.getDate() + days);
-    d.setHours(9, 0, 0, 0);
-    return d;
+function nextSunday() {
+  const d=new Date(); d.setDate(d.getDate()+((7-d.getDay())%7||7));
+  d.setHours(9,0,0,0); return d;
 }
 
-function getAfternoonService() {
-    const d = new Date();
-    d.setHours(15, 0, 0, 0);
-    return d;
+function format(sec){
+  const d=Math.floor(sec/86400);
+  const h=Math.floor((sec%86400)/3600);
+  const m=Math.floor((sec%3600)/60);
+  const s=sec%60;
+  return `${d}d ${h}h ${m}m ${s}s`;
 }
 
-function formatCountdown(diff) {
-    const d = Math.floor(diff / 86400);
-    const h = Math.floor((diff % 86400) / 3600);
-    const m = Math.floor((diff % 3600) / 60);
-    const s = diff % 60;
-    return `${d}d ${h}h ${m}m ${s}s`;
+function parseTime(t){
+  const [h,m]=t.split(":");
+  const d=new Date();
+  return new Date(d.getFullYear(),d.getMonth(),d.getDate(),h,m,0);
 }
 
-function updateDisplay() {
-    const now = new Date();
+function update(){
+  const now=new Date();
 
-    if (!isSunday) {
-        document.getElementById("serviceContent").style.display = "none";
-        const nextSunday = getNextSundayMorning();
-        const diff = Math.floor((nextSunday - now) / 1000);
+  if(!isSunday){
+    document.getElementById("weekdayContent").innerHTML =
+    `📖 <b>Scripture:</b> ${scriptures[day]}<br><br>
+     ⏳ <b>Countdown to Sunday:</b><br>
+     <span>${format(Math.floor((nextSunday()-now)/1000))}</span>`;
+    document.getElementById("timerBox").innerHTML =
+      document.getElementById("weekdayContent").innerHTML;
+    return;
+  }
 
-        document.getElementById("timerBox").innerHTML = `
-        🌿 <strong>Scripture for Meditation</strong><br><br>
-        ${scriptures[day]}<br><br>
-        ⏳ <strong>Countdown to Sunday Service</strong><br>
-        <span>${formatCountdown(diff)}</span>
-        `;
-        return;
+  document.getElementById("sundayContent").style.display="block";
+  const rows=document.querySelectorAll("tr[data-start]");
+  rows.forEach(r=>r.classList.remove("current-program"));
+
+  for(let r of rows){
+    const s=parseTime(r.dataset.start);
+    const e=parseTime(r.dataset.end);
+    if(now>=s && now<e){
+      r.classList.add("current-program");
+      document.getElementById("timerBox").innerHTML=
+      `🕒 NOW: <span>${r.children[1].innerText}</span><br>
+       ⏳ Remaining: <span>${Math.floor((e-now)/60000)} min</span>`;
+      return;
     }
-
-    document.getElementById("serviceContent").style.display = "block";
-    const afternoon = getAfternoonService();
-
-    if (now < afternoon) {
-        const diff = Math.floor((afternoon - now) / 1000);
-        document.getElementById("timerBox").innerHTML = `
-        🙏 <strong>Sunday Morning Service Ongoing</strong><br><br>
-        ⏳ Afternoon Service starts in<br>
-        <span>${formatCountdown(diff)}</span>
-        `;
-    } else {
-        document.getElementById("timerBox").innerHTML = `
-        🙌 <strong>Sunday Afternoon Service Ongoing</strong><br><br>
-        🔥 Expect a move of God
-        `;
-    }
+  }
 }
 
-setInterval(updateDisplay, 1000);
-updateDisplay();
+setInterval(update,1000);
+update();
 </script>
 
 </body>
