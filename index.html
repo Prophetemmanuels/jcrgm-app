@@ -148,9 +148,14 @@ function update(){
 
       const nextText=i+1<rows.length ? rows[i+1].children[1].innerText : "End of Service";
 
+      // ✅ Corrected countdown with seconds
+      const remainingSec = Math.floor((e - now) / 1000);
+      const remMin = Math.floor(remainingSec / 60);
+      const remSec = remainingSec % 60;
+
       document.getElementById("timerBox").innerHTML=
       `🕒 NOW: <span>${rows[i].children[1].innerText}</span><br>
-       ⏳ Remaining: <span>${Math.floor((e-now)/60000)}m ${Math.floor((e-now)%60)}s</span><br>
+       ⏳ Remaining: <span>${remMin}m ${remSec}s</span><br>
        ➡ NEXT: <span>${nextText}</span>`;
 
       if(lastActive!==rows[i].children[1].innerText){
