@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Jesus Christ Redeems Global Ministries | Service Timer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#1f3c88">
+
+<style>
+body { font-family: "Segoe UI", Arial, sans-serif; background-color: #f4f6f8; margin:0; color:#333; }
+header { background: linear-gradient(90deg,#1f3c88,#2c3e50); color:#fff; padding:30px 20px; text-align:center; }
+button { padding:10px 18px; border:none; background:#1f3c88; color:#fff; cursor:pointer; border-radius:4px; margin:6px; }
+button:hover {opacity:0.9;}
+.youtube {background:red;}
+.whatsapp {background:#25D366;}
+.games {background:#ff9800;}
+.meditation {background:#8e44ad;}
+.membership {background:#3498db;}
+.tithe {background:#16a085;}
+.container {max-width:1000px; margin:30px auto; background:#fff; padding:30px; box-shadow:0 0 12px rgba(0,0,0,0.1);}
+.timer-box {background:#1f3c88; color:#fff; padding:25px; font-size:26px; text-align:center; border-radius:6px; margin-bottom:30px;}
+.timer-box span {color:#ffd700; font-weight:bold;}
+table {width:100%; border-collapse:collapse; margin-bottom:30px;}
+th, td {border:1px solid #ddd; padding:12px;}
+th {background:#ecf0f1;}
+.current-program {background:#fff3cd !important; font-weight:bold; border-left:6px solid #e67e22;}
+.next-program {background:#d1ecf1 !important; font-weight:bold; border-left:6px solid #17a2b8;}
+footer {background:#2c3e50; color:#fff; text-align:center; padding:15px;}
+.projector header, .projector footer, .projector h2, .projector .service-time, .projector .social-buttons {display:none;}
+.projector .timer-box, .projector table {font-size:28px;}
+input, select {padding:8px; width:100%; margin:6px 0; border-radius:4px; border:1px solid #ccc;}
+</style>
+</head>
+
+<body>
+<header>
+<h1>Jesus Christ Redeems Global Ministries</h1>
+<p id="serviceDate"></p>
+<button onclick="toggleProjector()">Toggle Projector Mode</button>
+
+<div class="social-buttons">
+<a href="https://web.facebook.com/pedahzurchurch" target="_blank"><button>📘 Facebook</button></a>
+<a href="https://www.youtube.com/@officialjcrgmtv" target="_blank"><button class="youtube">📺 YouTube</button></a>
+<a href="https://wa.me/260979554970" target="_blank"><button class="whatsapp">💬 WhatsApp Office</button></a>
+<a href="https://www.biblechallenger.com/" target="_blank"><button class="games">🎮 Christian Games</button></a>
+<a href="https://www.youtube.com/watch?v=785fnki4lsw&list=RD785fnki4lsw&start_radio=1" target="_blank"><button class="meditation">🎵 Prayer & Meditation</button></a>
+<button class="membership" onclick="showMembershipForm()">📝 Membership</button>
+<button class="tithe" onclick="showTitheInfo()">💰 Tithes & Offerings</button>
+</div>
+</header>
+
+<div class="container">
+<div class="timer-box" id="timerBox">Loading…</div>
+
+<div id="weekdayContent"></div>
+
+<div id="sundayContent" style="display:none">
+<h2>Morning Worship Service</h2>
+<p class="service-time">09:00 – 12:30</p>
+<table>
+<tr><th>Time</th><th>Program</th></tr>
+<tr data-start="09:00" data-end="09:15"><td>09:00 – 09:15</td><td>Opening Prayer</td></tr>
+<tr data-start="09:15" data-end="09:45"><td>09:15 – 09:45</td><td>Praise & Worship</td></tr>
+<tr data-start="09:45" data-end="10:05"><td>09:45 – 10:05</td><td>Scripture & Intercession</td></tr>
+<tr data-start="10:05" data-end="10:25"><td>10:05 – 10:25</td><td>Testimonies</td></tr>
+<tr data-start="10:25" data-end="10:45"><td>10:25 – 10:45</td><td>Choir Ministration and Presentations</td></tr>
+<tr data-start="10:45" data-end="11:00"><td>10:45 – 11:00</td><td>Offering & Tithes</td></tr>
+<tr data-start="11:00" data-end="12:00"><td>11:00 – 12:00</td><td>Sermon</td></tr>
+<tr data-start="12:00" data-end="12:30"><td>12:00 – 12:30</td><td>Closing Prayers</td></tr>
+</table>
+
+<h2>Afternoon Prophetic Service</h2>
+<p class="service-time">15:00 – 18:30</p>
+<table>
+<tr><th>Time</th><th>Program</th></tr>
+<tr data-start="15:00" data-end="15:45"><td>15:00 – 15:45</td><td>Opening Prayer</td></tr>
+<tr data-start="15:45" data-end="16:15"><td>15:45 – 16:15</td><td>Worship</td></tr>
+<tr data-start="16:15" data-end="16:30"><td>16:15 – 16:30</td><td>Prophetic Scriptures and Prayer</td></tr>
+<tr data-start="16:30" data-end="17:10"><td>16:30 – 17:10</td><td>Offering then Ministration</td></tr>
+<tr data-start="17:10" data-end="18:00"><td>17:10 – 18:00</td><td>Healing and Deliverance</td></tr>
+<tr data-start="18:00" data-end="18:30"><td>18:00 – 18:30</td><td>Mass Prayer and Final Blessing</td></tr>
+</table>
+</div>
+
+<!-- Membership Form -->
+<div id="membershipForm" style="display:none; margin-top:20px;">
+<h3>Membership Registration</h3>
+<input type="text" id="memberName" placeholder="Full Name">
+<input type="text" id="memberPhone" placeholder="Phone Number">
+<input type="text" id="memberNRC" placeholder="NRC Number (Optional)">
+<input type="email" id="memberEmail" placeholder="Email">
+<input type="text" id="memberResidence" placeholder="Residence">
+<input type="file" id="memberPhoto" accept="image/*">
+<button onclick="sendMembership()">Send Membership</button>
+<button onclick="clearMembershipForm()">Clear Form</button>
+</div>
+
+<!-- Tithe Info -->
+<div id="titheInfo" style="display:none; margin-top:20px;">
+<h3>Tithes & Offerings</h3>
+<p>Airtel Money Agent: 0979554970 / 20202857</p>
+<p>Direct Deposit: 0979085154</p>
+<p>MTN Money: 0760528887</p>
+</div>
+
+</div>
+
+<footer>
+Phone: 0979554970 | Email: pedahzurministries@gmail.com<br>
+© <span id="year"></span> Jesus Christ Redeems Global Ministries
+</footer>
+
+<audio id="alertSound">
+<source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
+</audio>
+<audio id="scriptureSound">
+<source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg">
+</audio>
+
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js');}
+
+const day=new Date().getDay();
+const isSunday=day===0;
+document.getElementById("serviceDate").innerText="Today: "+new Date().toDateString();
+document.getElementById("year").innerText=new Date().getFullYear();
+
+function toggleProjector(){document.documentElement.classList.toggle("projector");}
+
+const scriptures={
+1:"Psalm 1:1–2 – Blessed is the man who delights in the law of the Lord",
+2:"Isaiah 40:31 – But they that wait upon the Lord shall renew their strength",
+3:"Proverbs 3:5–6 – Trust in the Lord with all your heart and lean not on your own understanding",
+4:"Matthew 11:28 – Come unto me, all ye that labour and are heavy laden",
+5:"Hebrews 10:25 – Not forsaking the assembling of ourselves together",
+6:"Joshua 24:15 – As for me and my house, we will serve the Lord"
+};
+
+function nextSunday(){const d=new Date(); d.setDate(d.getDate()+((7-d.getDay())%7||7)); d.setHours(9,0,0,0); return d;}
+function format(sec){const d=Math.floor(sec/86400); const h=Math.floor((sec%86400)/3600); const m=Math.floor((sec%3600)/60); const s=sec%60; return `${d}d ${h}h ${m}m ${s}s`;}
+function parseTime(t){const [h,m]=t.split(":"); const d=new Date(); return new Date(d.getFullYear(),d.getMonth(),d.getDate(),h,m,0); }
+
+let lastActive = "";
+let scripturePlayed = false;
+
+// ---- Membership Functions ----
+function showMembershipForm(){
+  document.getElementById("membershipForm").style.display="block";
+  document.getElementById("titheInfo").style.display="none";
+}
+function showTitheInfo(){
+  document.getElementById("titheInfo").style.display="block";
+  document.getElementById("membershipForm").style.display="none";
+}
+function clearMembershipForm(){
+  document.getElementById("memberName").value="";
+  document.getElementById("memberPhone").value="";
+  document.getElementById("memberNRC").value="";
+  document.getElementById("memberEmail").value="";
+  document.getElementById("memberResidence").value="";
+  document.getElementById("memberPhoto").value="";
+}
+
+function sendMembership(){
+  const name=document.getElementById("memberName").value;
+  const phone=document.getElementById("memberPhone").value;
+  const nrc=document.getElementById("memberNRC").value;
+  const email=document.getElementById("memberEmail").value;
+  const residence=document.getElementById("memberResidence").value;
+  const photo=document.getElementById("memberPhoto").files[0];
+
+  if(!name || !phone || !email || !residence){
+    alert("Please fill in all required details!");
+    return;
+  }
+
+  let message=`📝 Membership Registration\nName: ${name}\nPhone: ${phone}\n`;
+  message += nrc ? `NRC: ${nrc}\n` : "NRC: Not yet provided\n";
+  message += `Email: ${email}\nResidence: ${residence}`;
+  if(photo) message += `\nPhoto attached manually`;
+
+  const numbers=["260979554970","260978548813"];
+  numbers.forEach(num=>{
+    window.open(`https://wa.me/${num}?text=${encodeURIComponent(message)}`, "_blank");
+  });
+
+  alert("Membership details opened in WhatsApp. Attach photo manually if selected.");
+}
+
+// ---- Service Timer ----
+function update(){
+  const now=new Date();
+
+  if(!isSunday){
+    document.getElementById("sundayContent").style.display="none";
+    document.getElementById("timerBox").innerHTML=
+      `📖 <b>Scripture:</b> ${scriptures[day]}<br><br>
+       ⏳ <b>Countdown to Sunday:</b><br>
+       <span>${format(Math.floor((nextSunday()-now)/1000))}</span>`;
+    if(!scripturePlayed){document.getElementById("scriptureSound").play(); scripturePlayed=true;}
+    return;
+  }
+
+  document.getElementById("sundayContent").style.display="block";
+  const rows=document.querySelectorAll("tr[data-start]");
+  let activeFound=false;
+  rows.forEach(r=>r.classList.remove("current-program","next-program"));
+
+  for(let i=0;i<rows.length;i++){
+    const s=parseTime(rows[i].dataset.start);
+    const e=parseTime(rows[i].dataset.end);
+
+    if(now>=s && now<e){
+      rows[i].classList.add("current-program");
+      if(i+1<rows.length) rows[i+1].classList.add("next-program");
+
+      const nextText=i+1<rows.length ? rows[i+1].children[1].innerText : "End of Service";
+
+      const remainingSec=Math.floor((e-now)/1000);
+      const remMin=Math.floor(remainingSec/60);
+      const remSec=remainingSec%60;
+
+      document.getElementById("timerBox").innerHTML=
+      `🕒 NOW: <span>${rows[i].children[1].innerText}</span><br>
+       ⏳ Remaining: <span>${remMin}m ${remSec}s</span><br>
+       ➡ NEXT: <span>${nextText}</span>`;
+
+      if(lastActive!==rows[i].children[1].innerText){
+        document.getElementById("alertSound").play();
+        lastActive=rows[i].children[1].innerText;
+      }
+
+      activeFound=true;
+      break;
+    }
+  }
+
+  if(!activeFound){
+    const start=parseTime("09:00");
+    const end=parseTime("18:30");
+    if(now<start){
+      const diff=Math.floor((start-now)/1000);
+      document.getElementById("timerBox").innerHTML=
+        `⏳ Service starts at 09:00<br>Countdown: <span>${Math.floor(diff/3600)}h ${Math.floor((diff%3600)/60)}m</span>`;
+    } else if(now>end){
+      document.getElementById("timerBox").innerHTML=`✅ All services for today have ended<br>🙏 Thank you for worshipping with us`;
+    }
+  }
+}
+
+setInterval(update,1000);
+update();
+</script>
+</body>
+</html>
