@@ -19,6 +19,8 @@ button:hover {opacity:0.9;}
 .whatsapp {background:#25D366;}
 .games {background:#ff9800;}
 .meditation {background:#8e44ad;}
+.membership {background:#3498db;}
+.tithe {background:#16a085;}
 .container {max-width:1000px; margin:30px auto; background:#fff; padding:30px; box-shadow:0 0 12px rgba(0,0,0,0.1);}
 .timer-box {background:#1f3c88; color:#fff; padding:25px; font-size:26px; text-align:center; border-radius:6px; margin-bottom:30px;}
 .timer-box span {color:#ffd700; font-weight:bold;}
@@ -31,7 +33,6 @@ footer {background:#2c3e50; color:#fff; text-align:center; padding:15px;}
 .projector header, .projector footer, .projector h2, .projector .service-time, .projector .social-buttons {display:none;}
 .projector .timer-box, .projector table {font-size:28px;}
 input, select {padding:8px; width:100%; margin:6px 0; border-radius:4px; border:1px solid #ccc;}
-label {font-weight:bold;}
 </style>
 </head>
 
@@ -47,8 +48,8 @@ label {font-weight:bold;}
 <a href="https://wa.me/260979554970" target="_blank"><button class="whatsapp">💬 WhatsApp Office</button></a>
 <a href="https://www.biblechallenger.com/" target="_blank"><button class="games">🎮 Christian Games</button></a>
 <a href="https://www.youtube.com/watch?v=785fnki4lsw&list=RD785fnki4lsw&start_radio=1" target="_blank"><button class="meditation">🎵 Prayer & Meditation</button></a>
-<button onclick="showMembershipForm()">📝 Membership</button>
-<button onclick="showTitheInfo()">💰 Tithes & Offerings</button>
+<button class="membership" onclick="showMembershipForm()">📝 Membership</button>
+<button class="tithe" onclick="showTitheInfo()">💰 Tithes & Offerings</button>
 </div>
 </header>
 
@@ -86,24 +87,24 @@ label {font-weight:bold;}
 </div>
 
 <!-- Membership Form -->
-<div id="membershipForm" style="display:none">
-<h2>Membership Registration</h2>
-<label>Full Name</label><input type="text" id="memName">
-<label>Phone Number</label><input type="text" id="memPhone">
-<label>Residence</label><input type="text" id="memResidence">
-<label>NRC Number</label><input type="text" id="memNRC">
-<label>Email</label><input type="email" id="memEmail">
-<label>Passport Photo</label><input type="file" id="memPhoto" accept="image/*">
+<div id="membershipForm" style="display:none; margin-top:20px;">
+<h3>Membership Registration</h3>
+<input type="text" id="memberName" placeholder="Full Name">
+<input type="text" id="memberPhone" placeholder="Phone Number">
+<input type="text" id="memberNRC" placeholder="NRC Number">
+<input type="email" id="memberEmail" placeholder="Email">
+<input type="text" id="memberResidence" placeholder="Residence">
+<input type="file" id="memberPhoto" accept="image/*">
 <button onclick="sendMembership()">Send Membership</button>
-<button onclick="resetMembershipForm()">Reset Form</button>
+<button onclick="clearMembershipForm()">Clear Form</button>
 </div>
 
-<!-- Tithes & Offerings -->
-<div id="titheInfo" style="display:none">
-<h2>Tithes & Offerings</h2>
-<p><b>Airtel Money (Agent line):</b> 0979554970 / 20202857</p>
-<p><b>Airtel Money (Direct Deposit):</b> 0979085154</p>
-<p><b>MTN Money:</b> 0760528887</p>
+<!-- Tithe Info -->
+<div id="titheInfo" style="display:none; margin-top:20px;">
+<h3>Tithes & Offerings</h3>
+<p>Airtel Money Agent: 0979554970 / 20202857</p>
+<p>Direct Deposit: 0979085154</p>
+<p>MTN Money: 0760528887</p>
 </div>
 
 </div>
@@ -123,60 +124,12 @@ Phone: 0979554970 | Email: pedahzurministries@gmail.com<br>
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js');}
 
+const day=new Date().getDay();
+const isSunday=day===0;
 document.getElementById("serviceDate").innerText="Today: "+new Date().toDateString();
 document.getElementById("year").innerText=new Date().getFullYear();
 
 function toggleProjector(){document.documentElement.classList.toggle("projector");}
-
-// Membership functions
-function showMembershipForm(){
-  document.getElementById("membershipForm").style.display="block";
-  document.getElementById("titheInfo").style.display="none";
-}
-function resetMembershipForm(){
-  document.getElementById("memName").value="";
-  document.getElementById("memPhone").value="";
-  document.getElementById("memResidence").value="";
-  document.getElementById("memNRC").value="";
-  document.getElementById("memEmail").value="";
-  document.getElementById("memPhoto").value="";
-}
-function sendMembership(){
-  const name=document.getElementById("memName").value;
-  const phone=document.getElementById("memPhone").value;
-  const residence=document.getElementById("memResidence").value;
-  const nrc=document.getElementById("memNRC").value;
-  const email=document.getElementById("memEmail").value;
-  const photo=document.getElementById("memPhoto").files[0];
-
-  if(!name||!phone||!residence||!nrc||!email||!photo){
-    alert("Please fill all details and attach photo.");
-    return;
-  }
-
-  const reader=new FileReader();
-  reader.onload=function(e){
-    const imgData=e.target.result;
-    const message=`Membership Details:\nName: ${name}\nPhone: ${phone}\nResidence: ${residence}\nNRC: ${nrc}\nEmail: ${email}`;
-    const whatsappNumbers=["260979554970","260978548813"];
-    whatsappNumbers.forEach(num=>{
-      window.open(`https://wa.me/${num}?text=${encodeURIComponent(message)}`, "_blank");
-    });
-    alert("Membership sent to WhatsApp!");
-    resetMembershipForm();
-  };
-  reader.readAsDataURL(photo);
-}
-
-// Tithe functions
-function showTitheInfo(){
-  document.getElementById("titheInfo").style.display="block";
-  document.getElementById("membershipForm").style.display="none";
-}
-
-// Service Timer
-const day=new Date().getDay();
-const isSunday=day===0;
 
 const scriptures={
 1:"Psalm 1:1–2 – Blessed is the man who delights in the law of the Lord",
@@ -191,9 +144,52 @@ function nextSunday(){const d=new Date(); d.setDate(d.getDate()+((7-d.getDay())%
 function format(sec){const d=Math.floor(sec/86400); const h=Math.floor((sec%86400)/3600); const m=Math.floor((sec%3600)/60); const s=sec%60; return `${d}d ${h}h ${m}m ${s}s`;}
 function parseTime(t){const [h,m]=t.split(":"); const d=new Date(); return new Date(d.getFullYear(),d.getMonth(),d.getDate(),h,m,0); }
 
-let lastActive="";
-let scripturePlayed=false;
+let lastActive = "";
+let scripturePlayed = false;
 
+// ---- Membership Functions ----
+function showMembershipForm(){
+  document.getElementById("membershipForm").style.display="block";
+  document.getElementById("titheInfo").style.display="none";
+}
+function showTitheInfo(){
+  document.getElementById("titheInfo").style.display="block";
+  document.getElementById("membershipForm").style.display="none";
+}
+function clearMembershipForm(){
+  document.getElementById("memberName").value="";
+  document.getElementById("memberPhone").value="";
+  document.getElementById("memberNRC").value="";
+  document.getElementById("memberEmail").value="";
+  document.getElementById("memberResidence").value="";
+  document.getElementById("memberPhoto").value="";
+}
+
+function sendMembership(){
+  const name=document.getElementById("memberName").value;
+  const phone=document.getElementById("memberPhone").value;
+  const nrc=document.getElementById("memberNRC").value;
+  const email=document.getElementById("memberEmail").value;
+  const residence=document.getElementById("memberResidence").value;
+  const photo=document.getElementById("memberPhoto").files[0];
+
+  if(!name || !phone || !nrc || !email || !residence){
+    alert("Please fill in all details!");
+    return;
+  }
+
+  let message=`📝 Membership Registration\nName: ${name}\nPhone: ${phone}\nNRC: ${nrc}\nEmail: ${email}\nResidence: ${residence}`;
+  if(photo) message += `\nPhoto attached manually`;
+
+  const numbers=["260979554970","260978548813"];
+  numbers.forEach(num=>{
+    window.open(`https://wa.me/${num}?text=${encodeURIComponent(message)}`, "_blank");
+  });
+
+  alert("Membership details opened in WhatsApp. Attach photo manually if selected.");
+}
+
+// ---- Service Timer ----
 function update(){
   const now=new Date();
 
@@ -210,7 +206,6 @@ function update(){
   document.getElementById("sundayContent").style.display="block";
   const rows=document.querySelectorAll("tr[data-start]");
   let activeFound=false;
-
   rows.forEach(r=>r.classList.remove("current-program","next-program"));
 
   for(let i=0;i<rows.length;i++){
@@ -223,9 +218,9 @@ function update(){
 
       const nextText=i+1<rows.length ? rows[i+1].children[1].innerText : "End of Service";
 
-      const remainingSec = Math.floor((e - now) / 1000);
-      const remMin = Math.floor(remainingSec / 60);
-      const remSec = remainingSec % 60;
+      const remainingSec=Math.floor((e-now)/1000);
+      const remMin=Math.floor(remainingSec/60);
+      const remSec=remainingSec%60;
 
       document.getElementById("timerBox").innerHTML=
       `🕒 NOW: <span>${rows[i].children[1].innerText}</span><br>
@@ -243,15 +238,14 @@ function update(){
   }
 
   if(!activeFound){
-    const firstService=parseTime("09:00");
-    const lastService=parseTime("18:30");
-    if(now<firstService){
-      const diff=Math.floor((firstService-now)/1000);
+    const start=parseTime("09:00");
+    const end=parseTime("18:30");
+    if(now<start){
+      const diff=Math.floor((start-now)/1000);
       document.getElementById("timerBox").innerHTML=
-        `⏳ Morning Service starts in <span>${Math.floor(diff/3600)}h ${Math.floor((diff%3600)/60)}m</span>`;
-    }else if(now>lastService){
-      document.getElementById("timerBox").innerHTML=
-        `✅ All services for today have ended<br>🙏 Thank you for worshipping with us`;
+        `⏳ Service starts at 09:00<br>Countdown: <span>${Math.floor(diff/3600)}h ${Math.floor((diff%3600)/60)}m</span>`;
+    } else if(now>end){
+      document.getElementById("timerBox").innerHTML=`✅ All services for today have ended<br>🙏 Thank you for worshipping with us`;
     }
   }
 }
