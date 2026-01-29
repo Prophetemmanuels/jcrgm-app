@@ -197,17 +197,21 @@ function sendMembership(){
 }
 
 // Payments via USSD
-function makePayment(){
-  window.location.href = "tel:*115%23";
-}
+function makePayment(){ window.location.href = "tel:*115%23"; }
 
-// Sunday Timer Helpers
+// Timer Helpers
 function parseTime(t){const [h,m]=t.split(":"); const d=new Date(); return new Date(d.getFullYear(),d.getMonth(),d.getDate(),h,m,0);}
-function format(sec){const m=Math.floor(sec/60); const s=sec%60; return `${m}m ${s}s`;}
-let lastActive = "";
-let scripturePlayed = false;
-const day=new Date().getDay();
-const isSunday=day===0;
+function formatDHMS(sec){
+    const d=Math.floor(sec/86400); sec%=86400;
+    const h=Math.floor(sec/3600); sec%=3600;
+    const m=Math.floor(sec/60); const s=sec%60;
+    return `${d}d ${h}h ${m}m ${s}s`;
+}
+function formatMS(sec){const m=Math.floor(sec/60); const s=sec%60; return `${m}m ${s}s`;}
+
+// Sunday Check
+const day=new Date().getDay(); const isSunday=day===0;
+let scripturePlayed=false;
 
 // Scriptures
 const scriptures = [
@@ -217,45 +221,54 @@ const scriptures = [
   "Hebrews 4:12 – For the word of God is quick, and powerful, and sharper than any two-edged sword.",
   "John 8:32 – And ye shall know the truth, and the truth shall make you free."
 ];
-function getTodayScripture(){const index=new Date().getDay()%scriptures.length; return scriptures[index];}
+function getTodayScripture(){return scriptures[new Date().getDay()%scriptures.length];}
 
-function nextSunday(){const d=new Date(); d.setDate(d.getDate()+((7-d.getDay())%7||7)); d.setHours(9,0,0,0); return d;}
+function nextSunday(){
+    const d=new Date();
+    d.setDate(d.getDate()+((7-d.getDay())%7||7));
+    d.setHours(9,0,0,0);
+    return d;
+}
 
-// ✅ FIXED TIMER LOGIC
+// ✅ UPDATE TIMER
 function update(){
-  const now=new Date();
-  if(!isSunday){
-    document.getElementById("sundayContent").style.display="none";
-    document.getElementById("timerBox").innerHTML=`📖 Scripture<br>⏳ Countdown to Sunday: <span>${format(Math.floor((nextSunday()-now)/1000))}</span>`; 
-    if(!scripturePlayed){document.getElementById("scriptureSound").play(); scripturePlayed=true;}
-    document.getElementById("scriptureBox").style.display="block";
-    document.getElementById("scriptureText").innerText = getTodayScripture();
-    return;
-  }
+    const now=new Date();
 
-  document.getElementById("sundayContent").style.display="block";
-  const programs=document.querySelectorAll("#sundayContent table tr[data-start]");
-  let current=null, next=null;
+    if(!isSunday){
+        document.getElementById("sundayContent").style.display="none";
+        const diff=Math.floor((nextSunday()-now)/1000);
+        document.getElementById("timerBox").innerHTML=`📖 Scripture<br>⏳ Countdown to Sunday: <span>${formatDHMS(diff)}</span>`;
+        if(!scripturePlayed){document.getElementById("scriptureSound").play(); scripturePlayed=true;}
+        document.getElementById("scriptureBox").style.display="block";
+        document.getElementById("scriptureText").innerText = getTodayScripture();
+        return;
+    }
 
-  programs.forEach(row=>{
-    const start=parseTime(row.dataset.start);
-    const end=parseTime(row.dataset.end);
-    row.classList.remove("current-program","next-program");
+    document.getElementById("sundayContent").style.display="block";
+    const programs=document.querySelectorAll("#sundayContent table tr[data-start]");
+    let current=null, next=null;
 
-    if(now>=start && now<=end){current={row,end}; row.classList.add("current-program");}
-    else if(!next && now<start){next={row,start};}
-  });
+    programs.forEach(row=>{
+        const start=parseTime(row.dataset.start);
+        const end=parseTime(row.dataset.end);
+        row.classList.remove("current-program","next-program");
 
-  if(next) next.row.classList.add("next-program");
+        if(now>=start && now<=end){ current={row,end}; row.classList.add("current-program"); }
+        else if(!next && now<start){ next={row,start}; }
+    });
 
-  if(current){
-    const remaining=Math.floor((current.end-now)/1000);
-    const nextText=next? next.row.cells[1].innerText+" ("+next.row.cells[0].innerText+")":"None";
-    document.getElementById("timerBox").innerHTML=`⏱ Current Program Remaining: <span>${format(remaining)}</span><br>▶ Next Program: <span>${nextText}</span>`;
-  } else if(next){
-    const wait=Math.floor((next.start-now)/1000);
-    document.getElementById("timerBox").innerHTML=`⏳ Next Program Starts In: <span>${format(wait)}</span><br>▶ ${next.row.cells[1].innerText}`;
-  } else {document.getElementById("timerBox").innerText="All programs completed.";}
+    if(next) next.row.classList.add("next-program");
+
+    if(current){
+        const remaining=Math.floor((current.end-now)/1000);
+        const nextText=next? next.row.cells[1].innerText+" ("+next.row.cells[0].innerText+")":"None";
+        document.getElementById("timerBox").innerHTML=`⏱ Current Program Remaining: <span>${formatMS(remaining)}</span><br>▶ Next Program: <span>${nextText}</span>`;
+    } else if(next){
+        const wait=Math.floor((next.start-now)/1000);
+        document.getElementById("timerBox").innerHTML=`⏳ Next Program Starts In: <span>${formatMS(wait)}</span><br>▶ ${next.row.cells[1].innerText}`;
+    } else {
+        document.getElementById("timerBox").innerText="All programs completed.";
+    }
 }
 
 update();
