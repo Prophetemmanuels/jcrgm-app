@@ -203,7 +203,7 @@ function makePayment(){
 
 // Sunday Timer Helpers
 function parseTime(t){const [h,m]=t.split(":"); const d=new Date(); return new Date(d.getFullYear(),d.getMonth(),d.getDate(),h,m,0);}
-function format(sec){const d=Math.floor(sec/86400); const h=Math.floor((sec%86400)/3600); const m=Math.floor((sec%3600)/60); const s=sec%60; return `${d}d ${h}h ${m}m ${s}s`;}
+function format(sec){const m=Math.floor(sec/60); const s=sec%60; return `${m}m ${s}s`;}
 let lastActive = "";
 let scripturePlayed = false;
 const day=new Date().getDay();
@@ -221,6 +221,7 @@ function getTodayScripture(){const index=new Date().getDay()%scriptures.length; 
 
 function nextSunday(){const d=new Date(); d.setDate(d.getDate()+((7-d.getDay())%7||7)); d.setHours(9,0,0,0); return d;}
 
+// ✅ FIXED TIMER LOGIC
 function update(){
   const now=new Date();
   if(!isSunday){
@@ -234,15 +235,27 @@ function update(){
 
   document.getElementById("sundayContent").style.display="block";
   const programs=document.querySelectorAll("#sundayContent table tr[data-start]");
-  let found=false;
+  let current=null, next=null;
+
   programs.forEach(row=>{
     const start=parseTime(row.dataset.start);
     const end=parseTime(row.dataset.end);
     row.classList.remove("current-program","next-program");
-    if(now>=start && now<=end){row.classList.add("current-program"); found=true;}
-    else if(!found && now<start){row.classList.add("next-program"); found=true;}
+
+    if(now>=start && now<=end){current={row,end}; row.classList.add("current-program");}
+    else if(!next && now<start){next={row,start};}
   });
-  document.getElementById("timerBox").innerText="Next program updates automatically.";
+
+  if(next) next.row.classList.add("next-program");
+
+  if(current){
+    const remaining=Math.floor((current.end-now)/1000);
+    const nextText=next? next.row.cells[1].innerText+" ("+next.row.cells[0].innerText+")":"None";
+    document.getElementById("timerBox").innerHTML=`⏱ Current Program Remaining: <span>${format(remaining)}</span><br>▶ Next Program: <span>${nextText}</span>`;
+  } else if(next){
+    const wait=Math.floor((next.start-now)/1000);
+    document.getElementById("timerBox").innerHTML=`⏳ Next Program Starts In: <span>${format(wait)}</span><br>▶ ${next.row.cells[1].innerText}`;
+  } else {document.getElementById("timerBox").innerText="All programs completed.";}
 }
 
 update();
