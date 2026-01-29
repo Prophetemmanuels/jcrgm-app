@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jcrgm-cache-v2';
+const CACHE_NAME = 'jcrgm-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -23,5 +23,5 @@ self.addEventListener('activate', event => {
 
 // Fetch
 self.addEventListener('fetch', event => {
-  event.respondWith(caches.match(event.request).then(response => response || fetch
-::contentReference[oaicite:0]{index=0}
+  event.respondWith(caches.match(event.request).then(response => response || fetch(event.request)));
+});

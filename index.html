@@ -19,7 +19,7 @@ button:hover {opacity:0.9;}
 .games {background:#ff9800;}
 .meditation {background:#8e44ad;}
 .youtube {background:#ff0000;}
-.payments {background:#28a745;} /* New payments button */
+.payments {background:#27ae60;}
 .container {max-width:1000px; margin:30px auto; background:#fff; padding:30px; box-shadow:0 0 12px rgba(0,0,0,0.1);}
 .timer-box {background:#1f3c88; color:#fff; padding:25px; font-size:26px; text-align:center; border-radius:6px; margin-bottom:30px;}
 .timer-box span {color:#ffd700; font-weight:bold;}
@@ -59,7 +59,15 @@ footer {background:#2c3e50; color:#fff; text-align:center; padding:15px;}
 <div class="timer-box" id="timerBox">Loading…</div>
 
 <!-- Scripture Box -->
-<div id="scriptureBox" style="display:none; margin-top:20px; padding:20px; background:#f9f9f9; border-left:6px solid #1f3c88; font-size:20px; line-height:1.6;">
+<div id="scriptureBox" style="
+  display:none;
+  margin-top:20px;
+  padding:20px;
+  background:#f9f9f9;
+  border-left:6px solid #1f3c88;
+  font-size:20px;
+  line-height:1.6;
+">
 📖 <strong>Scripture Reading</strong><br>
 <span id="scriptureText"></span>
 </div>
@@ -97,9 +105,25 @@ footer {background:#2c3e50; color:#fff; text-align:center; padding:15px;}
 <tr><th>Date</th><th>Event</th><th>Program</th><th>Time</th><th>Venue</th></tr>
 </thead>
 <tbody id="calendarBody">
-<!-- Include all your events here -->
 <tr><td>2026-01-01</td><td>NEW YEAR</td><td>YEARS BLESSINGS</td><td>00:01HRS</td><td>PAMI CHURCH</td></tr>
-<!-- ... add all other events ... -->
+<tr><td>2026-02-14</td><td>PEDAHZUR SUPPORT TEAM</td><td>Support Meeting</td><td>14HRS</td><td>AS DIRECTED</td></tr>
+<tr><td>2026-03-05</td><td>WOMEN DAY</td><td>Women Sunday</td><td>09:30 – 13:30</td><td>PAMI CHURCH</td></tr>
+<tr><td>2026-03-12</td><td>YOUTH DAY</td><td>Youth Sunday</td><td>09:30</td><td>PAMI CHURCH</td></tr>
+<tr><td>2026-04-14</td><td>GOOD FRIDAY</td><td>PRAYER SUMMIT</td><td>14HRS - 17HRS</td><td>AS DIRECTED</td></tr>
+<tr><td>2026-04-15</td><td>HOLY SATURDAY</td><td>PRAYER SUMMIT</td><td>14HRS - 17HRS</td><td>AS DIRECTED</td></tr>
+<tr><td>2026-04-16</td><td>RESSURECTION SUNDAY</td><td>REDEMPTION SUNDAY</td><td>09:00 – 13:30</td><td>PAMI CHURCH</td></tr>
+<tr><td>2026-04-17</td><td>EASTER</td><td>PRAYER SUMMIT</td><td>14HRS - 17HRS</td><td>AS DIRECTED</td></tr>
+<tr><td>2026-05-01</td><td>LABOR DAY</td><td>MOUNTAIN PRAYERS</td><td>08:00 – 16:00</td><td>PAMI CHURCH</td></tr>
+<tr><td>2026-05-25</td><td>AFRICA FREEDOM DAY</td><td>MOUNTAIN PRAYERS</td><td>08:00 – 16:00</td><td>PAMI CHURCH</td></tr>
+<tr><td>2026-07-03</td><td>HEROS DAY</td><td>MOUNTAIN PRAYER CAMP</td><td>20HRS</td><td>PAMI CHURCH</td></tr>
+<tr><td>2026-07-04</td><td>UNITY DAY</td><td>PRAYER CAMP</td><td>04HRS</td><td>PAMI CHURCH</td></tr>
+<tr><td>2026-08-07</td><td>FARMERS DAY</td><td>CONGREGATIONAL THANKS GIVING SERVICE</td><td>14HRS – 17HRS</td><td>AS DIRECTED</td></tr>
+<tr><td>2026-08-08</td><td>PAMI ANNIVERSARY</td><td>Anniversary Celebration</td><td>14HRS</td><td>AS DIRECTED</td></tr>
+<tr><td>2026-08-23</td><td>PEDAHZUR SUPPORT TEAM</td><td>Support Meeting</td><td>14:00HRS</td><td>PAMI CHURCH</td></tr>
+<tr><td>2026-10-18</td><td>NATIONAL PRAYER DAY</td><td>ZOOM PROPHETIC SERVICE</td><td>21:30HRS</td><td>ZOOM</td></tr>
+<tr><td>2026-10-24</td><td>INDEPENDENCE DAY</td><td>ZOOM PROPHETIC SERVICE</td><td>21:30HRS</td><td>ZOOM</td></tr>
+<tr><td>2026-12-25</td><td>CHRISTMAS DAY</td><td>CHRISTMAS CELEBRATION</td><td>14HRS</td><td>AS DIRECTED</td></tr>
+<tr><td>2026-12-31</td><td>NEW YEARS EVE</td><td>CROSSOVER NIGHT</td><td>20HRS – 04HRS</td><td>PAMI CHURCH</td></tr>
 </tbody>
 </table>
 </div>
@@ -138,11 +162,14 @@ Phone: 0979554970 | Email: pedahzurministries@gmail.com<br>
 © <span id="year"></span> Jesus Christ Redeems Global Ministries
 </footer>
 
-<audio id="alertSound"><source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
-<audio id="scriptureSound"><source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+<audio id="alertSound">
+<source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
+</audio>
+<audio id="scriptureSound">
+<source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg">
+</audio>
 
 <script>
-// PWA Service Worker
 if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js');}
 
 // Display date & year
@@ -169,7 +196,7 @@ function sendMembership(){
   window.open(url,'_blank');
 }
 
-// Make Payments (USSD)
+// Payments via USSD
 function makePayment(){
   window.location.href = "tel:*115%23";
 }
@@ -198,7 +225,7 @@ function update(){
   const now=new Date();
   if(!isSunday){
     document.getElementById("sundayContent").style.display="none";
-    document.getElementById("timerBox").innerHTML=`📖 Scripture<br>⏳ Countdown to Sunday: <span>${format(Math.floor((nextSunday()-now)/1000))}</span>`;
+    document.getElementById("timerBox").innerHTML=`📖 Scripture<br>⏳ Countdown to Sunday: <span>${format(Math.floor((nextSunday()-now)/1000))}</span>`; 
     if(!scripturePlayed){document.getElementById("scriptureSound").play(); scripturePlayed=true;}
     document.getElementById("scriptureBox").style.display="block";
     document.getElementById("scriptureText").innerText = getTodayScripture();
@@ -206,50 +233,20 @@ function update(){
   }
 
   document.getElementById("sundayContent").style.display="block";
-  const rows=document.querySelectorAll("tr[data-start]");
-  let activeFound=false;
-  rows.forEach(r=>r.classList.remove("current-program","next-program"));
-
-  for(let i=0;i<rows.length;i++){
-    const s=parseTime(rows[i].dataset.start);
-    const e=parseTime(rows[i].dataset.end);
-    if(now>=s && now<e){
-      rows[i].classList.add("current-program");
-      if(i+1<rows.length) rows[i+1].classList.add("next-program");
-
-      const nextText=i+1<rows.length ? rows[i+1].children[1].innerText : "End of Service";
-      const remainingSec=Math.floor((e-now)/1000);
-      const remMin=Math.floor(remainingSec/60);
-      const remSec=remainingSec%60;
-      document.getElementById("timerBox").innerHTML=`🕒 NOW: <span>${rows[i].children[1].innerText}</span><br>⏳ Remaining: <span>${remMin}m ${remSec}s</span><br>➡ NEXT: <span>${nextText}</span>`;
-
-      // Scripture display
-      if(rows[i].children[1].innerText.toLowerCase().includes("scripture")){
-        document.getElementById("scriptureBox").style.display="block";
-        document.getElementById("scriptureText").innerText = getTodayScripture();
-        if(!scripturePlayed){document.getElementById("scriptureSound").play(); scripturePlayed=true;}
-      } else {
-        document.getElementById("scriptureBox").style.display="none";
-      }
-
-      if(lastActive!==rows[i].children[1].innerText){document.getElementById("alertSound").play(); lastActive=rows[i].children[1].innerText;}
-      activeFound=true; break;
-    }
-  }
-  if(!activeFound){
-    const morning=parseTime("09:00");
-    const afternoon=parseTime("15:00");
-    const evening=parseTime("18:30");
-    if(now<morning){document.getElementById("timerBox").innerHTML=`⏳ Morning Service starts at 09:00hrs`;}
-    else if(now>=morning && now<afternoon){document.getElementById("timerBox").innerHTML=`✅ Morning Service Ended. Afternoon starts at 15:00hrs`;}
-    else if(now>=afternoon && now<evening){document.getElementById("timerBox").innerHTML=`✅ Afternoon Service Ongoing`;}
-    else{document.getElementById("timerBox").innerHTML=`✅ All services for today have ended<br>🙏 Thank you for worshipping with us`;}
-    document.getElementById("scriptureBox").style.display="none";
-  }
+  const programs=document.querySelectorAll("#sundayContent table tr[data-start]");
+  let found=false;
+  programs.forEach(row=>{
+    const start=parseTime(row.dataset.start);
+    const end=parseTime(row.dataset.end);
+    row.classList.remove("current-program","next-program");
+    if(now>=start && now<=end){row.classList.add("current-program"); found=true;}
+    else if(!found && now<start){row.classList.add("next-program"); found=true;}
+  });
+  document.getElementById("timerBox").innerText="Next program updates automatically.";
 }
 
-setInterval(update,1000);
 update();
+setInterval(update,1000);
 </script>
 </body>
 </html>
