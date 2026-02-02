@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jcrgm-cache-v4';
+const CACHE_NAME = 'jcrgm-cache-v3';
 
 const urlsToCache = [
   './',
