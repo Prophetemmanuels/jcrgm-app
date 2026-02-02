@@ -51,6 +51,7 @@ footer {background:#2c3e50; color:#fff; text-align:center; padding:15px;}
 <button onclick="showMembership()">📝 Membership</button>
 <button onclick="showTithes()">💰 Tithes & Offerings</button>
 <button onclick="showCalendar()">📅 Church Calendar</button>
+<button class="payments" onclick="openCrossover()">🌙 Crossover Night</button>
 <button class="payments" onclick="makePayment()">💳 Make Payments</button>
 </div>
 </header>
@@ -175,6 +176,9 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worke
 // Display date & year
 document.getElementById("serviceDate").innerText="Today: "+new Date().toDateString();
 document.getElementById("year").innerText=new Date().getFullYear();
+
+// Crossover Night Programme
+function openCrossover(){window.open('crossover.html', '_blank');}
 
 // Projector toggle
 function toggleProjector(){document.documentElement.classList.toggle("projector");}
