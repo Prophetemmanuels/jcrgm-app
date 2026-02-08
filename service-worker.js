@@ -1,4 +1,4 @@
-const CACHE_NAME = "jcrgm-v5";
+const CACHE_NAME = "jcrgm-v2";
 
 const ASSETS = [
   "./",
