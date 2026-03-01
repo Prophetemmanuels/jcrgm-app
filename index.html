@@ -57,6 +57,7 @@ footer {background:#2c3e50; color:#fff; text-align:center; padding:15px;}
 <button onclick="showMembership()">📝 Membership</button>
 <button onclick="showTithes()">💰 Tithes & Offerings</button>
 <button onclick="showCalendar()">📅 Church Calendar</button>
+<button class="meditation" onclick="openPrayerGuide()">🙏 Monthly Prayer Guide</button>
 <button onclick="openCrossover()" class="games">🌙 Crossover Programme</button>
 <button class="payments" onclick="makePayment()">💳 Make Payments</button>
 </div>
@@ -148,7 +149,7 @@ footer {background:#2c3e50; color:#fff; text-align:center; padding:15px;}
 <tr data-start="10:25" data-end="10:45"><td>10:25 – 10:45</td><td>Choir Ministration and Presentations</td></tr>
 <tr data-start="10:45" data-end="11:00"><td>10:45 – 11:00</td><td>Offering & Tithes</td></tr>
 <tr data-start="11:00" data-end="12:00"><td>11:00 – 12:00</td><td>Sermon</td></tr>
-<tr data-start="12:00" data-end="12:30"><td>12:00 – 12:30</td><td>Mass Prayer and Declarations then Closing Prayers</td></tr>
+<tr data-start="12:00" data-end="12:30"><td>12:00 – 12:30</td><td>Closing Prayers</td></tr>
 </table>
 
 <h2>Counselling and Afternoon Prophetic Service</h2>
@@ -192,6 +193,7 @@ function showMembership(){document.getElementById('membershipContent').style.dis
 function showTithes(){document.getElementById('tithesContent').style.display='block';document.getElementById('tithesContent').scrollIntoView({behavior:'smooth'});}
 function showCalendar(){document.getElementById('calendarContent').style.display='block';document.getElementById('calendarContent').scrollIntoView({behavior:'smooth'});}
 function openCrossover(){ window.location.href = "crossover.html";}
+function openPrayerGuide(){window.location.href = "prayer-guide.html";}
 
 // Membership WhatsApp
 function sendMembership(){
@@ -285,7 +287,6 @@ setInterval(update,1000);
 </script>
 </body>
 </html>
-
 
 
 

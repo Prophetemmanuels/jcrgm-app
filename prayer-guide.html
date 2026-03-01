@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JCRGM Monthly Prayer Guide</title>
+
+<style>
+body{
+    margin:0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#1e3c72);
+    background-size:400% 400%;
+    animation: gradientBG 15s ease infinite;
+    color:white;
+}
+
+@keyframes gradientBG{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+header{
+    text-align:center;
+    padding:60px 20px;
+}
+
+header h1{
+    font-size:34px;
+    margin:0;
+    letter-spacing:1px;
+}
+
+header h2{
+    margin-top:10px;
+    font-weight:300;
+    color:#ffd700;
+}
+
+.datetime{
+    margin-top:20px;
+    font-size:18px;
+    font-weight:500;
+    background:rgba(255,255,255,0.1);
+    display:inline-block;
+    padding:10px 20px;
+    border-radius:30px;
+    backdrop-filter:blur(5px);
+}
+
+.section{
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:rgba(255,255,255,0.08);
+    padding:30px;
+    margin-bottom:25px;
+    border-radius:15px;
+    backdrop-filter:blur(10px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.4);
+    transition:0.4s ease;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 12px 30px rgba(0,0,0,0.6);
+}
+
+.card h3{
+    color:#ffd700;
+    margin-top:0;
+}
+
+.scripture{
+    font-style:italic;
+    font-size:18px;
+    line-height:1.6;
+    border-left:4px solid #ffd700;
+    padding-left:15px;
+}
+
+.programme-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.programme-table th,
+.programme-table td{
+    padding:12px;
+    border-bottom:1px solid rgba(255,255,255,0.2);
+    text-align:center;
+}
+
+.programme-table th{
+    color:#ffd700;
+}
+
+ul{
+    line-height:1.8;
+}
+
+.declaration{
+    font-weight:bold;
+    font-size:18px;
+    color:#ffd700;
+}
+
+footer{
+    text-align:center;
+    padding:30px;
+    font-size:14px;
+    opacity:0.8;
+}
+
+@media(max-width:768px){
+    header h1{
+        font-size:24px;
+    }
+}
+
+.today-highlight{
+    background:rgba(255,215,0,0.15);
+    border-left:5px solid #ffd700;
+    padding:10px;
+    border-radius:8px;
+    box-shadow:0 0 15px rgba(255,215,0,0.6);
+    transition:0.4s ease;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Jesus Christ Redeems Global Ministries</h1>
+    <h2>Monthly Prayer Guide – SEPTEMBER 2026</h2>
+
+    <div class="datetime">
+        <span id="date"></span> | <span id="clock"></span>
+    </div>
+</header>
+
+<div class="section">
+
+    <div class="card">
+        <h3>🔥 Meditation Scripture</h3>
+        <div class="scripture">
+            "Call to Me and I will answer you, and show you great and mighty things which you do not know." – Jeremiah 33:3
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>🕊 Prayer Programme Schedule</h3>
+        <table class="programme-table">
+            <tr>
+                <th>Time</th>
+                <th>Duration</th>
+                <th>Scripture Focus</th>
+            </tr>
+            <tr>
+                <td>03:00 HRS</td>
+                <td>1 Hour Prayer</td>
+                <td>1 John 1:9</td>
+            </tr>
+            <tr>
+                <td>15:00 HRS</td>
+                <td>25 Minutes</td>
+                <td>Romans 8:34</td>
+            </tr>
+            <tr>
+                <td>21:00 HRS</td>
+                <td>30 Minutes</td>
+                <td>Luke 23:34</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <h3>🎯 Monthly Prayer Targets</h3>
+        <ul>
+           <div class="card">
+    <h3>🎯 Monthly Prayer Targets (Day-by-Day Guide)</h3>
+
+    <!-- WEEK 1 -->
+    <h4 style="color:#ffd700;">Day 1–7: Personal Intercession & Reconnection with God</h4>
+    <ol>
+        <li id="day1"><strong>Day 1:</strong> Repentance and cleansing of the heart</li>
+        <li id="day2"><strong>Day 2:</strong> Forgiveness and spiritual renewal</li>
+        <li id="day3"><strong>Day 3:</strong> Healing from past spiritual wounds</li>
+        <li id="day4"><strong>Day 4:</strong> Restoring intimacy with the Holy Spirit</li>
+        <li id="day5"><strong>Day 5:</strong> Breaking spiritual dryness and stagnation</li>
+        <li id="day6"><strong>Day 6:</strong> Renewing passion for prayer and the Word</li>
+        <li id="day7"><strong>Day 7:</strong> Total surrender and rededication to God</li>
+    </ol>
+
+    <!-- WEEK 2 -->
+    <h4 style="color:#ffd700;">Day 8–14: Restoration of Purpose & Alignment</h4>
+    <ol start="8">
+        <li id="day8"><strong>Day 8:</strong> Rediscovering divine identity</li>
+        <li id="day9"><strong>Day 9:</strong> Clarity of calling and assignment</li>
+        <li id="day10"><strong>Day 10:</strong> Breaking distractions and confusion</li>
+        <li id="day11"><strong>Day 11:</strong> Alignment with God’s timing</li>
+        <li id="day12"><strong>Day 12:</strong> Grace to walk in obedience</li>
+        <li id="day13"><strong>Day 13:</strong> Restoration of lost opportunities</li>
+        <li><strong>Day 14:</strong> Establishment in divine purpose</li>
+    </ol>
+
+    <!-- WEEK 3 -->
+    <h4 style="color:#ffd700;">Day 15–21: Spiritual Strength & Ability</h4>
+    <ol start="15">
+        <li id="day15"><strong>Day 15:</strong> Strength in the inner man</li>
+        <li id="day16"><strong>Day 16:</strong> Grace to overcome temptation</li>
+        <li id="day17"><strong>Day 17:</strong> Activation of spiritual gifts</li>
+        <li id="day18"><strong>Day 18:</strong> Boldness and spiritual authority</li>
+        <li id="day19"><strong>Day 19:</strong> Discernment and sensitivity to the Spirit</li>
+        <li id="day20"><strong>Day 20:</strong> Endurance and perseverance</li>
+        <li id="day21"><strong>Day 21:</strong> Victory over spiritual battles</li>
+    </ol>
+
+    <!-- WEEK 4 -->
+    <h4 style="color:#ffd700;">Day 22–28: God’s Glory & Favor</h4>
+    <ol start="22">
+        <li id="day22"><strong>Day 22:</strong> Manifestation of God's presence</li>
+        <li id="day23"><strong>Day 23:</strong> Divine favor before men</li>
+        <li id="day24"><strong>Day 24:</strong> Supernatural doors and opportunities</li>
+        <li id="day25"><strong>Day 25:</strong> Financial grace and provision</li>
+        <li id="day26"><strong>Day 26:</strong> Family restoration and peace</li>
+        <li id="day27"><strong>Day 27:</strong> Influence and kingdom relevance</li>
+        <li id="day28"><strong>Day 28:</strong> Overflow of blessings</li>
+    </ol>
+
+    <!-- FINAL DAYS -->
+    <h4 style="color:#ffd700;">Day 29–End: Elevation & Promotion</h4>
+    <ol start="29">
+        <li id="day29"><strong>Day 29:</strong> Divine elevation</li>
+        <li id="day30><strong>Day 30:</strong> Promotion and establishment</li>
+        <li id="day31"><strong>Day 31:</strong> Thanksgiving & Prophetic Declaration for the next month</li>
+    </ol>
+</div>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>✨ Monthly Declaration</h3>
+        <div class="declaration">
+            May God Almighty give you the strength not only to pray,
+            but to become all that He has ordained for your life.
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Authorized By</h3>
+        <p>
+            Bishop Emmanuel Sakala <br>
+            Founder – JCRGM
+        </p>
+    </div>
+
+</div>
+
+<footer>
+    © 2026 JCRGM | Life in the Spirit
+</footer>
+
+<script>
+function updateDateTime(){
+    const now = new Date();
+
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById("date").innerHTML = now.toLocaleDateString(undefined, dateOptions);
+
+    document.getElementById("clock").innerHTML = now.toLocaleTimeString();
+}
+
+setInterval(updateDateTime, 1000);
+updateDateTime();
+</script>
+
+<script>
+function highlightTodayPrayer(){
+    const today = new Date().getDate(); // Gets day number (1-31)
+    const todayElement = document.getElementById("day" + today);
+
+    if(todayElement){
+        todayElement.classList.add("today-highlight");
+        todayElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+}
+
+highlightTodayPrayer();
+</script>
+
+</body>
+</html>
