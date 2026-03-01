@@ -1,4 +1,4 @@
-const CACHE_NAME = "jcrgm-v3";
+const CACHE_NAME = "jcrgm-v4";
 
 const ASSETS = [
   "./",
@@ -31,4 +31,5 @@ self.addEventListener("fetch", event => {
     )
   );
 });
+
 
