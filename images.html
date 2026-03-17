@@ -61,13 +61,24 @@
 <body>
 
 <h1>Church Members</h1>
+  <div style="text-align:center; margin-top:15px;">
+  <input 
+    type="text" 
+    id="searchInput" 
+    placeholder="Search member name..." 
+    style="padding:8px; width:200px; border-radius:5px; border:1px solid #ccc;"
+  >
+  
+  <button onclick="searchMembers()" 
+    style="padding:8px 12px; border:none; background:#1f3c88; color:white; border-radius:5px; cursor:pointer;">
+    Search
+  </button>
+</div>
 <div class="gallery" id="gallery"></div>
 
 <script>
-  // Supported image extensions
   const extensions = ["jpg", "jpeg", "png", "webp"];
 
-  // Member names only (NO extensions here)
   const members = [
     { id: 1, name: "Emmanuel Sakala" },
     { id: 2, name: "Vivien Sakala" },
@@ -76,7 +87,7 @@
     { id: 5, name: "Angela Chanda" },
     { id: 6, name: "Mercy Nalavwe" },
     { id: 7, name: "Fostina Mwanza" },
-    { id: 8, name: " Patrick Daka" },
+    { id: 8, name: "Patrick Daka" },
     { id: 9, name: "Andrew Mukobeka Jnr" },
     { id: 10, name: "Exildah Mwala" },
     { id: 11, name: "Hope Miyoba" },
@@ -107,13 +118,12 @@
 
   const gallery = document.getElementById('gallery');
 
-  // Function to find correct image extension
   function loadImage(img, baseName) {
     let index = 0;
 
     function tryNext() {
       if (index >= extensions.length) {
-        img.src = "images/default.png"; // fallback image (optional)
+        img.src = "images/default.png";
         return;
       }
 
@@ -135,25 +145,42 @@
     tryNext();
   }
 
-  members.forEach(member => {
-    const card = document.createElement('div');
-    card.className = 'member-card';
+  // 🔥 Render function (important for search)
+  function renderMembers(list) {
+    gallery.innerHTML = "";
 
-    const img = document.createElement('img');
-    const baseName = `member (${member.id})`;
+    list.forEach(member => {
+      const card = document.createElement('div');
+      card.className = 'member-card';
 
-    loadImage(img, baseName);
+      const img = document.createElement('img');
+      const baseName = `member (${member.id})`;
 
-    img.alt = member.name;
+      loadImage(img, baseName);
 
-    const name = document.createElement('div');
-    name.className = 'member-name';
-    name.innerText = member.name;
+      const name = document.createElement('div');
+      name.className = 'member-name';
+      name.innerText = member.name;
 
-    card.appendChild(img);
-    card.appendChild(name);
-    gallery.appendChild(card);
-  });
+      card.appendChild(img);
+      card.appendChild(name);
+      gallery.appendChild(card);
+    });
+  }
+
+  // 🔍 Search function
+  function searchMembers() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+
+    const filtered = members.filter(member =>
+      member.name.toLowerCase().includes(input)
+    );
+
+    renderMembers(filtered);
+  }
+
+  // 🔥 Initial load
+  renderMembers(members);
 </script>
 
 </body>
