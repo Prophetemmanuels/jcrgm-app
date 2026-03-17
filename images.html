@@ -64,43 +64,76 @@
 <div class="gallery" id="gallery"></div>
 
 <script>
-  // Array of member images and their names
+  // Supported image extensions
+  const extensions = ["jpg", "jpeg", "png", "webp"];
+
+  // Member names only (NO extensions here)
   const members = [
-    { src: "member (1).jpg", name: "Emmanuel Sakala" },
-    { src: "member (2).jpg", name: "Vivien Sakala" },
-    { src: "member (3).jpg", name: "Esther Mukobeka" },
-    { src: "member (4).jpg", name: "Serah Nalavwe" },
-    { src: "member (5).jpg", name: " Angela Chanda" },
-    { src: "member (6).jpg", name: "Mercy Nalavwe" },
-    { src: "member (7).jpg", name: "Fostina Mwanza" },
-    { src: "member (8).jpg", name: "" },
-    { src: "member (9).jpg", name: "" },
-    { src: "member (10).jpg", name: "" },
-    { src: "member (11).jpg", name: "" },
-    { src: "member (12).jpg", name: "" },
-    { src: "member (13).jpg", name: "" },
-    { src: "member (14).jpg", name: "" },
-    { src: "member (16).jpg", name: "" },
-    { src: "member (17).jpg", name: "" },
-    { src: "member (18).jpg", name: "" },
-    { src: "member (19).jpg", name: "" },
-    { src: "member (20).jpg", name: "" },
-    { src: "member (21).jpg", name: "" },
-    { src: "member (22).jpg", name: "" },
-    { src: "member (23).jpg", name: "" },
-    { src: "member (24).jpg", name: "" },
-    { src: "member (25).jpg", name: "" }
-    // Add more members here
+    { id: 1, name: "Emmanuel Sakala" },
+    { id: 2, name: "Vivien Sakala" },
+    { id: 3, name: "Esther Mukobeka" },
+    { id: 4, name: "Serah Nalavwe" },
+    { id: 5, name: "Angela Chanda" },
+    { id: 6, name: "Mercy Nalavwe" },
+    { id: 7, name: "Fostina Mwanza" },
+    { id: 8, name: "" },
+    { id: 9, name: "" },
+    { id: 10, name: "" },
+    { id: 11, name: "" },
+    { id: 12, name: "" },
+    { id: 13, name: "" },
+    { id: 14, name: "" },
+    { id: 16, name: "" },
+    { id: 17, name: "" },
+    { id: 18, name: "" },
+    { id: 19, name: "" },
+    { id: 20, name: "" },
+    { id: 21, name: "" },
+    { id: 22, name: "" },
+    { id: 23, name: "" },
+    { id: 24, name: "" },
+    { id: 25, name: "" }
   ];
 
   const gallery = document.getElementById('gallery');
+
+  // Function to find correct image extension
+  function loadImage(img, baseName) {
+    let index = 0;
+
+    function tryNext() {
+      if (index >= extensions.length) {
+        img.src = "images/default.png"; // fallback image (optional)
+        return;
+      }
+
+      const testSrc = `images/${baseName}.${extensions[index]}`;
+      const testImg = new Image();
+
+      testImg.onload = function () {
+        img.src = testSrc;
+      };
+
+      testImg.onerror = function () {
+        index++;
+        tryNext();
+      };
+
+      testImg.src = testSrc;
+    }
+
+    tryNext();
+  }
 
   members.forEach(member => {
     const card = document.createElement('div');
     card.className = 'member-card';
 
     const img = document.createElement('img');
-    img.src = `images/${member.src}`;
+    const baseName = `member (${member.id})`;
+
+    loadImage(img, baseName);
+
     img.alt = member.name;
 
     const name = document.createElement('div');
