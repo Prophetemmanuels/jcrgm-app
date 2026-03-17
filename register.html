@@ -157,7 +157,7 @@ async function addMember(){
  const nrcVal = document.getElementById('nrc').value || 'N/A';
  let m = { id: Date.now(), index, name: nameVal, phone: phoneVal, address: addressVal, nrc: nrcVal, photo: croppedImage || autoPhoto };
  members.push(m);
- save(); display(); croppedImage=''; photoInput.value='';
+ save(); display(); displayViewer(); croppedImage=''; photoInput.value='';
 }
 
 function display(){
@@ -179,7 +179,7 @@ function displayViewer(){
  });
 }
 
-function del(id){ members=members.filter(m=>m.id!==id); save(); display(); }
+function del(id){ members=members.filter(m=>m.id!==id); save(); display(); displayViewer(); }
 
 async function showID(id){
  let m=members.find(x=>x.id===id);
@@ -211,6 +211,7 @@ function printAllIDs(){
 }
 
 display();
+displayViewer();
 </script>
 </body>
 </html>
