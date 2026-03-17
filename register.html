@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JCRGM Member Register</title>
+<title>JCRGM Member Directory</title>
 
 <link href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css" rel="stylesheet"/>
 <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
@@ -19,19 +19,12 @@ button{ padding:10px; margin-top:10px; cursor:pointer; }
 .member-card{ background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,0.1);} 
 .member-photo{ width:100%; height:250px; object-fit:cover; }
 .member-info{ padding:10px; }
-.id-card{ width:250px; height:350px; border:2px solid #000; padding:10px; text-align:center; background:#fff; margin:10px; display:inline-block; vertical-align:top; }
 .viewer-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:15px; }
 .viewer-card{ background:#fff; padding:10px; border-radius:8px; text-align:center; }
 .viewer-card img{ width:100%; height:150px; object-fit:cover; border-radius:6px; }
 #cropModal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;flex-direction:column; z-index:1000;}
 #cropModal img{max-width:300px; max-height:400px;}
 #cropModal.hidden{ display:none; }
-@media print {
- body * { visibility: hidden; }
- #printArea, #printArea * { visibility: visible; }
- #printArea { position: absolute; top:0; left:0; width:100%; }
- .id-card{ page-break-inside: avoid; display:inline-block; }
-}
 </style>
 </head>
 <body>
@@ -53,7 +46,6 @@ button{ padding:10px; margin-top:10px; cursor:pointer; }
 <input type="file" id="photoInput">
 <button onclick="addMember()">Add</button>
 <div id="members" class="members-grid"></div>
-<button onclick="printAllIDs()">Print All IDs</button>
 </div>
 
 <div id="viewer" class="container hidden">
@@ -69,16 +61,21 @@ button{ padding:10px; margin-top:10px; cursor:pointer; }
 </div>
 </div>
 
-<div id="printArea" class="hidden"></div>
-
 <script>
-let members = JSON.parse(localStorage.getItem('members'))||[];
+let members = [];
 let cropper, croppedImage='', currentID=null;
-
 const photoInput = document.getElementById('photoInput');
 const applyCropBtn = document.getElementById('applyCropBtn');
 photoInput.addEventListener('change', openCropper);
 applyCropBtn.addEventListener('click', applyCrop);
+
+async function fetchMembers(){
+  try{
+    const res = await fetch('https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO/members.json');
+    members = await res.json();
+    display(); displayViewer();
+  }catch(e){ console.log('Could not fetch members',e); }
+}
 
 function login(){
  const pw = document.getElementById('password').value;
@@ -93,10 +90,14 @@ function login(){
 function openViewer(){
  document.getElementById('login').classList.add('hidden');
  document.getElementById('viewer').classList.remove('hidden');
- displayViewer();
+ fetchMembers();
 }
 
-function save(){ localStorage.setItem('members',JSON.stringify(members)); }
+function save(){
+  // For admin: optionally update localStorage or JSON for GitHub update workflow
+  localStorage.setItem('members',JSON.stringify(members));
+  display(); displayViewer();
+}
 
 function openCropper(e){
  const file = e.target.files[0];
@@ -118,13 +119,13 @@ function applyCrop(){
  if(currentID){
   let m = members.find(x=>x.id===currentID);
   m.photo = canvas.toDataURL();
-  display(); displayViewer();
  } else {
   croppedImage = canvas.toDataURL();
  }
  cropper.destroy(); cropper=null;
  document.getElementById('cropModal').classList.add('hidden');
  currentID=null;
+ display(); displayViewer();
 }
 
 function cancelCrop(){
@@ -133,37 +134,21 @@ function cancelCrop(){
  currentID=null;
 }
 
-async function getAutoImage(index){
- const base = `photos/members (${index})`;
- const exts = ['.jpg','.png','.jpeg','.webp'];
- let i = 0;
- const img = new Image();
- function tryNext(resolve){
-   if(i>=exts.length) return resolve('https://via.placeholder.com/300x400');
-   const path = base + exts[i++];
-   img.onload = ()=> resolve(path);
-   img.onerror = ()=> tryNext(resolve);
-   img.src = path;
- }
- return new Promise(resolve=> tryNext(resolve));
-}
-
-async function addMember(){
- let index = members.length + 1;
- let autoPhoto = await getAutoImage(index);
+function addMember(){
  const nameVal = document.getElementById('name').value || 'No Name';
  const phoneVal = document.getElementById('phone').value || 'No Phone';
  const addressVal = document.getElementById('address').value || 'No Address';
  const nrcVal = document.getElementById('nrc').value || 'N/A';
- let m = { id: Date.now(), index, name: nameVal, phone: phoneVal, address: addressVal, nrc: nrcVal, photo: croppedImage || autoPhoto };
+ let m = { id: Date.now(), name: nameVal, phone: phoneVal, address: addressVal, nrc: nrcVal, photo: croppedImage || 'https://via.placeholder.com/300x400' };
  members.push(m);
- save(); display(); displayViewer(); croppedImage=''; photoInput.value='';
+ croppedImage=''; photoInput.value='';
+ save();
 }
 
 function display(){
  let c=document.getElementById('members'); c.innerHTML='';
  members.forEach(m=>{
-  c.innerHTML+=`<div class='member-card'><img src='${m.photo}' class='member-photo'><div class='member-info'><b>${m.name}</b><br><a href='tel:${m.phone}'>${m.phone}</a><br><button onclick='showID(${m.id})'>ID Card</button><button onclick='del(${m.id})'>Delete</button><button onclick='changePhoto(${m.id})'>Change Photo</button></div></div>`;
+  c.innerHTML+=`<div class='member-card'><img src='${m.photo}' class='member-photo'><div class='member-info'><b>${m.name}</b><br><a href='tel:${m.phone}'>${m.phone}</a><br><button onclick='changePhoto(${m.id})'>Change Photo</button></div></div>`;
  });
 }
 
@@ -179,39 +164,7 @@ function displayViewer(){
  });
 }
 
-function del(id){ members=members.filter(m=>m.id!==id); save(); display(); displayViewer(); }
-
-async function showID(id){
- let m=members.find(x=>x.id===id);
- currentID = m.id;
- let printArea = document.getElementById('printArea');
- printArea.classList.remove('hidden');
- printArea.innerHTML=`<div class='id-card'><h3>JCRGM MEMBER</h3><img src='${m.photo}' style='width:100px'><br><b>${m.name}</b><br>📞 ${m.phone}<br>📍 ${m.address}<br>🆔 ${m.nrc || 'N/A'}<br>💳 ID: ${m.id}</div>`;
-}
-
-function printAllIDs(){
- let printArea = document.getElementById('printArea');
- printArea.classList.remove('hidden');
- printArea.innerHTML = '';
- let idsPerPage = 8;
- for(let i=0;i<members.length;i+=idsPerPage){
-  let pageMembers = members.slice(i,i+idsPerPage);
-  let page = document.createElement('div');
-  page.style.pageBreakAfter = 'always';
-  pageMembers.forEach(m=>{
-   let div = document.createElement('div');
-   div.className='id-card';
-   div.innerHTML = `<h3>JCRGM MEMBER</h3><img src='${m.photo}' style='width:100px'><br><b>${m.name}</b><br>📞 ${m.phone}<br>📍 ${m.address}<br>🆔 ${m.nrc || 'N/A'}<br>💳 ID: ${m.id}`;
-   page.appendChild(div);
-  });
-  printArea.appendChild(page);
- }
- window.print();
- printArea.classList.add('hidden');
-}
-
 display();
-displayViewer();
 </script>
 </body>
 </html>
