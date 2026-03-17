@@ -55,6 +55,7 @@ footer {background:#2c3e50; color:#fff; text-align:center; padding:15px;}
 <a href="https://www.biblechallenger.com/" target="_blank"><button class="games">🎮 Christian Games</button></a>
 <a href="https://www.youtube.com/watch?v=785fnki4lsw&list=RD785fnki4lsw&start_radio=1" target="_blank"><button class="meditation">🎵 Prayer & Meditation</button></a>
 <button onclick="showMembership()">📝 Membership</button>
+<button onclick="openRegister()">📇 Member Register</button>
 <button onclick="showTithes()">💰 Tithes & Offerings</button>
 <button onclick="showCalendar()">📅 Church Calendar</button>
 <button class="meditation" onclick="openPrayerGuide()">🙏 Monthly Prayer Guide</button>
@@ -190,6 +191,7 @@ function toggleProjector(){document.documentElement.classList.toggle("projector"
 
 // Show sections
 function showMembership(){document.getElementById('membershipContent').style.display='block';document.getElementById('membershipContent').scrollIntoView({behavior:'smooth'});}
+function openRegister(){window.location.href = "register.html";}
 function showTithes(){document.getElementById('tithesContent').style.display='block';document.getElementById('tithesContent').scrollIntoView({behavior:'smooth'});}
 function showCalendar(){document.getElementById('calendarContent').style.display='block';document.getElementById('calendarContent').scrollIntoView({behavior:'smooth'});}
 function openCrossover(){ window.location.href = "crossover.html";}
