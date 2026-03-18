@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JCRGM Bible Institution</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #0b0f1a;
+  color: white;
+}
+
+header {
+  background: gold;
+  color: black;
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.container {
+  padding: 20px;
+}
+
+.level {
+  background: #121a2b;
+  margin-bottom: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.level:hover {
+  background: #1d2a44;
+}
+
+.lessons {
+  display: none;
+  margin-top: 10px;
+}
+
+.lesson {
+  background: #1c2740;
+  margin: 8px 0;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+button {
+  background: gold;
+  border: none;
+  padding: 6px 12px;
+  margin-top: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.search {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: none;
+}
+</style>
+</head>
+
+<body>
+
+<header>JCRGM BIBLE INSTITUTION</header>
+
+<div class="container">
+
+<input type="text" class="search" placeholder="Search lessons..." onkeyup="searchLessons(this.value)">
+
+<!-- FOUNDATION LEVEL -->
+<div class="level" onclick="toggle('foundation')">
+📘 Foundation Level
+<div id="foundation" class="lessons">
+  <div class="lesson">Salvation & New Birth <br><button onclick="openLesson('https://sermons.logos.com/sermons/880459-c101:-lesson-2-salvation-and-the-new-birth')">Start Lesson</button></div>
+  <div class="lesson">Prayer & Fasting <br><button onclick="openLesson('https://founders.org/articles/notes-on-prayer-and-fasting/')">Start Lesson</button></div>
+  <div class="lesson">The Holy Spirit <br><button onclick="openLesson('https://www.moodybible.org/beliefs/holy-spirit/')">Start Lesson</button></div>
+  <div class="lesson">Bible Study Basics <br><button onclick="openLesson('https://hallow.com/blog/bible-study-guide-for-beginners/')">Start Lesson</button></div>
+</div>
+</div>
+
+<!-- DIPLOMA LEVEL -->
+<div class="level" onclick="toggle('diploma')">
+📗 Diploma Level
+<div id="diploma" class="lessons">
+  <div class="lesson">Doctrine of Christ <br><button onclick="openLesson('https://heraldsofrevival.org/2023/03/11/know-the-doctrine-of-christ-4/comment-page-1/')">Start Lesson</button></div>
+  <div class="lesson">Faith & Righteousness <br><button onclick="openLesson('https://goodnewsunlimited.com/righteousness-faith/')">Start Lesson</button></div>
+  <div class="lesson">Deliverance & Spiritual Warfare <br><button onclick="openLesson('https://christianity201.wordpress.com/2014/01/24/the-difference-between-spiritual-warfare-and-deliverance/')">Start Lesson</button></div>
+  <div class="lesson">Christian Character <br><button onclick="openLesson('https://learn.ligonier.org/guides/christian-character')">Start Lesson</button></div>
+</div>
+</div>
+
+<!-- DEGREE LEVEL -->
+<div class="level" onclick="toggle('degree')">
+📕 Degree Level
+<div id="degree" class="lessons">
+  <div class="lesson">Systematic Theology <br><button onclick="openLesson('https://sermons.logos.com/sermons/588719-systematic-theology-lecture-notes')">Start Lesson</button></div>
+  <div class="lesson">Church Leadership <br><button onclick="openLesson('https://www.acstechnologies.com/church-growth/church-leadership-roles-and-responsibilities-a-comprehensive-guide/?srsltid=AfmBOooVoWf2ml1YIpGAe47cGHnK1-T4AbDAw15u478e68xd-KdUyWY0')">Start Lesson</button></div>
+  <div class="lesson">Evangelism & Missions <br><button onclick="openLesson('https://www.biblesnet.com/evangelism_missions.html')">Start Lesson</button></div>
+  <div class="lesson">Kingdom Finances <br><button onclick="openLesson('https://www.youtube.com/watch?v=mDx0LHq-_4o')">Start Lesson</button></div>
+</div>
+</div>
+
+<!-- MASTERS LEVEL -->
+<div class="level" onclick="toggle('masters')">
+📙 Masters Level
+<div id="masters" class="lessons">
+  <div class="lesson">Advanced Revelation Knowledge <br><button onclick="openLesson('https://www.youtube.com/watch?v=FJkMhaz0mx4')">Start Lesson</button></div>
+  <div class="lesson">Apostolic & Prophetic Ministry <br><button onclick="openLesson('#')">Start Lesson</button></div>
+  <div class="lesson">Church Growth Systems <br><button onclick="openLesson('#')">Start Lesson</button></div>
+  <div class="lesson">Ministry Administration <br><button onclick="openLesson('#')">Start Lesson</button></div>
+</div>
+</div>
+
+<!-- PHD LEVEL -->
+<div class="level" onclick="toggle('phd')">
+📓 PhD Level
+<div id="phd" class="lessons">
+  <div class="lesson">Deep Mysteries of Scripture <br><button onclick="openLesson('#')">Start Lesson</button></div>
+  <div class="lesson">Kingdom Systems & Governance <br><button onclick="openLesson('#')">Start Lesson</button></div>
+  <div class="lesson">Mentorship & Discipleship <br><button onclick="openLesson('#')">Start Lesson</button></div>
+  <div class="lesson">Writing & Teaching Doctrine <br><button onclick="openLesson('#')">Start Lesson</button></div>
+</div>
+</div>
+
+</div>
+
+<script>
+function toggle(id) {
+  const section = document.getElementById(id);
+  section.style.display = section.style.display === "block" ? "none" : "block";
+}
+
+function openLesson(link) {
+  if(link === '#') {
+    alert('Link not added yet. Please provide lesson URL.');
+  } else {
+    window.open(link, '_blank');
+  }
+}
+
+function searchLessons(input) {
+  const lessons = document.querySelectorAll('.lesson');
+  input = input.toLowerCase();
+
+  lessons.forEach(l => {
+    if (l.innerText.toLowerCase().includes(input)) {
+      l.style.display = "block";
+    } else {
+      l.style.display = "none";
+    }
+  });
+}
+</script>
+
+</body>
+</html>
