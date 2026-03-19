@@ -51,7 +51,7 @@ footer {background:#2c3e50; color:#fff; text-align:center; padding:15px;}
 <div class="social-buttons">
 <a href="https://web.facebook.com/pedahzurchurch" target="_blank"><button>📘 Facebook</button></a>
 <a href="https://www.youtube.com/@officialjcrgmtv" target="_blank"><button class="youtube">📺 YouTube</button></a>
-<a href="https://wa.me/260979554970" target="_blank"><button class="whatsapp">💬 Prayer Petitions</button></a>
+<button class="whatsapp" onclick="showPrayerForm()">💬 Prayer Petitions</button>
 <a href="https://www.biblechallenger.com/" target="_blank"><button class="games">🎮 Christian Games</button></a>
 <a href="https://www.youtube.com/watch?v=Rm0HSONw1d8&list=RDRm0HSONw1d8&start_radio=1"><button class="meditation">🎵 Prayer & Meditation</button></a>
 <button onclick="showMembership()">📝 Membership</button>
@@ -95,6 +95,22 @@ footer {background:#2c3e50; color:#fff; text-align:center; padding:15px;}
 <label>NRC Number (Optional):</label><br><input type="text" id="memberNRC"><br>
 <label>Email:</label><br><input type="email" id="memberEmail" required><br>
 <button type="button" onclick="sendMembership()">Send to WhatsApp</button>
+</form>
+</div>
+
+<div id="prayerFormContainer" class="hidden-section">
+<h2>Send Your Prayer Petition</h2>
+<form id="prayerForm">
+  <label>Name:</label><br>
+  <input type="text" id="prayerName" placeholder="Your Name" required><br><br>
+
+  <label>Location:</label><br>
+  <input type="text" id="prayerLocation" placeholder="City/Area" required><br><br>
+
+  <label>Prayer Point:</label><br>
+  <textarea id="prayerPoint" placeholder="Type your prayer request here" required></textarea><br><br>
+
+  <button type="button" onclick="sendPrayer()">Send via WhatsApp</button>
 </form>
 </div>
 
@@ -292,6 +308,31 @@ function update(){
 update();
 setInterval(update,1000);
 function viewMembers() {window.location.href = "images.html";}
+
+function showPrayerForm() {
+    document.getElementById('prayerFormContainer').style.display = 'block';
+    document.getElementById('prayerFormContainer').scrollIntoView({behavior:'smooth'});
+}
+
+function sendPrayer() {
+    const name = document.getElementById('prayerName').value.trim();
+    const location = document.getElementById('prayerLocation').value.trim();
+    const prayer = document.getElementById('prayerPoint').value.trim();
+
+    if(!name || !location || !prayer){
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    const msg = `🙏 Prayer Petition\n\nName: ${name}\nLocation: ${location}\nPrayer Point: ${prayer}`;
+    const whatsappNumber = "260979554970"; // Church WhatsApp
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
+
+    window.open(url, "_blank");
+
+    // Optional: Clear form after sending
+    document.getElementById('prayerForm').reset();
+}
 </script>
 </body>
 </html>
