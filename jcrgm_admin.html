@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JCRGM System</title>
+
+<style>
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #eef2f7;
+}
+
+header {
+    background: linear-gradient(135deg, #0a3d62, #1e90ff);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+h2 {
+    color: #0a3d62;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    background: #0a3d62;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.admin-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: red;
+}
+
+.hidden {
+    display: none;
+}
+
+.department {
+    padding: 8px;
+    background: #f1f7ff;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>JCRGM Kingdom System</h1>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Vision</h2>
+        <p id="visionText"></p>
+    </div>
+
+    <div class="card">
+        <h2>Policies</h2>
+        <p id="policyText"></p>
+    </div>
+
+    <div class="card">
+        <h2>Departments</h2>
+        <div id="deptList"></div>
+    </div>
+
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="hidden container">
+
+    <div class="card">
+        <h2>Admin Panel</h2>
+
+        <label>Vision</label>
+        <textarea id="visionInput"></textarea>
+
+        <label>Policies</label>
+        <textarea id="policyInput"></textarea>
+
+        <button onclick="saveContent()">Save Changes</button>
+    </div>
+
+    <div class="card">
+        <h2>Add Department</h2>
+
+        <input type="text" id="deptName" placeholder="Department Name">
+        <textarea id="deptRules" placeholder="Department Rules"></textarea>
+
+        <button onclick="addDept()">Add Department</button>
+    </div>
+
+</div>
+
+<button class="admin-btn" onclick="login()">Admin</button>
+
+<script>
+
+// DEFAULT CONTENT
+if(!localStorage.getItem("vision")){
+    localStorage.setItem("vision", "To raise spiritually mature believers.");
+}
+if(!localStorage.getItem("policy")){
+    localStorage.setItem("policy", "Follow Christ, honor leadership, live holy.");
+}
+if(!localStorage.getItem("departments")){
+    localStorage.setItem("departments", JSON.stringify([]));
+}
+
+// LOAD CONTENT
+function loadContent(){
+    document.getElementById("visionText").innerText = localStorage.getItem("vision");
+    document.getElementById("policyText").innerText = localStorage.getItem("policy");
+
+    let depts = JSON.parse(localStorage.getItem("departments"));
+    let container = document.getElementById("deptList");
+    container.innerHTML = "";
+
+    depts.forEach(d => {
+        let div = document.createElement("div");
+        div.className = "department";
+        div.innerHTML = "<b>" + d.name + "</b><br>" + d.rules;
+        container.appendChild(div);
+    });
+}
+
+// SAVE CONTENT
+function saveContent(){
+    localStorage.setItem("vision", document.getElementById("visionInput").value);
+    localStorage.setItem("policy", document.getElementById("policyInput").value);
+    alert("Saved!");
+    loadContent();
+}
+
+// ADD DEPARTMENT
+function addDept(){
+    let name = document.getElementById("deptName").value;
+    let rules = document.getElementById("deptRules").value;
+
+    let depts = JSON.parse(localStorage.getItem("departments"));
+    depts.push({name, rules});
+    localStorage.setItem("departments", JSON.stringify(depts));
+
+    alert("Department Added!");
+    loadContent();
+}
+
+// ADMIN LOGIN
+function login(){
+    let pass = prompt("Enter Admin Password");
+    if(pass === "JCRGM123"){
+        document.getElementById("adminPanel").classList.toggle("hidden");
+
+        document.getElementById("visionInput").value = localStorage.getItem("vision");
+        document.getElementById("policyInput").value = localStorage.getItem("policy");
+    } else {
+        alert("Wrong Password");
+    }
+}
+
+// INIT
+loadContent();
+
+</script>
+
+</body>
+</html>
