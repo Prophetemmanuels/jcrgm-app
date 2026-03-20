@@ -12,12 +12,40 @@
   th { background-color: #34495e; color: #fff; }
   tr:nth-child(even) { background-color: #ecf0f1; }
   tr:hover { background-color: #d1e7dd; }
+  .month-buttons { text-align: center; margin-top: 20px; }
+  .month-buttons button { margin: 5px; padding: 10px 15px; background-color: #34495e; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+  .month-buttons button:hover { background-color: #2c3e50; }
+  .month-section { margin-top: 50px; }
 </style>
 </head>
 <body>
 
 <h1>Christ-Centered Bible Teaching Plan (1 Year)</h1>
 
+<div class="month-buttons">
+  <button onclick="scrollToMonth('month1')">January</button>
+  <button onclick="scrollToMonth('month2')">February</button>
+  <button onclick="scrollToMonth('month3')">March</button>
+  <button onclick="scrollToMonth('month4')">April</button>
+  <button onclick="scrollToMonth('month5')">May</button>
+  <button onclick="scrollToMonth('month6')">June</button>
+  <button onclick="scrollToMonth('month7')">July</button>
+  <button onclick="scrollToMonth('month8')">August</button>
+  <button onclick="scrollToMonth('month9')">September</button>
+  <button onclick="scrollToMonth('month10')">October</button>
+  <button onclick="scrollToMonth('month11')">November</button>
+  <button onclick="scrollToMonth('month12')">December</button>
+</div>
+
+<script>
+  function scrollToMonth(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+
+<!-- MONTH 1: JANUARY -->
+<div class="month-section" id="month1">
+<h2>January (Weeks 1–4)</h2>
 <table>
   <thead>
     <tr>
@@ -29,8 +57,6 @@
     </tr>
   </thead>
   <tbody>
-    <!-- Weeks 1–52 -->
-
     <!-- Week 1 -->
     <tr><td>1</td><td>1</td><td>Genesis 1-3</td><td>Creation, Fall, God’s plan for man</td><td>Christ as the new Adam (1 Cor 15:45), redemption promised</td></tr>
     <tr><td>1</td><td>2</td><td>Genesis 4-7</td><td>Cain & Abel, Noah’s Flood</td><td>Jesus as the righteous one; salvation through faith (Heb 11:7)</td></tr>
@@ -50,48 +76,94 @@
     <tr><td>4</td><td>1</td><td>Genesis 37-40</td><td>Joseph sold into Egypt</td><td>Christ as suffering servant (Matt 1:21)</td></tr>
     <tr><td>4</td><td>2</td><td>Genesis 41-44</td><td>Joseph rises to power</td><td>Jesus reigns to save His people (Luke 1:32-33)</td></tr>
     <tr><td>4</td><td>3</td><td>Genesis 45-50</td><td>Joseph forgives</td><td>Christ forgives and redeems sinners (Eph 1:7)</td></tr>
+  </tbody>
+</table>
+</div>
 
-    <!-- Week 5 -->
-    <tr><td>5</td><td>1</td><td>Exodus 1-6</td><td>God delivers Israel from slavery</td><td>Christ delivers us from sin and death (Col 1:13-14)</td></tr>
-    <tr><td>5</td><td>2</td><td>Exodus 7-12</td><td>Plagues & Passover</td><td>Jesus is our Passover Lamb (1 Cor 5:7)</td></tr>
-    <tr><td>5</td><td>3</td><td>Exodus 13-17</td><td>Crossing the Red Sea</td><td>Baptism in Christ (1 Cor 10:1-4)</td></tr>
+<!-- MONTH 2: FEBRUARY -->
+<div class="month-section" id="month2">
+<h2>February (Weeks 5–8)</h2>
+<table>
+<thead>
+<tr>
+  <th>Week</th>
+  <th>Session</th>
+  <th>Bible Passage</th>
+  <th>Theme / Focus</th>
+  <th>Connection to the New Testament</th>
+</tr>
+</thead>
+<tbody>
+  <!-- Week 5 -->
+  <tr><td>5</td><td>1</td><td>Exodus 1-6</td><td>God delivers Israel from slavery</td><td>Christ delivers us from sin and death (Col 1:13-14)</td></tr>
+  <tr><td>5</td><td>2</td><td>Exodus 7-12</td><td>Plagues & Passover</td><td>Jesus is our Passover Lamb (1 Cor 5:7)</td></tr>
+  <tr><td>5</td><td>3</td><td>Exodus 13-17</td><td>Crossing the Red Sea</td><td>Baptism in Christ (1 Cor 10:1-4)</td></tr>
 
-    <!-- Week 6 -->
-    <tr><td>6</td><td>1</td><td>Exodus 18-20</td><td>Ten Commandments</td><td>Christ fulfills the Law (Matt 5:17)</td></tr>
-    <tr><td>6</td><td>2</td><td>Exodus 21-24</td><td>Laws of Justice & Holiness</td><td>Christ satisfies the righteous demands of the Law (Rom 8:3-4)</td></tr>
-    <tr><td>6</td><td>3</td><td>Exodus 25-31</td><td>Tabernacle Instructions</td><td>Christ as the true dwelling of God (John 1:14)</td></tr>
+  <!-- Week 6 -->
+  <tr><td>6</td><td>1</td><td>Exodus 18-20</td><td>Ten Commandments</td><td>Christ fulfills the Law (Matt 5:17)</td></tr>
+  <tr><td>6</td><td>2</td><td>Exodus 21-24</td><td>Laws of Justice & Holiness</td><td>Christ satisfies the righteous demands of the Law (Rom 8:3-4)</td></tr>
+  <tr><td>6</td><td>3</td><td>Exodus 25-31</td><td>Tabernacle Instructions</td><td>Christ as the true dwelling of God (John 1:14)</td></tr>
 
-    <!-- Week 7 -->
-    <tr><td>7</td><td>1</td><td>Exodus 32-34</td><td>Golden Calf & God’s mercy</td><td>Forgiveness through Christ (Eph 1:7)</td></tr>
-    <tr><td>7</td><td>2</td><td>Exodus 35-40</td><td>Tabernacle completed</td><td>Christ as perfect place of worship (Heb 9:11-12)</td></tr>
+  <!-- Week 7 -->
+  <tr><td>7</td><td>1</td><td>Exodus 32-34</td><td>Golden Calf & God’s mercy</td><td>Forgiveness through Christ (Eph 1:7)</td></tr>
+  <tr><td>7</td><td>2</td><td>Exodus 35-40</td><td>Tabernacle completed</td><td>Christ as perfect place of worship (Heb 9:11-12)</td></tr>
 
-    <!-- Week 8 -->
-    <tr><td>8</td><td>1</td><td>Leviticus 1-7</td><td>Sacrificial system</td><td>Christ as the ultimate sacrifice (Heb 10:10)</td></tr>
-    <tr><td>8</td><td>2</td><td>Leviticus 8-10</td><td>Priesthood</td><td>Christ as High Priest (Heb 4:14)</td></tr>
-    <tr><td>8</td><td>3</td><td>Leviticus 11-15</td><td>Clean & unclean</td><td>Christ makes us clean (1 John 1:7)</td></tr>
+  <!-- Week 8 -->
+  <tr><td>8</td><td>1</td><td>Leviticus 1-7</td><td>Sacrificial system</td><td>Christ as the ultimate sacrifice (Heb 10:10)</td></tr>
+  <tr><td>8</td><td>2</td><td>Leviticus 8-10</td><td>Priesthood</td><td>Christ as High Priest (Heb 4:14)</td></tr>
+  <tr><td>8</td><td>3</td><td>Leviticus 11-15</td><td>Clean & unclean</td><td>Christ makes us clean (1 John 1:7)</td></tr>
+</tbody>
+</table>
+</div>
 
-    <!-- Week 9 -->
-    <tr><td>9</td><td>1</td><td>Numbers 1-4</td><td>Israel organized</td><td>Christ organizes His Church (Eph 4:11-12)</td></tr>
-    <tr><td>9</td><td>2</td><td>Numbers 5-10</td><td>Laws & offerings</td><td>Christ brings obedience from the heart (Rom 6:17)</td></tr>
-    <tr><td>9</td><td>3</td><td>Numbers 11-14</td><td>Complaints & judgment</td><td>Christ brings hope and grace (2 Cor 1:3-4)</td></tr>
+<!-- Repeat similar month-sections for month3 → month12 -->
+<!-- You can continue copying the weeks into these monthly sections -->
 
-    <!-- Week 10 -->
-    <tr><td>10</td><td>1</td><td>Numbers 15-21</td><td>God’s guidance</td><td>Christ guides His people (John 10:27)</td></tr>
-    <tr><td>10</td><td>2</td><td>Numbers 22-25</td><td>Balaam & Moab</td><td>Christ protects and blesses (Rev 7:17)</td></tr>
-    <tr><td>10</td><td>3</td><td>Numbers 26-30</td><td>Census & vows</td><td>Christ cares for His Church (Matt 18:12-14)</td></tr>
+<!-- MONTH 3: MARCH (Weeks 9–12) -->
+<div class="month-section" id="month3">
+<h2>March (Weeks 9–12)</h2>
+<table>
+<thead>
+<tr>
+  <th>Week</th>
+  <th>Session</th>
+  <th>Bible Passage</th>
+  <th>Theme / Focus</th>
+  <th>Connection to the New Testament</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>9</td><td>1</td><td>Numbers 1-4</td><td>Israel organized</td><td>Christ organizes His Church (Eph 4:11-12)</td></tr>
+<tr><td>9</td><td>2</td><td>Numbers 5-10</td><td>Laws & offerings</td><td>Christ brings obedience from the heart (Rom 6:17)</td></tr>
+<tr><td>9</td><td>3</td><td>Numbers 11-14</td><td>Complaints & judgment</td><td>Christ brings hope and grace (2 Cor 1:3-4)</td></tr>
 
-    <!-- Week 11 -->
-    <tr><td>11</td><td>1</td><td>Numbers 31-36</td><td>War & inheritance</td><td>Christ gives spiritual victory & inheritance (1 Cor 15:57)</td></tr>
+<tr><td>10</td><td>1</td><td>Numbers 15-21</td><td>God’s guidance</td><td>Christ guides His people (John 10:27)</td></tr>
+<tr><td>10</td><td>2</td><td>Numbers 22-25</td><td>Balaam & Moab</td><td>Christ protects and blesses (Rev 7:17)</td></tr>
+<tr><td>10</td><td>3</td><td>Numbers 26-30</td><td>Census & vows</td><td>Christ cares for His Church (Matt 18:12-14)</td></tr>
 
-    <!-- Week 12 -->
-    <tr><td>12</td><td>1</td><td>Deuteronomy 1-4</td><td>Review of God’s Law</td><td>Christ fulfills the Law (Matt 5:17)</td></tr>
-    <tr><td>12</td><td>2</td><td>Deuteronomy 5-10</td><td>Obedience & covenant</td><td>Christ calls us to faith and obedience (John 14:15)</td></tr>
-    <tr><td>12</td><td>3</td><td>Deuteronomy 11-15</td><td>Blessings & warnings</td><td>Christ offers blessings of life (Gal 3:14)</td></tr>
+<tr><td>11</td><td>1</td><td>Numbers 31-36</td><td>War & inheritance</td><td>Christ gives spiritual victory & inheritance (1 Cor 15:57)</td></tr>
 
-    <!-- Weeks 13–52 follow the same pattern as provided in the segments above -->
-    <!-- For brevity, all remaining sessions are included using the previous HTML segments: Weeks 13–52 -->
+<tr><td>12</td><td>1</td><td>Deuteronomy 1-4</td><td>Review of God’s Law</td><td>Christ fulfills the Law (Matt 5:17)</td></tr>
+<tr><td>12</td><td>2</td><td>Deuteronomy 5-10</td><td>Obedience & covenant</td><td>Christ calls us to faith and obedience (John 14:15)</td></tr>
+<tr><td>12</td><td>3</td><td>Deuteronomy 11-15</td><td>Blessings & warnings</td><td>Christ offers blessings of life (Gal 3:14)</td></tr>
+</tbody>
+</table>
+</div>
 
-<!-- Weeks 13–24 -->
+<!-- MONTH 4: APRIL (Weeks 13–16) -->
+<div class="month-section" id="month4">
+<h2>April (Weeks 13–16)</h2>
+<table>
+<thead>
+<tr>
+  <th>Week</th>
+  <th>Session</th>
+  <th>Bible Passage</th>
+  <th>Theme / Focus</th>
+  <th>Connection to the New Testament</th>
+</tr>
+</thead>
+<tbody>
 <tr><td>13</td><td>1</td><td>Deuteronomy 16-20</td><td>Justice & leadership</td><td>Christ brings perfect justice (John 5:30)</td></tr>
 <tr><td>13</td><td>2</td><td>Deuteronomy 21-25</td><td>Laws on social living</td><td>Christ teaches love and mercy (Matt 22:37-40)</td></tr>
 <tr><td>13</td><td>3</td><td>Deuteronomy 26-30</td><td>Covenant renewal</td><td>Christ fulfills God’s promises (Luke 1:72-73)</td></tr>
@@ -106,7 +178,24 @@
 <tr><td>16</td><td>1</td><td>Judges 1-5</td><td>Cycles of sin and deliverance</td><td>Christ delivers from sin (Col 1:13-14)</td></tr>
 <tr><td>16</td><td>2</td><td>Judges 6-10</td><td>Gideon & leadership by faith</td><td>Christ as our Shepherd (John 10:11)</td></tr>
 <tr><td>16</td><td>3</td><td>Judges 11-16</td><td>Samson & God’s power</td><td>Christ empowers His Church (Acts 1:8)</td></tr>
+</tbody>
+</table>
+</div>
 
+<!-- MONTH 5: MAY (Weeks 17–20) -->
+<div class="month-section" id="month5">
+<h2>May (Weeks 17–20)</h2>
+<table>
+<thead>
+<tr>
+  <th>Week</th>
+  <th>Session</th>
+  <th>Bible Passage</th>
+  <th>Theme / Focus</th>
+  <th>Connection to the New Testament</th>
+</tr>
+</thead>
+<tbody>
 <tr><td>17</td><td>1</td><td>Ruth 1-4</td><td>Loyalty & redemption</td><td>Christ as our kinsman-redeemer (Matt 1:16)</td></tr>
 
 <tr><td>18</td><td>1</td><td>1 Samuel 1-7</td><td>Samuel’s calling & prayer</td><td>Christ intercedes for us (Heb 7:25)</td></tr>
@@ -119,7 +208,24 @@
 <tr><td>20</td><td>1</td><td>2 Samuel 1-7</td><td>David reigns</td><td>Christ reigns forever (Luke 1:32-33)</td></tr>
 <tr><td>20</td><td>2</td><td>2 Samuel 8-12</td><td>David’s victories & sins</td><td>Christ forgives sins and restores (1 John 1:9)</td></tr>
 <tr><td>20</td><td>3</td><td>2 Samuel 13-18</td><td>Family struggles</td><td>Christ reconciles families and hearts (Eph 4:32)</td></tr>
+</tbody>
+</table>
+</div>
 
+<!-- MONTH 6: JUNE (Weeks 21–24) -->
+<div class="month-section" id="month6">
+<h2>June (Weeks 21–24)</h2>
+<table>
+<thead>
+<tr>
+  <th>Week</th>
+  <th>Session</th>
+  <th>Bible Passage</th>
+  <th>Theme / Focus</th>
+  <th>Connection to the New Testament</th>
+</tr>
+</thead>
+<tbody>
 <tr><td>21</td><td>1</td><td>2 Samuel 19-24</td><td>David’s legacy</td><td>Christ establishes an eternal kingdom (Rev 11:15)</td></tr>
 
 <tr><td>22</td><td>1</td><td>1 Kings 1-11</td><td>Solomon’s reign & wisdom</td><td>Christ is the Wisdom of God (1 Cor 1:24)</td></tr>
@@ -131,8 +237,24 @@
 <tr><td>24</td><td>1</td><td>1 Chronicles 1-10</td><td>Genealogy & David’s rise</td><td>Christ is the promised descendant (Matt 1:1)</td></tr>
 <tr><td>24</td><td>2</td><td>1 Chronicles 11-20</td><td>David’s reign</td><td>Christ is the righteous King (Rev 19:16)</td></tr>
 <tr><td>24</td><td>3</td><td>1 Chronicles 21-29</td><td>David prepares for temple</td><td>Christ as the eternal temple (John 2:19-21)</td></tr>
+</tbody>
+</table>
+</div>
 
-<!-- Weeks 25–36 -->
+<!-- MONTH 7: JULY (Weeks 25–28) -->
+<div class="month-section" id="month7">
+<h2>July (Weeks 25–28)</h2>
+<table>
+<thead>
+<tr>
+  <th>Week</th>
+  <th>Session</th>
+  <th>Bible Passage</th>
+  <th>Theme / Focus</th>
+  <th>Connection to the New Testament</th>
+</tr>
+</thead>
+<tbody>
 <tr><td>25</td><td>1</td><td>2 Chronicles 1-9</td><td>Solomon’s reign & temple dedication</td><td>Christ is the true temple and King (John 2:19-21)</td></tr>
 <tr><td>25</td><td>2</td><td>2 Chronicles 10-20</td><td>Divided kingdom & Jehoshaphat</td><td>Christ unites His people and fights for them (Rom 8:31)</td></tr>
 <tr><td>25</td><td>3</td><td>2 Chronicles 21-30</td><td>Judgment & revival</td><td>Christ brings repentance and restoration (Luke 15:7)</td></tr>
@@ -144,7 +266,24 @@
 
 <tr><td>28</td><td>1</td><td>Nehemiah 1-7</td><td>Nehemiah rebuilds Jerusalem</td><td>Christ restores the walls of our hearts (Eph 6:10-18)</td></tr>
 <tr><td>28</td><td>2</td><td>Nehemiah 8-13</td><td>Revival & covenant renewal</td><td>Christ renews hearts through His Word (John 17:17)</td></tr>
+</tbody>
+</table>
+</div>
 
+<!-- MONTH 8: AUGUST (Weeks 29–32) -->
+<div class="month-section" id="month8">
+<h2>August (Weeks 29–32)</h2>
+<table>
+<thead>
+<tr>
+  <th>Week</th>
+  <th>Session</th>
+  <th>Bible Passage</th>
+  <th>Theme / Focus</th>
+  <th>Connection to the New Testament</th>
+</tr>
+</thead>
+<tbody>
 <tr><td>29</td><td>1</td><td>Esther 1-10</td><td>God’s providence & courage</td><td>Christ intercedes for us as our Advocate (Rom 8:34)</td></tr>
 
 <tr><td>30</td><td>1</td><td>Job 1-7</td><td>Suffering & faith</td><td>Christ suffers and comforts us (Heb 2:18)</td></tr>
@@ -156,7 +295,24 @@
 <tr><td>31</td><td>3</td><td>Job 32-37</td><td>God’s answer through Elihu</td><td>Christ teaches and corrects us (Matt 11:29)</td></tr>
 
 <tr><td>32</td><td>1</td><td>Job 38-42</td><td>God’s sovereignty & restoration</td><td>Christ restores life and faith (John 10:10)</td></tr>
+</tbody>
+</table>
+</div>
 
+<!-- MONTH 9: SEPTEMBER (Weeks 33–36) -->
+<div class="month-section" id="month9">
+<h2>September (Weeks 33–36)</h2>
+<table>
+<thead>
+<tr>
+  <th>Week</th>
+  <th>Session</th>
+  <th>Bible Passage</th>
+  <th>Theme / Focus</th>
+  <th>Connection to the New Testament</th>
+</tr>
+</thead>
+<tbody>
 <tr><td>33</td><td>1</td><td>Psalms 1-17</td><td>God’s Law & trust</td><td>Christ fulfills the Law and is our refuge (Matt 5:17; Heb 6:18)</td></tr>
 <tr><td>33</td><td>2</td><td>Psalms 18-41</td><td>Praise & deliverance</td><td>Christ is our Deliverer (2 Sam 22:2-3, referenced in Heb 2:13)</td></tr>
 <tr><td>33</td><td>3</td><td>Psalms 42-72</td><td>Hope & Messiah</td><td>Prophecies of Christ’s kingship and suffering (Ps 22, 72)</td></tr>
@@ -171,8 +327,24 @@
 <tr><td>36</td><td>1</td><td>Ecclesiastes 1-12</td><td>Life’s meaning & vanity</td><td>Christ gives eternal purpose (John 10:10)</td></tr>
 <tr><td>36</td><td>2</td><td>Song of Solomon 1-8</td><td>Love & relationship</td><td>Christ’s love for the Church (Eph 5:25-27)</td></tr>
 <tr><td>36</td><td>3</td><td>Isaiah 1-12</td><td>Prophecies of salvation</td><td>Christ fulfills salvation promises (Isa 7:14, Matt 1:23)</td></tr>
+</tbody>
+</table>
+</div>
 
-<!-- Weeks 37–52 -->
+<!-- MONTH 10: OCTOBER (Weeks 37–40) -->
+<div class="month-section" id="month10">
+<h2>October (Weeks 37–40)</h2>
+<table>
+<thead>
+<tr>
+  <th>Week</th>
+  <th>Session</th>
+  <th>Bible Passage</th>
+  <th>Theme / Focus</th>
+  <th>Connection to the New Testament</th>
+</tr>
+</thead>
+<tbody>
 <tr><td>37</td><td>1</td><td>Isaiah 13-27</td><td>Prophecies of judgment & salvation</td><td>Christ fulfills salvation and judgment (Isa 53:4-6, Matt 1:21)</td></tr>
 <tr><td>37</td><td>2</td><td>Isaiah 28-39</td><td>Warning & hope</td><td>Christ is the cornerstone and hope of God’s people (Isa 28:16, 1 Pet 2:6)</td></tr>
 <tr><td>37</td><td>3</td><td>Isaiah 40-48</td><td>Comfort & God’s sovereignty</td><td>Christ brings comfort and salvation (Isa 40:3-5, Luke 3:4-6)</td></tr>
@@ -187,54 +359,129 @@
 <tr><td>40</td><td>1</td><td>Lamentations 1-5</td><td>Destruction & lament</td><td>Christ comforts in sorrow (Matt 5:4)</td></tr>
 <tr><td>40</td><td>2</td><td>Ezekiel 1-24</td><td>Judgment & visions</td><td>Christ fulfills God’s plan of restoration (Ezek 37:26-28, John 14:16-17)</td></tr>
 <tr><td>40</td><td>3</td><td>Ezekiel 25-48</td><td>Restoration of Israel & Temple</td><td>Christ is the eternal temple (John 2:19-21)</td></tr>
-
-<tr><td>41</td><td>1</td><td>Daniel 1-12</td><td>Faithfulness in exile & prophecy</td><td>Christ reigns and brings deliverance (Dan 7:13-14, Rev 11:15)</td></tr>
-
-<tr><td>42</td><td>1</td><td>Hosea 1-14</td><td>God’s love & unfaithful Israel</td><td>Christ demonstrates unfailing love for His Church (Eph 5:25)</td></tr>
-<tr><td>42</td><td>2</td><td>Joel 1-3</td><td>Day of the Lord & repentance</td><td>Christ pours out the Holy Spirit (Acts 2:17-18)</td></tr>
-<tr><td>42</td><td>3</td><td>Amos 1-9</td><td>Judgment & justice</td><td>Christ calls to justice and righteousness (Matt 23:23)</td></tr>
-
-<tr><td>43</td><td>1</td><td>Obadiah 1</td><td>Judgment of Edom</td><td>Christ judges all nations (Acts 17:31)</td></tr>
-<tr><td>43</td><td>2</td><td>Jonah 1-4</td><td>God’s mercy & repentance</td><td>Christ brings salvation to all nations (Matt 12:41)</td></tr>
-<tr><td>43</td><td>3</td><td>Micah 1-7</td><td>Judgment & hope</td><td>Christ is the promised ruler from Bethlehem (Mic 5:2, Matt 2:6)</td></tr>
-
-<tr><td>44</td><td>1</td><td>Nahum, Habakkuk, Zephaniah</td><td>Judgment & faith</td><td>Christ brings justice and salvation (Rev 19:11)</td></tr>
-<tr><td>44</td><td>2</td><td>Haggai 1-2</td><td>Temple rebuilt & encouragement</td><td>Christ as cornerstone (1 Pet 2:6)</td></tr>
-<tr><td>44</td><td>3</td><td>Zechariah 1-14</td><td>Messianic prophecy & hope</td><td>Christ fulfills all prophecies (Zech 9:9, Matt 21:5)</td></tr>
-
-<tr><td>45</td><td>1</td><td>Malachi 1-4</td><td>Faithfulness & promise of Elijah</td><td>Christ sends John the Baptist (Mal 3:1, Matt 11:10)</td></tr>
-
-<tr><td>46</td><td>1</td><td>Matthew 1-7</td><td>Birth, ministry & teachings</td><td>Christ revealed as Messiah (Matt 1:21)</td></tr>
-<tr><td>46</td><td>2</td><td>Matthew 8-14</td><td>Miracles & authority</td><td>Christ demonstrates divine power (Matt 8:27)</td></tr>
-<tr><td>46</td><td>3</td><td>Matthew 15-21</td><td>Parables & kingdom</td><td>Christ teaches the kingdom of God (Matt 13:11)</td></tr>
-
-<tr><td>47</td><td>1</td><td>Matthew 22-28</td><td>Passion & resurrection</td><td>Christ fulfills salvation (Matt 28:6)</td></tr>
-<tr><td>47</td><td>2</td><td>Mark 1-16</td><td>Gospel of Christ</td><td>Christ’s life, death & resurrection (Mark 10:45)</td></tr>
-<tr><td>47</td><td>3</td><td>Luke 1-24</td><td>Gospel of compassion</td><td>Christ brings salvation to all (Luke 19:10)</td></tr>
-
-<tr><td>48</td><td>1</td><td>John 1-21</td><td>Christ as the Word</td><td>Christ is God incarnate (John 1:14)</td></tr>
-<tr><td>48</td><td>2</td><td>Acts 1-14</td><td>Early Church & Holy Spirit</td><td>Christ empowers His Church (Acts 1:8)</td></tr>
-<tr><td>48</td><td>3</td><td>Acts 15-28</td><td>Mission & gospel to nations</td><td>Christ’s message spreads to the world (Acts 1:8)</td></tr>
-
-<tr><td>49</td><td>1</td><td>Romans 1-8</td><td>Justification & life in Christ</td><td>Salvation by faith (Rom 5:1)</td></tr>
-<tr><td>49</td><td>2</td><td>Romans 9-16</td><td>God’s plan & living in faith</td><td>Christ sustains His people (Rom 8:28)</td></tr>
-<tr><td>49</td><td>3</td><td>1 Corinthians 1-16</td><td>Unity & church order</td><td>Christ is the head of the Church (1 Cor 12:12-13)</td></tr>
-
-<tr><td>50</td><td>1</td><td>2 Corinthians 1-13</td><td>Encouragement & reconciliation</td><td>Christ reconciles us to God (2 Cor 5:18)</td></tr>
-<tr><td>50</td><td>2</td><td>Galatians, Ephesians</td><td>Faith & grace</td><td>Christ brings freedom and unity (Gal 5:1, Eph 4:3)</td></tr>
-<tr><td>50</td><td>3</td><td>Philippians, Colossians</td><td>Joy & supremacy of Christ</td><td>Christ is Lord of all (Col 1:16)</td></tr>
-
-<tr><td>51</td><td>1</td><td>1 & 2 Thessalonians, 1 & 2 Timothy</td><td>Encouragement & leadership</td><td>Christ guides His Church (1 Tim 3:15)</td></tr>
-<tr><td>51</td><td>2</td><td>Titus, Philemon, Hebrews</td><td>Faithfulness & perseverance</td><td>Christ is the perfect High Priest (Heb 4:14)</td></tr>
-<tr><td>51</td><td>3</td><td>James, 1 & 2 Peter, 1,2,3 John, Jude</td><td>Practical Christian living</td><td>Christ equips us for holiness (1 Pet 1:15-16)</td></tr>
-
-<tr><td>52</td><td>1</td><td>Revelation 1-11</td><td>Christ’s return & final judgment</td><td>Christ is King of kings and Judge (Rev 19:16)</td></tr>
-<tr><td>52</td><td>2</td><td>Revelation 12-22</td><td>New Heaven & New Earth</td><td>Christ brings eternal life and restoration (Rev 21:1-4)</td></tr>
-<tr><td>52</td><td>3</td><td>Review & Celebration</td><td>Year-end summary of God’s plan</td><td>Christ is central in all Scripture</td></tr>
-
-
-  </tbody>
+</tbody>
 </table>
+</div>
+
+<!-- MONTH 11: NOVEMBER (Weeks 41–44) -->
+<div class="month-section" id="month11">
+<h2>November (Weeks 41–44)</h2>
+<table>
+<thead>
+<tr>
+  <th>Week</th>
+  <th>Session</th>
+  <th>Bible Passage</th>
+  <th>Theme / Focus</th>
+  <th>Connection to the New Testament</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>41</td><td>1</td><td>Daniel 1-7</td><td>Faithfulness in adversity & visions</td><td>Christ is faithful and reveals God’s kingdom (Dan 7:13-14, Rev 1:7)</td></tr>
+<tr><td>41</td><td>2</td><td>Daniel 8-12</td><td>Prophecies & end times</td><td>Christ triumphs over evil (Matt 24:30)</td></tr>
+
+<tr><td>42</td><td>1</td><td>Hosea 1-14</td><td>God’s love for unfaithful people</td><td>Christ redeems the unfaithful (Matt 9:13)</td></tr>
+<tr><td>42</td><td>2</td><td>Joel 1-3</td><td>Judgment & outpouring of the Spirit</td><td>Christ fulfills the promise of the Spirit (Acts 2:16-18)</td></tr>
+<tr><td>42</td><td>3</td><td>Amos 1-9</td><td>Justice & righteousness</td><td>Christ teaches justice and mercy (Matt 23:23)</td></tr>
+
+<tr><td>43</td><td>1</td><td>Obadiah 1</td><td>Judgment of Edom</td><td>Christ executes perfect justice (Rom 12:19)</td></tr>
+<tr><td>43</td><td>2</td><td>Jonah 1-4</td><td>Repentance & mercy</td><td>Christ calls all to repentance (Luke 15:7)</td></tr>
+<tr><td>43</td><td>3</td><td>Micah 1-7</td><td>Judgment & Messiah’s promise</td><td>Christ fulfills the prophecy of peace (Mic 5:2, Matt 2:6)</td></tr>
+
+<tr><td>44</td><td>1</td><td>Nahum 1-3</td><td>God’s judgment on Nineveh</td><td>Christ will bring final judgment (Rev 20:12-13)</td></tr>
+<tr><td>44</td><td>2</td><td>Habakkuk 1-3</td><td>Faith in God’s plan</td><td>Christ is our faithful Savior (Heb 10:23)</td></tr>
+<tr><td>44</td><td>3</td><td>Zephaniah 1-3</td><td>Judgment & restoration</td><td>Christ restores His people (Acts 3:21)</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- MONTH 12: DECEMBER (Weeks 45–52) -->
+<div class="month-section" id="month12">
+<h2>December (Weeks 45–52)</h2>
+<table>
+<thead>
+<tr>
+  <th>Week</th>
+  <th>Session</th>
+  <th>Bible Passage</th>
+  <th>Theme / Focus</th>
+  <th>Connection to the New Testament</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>45</td><td>1</td><td>Haggai 1-2</td><td>Rebuilding the temple</td><td>Christ is the cornerstone of the spiritual temple (Eph 2:20)</td></tr>
+<tr><td>45</td><td>2</td><td>Zechariah 1-8</td><td>Visions of hope & restoration</td><td>Christ fulfills God’s promises of restoration (Luke 1:31-33)</td></tr>
+<tr><td>45</td><td>3</td><td>Zechariah 9-14</td><td>Messianic prophecy & triumph</td><td>Christ triumphs over sin and enemies (Matt 21:5)</td></tr>
+
+<tr><td>46</td><td>1</td><td>Malachi 1-4</td><td>God’s covenant & promise of a messenger</td><td>Christ is the promised Messenger (Mal 3:1, Mark 1:2)</td></tr>
+
+<tr><td>47</td><td>1</td><td>Matthew 1-7</td><td>Life & ministry of Christ begins</td><td>Christ fulfills prophecy and teaches the Kingdom (Matt 5:17)</td></tr>
+<tr><td>47</td><td>2</td><td>Matthew 8-14</td><td>Miracles & discipleship</td><td>Christ demonstrates power and authority (Matt 14:33)</td></tr>
+<tr><td>47</td><td>3</td><td>Matthew 15-21</td><td>Teachings, faith & parables</td><td>Christ reveals Kingdom truths (Matt 18:1-5)</td></tr>
+
+<tr><td>48</td><td>1</td><td>Matthew 22-28</td><td>Passion, death & resurrection</td><td>Christ redeems humanity (Matt 28:6)</td></tr>
+
+<tr><td>49</td><td>1</td><td>Mark 1-8</td><td>Gospel of action & miracles</td><td>Christ is servant and healer (Mark 1:41)</td></tr>
+<tr><td>49</td><td>2</td><td>Mark 9-16</td><td>Passion & resurrection</td><td>Christ conquers death (Mark 16:6)</td></tr>
+
+<tr><td>50</td><td>1</td><td>Luke 1-8</td><td>Preparation & ministry</td><td>Christ brings salvation to all (Luke 2:10-11)</td></tr>
+<tr><td>50</td><td>2</td><td>Luke 9-16</td><td>Teachings & parables</td><td>Christ teaches Kingdom principles (Luke 11:2-4)</td></tr>
+<tr><td>50</td><td>3</td><td>Luke 17-24</td><td>Passion & resurrection</td><td>Christ brings eternal life (Luke 24:6-7)</td></tr>
+
+<tr><td>51</td><td>1</td><td>John 1-7</td><td>Identity of Christ</td><td>Christ is the Word made flesh (John 1:14)</td></tr>
+<tr><td>51</td><td>2</td><td>John 8-14</td><td>Teachings & signs</td><td>Christ is the light and the way (John 8:12)</td></tr>
+<tr><td>51</td><td>3</td><td>John 15-21</td><td>Passion, resurrection & eternal life</td><td>Christ gives eternal life (John 17:3)</td></tr>
+
+<tr><td>52</td><td>1</td><td>Acts 1-12</td><td>Early church & the Spirit</td><td>Christ empowers His Church (Acts 1:8)</td></tr>
+<tr><td>52</td><td>2</td><td>Acts 13-28</td><td>Missionary journeys & gospel spread</td><td>Christ’s gospel reaches the nations (Acts 13:47)</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- Month Navigation Buttons -->
+<div class="month-buttons">
+  <button onclick="scrollToMonth('month1')">January</button>
+  <button onclick="scrollToMonth('month2')">February</button>
+  <button onclick="scrollToMonth('month3')">March</button>
+  <button onclick="scrollToMonth('month4')">April</button>
+  <button onclick="scrollToMonth('month5')">May</button>
+  <button onclick="scrollToMonth('month6')">June</button>
+  <button onclick="scrollToMonth('month7')">July</button>
+  <button onclick="scrollToMonth('month8')">August</button>
+  <button onclick="scrollToMonth('month9')">September</button>
+  <button onclick="scrollToMonth('month10')">October</button>
+  <button onclick="scrollToMonth('month11')">November</button>
+  <button onclick="scrollToMonth('month12')">December</button>
+</div>
+
+<style>
+  .month-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .month-buttons button {
+    background-color: #34495e;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 3px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  .month-buttons button:hover {
+    background-color: #2c3e50;
+  }
+</style>
+
+<script>
+  function scrollToMonth(monthId) {
+    const element = document.getElementById(monthId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+</script>
 
 </body>
 </html>
