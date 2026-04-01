@@ -357,20 +357,32 @@ function generateCalendar() {
     easterMonday.setDate(easter.getDate() + 1);
 
     const events = [
-        { date: new Date(year, 0, 1), event: "NEW YEAR", program: "YEAR BLESSINGS", time: "00:01HRS", venue: "PAMI CHURCH" },
-        { date: new Date(year, 1, 14), event: "PEDAHZUR SUPPORT TEAM", program: "Support Meeting", time: "14HRS", venue: "AS DIRECTED" },
+    // Fixed holidays
+    { date: new Date(year, 0, 1), event: "NEW YEAR", program: "YEAR BLESSINGS", time: "00:01HRS", venue: "PAMI CHURCH" },
+    { date: new Date(year, 1, 14), event: "PEDAHZUR SUPPORT TEAM", program: "Support Meeting", time: "14HRS", venue: "AS DIRECTED" },
 
-        { date: goodFriday, event: "GOOD FRIDAY", program: "PRAYER SUMMIT", time: "14HRS - 17HRS", venue: "AS DIRECTED" },
-        { date: holySaturday, event: "HOLY SATURDAY", program: "PRAYER SUMMIT", time: "14HRS - 17HRS", venue: "AS DIRECTED" },
-        { date: easter, event: "RESURRECTION SUNDAY", program: "REDEMPTION SUNDAY", time: "09:00 – 13:30", venue: "PAMI CHURCH" },
-        { date: easterMonday, event: "EASTER MONDAY", program: "PRAYER SUMMIT", time: "14HRS - 17HRS", venue: "AS DIRECTED" },
+    // Church events
+    { date: new Date(year, 2, 5), event: "WOMEN DAY", program: "Women Sunday", time: "09:30 – 13:30", venue: "PAMI CHURCH" },
+    { date: new Date(year, 2, 12), event: "YOUTH DAY", program: "Youth Sunday", time: "09:30", venue: "PAMI CHURCH" },
+    { date: new Date(year, 7, 8), event: "PAMI ANNIVERSARY", program: "Anniversary Celebration", time: "14HRS", venue: "AS DIRECTED" },
+    { date: new Date(year, 7, 23), event: "PEDAHZUR SUPPORT TEAM", program: "Support Meeting", time: "14:00HRS", venue: "PAMI CHURCH" },
 
-        { date: new Date(year, 4, 1), event: "LABOR DAY", program: "MOUNTAIN PRAYERS", time: "08:00 – 16:00", venue: "PAMI CHURCH" },
-        { date: new Date(year, 4, 25), event: "AFRICA FREEDOM DAY", program: "MOUNTAIN PRAYERS", time: "08:00 – 16:00", venue: "PAMI CHURCH" },
+    // Easter
+    { date: goodFriday, event: "GOOD FRIDAY", program: "PRAYER SUMMIT", time: "14HRS - 17HRS", venue: "AS DIRECTED" },
+    { date: holySaturday, event: "HOLY SATURDAY", program: "PRAYER SUMMIT", time: "14HRS - 17HRS", venue: "AS DIRECTED" },
+    { date: easter, event: "RESURRECTION SUNDAY", program: "REDEMPTION SUNDAY", time: "09:00 – 13:30", venue: "PAMI CHURCH" },
+    { date: easterMonday, event: "EASTER MONDAY", program: "PRAYER SUMMIT", time: "14HRS - 17HRS", venue: "AS DIRECTED" },
 
-        { date: new Date(year, 11, 25), event: "CHRISTMAS DAY", program: "CHRISTMAS CELEBRATION", time: "14HRS", venue: "AS DIRECTED" },
-        { date: new Date(year, 11, 31), event: "NEW YEARS EVE", program: "CROSSOVER NIGHT", time: "20HRS – 04HRS", venue: "PAMI CHURCH" }
-    ];
+    // Other national holidays
+    { date: new Date(year, 4, 1), event: "LABOR DAY", program: "MOUNTAIN PRAYERS", time: "08:00 – 16:00", venue: "PAMI CHURCH" },
+    { date: new Date(year, 4, 25), event: "AFRICA FREEDOM DAY", program: "MOUNTAIN PRAYERS", time: "08:00 – 16:00", venue: "PAMI CHURCH" },
+    { date: new Date(year, 6, 4), event: "UNITY DAY", program: "PRAYER CAMP", time: "04HRS", venue: "PAMI CHURCH" },
+    { date: new Date(year, 7, 7), event: "FARMERS DAY", program: "Congregational Thanksgiving Service", time: "14HRS – 17HRS", venue: "AS DIRECTED" },
+
+    // Christmas
+    { date: new Date(year, 11, 25), event: "CHRISTMAS DAY", program: "CHRISTMAS CELEBRATION", time: "14HRS", venue: "AS DIRECTED" },
+    { date: new Date(year, 11, 31), event: "NEW YEARS EVE", program: "CROSSOVER NIGHT", time: "20HRS – 04HRS", venue: "PAMI CHURCH" }
+];
 
     events.sort((a, b) => a.date - b.date);
 
