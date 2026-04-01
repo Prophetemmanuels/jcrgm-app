@@ -203,7 +203,9 @@ Phone: 0979554970 | Email: pedahzurministries@gmail.com<br>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js');}
 
 // Display date & year
-document.getElementById("serviceDate").innerText="Today: "+new Date().toDateString();
+const today = new Date();
+const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+document.getElementById("serviceDate").innerText = "Today: " + today.toLocaleDateString('en-GB', options);
 document.getElementById("year").innerText=new Date().getFullYear();
 
 // Projector toggle
