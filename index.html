@@ -39,6 +39,8 @@ footer {background:#2c3e50; color:#fff; text-align:center; padding:15px;}
 .projector .timer-box, .projector table {font-size:28px;}
 .calendar-table th {background:#1f3c88; color:#fff;}
 .hidden-section {display:none; margin-top:30px;}
+.today-event {background-color: #ffeeba !important; font-weight: bold; border-left: 6px solid #ff9800;}
+.upcoming-event { background-color: #d4edda !important; border-left: 6px solid #28a745;}
 </style>
 </head>
 
@@ -389,16 +391,33 @@ function generateCalendar() {
 
     events.sort((a, b) => a.date - b.date);
 
-    events.forEach(e => {
-        const row = `<tr>
-            <td>${formatDate(e.date)}</td>
-            <td>${e.event}</td>
-            <td>${e.program}</td>
-            <td>${e.time}</td>
-            <td>${e.venue}</td>
-        </tr>`;
-        tbody.innerHTML += row;
-    });
+    const today = new Date();
+today.setHours(0,0,0,0);
+
+events.forEach(e => {
+    const eventDate = new Date(e.date);
+    eventDate.setHours(0,0,0,0);
+
+    let className = "";
+
+    if (eventDate.getTime() === today.getTime()) {
+        className = "today-event";
+    } else if (eventDate > today && className === "") {
+        if (!document.querySelector(".upcoming-event")) {
+            className = "upcoming-event"; // first future event only
+        }
+    }
+
+    const row = `<tr class="${className}">
+        <td>${formatDate(e.date)}</td>
+        <td>${e.event}</td>
+        <td>${e.program}</td>
+        <td>${e.time}</td>
+        <td>${e.venue}</td>
+    </tr>`;
+
+    tbody.innerHTML += row;
+});
 }
 
 // Run it
