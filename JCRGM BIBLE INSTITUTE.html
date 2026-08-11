@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#172554">
+<title>JCRGM Bible Institute</title>
+<style>
+:root{--navy:#172554;--blue:#2563eb;--gold:#d4a017;--cream:#f8fafc;--ink:#172033;--muted:#64748b;--card:#fff;--line:#e2e8f0;--green:#15803d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--cream);color:var(--ink);line-height:1.6}
+button,input,textarea,select{font:inherit}.app{min-height:100vh}.top{background:linear-gradient(135deg,#0f172a,#172554 55%,#1d4ed8);color:white;padding:22px 18px 28px;position:sticky;top:0;z-index:20;box-shadow:0 8px 25px #0f172a22}
+.brand{max-width:1250px;margin:auto;display:flex;align-items:center;gap:14px}.seal{width:54px;height:54px;border:2px solid #f5d36b;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#f5d36b;background:#ffffff12}.brand h1{font-size:1.35rem;margin:0}.brand p{margin:2px 0 0;color:#cbd5e1;font-size:.85rem}
+.nav{max-width:1250px;margin:18px auto 0;display:flex;gap:8px;overflow:auto;padding-bottom:2px}.nav button{border:1px solid #ffffff25;background:#ffffff10;color:white;border-radius:999px;padding:9px 14px;white-space:nowrap;cursor:pointer}.nav button.active,.nav button:hover{background:#fff;color:#172554}
+main{max-width:1250px;margin:auto;padding:24px 16px 60px}.hero{background:linear-gradient(120deg,#fff,#eff6ff);border:1px solid var(--line);border-radius:24px;padding:30px;margin-bottom:20px}.hero h2{font-size:clamp(1.7rem,4vw,2.7rem);margin:0 0 8px;color:var(--navy)}.hero p{max-width:850px;color:#475569}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.btn{border:0;border-radius:12px;padding:11px 15px;background:var(--blue);color:white;cursor:pointer;font-weight:700}.btn.alt{background:#e2e8f0;color:#172033}.btn.gold{background:var(--gold);color:#1e293b}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:19px;box-shadow:0 6px 18px #0f172a0b}.card h3{margin:0 0 7px;color:var(--navy)}.muted{color:var(--muted)}.tag{display:inline-block;background:#dbeafe;color:#1e40af;padding:4px 8px;border-radius:999px;font-size:.74rem;font-weight:800;margin:2px}
+.progress{height:9px;background:#e2e8f0;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#22c55e);width:0}.stat{font-size:1.7rem;font-weight:900;color:var(--navy)}.section{margin:28px 0}.section h2{color:var(--navy)}
+.lesson{display:none}.lesson.active{display:block}.lesson-header{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;flex-wrap:wrap}.lesson-body{font-size:1.02rem}.lesson-body h3{color:var(--navy);margin-top:25px}.lesson-body blockquote{margin:18px 0;padding:14px 18px;border-left:4px solid var(--gold);background:#fffbeb;border-radius:8px}.verse{font-weight:700}.two{display:grid;grid-template-columns:2fr 1fr;gap:18px}@media(max-width:800px){.two{grid-template-columns:1fr}}
+textarea{width:100%;min-height:160px;border:1px solid var(--line);border-radius:12px;padding:12px;resize:vertical}input,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:white}.course{cursor:pointer;transition:.2s}.course:hover{transform:translateY(-2px);box-shadow:0 12px 25px #0f172a12}.check{display:flex;gap:10px;align-items:center}.check input{width:auto}.search{margin:10px 0 18px}.resource a{color:#1d4ed8;font-weight:700;text-decoration:none}.resource a:hover{text-decoration:underline}.quiz .q{padding:15px;border:1px solid var(--line);border-radius:14px;margin:12px 0}.result{padding:14px;border-radius:12px;background:#f0fdf4;color:#166534;display:none}.footer{text-align:center;color:#64748b;padding:30px;border-top:1px solid var(--line);font-size:.9rem}
+.small{font-size:.86rem}.danger{color:#b91c1c}.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="brand"><div class="seal">J</div><div><h1>JCRGM BIBLE INSTITUTE</h1><p>Know the Word • Understand the Gospel • Live the Life • Equip the Church</p></div></div>
+  <nav class="nav" id="nav">
+    <button class="active" data-page="home">Home</button><button data-page="curriculum">Curriculum</button><button data-page="library">Bible Library</button><button data-page="study">Study Tools</button><button data-page="quiz">Exams</button><button data-page="notes">My Notes</button><button data-page="resources">Resources</button>
+  </nav>
+</header>
+
+<main>
+<section id="home" class="page">
+  <div class="hero">
+    <span class="tag">JCRGM • BIBLE INSTITUTE</span>
+    <h2>A complete digital Bible-school learning environment.</h2>
+    <p>Study Scripture systematically from Genesis to Revelation while learning biblical interpretation, doctrine, spiritual formation, preaching, leadership, missions and practical ministry. Your progress and notes are saved in this browser.</p>
+    <div class="actions"><button class="btn" onclick="showPage('curriculum')">Start the School</button><button class="btn gold" onclick="showLesson('OT01')">Start Genesis</button><button class="btn alt" onclick="showPage('study')">Open Study Tools</button></div>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="stat" id="courseCount">12</div><div class="muted">Core courses</div></div>
+    <div class="card"><div class="stat" id="lessonCount">48</div><div class="muted">Structured lessons</div></div>
+    <div class="card"><div class="stat" id="doneCount">0</div><div class="muted">Lessons completed</div></div>
+    <div class="card"><div class="stat" id="pct">0%</div><div class="muted">Institute progress</div></div>
+  </div>
+  <div class="section">
+    <h2>Institute pathway</h2>
+    <div class="grid">
+      <div class="card"><h3>Foundation</h3><p>Scripture, salvation, prayer, discipleship and Christian worldview.</p></div>
+      <div class="card"><h3>Bible Survey</h3><p>Walk through the Old and New Testaments and see the unified story of redemption.</p></div>
+      <div class="card"><h3>Doctrine</h3><p>Study God, Christ, Spirit, humanity, sin, salvation, church and last things.</p></div>
+      <div class="card"><h3>Ministry</h3><p>Learn interpretation, preaching, teaching, pastoral care, leadership and mission.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="curriculum" class="page hidden">
+  <div class="hero"><h2>Institute Curriculum</h2><p>Complete the courses in order or choose a track. Each course contains four lessons, reflection prompts and an assessment.</p></div>
+  <input class="search" id="courseSearch" placeholder="Search courses, subjects or lessons..." oninput="renderCourses()">
+  <div id="courses" class="grid"></div>
+</section>
+
+<section id="lessonPage" class="page hidden">
+  <div id="lessonContainer"></div>
+</section>
+
+<section id="library" class="page hidden">
+  <div class="hero"><h2>Bible Library & Survey</h2><p>Use the book map to understand the Bible's structure, themes and major movements.</p></div>
+  <div class="grid" id="bookGrid"></div>
+</section>
+
+<section id="study" class="page hidden">
+  <div class="hero"><h2>Study Tools</h2><p>A practical workflow for serious Bible study: observation → interpretation → application → prayer.</p></div>
+  <div class="grid">
+    <div class="card"><h3>OIA Study Method</h3><ol><li><b>Observe:</b> Who, what, where, when, why? Note repetition, contrast and context.</li><li><b>Interpret:</b> What did the author mean in context? Compare Scripture with Scripture.</li><li><b>Apply:</b> What must I believe, change, obey, practice or teach?</li></ol></div>
+    <div class="card"><h3>Context Checklist</h3><p>Read the paragraph, chapter and book. Identify author, audience, occasion, genre, historical setting and the flow of argument.</p></div>
+    <div class="card"><h3>Cross-Reference Strategy</h3><p>Compare parallel passages, quotations, allusions and repeated biblical themes. Let clearer passages help with less-clear passages.</p></div>
+    <div class="card"><h3>Word Study</h3><p>Check the word's meaning in its immediate context, then consult original-language tools and multiple translations. Never build doctrine on a dictionary definition alone.</p></div>
+  </div>
+  <div class="section">
+    <h2>Quick Scripture search</h2>
+    <div class="grid">
+      <div class="card"><h3>Verse lookup</h3><input id="ref" placeholder="Example: John 3:16"><div class="actions"><button class="btn" onclick="lookup('biblegateway')">BibleGateway</button><button class="btn alt" onclick="lookup('biblehub')">Bible Hub</button></div><p class="small muted">External Bible sites open in a new tab.</p></div>
+      <div class="card"><h3>Study timer</h3><div class="stat" id="timer">25:00</div><div class="actions"><button class="btn" onclick="startTimer()">Start</button><button class="btn alt" onclick="resetTimer()">Reset</button></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="quiz" class="page hidden">
+  <div class="hero"><h2>Exams & Assessments</h2><p>Take the foundation assessment below. Use your result to identify areas to revisit.</p></div>
+  <div class="quiz card">
+    <div class="q"><b>1. What is the primary task of biblical interpretation?</b><label class="check"><input type="radio" name="q1" value="a"> Make the text say what I already believe</label><label class="check"><input type="radio" name="q1" value="b"> Understand the meaning of the text in its context</label><label class="check"><input type="radio" name="q1" value="c"> Find a hidden meaning in every sentence</label></div>
+    <div class="q"><b>2. Which sequence best describes the OIA method?</b><label class="check"><input type="radio" name="q2" value="a"> Opinion → Inspiration → Argument</label><label class="check"><input type="radio" name="q2" value="b"> Observation → Interpretation → Application</label><label class="check"><input type="radio" name="q2" value="c"> Outline → Imagination → Announcement</label></div>
+    <div class="q"><b>3. The gospel centers on:</b><label class="check"><input type="radio" name="q3" value="a"> Human achievement</label><label class="check"><input type="radio" name="q3" value="b"> God's saving work in Jesus Christ</label><label class="check"><input type="radio" name="q3" value="c"> Personal prosperity</label></div>
+    <div class="q"><b>4. A responsible doctrine should be:</b><label class="check"><input type="radio" name="q4" value="a"> Based on isolated verses only</label><label class="check"><input type="radio" name="q4" value="b"> Built from the whole counsel of Scripture with sound context</label><label class="check"><input type="radio" name="q4" value="c"> Determined only by culture</label></div>
+    <div class="q"><b>5. Christian leadership should primarily be characterized by:</b><label class="check"><input type="radio" name="q5" value="a"> Servanthood and faithfulness</label><label class="check"><input type="radio" name="q5" value="b"> Status and control</label><label class="check"><input type="radio" name="q5" value="c"> Popularity</label></div>
+    <button class="btn" onclick="grade()">Submit Exam</button><div id="result" class="result"></div>
+  </div>
+</section>
+
+<section id="notes" class="page hidden">
+  <div class="hero"><h2>My Notes & Journal</h2><p>Your notes are stored locally on this device. They are not uploaded to the internet.</p></div>
+  <div class="card"><textarea id="notesBox" placeholder="Write observations, insights, sermon ideas, prayer points and questions..."></textarea><div class="actions"><button class="btn" onclick="saveNotes()">Save Notes</button><button class="btn alt" onclick="clearNotes()">Clear</button></div><p id="saveMsg" class="small muted"></p></div>
+</section>
+
+<section id="resources" class="page hidden">
+  <div class="hero"><h2>Recommended Bible Resources</h2><p>External resources are independent websites. Check their statements of faith and use them alongside Scripture and your JCRGM teaching.</p></div>
+  <div class="grid resource">
+    <div class="card"><h3>Bible text</h3><p>Online translations, reading and search.</p><a href="https://www.biblegateway.com/" target="_blank" rel="noopener">BibleGateway ↗</a><br><a href="https://www.bible.com/" target="_blank" rel="noopener">YouVersion ↗</a></div>
+    <div class="card"><h3>Study tools</h3><a href="https://www.blueletterbible.org/" target="_blank" rel="noopener">Blue Letter Bible ↗</a><br><a href="https://www.stepbible.org/" target="_blank" rel="noopener">STEP Bible ↗</a><br><a href="https://biblehub.com/" target="_blank" rel="noopener">Bible Hub ↗</a></div>
+    <div class="card"><h3>Video Bible overview</h3><a href="https://bibleproject.com/" target="_blank" rel="noopener">BibleProject ↗</a></div>
+    <div class="card"><h3>Original languages</h3><p>Use language tools carefully and always return to the passage's context.</p><a href="https://www.stepbible.org/" target="_blank" rel="noopener">STEP Bible language tools ↗</a></div>
+    <div class="card"><h3>Academic research</h3><a href="https://www.bibleodyssey.org/" target="_blank" rel="noopener">Bible Odyssey ↗</a><p class="small muted">Useful for historical and literary background.</p></div>
+    <div class="card"><h3>Reading plans</h3><a href="https://www.bible.com/reading-plans" target="_blank" rel="noopener">YouVersion reading plans ↗</a></div>
+  </div>
+</section>
+</main>
+<footer class="footer">JCRGM BIBLE INSTITUTE • A digital learning companion for Scripture, discipleship and ministry. <span id="year"></span></footer>
+</div>
+
+<script>
+const courses=[
+{id:"OT",title:"Old Testament Survey",desc:"Genesis to Malachi: creation, covenant, kingdom, exile, wisdom and prophetic hope.",lessons:[
+["OT01","Genesis: Creation, Fall & Covenant",`<p>Genesis establishes the biblical worldview: God is Creator, humanity bears God's image, sin fractures creation, and God begins a covenant mission to bless the nations.</p><h3>Key themes</h3><ul><li>Creation and human dignity</li><li>The Fall and consequences of sin</li><li>Noah and God's preservation</li><li>Abrahamic covenant and promise</li><li>Faith, family and providence</li></ul><blockquote class="verse">Read: Genesis 1–3; 12; 15; 22; 50</blockquote><h3>Ministry reflection</h3><p>How does Genesis shape your understanding of human dignity, sin and God's redemptive purpose?</p>`],
+["OT02","Exodus–Deuteronomy: Redemption & Covenant",`<p>Israel's deliverance from Egypt becomes a central picture of salvation. Sinai forms Israel as a covenant people, while the wilderness reveals both God's faithfulness and human unbelief.</p><ul><li>Passover and deliverance</li><li>Covenant and law</li><li>Tabernacle and God's presence</li><li>Priesthood and holiness</li><li>Wilderness testing</li></ul><blockquote class="verse">Read: Exodus 12; 19–20; 32–34; Leviticus 19; Numbers 14; Deuteronomy 6</blockquote>`],
+["OT03","Joshua–Esther: Kingdom, Exile & Providence",`<p>Israel enters the land, develops monarchy, experiences division and eventually exile. The historical books repeatedly ask whether God's people will trust and obey the covenant.</p><ul><li>Conquest and settlement</li><li>Judges and the cycle of rebellion</li><li>Davidic kingship</li><li>Wisdom in leadership</li><li>Exile and restoration</li><li>God's providence in Esther</li></ul>`],
+["OT04","Wisdom & Prophets: Worship, Justice & Hope",`<p>Job, Psalms, Proverbs, Ecclesiastes and Song of Songs explore life before God. The prophets confront idolatry and injustice while announcing judgment, restoration and messianic hope.</p><blockquote>Study representative passages from Isaiah, Jeremiah, Ezekiel, Daniel and the Twelve Minor Prophets.</blockquote>`]]},
+{id:"NT",title:"New Testament Survey",desc:"Jesus, Acts, the apostolic witness and the church's mission.",lessons:[
+["NT01","The Gospels: Jesus the Messiah",`<p>The four Gospels proclaim the life, teaching, death and resurrection of Jesus. Read each Gospel as a coherent work while comparing their portraits of Christ.</p><ul><li>Kingdom of God</li><li>Jesus' identity and authority</li><li>Discipleship</li><li>Cross and resurrection</li></ul><blockquote class="verse">Read: Mark 1; Matthew 5–7; Luke 15; John 1; 18–20</blockquote>`],
+["NT02","Acts: Spirit, Church & Mission",`<p>Acts traces the Spirit-empowered witness of the early church from Jerusalem outward. Pay attention to preaching, prayer, fellowship, persecution and cross-cultural mission.</p><blockquote class="verse">Read: Acts 1–2; 4; 6–8; 10; 13–20; 28</blockquote>`],
+["NT03","Pauline Epistles: Gospel & Church",`<p>Romans through Philemon apply the gospel to salvation, identity, holiness, relationships, worship and ministry. Learn to read each letter in its historical and pastoral setting.</p>`],
+["NT04","General Epistles & Revelation",`<p>Hebrews through Jude call believers to endurance, holiness, discernment and faithful love. Revelation gives a symbolic, pastoral vision of Christ's victory and the hope of God's final renewal.</p>`]]},
+{id:"TH",title:"Systematic Theology",desc:"A structured study of major Christian doctrines.",lessons:[
+["TH01","Doctrine of God",`<p>Study God's character, holiness, love, faithfulness, sovereignty and self-revelation. Consider the Trinity as Father, Son and Holy Spirit.</p><blockquote>Read: Deuteronomy 6:4; Isaiah 6; Matthew 28:19; John 1:1–18; 2 Corinthians 13:14.</blockquote>`],
+["TH02","Christology: Person & Work of Christ",`<p>Jesus Christ is central to Christian theology. Study his incarnation, sinlessness, teaching, miracles, atoning death, resurrection, ascension and promised return.</p>`],
+["TH03","Holy Spirit, Humanity & Sin",`<p>Study creation in God's image, human brokenness, the Spirit's work in regeneration and sanctification, spiritual gifts and life in the Spirit.</p>`],
+["TH04","Salvation, Church & Last Things",`<p>Trace salvation from God's grace to faith, justification, adoption, sanctification and glorification. Then study the nature and mission of the church and Christian hope concerning Christ's return and final judgment.</p>`]]},
+{id:"BI",title:"Biblical Interpretation",desc:"Learn to handle Scripture faithfully and responsibly.",lessons:[
+["BI01","Observation & Context",`<p>Begin with what the text actually says. Observe repeated words, structure, commands, promises, contrasts, characters, setting and argument.</p><h3>Rule</h3><p>Interpret a verse in its paragraph, book and canonical context—not as an isolated slogan.</p>`],
+["BI02","Genre & Literary Reading",`<p>Narrative, poetry, wisdom, prophecy, Gospel, epistle and apocalyptic literature use different conventions. Identify genre before deciding how a passage communicates.</p>`],
+["BI03","History, Culture & Original Languages",`<p>Historical background can illuminate a passage. Greek and Hebrew tools can help with vocabulary and grammar, but word studies must remain contextual.</p>`],
+["BI04","From Exegesis to Application",`<p>Move from authorial meaning to faithful contemporary application. Distinguish what the text meant then from principles that can be lived now.</p>`]]},
+{id:"CH",title:"Christology & Gospel",desc:"Know Christ and communicate the good news clearly.",lessons:[
+["CH01","The Gospel Story",`<p>Creation, fall, promise, Christ, cross, resurrection, Spirit, church and new creation form the broad biblical story of redemption.</p>`],
+["CH02","Cross & Resurrection",`<p>Study biblical themes of sacrifice, reconciliation, victory, justification, substitution and new life without reducing the cross to one formula.</p>`],
+["CH03","Faith, Repentance & New Life",`<p>Explore conversion, faith, repentance, baptism, union with Christ and the call to follow Jesus.</p>`],
+["CH04","Evangelism & Discipleship",`<p>Evangelism announces Christ; discipleship forms people to obey Jesus. Healthy ministry holds proclamation and formation together.</p>`]]},
+{id:"SP",title:"Spiritual Formation",desc:"Prayer, holiness, worship, character and spiritual disciplines.",lessons:[
+["SP01","Prayer & Communion with God",`<p>Study prayer as relationship, dependence, worship, intercession, confession and thanksgiving. Build a sustainable prayer rhythm.</p><blockquote class="verse">Read: Matthew 6:5–13; Luke 11:1–13; Philippians 4:6–7.</blockquote>`],
+["SP02","Holiness & Character",`<p>Christian maturity includes transformed character. Study the fruit of the Spirit, putting off old patterns and putting on Christlike virtues.</p>`],
+["SP03","Worship, Fasting & Scripture",`<p>Worship encompasses the whole life. Scripture meditation, fasting, solitude and gathered worship can train attention toward God when practiced with humility.</p>`],
+["SP04","Discernment & Spiritual Maturity",`<p>Test impressions and teachings by Scripture, wise counsel, Christlike fruit and truth. Spiritual maturity grows in love and discernment.</p>`]]},
+{id:"PR",title:"Preaching & Teaching",desc:"Prepare biblical messages that explain Scripture and call people to faithful response.",lessons:[
+["PR01","The Biblical Sermon",`<p>A faithful sermon starts with a real text and its meaning. Identify the central idea, structure and purpose before crafting illustrations.</p>`],
+["PR02","Expository Preparation",`<p>Study the passage, outline its flow, formulate the big idea, build explanations, provide illustrations and apply the truth responsibly.</p>`],
+["PR03","Communication & Delivery",`<p>Clear language, appropriate pace, eye contact, vocal variety and purposeful repetition help people hear the message. Delivery serves content rather than replacing it.</p>`],
+["PR04","Teaching for Transformation",`<p>Teaching should aim beyond information. Give learners opportunities to understand, discuss, practice, obey and teach others.</p>`]]},
+{id:"PA",title:"Pastoral Ministry",desc:"Care for people with wisdom, compassion, boundaries and biblical faithfulness.",lessons:[
+["PA01","The Shepherd's Calling",`<p>Pastoral ministry follows the pattern of Christ the Chief Shepherd: service, truth, care, protection and example.</p>`],
+["PA02","Counseling & Care",`<p>Listen carefully, pray, use Scripture wisely, respect confidentiality and know when to refer serious needs to qualified professionals. Never promise outcomes Scripture does not promise.</p>`],
+["PA03","Church Conflict & Reconciliation",`<p>Address conflict promptly, truthfully and humbly. Pursue reconciliation without ignoring abuse, safety or accountability.</p>`],
+["PA04","Funerals, Weddings & Life Events",`<p>Prepare ministry for major life transitions with theological clarity, compassion, appropriate local law and respect for families and communities.</p>`]]},
+{id:"LE",title:"Christian Leadership",desc:"Lead through character, service, vision, stewardship and multiplication.",lessons:[
+["LE01","Servant Leadership",`<p>Jesus overturns status-driven leadership. Authority is exercised for the good of people and the mission of God.</p>`],
+["LE02","Vision & Planning",`<p>Turn biblical mission into clear goals, responsible plans, measurable practices and prayerful review.</p>`],
+["LE03","Teams & Delegation",`<p>Healthy leaders identify gifts, equip people, delegate responsibility and create accountability without controlling everything.</p>`],
+["LE04","Integrity & Accountability",`<p>Money, sexuality, power, speech and relationships require transparent safeguards. Leaders should welcome correction and avoid isolated authority.</p>`]]},
+{id:"MI",title:"Missions & Evangelism",desc:"The church participates in God's mission among neighbors and nations.",lessons:[
+["MI01","Biblical Mission",`<p>From Abraham's blessing to Jesus' Great Commission, Scripture presents God's redemptive purpose for the nations.</p>`],
+["MI02","Cross-Cultural Witness",`<p>Listen before speaking. Learn language and culture, communicate the gospel clearly, avoid unnecessary cultural offense and honor local believers.</p>`],
+["MI03","Church Planting & Multiplication",`<p>Healthy mission develops disciples and local leadership rather than permanent dependency.</p>`],
+["MI04","Justice, Mercy & Public Witness",`<p>Christian witness includes truthful proclamation and lives marked by love, justice, mercy, generosity and good works.</p>`]]},
+{id:"CHU",title:"Ecclesiology & Church Life",desc:"Understand the church, ordinances, community, gifts and mission.",lessons:[
+["CHU01","Nature & Mission of the Church",`<p>Study the church as the people of God, body of Christ and temple of the Spirit, gathered for worship, formation, fellowship and mission.</p>`],
+["CHU02","Baptism & Communion",`<p>Explore the biblical meaning and practice of baptism and the Lord's Supper, while recognizing denominational differences.</p>`],
+["CHU03","Gifts & Ministry",`<p>Spiritual gifts equip the body for service. Gifts should operate under love, order, biblical discernment and the goal of building others up.</p>`],
+["CHU04","Church Health",`<p>Healthy churches cultivate biblical teaching, prayer, worship, community, mission, generosity, discipleship and accountable leadership.</p>`]]},
+{id:"BIH",title:"Bible History & Background",desc:"Build historical awareness for better reading.",lessons:[
+["BIH01","Bible Lands & Covenants",`<p>Map the major biblical settings: Mesopotamia, Canaan, Egypt, wilderness, Israel, Judah, exile, Galilee, Judea and the wider Roman world.</p>`],
+["BIH02","Israel's Kingdoms & Exile",`<p>Learn the broad sequence from judges to united monarchy, divided kingdom, Assyrian and Babylonian exile, Persian period and restoration.</p>`],
+["BIH03","Second Temple & New Testament World",`<p>Understand Jewish groups, synagogue life, Roman rule, Greek influence and the historical setting of the Gospels and early church.</p>`],
+["BIH04","Canon, Manuscripts & Translations",`<p>Learn how biblical books were transmitted and translated. Compare translations and distinguish textual variants from changes in doctrine.</p>`]]}
+];
+
+const books=[
+["Pentateuch","Genesis • Exodus • Leviticus • Numbers • Deuteronomy","Creation, covenant, redemption, holiness"],
+["History","Joshua through Esther","Land, judges, kings, exile, restoration"],
+["Poetry & Wisdom","Job through Song of Songs","Suffering, worship, wisdom, meaning, love"],
+["Major Prophets","Isaiah • Jeremiah • Lamentations • Ezekiel • Daniel","Judgment, covenant, hope and restoration"],
+["Minor Prophets","Hosea through Malachi","Covenant faithfulness, justice and messianic hope"],
+["Gospels","Matthew • Mark • Luke • John","Jesus' life, teaching, death and resurrection"],
+["Acts","Acts","Spirit-empowered witness and church mission"],
+["Paul's Letters","Romans through Philemon","Gospel doctrine and church life"],
+["General Letters","Hebrews through Jude","Endurance, holiness, truth and love"],
+["Revelation","Revelation","Christ's victory, judgment and new creation"]
+];
+
+let completed=JSON.parse(localStorage.getItem("jcrgm_completed")||"[]");
+let notes=localStorage.getItem("jcrgm_notes")||"";
+let timerSeconds=1500,timerInt=null;
+
+function showPage(id){
+ document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+
+function renderCourses(){
+ const q=(document.getElementById("courseSearch")?.value||"").toLowerCase();
+ const box=document.getElementById("courses"); box.innerHTML="";
+ courses.filter(c=>(c.title+c.desc+c.lessons.flat().join(" ")).toLowerCase().includes(q)).forEach(c=>{
+   const done=c.lessons.filter(l=>completed.includes(l[0])).length,p=Math.round(done/c.lessons.length*100);
+   const d=document.createElement("div");d.className="card course";
+   d.innerHTML=`<span class="tag">${c.id}</span><h3>${c.title}</h3><p>${c.desc}</p><div class="progress"><i style="width:${p}%"></i></div><p class="small muted">${done}/${c.lessons.length} lessons • ${p}%</p><button class="btn" onclick="openCourse('${c.id}')">Open Course</button>`;
+   box.appendChild(d);
+ });
+}
+function openCourse(id){const c=courses.find(x=>x.id===id);showLesson(c.lessons[0][0]);}
+function findLesson(id){for(const c of courses){const l=c.lessons.find(x=>x[0]===id);if(l)return {c,l};}}
+function showLesson(id){
+ const f=findLesson(id); if(!f)return; const {c,l}=f;
+ showPage("lessonPage");
+ const done=completed.includes(id);
+ const idx=c.lessons.findIndex(x=>x[0]===id);
+ let navs=`<div class="actions">${idx>0?`<button class="btn alt" onclick="showLesson('${c.lessons[idx-1][0]}')">← Previous</button>`:""}${idx<c.lessons.length-1?`<button class="btn" onclick="showLesson('${c.lessons[idx+1][0]}')">Next →</button>`:""}<button class="btn gold" onclick="showPage('curriculum')">Course list</button></div>`;
+ document.getElementById("lessonContainer").innerHTML=`<div class="hero"><span class="tag">${c.title}</span><div class="lesson-header"><div><h2>${l[1]}</h2><p class="muted">Lesson ${idx+1} of ${c.lessons.length}</p></div><button class="btn ${done?'alt':''}" onclick="toggleDone('${id}')">${done?'✓ Completed':'Mark Complete'}</button></div></div><div class="two"><article class="card lesson-body">${l[2]}<h3>Study assignment</h3><p>Read the listed passages slowly. Write three observations, one theological insight, one practical application and one prayer.</p><textarea id="lessonNote" placeholder="Your lesson reflection...">${localStorage.getItem('jcrgm_note_'+id)||""}</textarea><button class="btn" onclick="saveLessonNote('${id}')">Save Reflection</button>${navs}</article><aside class="card"><h3>Study prayer</h3><p>“Lord, open my eyes to understand Your Word, shape my character by Your truth, and make me faithful to obey and teach what I learn.”</p><h3>Recommended reading</h3><p class="small">Read the whole biblical book surrounding the assigned passage. Then compare at least two trustworthy translations.</p></aside></div>`;
+}
+function toggleDone(id){if(completed.includes(id))completed=completed.filter(x=>x!==id);else completed.push(id);localStorage.setItem("jcrgm_completed",JSON.stringify(completed));updateStats();showLesson(id);}
+function saveLessonNote(id){localStorage.setItem("jcrgm_note_"+id,document.getElementById("lessonNote").value);alert("Reflection saved on this device.");}
+function updateStats(){const total=courses.reduce((n,c)=>n+c.lessons.length,0),d=completed.length,p=Math.round(d/total*100);document.getElementById("doneCount").textContent=d;document.getElementById("pct").textContent=p+"%";document.getElementById("lessonCount").textContent=total;}
+function renderBooks(){document.getElementById("bookGrid").innerHTML=books.map(b=>`<div class="card"><h3>${b[0]}</h3><p><b>${b[1]}</b></p><p class="muted">${b[2]}</p></div>`).join("");}
+function saveNotes(){localStorage.setItem("jcrgm_notes",document.getElementById("notesBox").value);document.getElementById("saveMsg").textContent="Saved locally on this device."}
+function clearNotes(){if(confirm("Clear your institute notes?")){document.getElementById("notesBox").value="";saveNotes();}}
+function lookup(site){const r=document.getElementById("ref").value.trim();if(!r){alert("Enter a reference first.");return}let url=site==="biblegateway"?"https://www.biblegateway.com/passage/?search="+encodeURIComponent(r):"https://biblehub.com/"+encodeURIComponent(r.replaceAll(" ","_"))+".htm";window.open(url,"_blank","noopener");}
+function grade(){const ans={q1:"b",q2:"b",q3:"b",q4:"b",q5:"a"};let s=0;for(const q in ans){const x=document.querySelector(`input[name="${q}"]:checked`);if(x&&x.value===ans[q])s++}const pct=Math.round(s/5*100),r=document.getElementById("result");r.style.display="block";r.innerHTML=`You scored <b>${s}/5 (${pct}%)</b>. ${pct>=80?"Strong foundation—continue to deeper study.":"Review Biblical Interpretation, Gospel and Leadership lessons, then retake the assessment."}`;}
+function startTimer(){if(timerInt)return;timerInt=setInterval(()=>{timerSeconds--;if(timerSeconds<=0){clearInterval(timerInt);timerInt=null;alert("Study session complete. Take a moment to pray and record what you learned.");timerSeconds=1500}renderTimer()},1000)}
+function resetTimer(){clearInterval(timerInt);timerInt=null;timerSeconds=1500;renderTimer()}
+function renderTimer(){let m=Math.floor(timerSeconds/60),s=timerSeconds%60;document.getElementById("timer").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`}
+document.getElementById("notesBox").value=notes;document.getElementById("year").textContent=new Date().getFullYear();
+document.getElementById("courseCount").textContent=courses.length;renderCourses();renderBooks();updateStats();renderTimer();
+</script>
+</body>
+</html>

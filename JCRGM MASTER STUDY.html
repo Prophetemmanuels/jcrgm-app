@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07111f">
+<title>JCRGM MASTER STUDY</title>
+<style>
+:root{--bg:#07111f;--panel:#0d1b2d;--panel2:#12243a;--gold:#e7bd62;--gold2:#ffe3a0;--text:#edf3f8;--muted:#9fb0c2;--green:#54d69b;--red:#ff8f8f;--line:#203650}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#173453 0,#07111f 42%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.55}
+button,input,textarea,select{font:inherit}button{cursor:pointer}.app{display:flex;min-height:100vh}.side{width:280px;background:rgba(6,15,28,.94);border-right:1px solid var(--line);padding:22px;position:sticky;top:0;height:100vh;overflow:auto}.brand{font-weight:900;letter-spacing:.08em;color:var(--gold);font-size:19px}.tag{color:var(--muted);font-size:12px;margin:4px 0 22px}.nav button{width:100%;text-align:left;background:transparent;color:var(--muted);border:0;padding:11px 12px;border-radius:10px;margin:3px 0}.nav button.active,.nav button:hover{background:var(--panel2);color:white}.main{flex:1;padding:28px;max-width:1500px;margin:auto;width:100%}.top{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:22px}.eyebrow{color:var(--gold);font-weight:800;text-transform:uppercase;letter-spacing:.12em;font-size:12px}.title{font-size:clamp(28px,4vw,48px);margin:4px 0;font-weight:900}.subtitle{color:var(--muted);max-width:760px}.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:var(--panel);color:white;border-radius:10px;padding:10px 13px}.btn.primary{background:var(--gold);color:#17120a;border-color:var(--gold);font-weight:800}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.card{grid-column:span 4;background:linear-gradient(145deg,rgba(18,36,58,.96),rgba(9,22,37,.96));border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 14px 35px #0003}.wide{grid-column:span 8}.full{grid-column:1/-1}.card h2,.card h3{margin:0 0 8px}.muted{color:var(--muted)}.metric{font-size:32px;font-weight:900;color:var(--gold2)}.progress{height:9px;background:#08121f;border-radius:9px;overflow:hidden;margin:10px 0}.bar{height:100%;background:linear-gradient(90deg,var(--gold),#fff0bd);width:0}.verse{font-family:Georgia,serif;font-size:22px;line-height:1.65;color:#fff8e7}.ref{color:var(--gold);font-weight:800}.tabs{display:flex;gap:8px;overflow:auto;margin:18px 0}.tab{white-space:nowrap}.section{display:none}.section.show{display:block}.bookgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}.book{background:#0b1829;border:1px solid var(--line);border-radius:10px;padding:12px;text-align:left;color:white}.book small{display:block;color:var(--muted)}textarea,input,select{width:100%;background:#081523;border:1px solid var(--line);color:white;border-radius:10px;padding:12px;outline:none}.notes{min-height:180px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.check{display:flex;gap:9px;align-items:flex-start;margin:10px 0}.check input{width:auto;margin-top:5px}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#18304a;color:var(--muted);font-size:12px;margin:3px}.quote{border-left:3px solid var(--gold);padding-left:14px}.footer{text-align:center;color:var(--muted);padding:35px 0;font-size:12px}.hidden{display:none!important}.toast{position:fixed;right:20px;bottom:20px;background:#f5d27d;color:#17120a;padding:12px 15px;border-radius:10px;font-weight:800;display:none;z-index:20}.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.modalbox{max-width:800px;width:100%;max-height:90vh;overflow:auto;background:#0b192b;border:1px solid var(--line);border-radius:16px;padding:22px}.danger{color:var(--red)}@media(max-width:900px){.side{position:fixed;z-index:8;left:-290px;transition:.2s}.side.open{left:0}.main{padding:18px}.card,.wide{grid-column:1/-1}.row{grid-template-columns:1fr}.mobile{display:block!important}.top{align-items:flex-start}.menu{display:block!important}}
+.mobile{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side" id="side">
+  <div class="brand">JCRGM MASTER STUDY</div>
+  <div class="tag">Read • Understand • Meditate • Apply • Pray</div>
+  <nav class="nav">
+    <button class="active" data-go="dashboard">⌂ Dashboard</button>
+    <button data-go="read">📖 Bible Journey</button>
+    <button data-go="study">🔎 Study Method</button>
+    <button data-go="journal">✍ Journal & Prayer</button>
+    <button data-go="memory">🧠 Scripture Memory</button>
+    <button data-go="topics">✦ Topics & Themes</button>
+    <button data-go="plans">◷ Reading Plans</button>
+    <button data-go="resources">🔗 Study Resources</button>
+    <button data-go="settings">⚙ Settings & Data</button>
+  </nav>
+</aside>
+<main class="main">
+<div class="top">
+  <div><button class="btn menu mobile" onclick="toggleSide()">☰</button><div class="eyebrow">Daily discipleship workspace</div><div class="title">JCRGM MASTER STUDY</div><div class="subtitle">A focused command center for reading the whole Bible with context, observation, interpretation, application, prayer and Scripture memory.</div></div>
+  <div class="actions"><button class="btn" onclick="toggleTheme()">◐ Theme</button><button class="btn primary" onclick="showToday()">Today's Study</button></div>
+</div>
+
+<section id="dashboard" class="section show">
+<div class="grid">
+<div class="card wide"><h2>Today's Mission</h2><p class="muted">Don't rush to finish chapters. Aim to know the text, see God's character, understand the message, obey what is clear, and pray it into your life.</p>
+<div class="verse">“Your word is a lamp to my feet and a light to my path.” <span class="ref">— Psalm 119:105</span></div>
+<div class="progress"><div class="bar" id="daybar"></div></div><small class="muted"><span id="daypct">0</span>% of today's study checklist completed</small></div>
+<div class="card"><h3>Whole Bible</h3><div class="metric" id="booksDone">0 / 66</div><div class="progress"><div class="bar" id="bookbar"></div></div><span class="muted">Books marked studied</span></div>
+<div class="card"><h3>Study Streak</h3><div class="metric" id="streak">0 days</div><span class="muted">Stored on this device</span></div>
+<div class="card"><h3>Quick Start</h3><button class="btn primary" onclick="go('read')">Choose a book</button><button class="btn" onclick="go('study')">Open study method</button></div>
+<div class="card wide"><h2>7-step daily rhythm</h2>
+<div class="check"><input type="checkbox" class="daily"> <span><b>1. Prepare</b> — silence distractions; ask God for wisdom and humility.</span></div>
+<div class="check"><input type="checkbox" class="daily"> <span><b>2. Read</b> — read the passage slowly, preferably twice.</span></div>
+<div class="check"><input type="checkbox" class="daily"> <span><b>3. Observe</b> — repeated words, people, places, commands, contrasts, cause/effect.</span></div>
+<div class="check"><input type="checkbox" class="daily"> <span><b>4. Interpret</b> — author, audience, context, genre and purpose before personal application.</span></div>
+<div class="check"><input type="checkbox" class="daily"> <span><b>5. Cross-reference</b> — compare Scripture with Scripture.</span></div>
+<div class="check"><input type="checkbox" class="daily"> <span><b>6. Apply</b> — identify one truth, one action, one attitude to cultivate.</span></div>
+<div class="check"><input type="checkbox" class="daily"> <span><b>7. Pray & remember</b> — turn the passage into prayer and memorize one key verse.</span></div>
+</div>
+<div class="card"><h3>Today's Anchor</h3><p class="quote">Scripture first. Interpretation second. Application third. Emotion never replaces truth.</p></div>
+</div></section>
+
+<section id="read" class="section">
+<div class="card full"><h2>Bible Journey — 66 Books</h2><p class="muted">Select a book to mark it as studied and open an external Bible search. This app does not redistribute copyrighted Bible translations; use your preferred licensed Bible.</p><div id="books" class="bookgrid"></div></div>
+</section>
+
+<section id="study" class="section">
+<div class="grid">
+<div class="card wide"><h2>MASTER Study Canvas</h2><p class="muted">Use this repeatable framework for every passage.</p>
+<div class="row"><div><label>Passage</label><input id="passage" placeholder="e.g. Romans 8:1–17"></div><div><label>Genre</label><select id="genre"><option>Narrative</option><option>Law</option><option>Poetry/Wisdom</option><option>Prophecy</option><option>Gospel</option><option>Acts/History</option><option>Epistle</option><option>Apocalyptic</option></select></div></div>
+<h3>O — Observation</h3><textarea id="obs" placeholder="What does the text actually say?"></textarea>
+<h3>I — Interpretation</h3><textarea id="interp" placeholder="What did it mean to the original audience? What is the author's main point?"></textarea>
+<h3>C — Context & Cross-references</h3><textarea id="context" placeholder="Book context, historical setting, surrounding passage, related Scriptures..."></textarea>
+<h3>A — Application</h3><textarea id="apply" placeholder="What should I believe, stop, start, confess, practice or teach?"></textarea>
+<h3>P — Prayer</h3><textarea id="prayer" placeholder="Turn the truth of this passage into a prayer."></textarea>
+<button class="btn primary" onclick="saveStudy()">Save Study</button> <button class="btn" onclick="clearStudy()">Clear</button>
+</div>
+<div class="card"><h3>Interpretation guardrails</h3>
+<p>Ask: <b>What did it mean?</b> before asking <b>What does it mean to me?</b></p>
+<ul class="muted"><li>Read the whole paragraph/chapter.</li><li>Identify speaker, audience and purpose.</li><li>Respect literary genre.</li><li>Compare multiple translations.</li><li>Use cross-references carefully.</li><li>Separate clear teaching from inference.</li><li>Let difficult passages be difficult; keep studying.</li></ul>
+</div></div></section>
+
+<section id="journal" class="section">
+<div class="grid"><div class="card wide"><h2>Journal & Prayer Room</h2><input id="jtitle" placeholder="Entry title"><br><br><textarea id="journalText" class="notes" placeholder="Write what God is teaching you, questions, convictions, answered prayers, people to pray for..."></textarea><br><br><button class="btn primary" onclick="saveJournal()">Save Entry</button></div>
+<div class="card"><h3>Prayer checklist</h3><div class="check"><input type="checkbox"> Worship</div><div class="check"><input type="checkbox"> Confession</div><div class="check"><input type="checkbox"> Thanksgiving</div><div class="check"><input type="checkbox"> Intercession</div><div class="check"><input type="checkbox"> Guidance</div><div class="check"><input type="checkbox"> Mission & witness</div></div>
+<div class="card full"><h3>Saved journal entries</h3><div id="journalList" class="muted">No entries yet.</div></div></div></section>
+
+<section id="memory" class="section">
+<div class="grid"><div class="card wide"><h2>Scripture Memory Lab</h2><input id="memRef" placeholder="Reference, e.g. Philippians 4:13"><textarea id="memText" placeholder="Enter the verse from a translation you are licensed to use."></textarea><button class="btn primary" onclick="saveMemory()">Save Verse</button>
+<div id="memoryList"></div></div>
+<div class="card"><h3>Memory method</h3><ol class="muted"><li>Read aloud 5 times.</li><li>Understand the context.</li><li>Hide one phrase at a time.</li><li>Recite morning and evening.</li><li>Review after 1, 3, 7, 14 and 30 days.</li><li>Use it in prayer and conversation.</li></ol></div></div></section>
+
+<section id="topics" class="section">
+<div class="card full"><h2>Topics & Themes</h2><p class="muted">Use these as study trails. Search the topic in your Bible, then trace it across books.</p><div id="topicsList"></div></div></section>
+
+<section id="plans" class="section">
+<div class="grid"><div class="card wide"><h2>Reading Plans</h2><p>Choose a pace that produces consistency rather than burnout.</p>
+<div class="pill">365 days — whole Bible</div><div class="pill">180 days — intensive</div><div class="pill">90 days — focused</div><div class="pill">New Testament — 1 year</div><div class="pill">Old Testament — 1 year</div><div class="pill">Books of the Bible — 1 year</div>
+<p class="muted">External curated plans:</p><button class="btn primary" onclick="openLink('https://bibleproject.com/reading-plans/')">BibleProject Reading Plans</button> <button class="btn" onclick="openLink('https://www.bible.com/reading-plans')">YouVersion Plans</button>
+</div><div class="card"><h3>Suggested 365-day rhythm</h3><p class="muted">Use the BibleProject/YouVersion “One Story That Leads to Jesus” plan if you want a guided canonical journey with additional resources.</p><button class="btn" onclick="openLink('https://bibleproject.com/reading-plans/')">View plan</button></div></div></section>
+
+<section id="resources" class="section">
+<div class="grid">
+<div class="card"><h2>Free Study Tools</h2><p><b>BibleProject</b><br><span class="muted">Book overviews, themes, videos, classes, podcasts and reading plans.</span></p><button class="btn" onclick="openLink('https://bibleproject.com/')">Open BibleProject</button></div>
+<div class="card"><h2>Original Languages</h2><p><b>Blue Letter Bible</b><br><span class="muted">Lexicons, concordances, commentaries, dictionaries and parallel translations.</span></p><button class="btn" onclick="openLink('https://www.blueletterbible.org/')">Open BLB</button></div>
+<div class="card"><h2>Bible Reading</h2><p><b>YouVersion</b><br><span class="muted">Bible reading plans, translations, audio and reading tools.</span></p><button class="btn" onclick="openLink('https://www.bible.com/')">Open Bible App</button></div>
+<div class="card full"><h2>How to use external resources wisely</h2><p class="muted">Start with the biblical text. Use commentaries and study tools to test and deepen your understanding—not to replace careful reading. Compare sources when interpretations differ and check claims against the surrounding passage.</p></div>
+</div></section>
+
+<section id="settings" class="section">
+<div class="grid"><div class="card"><h2>Data</h2><button class="btn primary" onclick="exportData()">Export My Study Data</button><button class="btn" onclick="importData()">Import Data</button><button class="btn danger" onclick="resetData()">Reset Local Data</button><p class="muted">Your notes, checklist and progress are stored locally in this browser.</p></div><div class="card"><h2>Daily target</h2><select id="target"><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60">60 minutes</option><option value="90">90 minutes</option></select><p class="muted">A longer session is not automatically a better session. Seek depth, understanding and obedience.</p></div></div></section>
+
+<div class="footer">JCRGM MASTER STUDY • Built as a personal Bible-study workspace • Scripture text should be read from a Bible translation you have lawful access to.</div>
+</main></div>
+<div id="toast" class="toast"></div>
+<input id="file" type="file" accept=".json" class="hidden">
+<script>
+const OT=['Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua','Judges','Ruth','1 Samuel','2 Samuel','1 Kings','2 Kings','1 Chronicles','2 Chronicles','Ezra','Nehemiah','Esther','Job','Psalms','Proverbs','Ecclesiastes','Song of Solomon','Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel','Hosea','Joel','Amos','Obadiah','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi'];
+const NT=['Matthew','Mark','Luke','John','Acts','Romans','1 Corinthians','2 Corinthians','Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians','1 Timothy','2 Timothy','Titus','Philemon','Hebrews','James','1 Peter','2 Peter','1 John','2 John','3 John','Jude','Revelation'];
+const BOOKS=[...OT,...NT];
+const TOPICS=['God','Jesus Christ','Holy Spirit','Faith','Grace','Salvation','Prayer','Holiness','Love','Wisdom','Fear of the Lord','Kingdom of God','Discipleship','Forgiveness','Repentance','Covenant','Worship','Justice','Suffering','Hope','Resurrection','Church','Mission','Spiritual warfare','Money & stewardship','Marriage & family','Leadership','Temptation','Identity in Christ','Eternal life'];
+let state=JSON.parse(localStorage.getItem('jcrgmMaster')||'{"done":[],"journal":[],"memory":[],"studies":[],"dark":true,"streak":0}');
+function save(){localStorage.setItem('jcrgmMaster',JSON.stringify(state));update();}
+function toast(t){let x=document.getElementById('toast');x.textContent=t;x.style.display='block';setTimeout(()=>x.style.display='none',2200)}
+function go(id){document.querySelectorAll('.section').forEach(x=>x.classList.remove('show'));document.getElementById(id).classList.add('show');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===id));if(id==='read')renderBooks();if(id==='journal')renderJournal();if(id==='memory')renderMemory();if(id==='topics')renderTopics();if(innerWidth<900)document.getElementById('side').classList.remove('open');scrollTo(0,0)}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.go));
+function toggleSide(){document.getElementById('side').classList.toggle('open')}
+function renderBooks(){let el=document.getElementById('books');el.innerHTML='';BOOKS.forEach((b,i)=>{let q=document.createElement('button');q.className='book';q.innerHTML='<b>'+b+'</b><small>'+(state.done.includes(b)?'✓ Studied':'Not yet studied')+'</small>';q.onclick=()=>{state.done=state.done.includes(b)?state.done.filter(x=>x!==b):[...state.done,b];save();renderBooks();};el.appendChild(q)})}
+function update(){let n=document.querySelectorAll('.daily').length, c=[...document.querySelectorAll('.daily')].filter(x=>x.checked).length;document.getElementById('daypct').textContent=Math.round(c/n*100);document.getElementById('daybar').style.width=(c/n*100)+'%';document.getElementById('booksDone').textContent=state.done.length+' / 66';document.getElementById('bookbar').style.width=(state.done.length/66*100)+'%';document.getElementById('streak').textContent=(state.streak||0)+' days'}
+document.querySelectorAll('.daily').forEach(x=>x.addEventListener('change',()=>{update();localStorage.setItem('jcrgmDaily',JSON.stringify([...document.querySelectorAll('.daily')].map(x=>x.checked)))}));
+function loadDaily(){let a=JSON.parse(localStorage.getItem('jcrgmDaily')||'[]');document.querySelectorAll('.daily').forEach((x,i)=>x.checked=!!a[i]);update()}
+function saveStudy(){let s={date:new Date().toLocaleString(),passage:passage.value,genre:genre.value,obs:obs.value,interp:interp.value,context:context.value,apply:apply.value,prayer:prayer.value};state.studies.unshift(s);save();toast('Study saved');}
+function clearStudy(){['passage','obs','interp','context','apply','prayer'].forEach(id=>document.getElementById(id).value='')}
+function saveJournal(){if(!journalText.value.trim())return toast('Write something first');state.journal.unshift({date:new Date().toLocaleString(),title:jtitle.value||'Prayer / Study Entry',text:journalText.value});save();jtitle.value='';journalText.value='';renderJournal();toast('Journal entry saved')}
+function renderJournal(){let e=document.getElementById('journalList');e.innerHTML=state.journal.length?state.journal.map((x,i)=>`<div class="card" style="margin:8px 0"><b>${esc(x.title)}</b><small class="muted"> ${x.date}</small><p>${esc(x.text).replace(/\n/g,'<br>')}</p></div>`).join(''):'No entries yet.'}
+function saveMemory(){if(!memRef.value.trim()||!memText.value.trim())return toast('Add a reference and verse');state.memory.unshift({ref:memRef.value,text:memText.value,date:new Date().toLocaleDateString()});save();memRef.value='';memText.value='';renderMemory();toast('Memory verse saved')}
+function renderMemory(){document.getElementById('memoryList').innerHTML=state.memory.map((x,i)=>`<div class="card" style="margin-top:12px"><span class="ref">${esc(x.ref)}</span><p class="verse">${esc(x.text)}</p><button class="btn" onclick="removeMem(${i})">Remove</button></div>`).join('')}
+function removeMem(i){state.memory.splice(i,1);save();renderMemory()}
+function renderTopics(){document.getElementById('topicsList').innerHTML=TOPICS.map(t=>`<button class="btn" style="margin:5px" onclick="openLink('https://www.blueletterbible.org/search/search.cfm?Criteria=${encodeURIComponent(t)}')">${t}</button>`).join('')}
+function showToday(){go('dashboard');toast('Begin with prayer, then read slowly.')}
+function openLink(u){window.open(u,'_blank','noopener,noreferrer')}
+function toggleTheme(){document.body.classList.toggle('light');document.body.style.background=document.body.classList.contains('light')?'#eef3f7':''}
+function exportData(){let blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='jcrgm-master-study-backup.json';a.click()}
+function importData(){document.getElementById('file').click()}
+document.getElementById('file').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();renderBooks();toast('Data imported')}catch{toast('Invalid backup file')}};r.readAsText(f)}
+function resetData(){if(confirm('Delete all local JCRGM study data?')){localStorage.removeItem('jcrgmMaster');localStorage.removeItem('jcrgmDaily');location.reload()}}
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+loadDaily();renderBooks();
+</script>
+</body></html>
