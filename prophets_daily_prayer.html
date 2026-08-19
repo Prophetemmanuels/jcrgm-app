@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#5b2c83">
+<title>JCRGM Prophet's Daily Order of Prayer</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f1f7;
+    color:#222;
+    line-height:1.6;
+}
+
+header{
+    background:linear-gradient(135deg,#32134d,#6d2b8c,#b47b26);
+    color:white;
+    padding:45px 20px;
+    text-align:center;
+}
+
+header h1{
+    font-size:2.2rem;
+    margin-bottom:10px;
+}
+
+header p{
+    opacity:.9;
+}
+
+.container{
+    width:min(1000px,92%);
+    margin:auto;
+    padding:25px 0 60px;
+}
+
+.progress-box{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+    margin-bottom:25px;
+}
+
+.progress-bar{
+    width:100%;
+    height:14px;
+    background:#ddd;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:10px;
+}
+
+.progress{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#6d2b8c,#d49b34);
+    transition:.4s;
+}
+
+.prayer-card{
+    background:white;
+    margin:15px 0;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    border-left:6px solid #6d2b8c;
+}
+
+.prayer-title{
+    padding:18px;
+    cursor:pointer;
+    font-size:1.05rem;
+    font-weight:bold;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.prayer-title:hover{
+    background:#faf7fc;
+}
+
+.content{
+    display:none;
+    padding:0 20px 20px;
+}
+
+.content.active{
+    display:block;
+}
+
+.scripture{
+    background:#f4eafa;
+    border-left:4px solid #8b3bb2;
+    padding:15px;
+    margin:15px 0;
+    border-radius:8px;
+}
+
+.prayer{
+    background:#fff8e8;
+    border-left:4px solid #c78a18;
+    padding:15px;
+    margin:15px 0;
+    border-radius:8px;
+}
+
+.checkbox{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:15px;
+    font-weight:bold;
+}
+
+input[type="checkbox"]{
+    width:20px;
+    height:20px;
+}
+
+.schedule{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    margin-top:30px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.schedule h2{
+    color:#5b2c83;
+    margin-bottom:15px;
+}
+
+.schedule-item{
+    padding:15px;
+    border-bottom:1px solid #eee;
+}
+
+.schedule-item:last-child{
+    border:none;
+}
+
+.declarations{
+    background:#32134d;
+    color:white;
+    padding:30px;
+    border-radius:15px;
+    margin-top:30px;
+}
+
+.declarations h2{
+    margin-bottom:15px;
+}
+
+.declarations p{
+    background:rgba(255,255,255,.1);
+    padding:12px;
+    border-radius:8px;
+    margin:8px 0;
+}
+
+button{
+    background:#6d2b8c;
+    color:white;
+    border:none;
+    padding:13px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:15px;
+    font-size:1rem;
+}
+
+button:hover{
+    background:#4b1c63;
+}
+
+footer{
+    text-align:center;
+    padding:25px;
+    background:#32134d;
+    color:white;
+}
+
+@media(max-width:600px){
+    header h1{
+        font-size:1.7rem;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🔥 JCRGM PROPHET'S DAILY ORDER OF PRAYER</h1>
+    <p>A Daily Prayer Pattern for the Presence, Voice and Power of God</p>
+</header>
+
+<div class="container">
+
+<div class="progress-box">
+    <strong>Daily Prayer Progress: <span id="percent">0%</span></strong>
+    <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+    </div>
+    <button onclick="resetPrayer()">Reset Daily Prayer</button>
+</div>
+
+<div id="prayerSections"></div>
+
+<div class="declarations">
+    <h2>📖 DAILY PROPHETIC DECLARATIONS</h2>
+    <p>🔥 I am led by the Spirit of God.</p>
+    <p>🔥 My spiritual ears are open to hear the voice of God.</p>
+    <p>🔥 The presence of God goes with me.</p>
+    <p>🔥 I walk in holiness, wisdom and obedience.</p>
+    <p>🔥 I will fulfill the purpose of God for my life.</p>
+    <p>🔥 No weapon formed against me shall prosper.</p>
+    <p>🔥 The Holy Spirit orders my steps.</p>
+    <p>🔥 The Word of God is alive and powerful in me.</p>
+</div>
+
+<div class="schedule">
+    <h2>⏰ Suggested Daily Prayer Schedule</h2>
+
+    <div class="schedule-item">
+        <strong>🌅 Morning:</strong><br>
+        Thanksgiving, Worship, Consecration, Holy Spirit and Hearing God.
+    </div>
+
+    <div class="schedule-item">
+        <strong>☀️ Midday:</strong><br>
+        Word Meditation, Personal Spiritual Strength and Direction.
+    </div>
+
+    <div class="schedule-item">
+        <strong>🌇 Afternoon:</strong><br>
+        Family, Church, Ministry and Intercession.
+    </div>
+
+    <div class="schedule-item">
+        <strong>🌙 Evening:</strong><br>
+        Nation, Prophetic Intercession and Spiritual Warfare.
+    </div>
+
+    <div class="schedule-item">
+        <strong>🌌 Night:</strong><br>
+        Thanksgiving, Reflection, Surrender and Waiting on God.
+    </div>
+</div>
+
+</div>
+
+<footer>
+    <h3>JCRGM — Jesus Christ Redeems Global Ministries</h3>
+    <p>Prophetic Prayer • Word • Presence • Power</p>
+</footer>
+
+<script>
+
+const prayers = [
+
+{
+title:"1. ENTER HIS PRESENCE WITH THANKSGIVING",
+scripture:"Psalm 100:4 — Enter into his gates with thanksgiving, and into his courts with praise.",
+prayer:"Father, I thank You for the gift of life. Thank You for preserving me through the night. Thank You for Your mercy, grace, protection and faithfulness. I enter Your presence with thanksgiving and praise."
+},
+
+{
+title:"2. WORSHIP AND EXALT GOD",
+scripture:"Psalm 95:6 | John 4:23–24 | Revelation 4:8–11",
+prayer:"Lord, You are holy, mighty, glorious and worthy of all praise. I worship You because of who You are. Let my heart be completely focused upon You."
+},
+
+{
+title:"3. CONSECRATION AND SURRENDER",
+scripture:"Romans 12:1 | Psalm 139:23–24 | 1 John 1:9",
+prayer:"Lord Jesus, I surrender my spirit, soul, body, family, ministry and plans to You. Search me and cleanse me from everything that displeases You. Let my life be a living sacrifice."
+},
+
+{
+title:"4. BE FILLED WITH THE HOLY SPIRIT",
+scripture:"Ephesians 5:18 | Acts 1:8 | Jude 1:20",
+prayer:"Holy Spirit, fill me afresh today. Fill me with Your power, fire, wisdom and sensitivity. Let me pray in the Spirit and be led by You throughout this day."
+},
+
+{
+title:"5. WAIT UPON GOD",
+scripture:"Isaiah 40:31 | Psalm 27:14 | Lamentations 3:25–26",
+prayer:"Lord, I wait before You. Quiet every distraction. Let Your presence fill this place. Renew my strength and let my heart become sensitive to Your Spirit."
+},
+
+{
+title:"6. ASK GOD TO SPEAK",
+scripture:"1 Samuel 3:10 | John 10:27 | Habakkuk 2:1–2",
+prayer:"Speak, Lord, for Your servant is listening. Open my spiritual ears. Give me understanding, direction and revelation according to Your will. Let me recognize Your voice and obey You."
+},
+
+{
+title:"7. PERSONAL SPIRITUAL STRENGTH",
+scripture:"Ephesians 3:16 | Colossians 1:9–11 | 2 Timothy 1:7",
+prayer:"Father, strengthen me with might by Your Spirit in my inner man. Give me wisdom, discernment, boldness, discipline and spiritual understanding."
+},
+
+{
+title:"8. HOLINESS AND CHARACTER",
+scripture:"1 Peter 1:15–16 | Galatians 5:22–23 | 2 Timothy 2:21",
+prayer:"Lord, separate me for Your purpose. Guard my heart, eyes, mouth and thoughts. Produce the fruit of the Spirit in me and let my private life honor You."
+},
+
+{
+title:"9. FAMILY AND HOUSEHOLD",
+scripture:"Joshua 24:15 | Isaiah 54:13 | Job 1:5",
+prayer:"Father, cover my family with Your mercy and protection. Let salvation, peace, holiness and the fear of God rest upon my household."
+},
+
+{
+title:"10. CHURCH AND MINISTRY",
+scripture:"Ephesians 6:18 | Acts 4:29–31 | Colossians 4:3",
+prayer:"Lord, strengthen Your Church and let Your presence rest upon JCRGM. Raise faithful leaders, save souls, heal the sick and establish Your kingdom through this ministry."
+},
+
+{
+title:"11. PRAY FOR THE NATION",
+scripture:"1 Timothy 2:1–2",
+prayer:"Father, I pray for the leaders of my nation. Give them wisdom and guide them according to Your purposes. Let righteousness, justice and peace prevail in Zambia."
+},
+
+{
+title:"12. PROPHETIC INTERCESSION",
+scripture:"Ezekiel 22:30 | Isaiah 62:6–7 | 1 Samuel 12:23",
+prayer:"Lord, what is on Your heart today? Show me who and what You want me to pray for. Make me faithful in standing in the gap."
+},
+
+{
+title:"13. SPIRITUAL WARFARE",
+scripture:"Ephesians 6:10–18 | 2 Corinthians 10:3–5 | Luke 10:19",
+prayer:"In the name of Jesus Christ, I put on the whole armor of God. Every plan of darkness assigned against my life, family, calling and ministry shall not prevail. I stand firmly in the victory of Christ."
+},
+
+{
+title:"14. PROPHETIC DECLARATION",
+scripture:"Job 22:28 | Isaiah 55:11 | Hebrews 4:12",
+prayer:"I declare that this is the day the Lord has made. I am led by the Spirit of God. The presence of God goes with me. My steps are ordered by the Lord."
+},
+
+{
+title:"15. COMMIT THE DAY TO GOD",
+scripture:"Proverbs 3:5–6 | Psalm 90:17 | Proverbs 16:3",
+prayer:"Father, I commit this day and every assignment into Your hands. Order my steps, connect me with the right people and establish the work of my hands."
+},
+
+{
+title:"16. THANKSGIVING AND CLOSING",
+scripture:"Philippians 4:6 | 1 Thessalonians 5:18 | Mark 11:24",
+prayer:"Father, thank You because You have heard me. I receive Your peace, direction and strength. Let Your will be established in my life, family, ministry and nation. In Jesus' name, Amen."
+}
+
+];
+
+const container = document.getElementById("prayerSections");
+
+prayers.forEach((item,index)=>{
+
+const card=document.createElement("div");
+card.className="prayer-card";
+
+card.innerHTML=`
+<div class="prayer-title" onclick="togglePrayer(${index})">
+<span>${item.title}</span>
+<span>➕</span>
+</div>
+
+<div class="content" id="content${index}">
+
+<div class="scripture">
+<strong>📖 Scripture:</strong><br>
+${item.scripture}
+</div>
+
+<div class="prayer">
+<strong>🙏 Prayer:</strong><br>
+${item.prayer}
+</div>
+
+<label class="checkbox">
+<input type="checkbox" onchange="updateProgress()">
+I have completed this prayer section.
+</label>
+
+</div>
+`;
+
+container.appendChild(card);
+
+});
+
+function togglePrayer(index){
+
+const content=document.getElementById("content"+index);
+
+content.classList.toggle("active");
+
+}
+
+function updateProgress(){
+
+const checks=document.querySelectorAll('input[type="checkbox"]');
+const checked=document.querySelectorAll('input[type="checkbox"]:checked');
+
+const percent=Math.round((checked.length/checks.length)*100);
+
+document.getElementById("percent").innerText=percent+"%";
+document.getElementById("progress").style.width=percent+"%";
+
+localStorage.setItem("prayerProgress",percent);
+
+}
+
+function resetPrayer(){
+
+document.querySelectorAll('input[type="checkbox"]').forEach(check=>{
+check.checked=false;
+});
+
+document.getElementById("percent").innerText="0%";
+document.getElementById("progress").style.width="0%";
+
+localStorage.removeItem("prayerProgress");
+
+}
+
+</script>
+
+</body>
+</html>
