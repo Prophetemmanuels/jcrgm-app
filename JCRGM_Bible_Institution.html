@@ -2,166 +2,1339 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JCRGM Bible Institute</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>JCRGM Theology School | Complete Bible & Ministry Training</title>
 
 <style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #0b0f1a;
-  color: white;
+:root{
+ --purple:#3b0a57;
+ --purple2:#65138a;
+ --gold:#e4b44c;
+ --dark:#17051f;
+ --light:#f6f4f8;
+ --white:#fff;
+ --green:#138a4a;
+ --red:#b42318;
+ --blue:#145da0;
+ --text:#25202a;
+ --muted:#6b6470;
+ --border:#e4dfe8;
 }
-
-header {
-  background: gold;
-  color: black;
-  padding: 15px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 1.5em;
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--light);color:var(--text);line-height:1.65}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+header{
+ position:sticky;top:0;z-index:1000;color:#fff;
+ background:linear-gradient(120deg,var(--dark),var(--purple),var(--purple2));
+ box-shadow:0 3px 16px rgba(0,0,0,.25)
 }
-
-.container {
-  padding: 20px;
+.topbar{max-width:1500px;margin:auto;padding:15px 20px}
+.brand{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.brand h1{margin:0;color:var(--gold);font-size:25px}
+.brand p{margin:2px 0 0;font-size:12px;opacity:.9}
+.student-pill{background:rgba(255,255,255,.13);padding:8px 14px;border-radius:25px}
+nav{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}
+nav button{
+ background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:7px;
+ padding:9px 13px;font-size:13px
 }
-
-.level {
-  background: #121a2b;
-  margin-bottom: 15px;
-  padding: 15px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s;
+nav button:hover,nav button.active{background:var(--gold);color:#1b1020}
+.container{max-width:1500px;margin:25px auto;padding:0 18px;min-height:70vh}
+.page{display:none}.page.active{display:block}
+.hero{
+ padding:65px 30px;border-radius:20px;color:white;text-align:center;
+ background:linear-gradient(135deg,rgba(23,5,31,.95),rgba(59,10,87,.9),rgba(101,19,138,.85))
 }
-
-.level:hover {
-  background: #1d2a44;
+.hero h2{font-size:42px;margin:0 0 12px;color:var(--gold)}
+.hero p{max-width:850px;margin:10px auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:17px;margin:18px 0}
+.card,.lesson-card{
+ background:#fff;border-radius:14px;padding:21px;box-shadow:0 4px 18px rgba(0,0,0,.07)
 }
-
-.lessons {
-  display: none;
-  margin-top: 10px;
+.card h3{color:var(--purple);margin-top:0}
+.section-title{color:var(--purple);border-left:5px solid var(--gold);padding-left:12px;margin:25px 0 15px}
+.btn{
+ border:0;border-radius:8px;padding:11px 17px;background:var(--purple);color:#fff;
+ font-weight:bold;margin:3px
 }
-
-.lesson {
-  background: #1c2740;
-  margin: 8px 0;
-  padding: 10px;
-  border-radius: 8px;
+.btn:hover{opacity:.9;transform:translateY(-1px)}
+.gold{background:var(--gold);color:#21152a}.green{background:var(--green)}.blue{background:var(--blue)}.red{background:var(--red)}
+.small{font-size:12px;color:var(--muted)}
+.alert{padding:15px;border-radius:10px;margin:14px 0}
+.info{background:#eaf3ff;color:#124b86}.warn{background:#fff4cf;color:#735900}.success{background:#e4f8ea;color:#075c30}
+form{background:#fff;padding:24px;border-radius:15px;box-shadow:0 4px 18px rgba(0,0,0,.07)}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+label{display:block;font-weight:bold;margin:9px 0 5px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #d9d2de;border-radius:7px}
+textarea{min-height:120px;resize:vertical}
+.level{
+ background:#fff;margin:14px 0;border-radius:14px;overflow:hidden;
+ box-shadow:0 4px 16px rgba(0,0,0,.06)
 }
-
-button {
-  background: gold;
-  border: none;
-  padding: 6px 12px;
-  margin-top: 5px;
-  cursor: pointer;
-  border-radius: 5px;
+.level-head{
+ padding:18px;background:linear-gradient(90deg,#fbf7fd,#f1e7f7);
+ display:flex;justify-content:space-between;align-items:center;gap:10px
 }
-
-.search {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 5px;
-  border: none;
+.level-head h3{margin:0;color:var(--purple)}
+.course{margin:13px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.course-head{
+ padding:14px;background:#fcfbfc;display:flex;justify-content:space-between;
+ align-items:center;cursor:pointer;gap:10px
+}
+.course-body{display:none;padding:14px}.course-body.open{display:block}
+.lesson-row{
+ padding:13px;border-left:4px solid var(--purple2);background:#fafafa;
+ margin:10px 0;border-radius:7px;display:flex;justify-content:space-between;gap:10px;align-items:center
+}
+.lesson-row.done{border-left-color:var(--green);background:#f1fbf4}
+.study-layout{display:grid;grid-template-columns:270px 1fr;gap:18px}
+.sidebar{background:#fff;border-radius:14px;padding:15px;height:max-content;position:sticky;top:145px}
+.sidebar button{display:block;width:100%;text-align:left;margin:5px 0;border:0;padding:10px;border-radius:6px;background:#f6f2f8;color:var(--purple)}
+.sidebar button:hover{background:#eadcf0}
+.study-main{min-width:0}
+.lesson-header{background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff;padding:28px;border-radius:14px}
+.lesson-header h2{margin:0;color:var(--gold)}
+.note-box{background:#fff9e7;border-left:5px solid var(--gold);padding:15px;margin:15px 0;border-radius:7px}
+.scripture{background:#edf6ff;border-left:5px solid var(--blue);padding:14px;margin:14px 0;border-radius:7px}
+.objectives{background:#f0f8f2;border-left:5px solid var(--green);padding:14px;border-radius:7px}
+.deep-study{background:#f4eef8;padding:14px;border-radius:7px;margin:14px 0}
+.deep-study a{color:var(--purple2);font-weight:bold}
+.personal-notes{background:#fff;padding:18px;border:1px solid var(--border);border-radius:10px;margin-top:20px}
+.progress-wrap{height:18px;background:#e8e4ea;border-radius:20px;overflow:hidden}
+.progress{height:100%;width:0;background:linear-gradient(90deg,var(--purple2),var(--gold));transition:.3s}
+.stat{font-size:31px;font-weight:bold;color:var(--purple)}
+.quiz{background:#fff;border-radius:12px;padding:20px;margin:15px 0;box-shadow:0 3px 13px rgba(0,0,0,.06)}
+.option{display:block;border:1px solid #ddd;border-radius:7px;padding:10px;margin:7px 0;font-weight:normal}
+.option input{width:auto;margin-right:8px}
+.assignment{background:#effbf2;border-left:5px solid var(--green);padding:15px;border-radius:7px;margin:15px 0}
+.table-wrap{overflow:auto;background:#fff;border-radius:12px}
+table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px solid #eee;text-align:left}th{background:var(--purple);color:#fff}
+.badge{padding:4px 10px;border-radius:20px;font-size:12px;font-weight:bold;display:inline-block}
+.complete{background:#dff7e6;color:#08713b}.pending{background:#fff1c9;color:#785d00}
+.library-item{padding:15px;border-bottom:1px solid #eee}
+footer{margin-top:40px;background:var(--dark);color:#fff;text-align:center;padding:30px}
+.certificate{
+ background:white;border:12px double var(--gold);padding:50px;text-align:center;
+ max-width:1000px;margin:auto
+}
+.certificate h1{font-size:42px;color:var(--purple);font-family:Georgia,serif}
+.certificate .name{font-size:35px;color:var(--purple2);font-family:Georgia,serif;margin:25px}
+@media(max-width:800px){
+ header{position:relative}.hero{padding:40px 18px}.hero h2{font-size:29px}
+ .study-layout{grid-template-columns:1fr}.sidebar{position:static}
+ .lesson-row{flex-direction:column;align-items:flex-start}
+}
+@media print{
+ header,footer,.no-print{display:none!important}
+ body{background:#fff}.page{display:none!important}.page.active{display:block!important}
 }
 </style>
 </head>
 
 <body>
 
-<header>JCRGM BIBLE INSTITUTE</header>
-
-<div class="container">
-
-<input type="text" class="search" placeholder="Search lessons..." onkeyup="searchLessons(this.value)">
-
-<!-- FOUNDATION LEVEL -->
-<div class="level" onclick="toggle('foundation')">
-📘 Foundation Level
-<div id="foundation" class="lessons">
-  <div class="lesson">Salvation & New Birth <br><button onclick="openLesson('https://sermons.logos.com/sermons/880459-c101:-lesson-2-salvation-and-the-new-birth')">Start Lesson</button></div>
-  <div class="lesson">Prayer & Fasting <br><button onclick="openLesson('https://founders.org/articles/notes-on-prayer-and-fasting/')">Start Lesson</button></div>
-  <div class="lesson">The Holy Spirit <br><button onclick="openLesson('https://www.moodybible.org/beliefs/holy-spirit/')">Start Lesson</button></div>
-  <div class="lesson">Bible Study Basics <br><button onclick="openLesson('https://hallow.com/blog/bible-study-guide-for-beginners/')">Start Lesson</button></div>
+<header>
+<div class="topbar">
+<div class="brand">
+<div>
+<h1>JCRGM THEOLOGY SCHOOL</h1>
+<p>Jesus Christ Redeems Global Ministries • Bible • Theology • Prophetic • Practical Ministry</p>
 </div>
+<div class="student-pill" id="headerStudent">Guest Student</div>
 </div>
 
-<!-- DIPLOMA LEVEL -->
-<div class="level" onclick="toggle('diploma')">
-📗 Diploma Level
-<div id="diploma" class="lessons">
-  <div class="lesson">Doctrine of Christ <br><button onclick="openLesson('https://heraldsofrevival.org/2023/03/11/know-the-doctrine-of-christ-4/comment-page-1/')">Start Lesson</button></div>
-  <div class="lesson">Faith & Righteousness <br><button onclick="openLesson('https://goodnewsunlimited.com/righteousness-faith/')">Start Lesson</button></div>
-  <div class="lesson">Deliverance & Spiritual Warfare <br><button onclick="openLesson('https://christianity201.wordpress.com/2014/01/24/the-difference-between-spiritual-warfare-and-deliverance/')">Start Lesson</button></div>
-  <div class="lesson">Christian Character <br><button onclick="openLesson('https://learn.ligonier.org/guides/christian-character')">Start Lesson</button></div>
+<nav class="no-print">
+<button class="nav active" data-page="home">Home</button>
+<button class="nav" data-page="register">Register</button>
+<button class="nav" data-page="dashboard">Dashboard</button>
+<button class="nav" data-page="curriculum">School</button>
+<button class="nav" data-page="study">Study Room</button>
+<button class="nav" data-page="prophetic">Prophetic School</button>
+<button class="nav" data-page="practical">Practical Ministry</button>
+<button class="nav" data-page="assignments">Assignments</button>
+<button class="nav" data-page="exams">Exams</button>
+<button class="nav" data-page="library">Library</button>
+<button class="nav" data-page="records">Records</button>
+<button class="nav" data-page="certificate">Certificate</button>
+</nav>
 </div>
+</header>
+
+<main class="container">
+
+<!-- HOME -->
+<section id="home" class="page active">
+<div class="hero">
+<h2>JCRGM Theology School</h2>
+<p>A complete Bible, theology, prophetic and practical ministry training school. Study from Christian foundations through advanced theology, doctoral research and PhD preparation.</p>
+<button class="btn gold go" data-target="register">Register as a Student</button>
+<button class="btn go" data-target="curriculum">Explore the School</button>
 </div>
 
-<!-- DEGREE LEVEL -->
-<div class="level" onclick="toggle('degree')">
-📕 Degree Level
-<div id="degree" class="lessons">
-  <div class="lesson">Systematic Theology <br><button onclick="openLesson('https://sermons.logos.com/sermons/588719-systematic-theology-lecture-notes')">Start Lesson</button></div>
-  <div class="lesson">Church Leadership <br><button onclick="openLesson('https://www.acstechnologies.com/church-growth/church-leadership-roles-and-responsibilities-a-comprehensive-guide/?srsltid=AfmBOooVoWf2ml1YIpGAe47cGHnK1-T4AbDAw15u478e68xd-KdUyWY0')">Start Lesson</button></div>
-  <div class="lesson">Evangelism & Missions <br><button onclick="openLesson('https://www.biblesnet.com/evangelism_missions.html')">Start Lesson</button></div>
-  <div class="lesson">Kingdom Finances <br><button onclick="openLesson('https://www.youtube.com/watch?v=mDx0LHq-_4o')">Start Lesson</button></div>
+<h2 class="section-title">Your Complete Academic Journey</h2>
+<div class="grid" id="journeyCards"></div>
+
+<div class="card">
+<h3>How the School Works</h3>
+<p>Register → Select a programme → Study full lessons → Read Scriptures → Take personal notes → Complete quizzes → Submit assignments → Pass examinations → Progress to the next stage.</p>
+<p><strong>Your progress and notes are saved on this browser.</strong> For central tracking of every student across different devices, this HTML can later be connected to a secure database and administrator portal.</p>
 </div>
+</section>
+
+<!-- REGISTER -->
+<section id="register" class="page">
+<h2 class="section-title">Student Registration</h2>
+<div class="alert info">After registration, a WhatsApp message containing the student's details opens for the JCRGM office at <strong>0979554970</strong>.</div>
+
+<form id="registrationForm">
+<div class="form-grid">
+<div><label>Full Name</label><input id="regName" required></div>
+<div><label>Gender</label><select id="regGender" required><option value="">Select</option><option>Male</option><option>Female</option></select></div>
+<div><label>Phone Number</label><input id="regPhone" required></div>
+<div><label>Email</label><input id="regEmail" type="email"></div>
+<div><label>Country</label><input id="regCountry" value="Zambia"></div>
+<div><label>City / Town</label><input id="regCity" required></div>
+<div><label>Church / Ministry</label><input id="regChurch"></div>
+<div><label>Current Ministry Role</label><input id="regRole" placeholder="Member, Pastor, Prophet, etc."></div>
+<div>
+<label>Starting Programme</label>
+<select id="regProgramme" required></select>
+</div>
+</div>
+<label>Salvation, Calling or Ministry Testimony</label>
+<textarea id="regCalling" placeholder="Briefly describe your salvation experience and calling to ministry."></textarea>
+<label><input type="checkbox" id="regAgree" required style="width:auto"> I confirm that my information is correct and agree to study with integrity, biblical responsibility and accountability.</label>
+<br>
+<button class="btn green" type="submit">Register & Send Details to WhatsApp</button>
+</form>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page">
+<h2 class="section-title">Student Dashboard</h2>
+<div id="guestDashboard" class="alert warn">You have not registered yet. <button class="btn go" data-target="register">Register Now</button></div>
+
+<div id="studentDashboard" style="display:none">
+<div class="card">
+<h2 id="dashName"></h2>
+<p><strong>Student ID:</strong> <span id="dashID"></span></p>
+<p><strong>Programme:</strong> <span id="dashProgramme"></span></p>
+<p><strong>Last Lesson:</strong> <span id="lastLessonText">Not started</span></p>
 </div>
 
-<!-- MASTERS LEVEL -->
-<div class="level" onclick="toggle('masters')">
-📙 Masters Level
-<div id="masters" class="lessons">
-  <div class="lesson">Advanced Revelation Knowledge <br><button onclick="openLesson('https://www.youtube.com/watch?v=FJkMhaz0mx4')">Start Lesson</button></div>
-  <div class="lesson">Apostolic & Prophetic Ministry <br><button onclick="openLesson('https://www.identitynetwork.net/apps/articles/default.asp?articleid=55450#:~:text=The%20Prophetic%20is%20God%20pursuing,become%20clear%20to%20the%20church.')">Start Lesson</button></div>
-  <div class="lesson">Church Growth Systems <br><button onclick="openLesson('https://digitalcommons.liberty.edu/cgi/viewcontent.cgi?article=1196&context=towns_books')">Start Lesson</button></div>
-  <div class="lesson">Ministry Administration <br><button onclick="openLesson('https://www.google.com/search?q=ministry+administration+notes&sca_esv=9d834588ceecb5ca&biw=1087&bih=931&sxsrf=ANbL-n5JSo8s6nOSlxXIW1CEtFcTECjaxw%3A1773838290403&ei=0p-6abWfGM-ohbIP47-b0Aw&ved=0ahUKEwi10MDJvqmTAxVPVEEAHePfBsoQ4dUDCBE&uact=5&oq=ministry+administration+notes&gs_lp=Egxnd3Mtd2l6LXNlcnAiHW1pbmlzdHJ5IGFkbWluaXN0cmF0aW9uIG5vdGVzMggQIRigARjDBDIIECEYoAEYwwQyCBAhGKABGMMESIMnUABYmRxwAHgAkAEAmAGdBKAB7kKqAQgzLTE3LjUuMbgBA8gBAPgBAZgCAaACtAKYAwCSBwMzLTGgB52KAbIHAzMtMbgHtALCBwMwLjHIBwKACAA&sclient=gws-wiz-serp')">Start Lesson</button></div>
-</div>
+<div class="grid">
+<div class="card"><div class="stat" id="dashProgress">0%</div>Overall Progress</div>
+<div class="card"><div class="stat" id="dashLessons">0</div>Lessons Completed</div>
+<div class="card"><div class="stat" id="dashAssignments">0</div>Assignments Completed</div>
+<div class="card"><div class="stat" id="dashExams">0</div>Exams Passed</div>
 </div>
 
-<!-- PHD LEVEL -->
-<div class="level" onclick="toggle('phd')">
-📓 PhD Level
-<div id="phd" class="lessons">
-  <div class="lesson">Deep Mysteries of Scripture <br><button onclick="openLesson('https://d1wqtxts1xzle7.cloudfront.net/124950581/Deeper_Biblical_Mysteries-libre.pdf?1760129434=&response-content-disposition=attachment%3B+filename%3DDeeper_Biblical_Mysteries.pdf&Expires=1773843168&Signature=WABOvNntJF2JPAbUgWvAfCPP6lNqX3c9cR7MzucaABdro856ZUbhuhK9xelKno94N0FTSOg4DGC00KgqPW4-oR7lbjy1KMikzPILxVfGXuTbu3OINIAHqfjmlrIAc3RmoiJyClou8rGIb9s12KJShLUD2seDoLDsohfPNZWtIy8-Craidaq~X--uu3RqUcWZJ3-PHMQlFnyA-EdaUQaCdrBEZRVz76jWBsthd1xcB0L4p2K7hpIXcB9866McqxE9osPbdffCN0uqHhpMHUeXFtnt6L~~GMhG6OI1J3NDgjfwSweKzyIUVbZWnC1rWrKSiQojC0KQCB16kTqBoWB4lw__&Key-Pair-Id=APKAJLOHF5GGSLRBV4ZA')">Start Lesson</button></div>
-  <div class="lesson">Kingdom Systems & Governance <br><button onclick="openLesson('https://apcwo.org/apc/resources/sermons/notes/2009-11-22-TheKingdomOfGod-KingdomGovernment.pdf')">Start Lesson</button></div>
-  <div class="lesson">Mentorship & Discipleship <br><button onclick="openLesson('https://apcwo.org/apc/documents/guidelines/APC-1-to-1-Discipleship-Guidelines.pdf')">Start Lesson</button></div>
-  <div class="lesson">Writing & Teaching Doctrine <br><button onclick="openLesson('https://www.ntslibrary.com/PDF%20Books/Fundamental%20of%20Bible%20Doctrine.pdf')">Start Lesson</button></div>
+<div class="card">
+<h3>Academic Progress</h3>
+<div class="progress-wrap"><div class="progress" id="dashProgressBar"></div></div>
+<p id="dashProgressText"></p>
+<button class="btn blue" id="continueStudy">Continue Where I Stopped</button>
+<button class="btn go" data-target="records">View Academic Records</button>
 </div>
+</div>
+</section>
+
+<!-- CURRICULUM -->
+<section id="curriculum" class="page">
+<h2 class="section-title">Complete JCRGM Academic Curriculum</h2>
+<div class="alert info">Click a course to see its lessons. Every lesson can be opened in the Study Room with full notes, Scriptures, activities, personal notes and quizzes.</div>
+<div id="curriculumList"></div>
+</section>
+
+<!-- STUDY -->
+<section id="study" class="page">
+<h2 class="section-title">JCRGM Digital Study Room</h2>
+<div class="study-layout">
+<aside class="sidebar">
+<h3 style="margin-top:0;color:#3b0a57">Lessons</h3>
+<div id="studySidebar"></div>
+</aside>
+<div class="study-main" id="lessonViewer">
+<div class="alert info">Select a lesson from the curriculum or lesson menu to begin studying.</div>
+</div>
+</div>
+</section>
+
+<!-- PROPHETIC -->
+<section id="prophetic" class="page">
+<h2 class="section-title">JCRGM School of Prophetic Ministry</h2>
+<div class="hero">
+<h2>Prophetic Ministry Training</h2>
+<p>Biblical foundations, spiritual maturity, discernment, accountability and supervised practical ministry.</p>
+</div>
+<div id="propheticContent"></div>
+</section>
+
+<!-- PRACTICAL -->
+<section id="practical" class="page">
+<h2 class="section-title">JCRGM Practical Ministry School</h2>
+<div id="practicalContent"></div>
+</section>
+
+<!-- ASSIGNMENTS -->
+<section id="assignments" class="page">
+<h2 class="section-title">Assignments & Research Centre</h2>
+<div class="alert info">Complete the assignment after studying the relevant course. The school records your completion locally.</div>
+<div id="assignmentList"></div>
+</section>
+
+<!-- EXAMS -->
+<section id="exams" class="page">
+<h2 class="section-title">Examination Centre</h2>
+<div class="alert warn">Passing mark: 60%. Review your lessons before attempting an examination.</div>
+<div id="examList"></div>
+</section>
+
+<!-- LIBRARY -->
+<section id="library" class="page">
+<h2 class="section-title">JCRGM Digital Theology Library</h2>
+<div class="alert info">The core JCRGM notes are contained in this school. The links below are optional resources for deeper study.</div>
+
+<div class="card">
+<h3>Biblical Study Resources</h3>
+<div class="library-item"><strong>Book and Theme Study</strong><br><a href="https://bibleproject.com/guides/" target="_blank">BibleProject Study Guides</a></div>
+<div class="library-item"><strong>Structured Video Courses</strong><br><a href="https://bibleproject.com/classroom/" target="_blank">BibleProject Classroom</a></div>
+<div class="library-item"><strong>Additional Bible Study Courses</strong><br><a href="https://yalebiblestudy.org/" target="_blank">Yale Bible Study</a></div>
+<div class="library-item"><strong>Study Tools and Bible Reference Resources</strong><br><a href="https://www.biblegateway.com/resources/" target="_blank">Bible Gateway Resources</a></div>
 </div>
 
+<div class="card">
+<h3>JCRGM Recommended Study Method</h3>
+<ol>
+<li>Pray for wisdom and understanding.</li>
+<li>Read the assigned biblical passage several times.</li>
+<li>Observe what the text actually says.</li>
+<li>Interpret the passage within its literary and historical context.</li>
+<li>Compare Scripture with Scripture.</li>
+<li>Write your observations.</li>
+<li>Apply biblical truth responsibly.</li>
+<li>Discuss difficult questions with mature teachers and leaders.</li>
+</ol>
 </div>
+</section>
+
+<!-- RECORDS -->
+<section id="records" class="page">
+<h2 class="section-title">Academic Records</h2>
+<div id="recordsViewer"></div>
+</section>
+
+<!-- CERTIFICATE -->
+<section id="certificate" class="page">
+<h2 class="section-title no-print">Certificates & Completion</h2>
+<div id="certificateViewer"></div>
+</section>
+
+</main>
+
+<footer>
+<h3>JCRGM THEOLOGY SCHOOL</h3>
+<p>Jesus Christ Redeems Global Ministries</p>
+<p>Student Registration & Information: WhatsApp 0979554970</p>
+<p>© <span id="year"></span> JCRGM Theology School</p>
+</footer>
 
 <script>
-function toggle(id) {
-  const section = document.getElementById(id);
-  section.style.display = section.style.display === "block" ? "none" : "block";
-}
+/* ==========================================================
+   JCRGM THEOLOGY SCHOOL - SINGLE FILE APPLICATION
+   ========================================================== */
 
-function openLesson(link) {
-  if(link === '#') {
-    alert('Link not added yet. Please provide lesson URL.');
-  } else {
-    window.open(link, '_blank');
+const LEVELS = [
+{
+ id:"foundation", name:"Level 1 - Foundation Certificate",
+ short:"Christian foundations, Bible study and spiritual formation.",
+ courses:["F101","F102","F103","F104"]
+},
+{
+ id:"certificate", name:"Level 2 - Certificate in Biblical Studies",
+ short:"Bible survey, doctrine, interpretation and Christian life.",
+ courses:["C201","C202","C203"]
+},
+{
+ id:"diploma", name:"Level 3 - Diploma in Theology",
+ short:"Old Testament, New Testament, theology and ministry.",
+ courses:["D301","D302","D303","D304"]
+},
+{
+ id:"bachelor", name:"Level 4 - Bachelor of Theology",
+ short:"Advanced theology, leadership, preaching and ministry.",
+ courses:["B401","B402","B403","B404"]
+},
+{
+ id:"prophetic", name:"Prophetic Ministry School",
+ short:"Biblical prophetic ministry, discernment and practicum.",
+ courses:["P501","P502","P503"]
+},
+{
+ id:"practical", name:"Practical Ministry School",
+ short:"Preaching, pastoral care, evangelism and leadership.",
+ courses:["M601","M602","M603"]
+},
+{
+ id:"masters", name:"Level 5 - Master of Theology",
+ short:"Advanced theology and academic research.",
+ courses:["T701","T702"]
+},
+{
+ id:"doctorate", name:"Level 6 - Doctor of Theology",
+ short:"Advanced research and doctoral ministry studies.",
+ courses:["D801","D802"]
+},
+{
+ id:"phd", name:"Level 7 - PhD in Theology",
+ short:"Original research, dissertation and oral defense.",
+ courses:["P901","P902"]
+}
+];
+
+/* ---------- COMPLETE CORE LESSON DATABASE ---------- */
+
+const COURSES = {
+F101:{
+ title:"F101 - Introduction to the Bible",
+ assignment:"Write 1,000 words explaining what the Bible is, how it is organized and why context matters in Bible study.",
+ lessons:[
+ {
+  title:"What Is the Bible?",
+  scripture:["2 Timothy 3:16-17","Hebrews 4:12","Psalm 119:105"],
+  objectives:["Explain what the Bible is.","Identify the Old and New Testaments.","Describe the purpose of Scripture in Christian life."],
+  content:[
+   ["The Bible as a Library","The Bible is a collection of sacred writings rather than one book written by one author at one moment in history. Christians receive these writings as Scripture and use them for teaching, correction, formation and instruction in righteous living."],
+   ["Two Major Testaments","The Old Testament tells the story of creation, humanity, Israel, covenant, wisdom and prophetic hope. The New Testament centers on Jesus Christ, the apostolic witness, the birth of the church and Christian hope."],
+   ["Why the Bible Matters","Scripture shapes belief, worship, character and ministry. A student should therefore read carefully, avoiding the habit of choosing isolated verses simply because they sound powerful."]
+  ],
+  example:"When reading Philippians 4:13, read the verses surrounding it. Paul is speaking about contentment in changing circumstances. Context protects students from giving verses meanings they were not intended to carry.",
+  activity:"Read Psalm 1. Write down what the passage says about the person who delights in God's instruction.",
+  quiz:[
+   ["What are the two major divisions of the Christian Bible?",["Law and Prophets","Old Testament and New Testament","Gospels and Epistles","History and Wisdom"],1],
+   ["Why should a verse be read in context?",["To understand its intended meaning","To make it longer","To avoid prayer","To ignore the author"],0]
+  ]
+ },
+ {
+  title:"How the Bible Is Organized",
+  scripture:["Luke 24:44","Romans 15:4"],
+  objectives:["Identify major biblical literary divisions.","Recognize that different genres require careful reading.","Develop a basic Bible navigation skill."],
+  content:[
+   ["Old Testament Organization","The Old Testament includes the Law, historical writings, poetry and wisdom, and prophetic writings. Different Christian traditions may arrange or count some books differently, but students should learn the structure of the Bible they are using."],
+   ["New Testament Organization","The New Testament includes the four Gospels, Acts, letters written to churches and individuals, the general letters and Revelation."],
+   ["Genre Matters","Narrative tells a story. Poetry often uses imagery. Proverbs normally teach wisdom principles rather than automatic guarantees. Letters address particular communities and situations. Apocalyptic literature uses powerful imagery and symbolism."]
+  ],
+  example:"A proverb should not always be treated in exactly the same way as a historical narrative. Good interpretation pays attention to genre.",
+  activity:"Locate Genesis, Psalms, Isaiah, Matthew, Acts, Romans and Revelation. Write which major division each belongs to.",
+  quiz:[
+   ["Which New Testament book describes the early expansion of the church?",["Genesis","Acts","Psalms","Revelation"],1],
+   ["Why is literary genre important?",["It helps us read responsibly","It makes every verse identical","It removes context","It replaces prayer"],0]
+  ]
+ },
+ {
+  title:"The Central Story of Scripture",
+  scripture:["Genesis 12:1-3","John 3:16","Ephesians 1:7-10","Revelation 21:1-5"],
+  objectives:["Trace major movements in the biblical story.","Recognize the central importance of Christ for Christian theology.","Connect creation, covenant, redemption and hope."],
+  content:[
+   ["Creation","The Bible begins with God as Creator. Human beings are presented as creatures accountable to God and bearing a unique responsibility within creation."],
+   ["Fall and Brokenness","The biblical story describes sin as rebellion against God and a source of brokenness in human relationships and creation."],
+   ["Covenant and Promise","God's dealings with Abraham and Israel form a major part of the biblical story and prepare the theological background for understanding the mission of Christ."],
+   ["Christ and Redemption","The New Testament presents Jesus Christ as central to God's redemptive purpose. His life, death and resurrection are foundational to Christian proclamation."],
+   ["New Creation","Biblical hope looks forward to God's final renewal and the defeat of evil."]
+  ],
+  example:"The Bible should not be treated merely as a collection of disconnected quotations. Individual passages belong within the larger biblical story.",
+  activity:"Draw a timeline: Creation → Fall → Covenant → Christ → Church → New Creation.",
+  quiz:[
+   ["Which event is central to Christian proclamation?",["A modern invention","The life, death and resurrection of Christ","The building of every church","Political power"],1],
+   ["Which movement comes last in the broad biblical storyline?",["Creation","Fall","New Creation","Exodus"],2]
+  ]
+ }
+ ]
+},
+
+F102:{
+ title:"F102 - Foundations of Christian Faith",
+ assignment:"Write a personal statement of faith with Scripture references explaining salvation, Jesus Christ, the Holy Spirit and the church.",
+ lessons:[
+ {
+ title:"Salvation, Grace and Faith", scripture:["Ephesians 2:8-10","Romans 3:23-24","Romans 10:9-10"],
+ objectives:["Explain salvation by grace.","Describe the role of faith and repentance.","Understand salvation as the beginning of discipleship."],
+ content:[
+ ["Human Need","Christian theology teaches that all humanity stands in need of God's grace. Sin is not merely a collection of mistakes but a serious rupture in humanity's relationship with God."],
+ ["Grace","Grace describes God's undeserved favor and saving action. Christian salvation is not earned as payment for human achievement."],
+ ["Faith and Response","Faith includes trust and commitment. Biblical repentance involves turning toward God, not merely feeling temporary regret."],
+ ["New Life","Salvation begins a life of discipleship. Good works do not purchase salvation; rather, transformed life is expected to grow from faith."]
+ ],
+ example:"A student should distinguish the basis of salvation from the fruit of salvation. Grace is the basis; transformed obedience is part of the response of discipleship.",
+ activity:"Read Ephesians 2:1-10 and summarize Paul's movement from human need to grace and purposeful living.",
+ quiz:[["According to Ephesians 2, salvation is primarily described as what?",["A human wage","A gift of grace","A political reward","A family inheritance"],1]]
+ },
+ {
+ title:"Jesus Christ: Person and Work", scripture:["John 1:1-14","Philippians 2:5-11","1 Corinthians 15:1-8"],
+ objectives:["Describe the central place of Jesus in Christianity.","Explain why the death and resurrection matter.","Develop responsible Christ-centered interpretation."],
+ content:[
+ ["The Person of Christ","Christian theology confesses Jesus Christ as central to God's self-revelation and redemption. The Gospels portray his teaching, works, relationships, suffering and mission."],
+ ["The Cross","The death of Christ is interpreted throughout the New Testament using rich biblical images including sacrifice, reconciliation, redemption and victory."],
+ ["The Resurrection","The resurrection is central to apostolic proclamation and Christian hope. It is not a decorative addition to the gospel message."]
+ ],
+ example:"When preaching Christ, avoid reducing him only to a source of material benefit. Study his identity, kingdom teaching, cross, resurrection and call to discipleship.",
+ activity:"Read Mark 8:27-38. Write what this passage teaches about Jesus and discipleship.",
+ quiz:[["Which event is central to apostolic preaching?",["The resurrection of Christ","A church building","A modern conference","A political election"],0]]
+ }
+ ]
+},
+
+F103:{
+ title:"F103 - Prayer and Spiritual Formation",
+ assignment:"Keep a 14-day prayer journal recording Scripture, prayer focus, reflection and practical obedience.",
+ lessons:[
+ {
+ title:"Foundations of Prayer", scripture:["Matthew 6:5-13","Philippians 4:6-7","1 Timothy 2:1-4"],
+ objectives:["Identify biblical elements of prayer.","Develop a balanced prayer pattern.","Understand prayer as relationship and obedience."],
+ content:[
+ ["Prayer as Communion","Prayer is communication with God involving worship, thanksgiving, confession, petition and intercession."],
+ ["The Lord's Prayer","Jesus provides a pattern that includes honoring God, seeking his kingdom, daily dependence, forgiveness and spiritual protection."],
+ ["Intercession","Believers are encouraged to pray for others, communities and leaders."],
+ ["Formation","Prayer should shape the person praying. A mature prayer life grows together with obedience, humility and love."]
+ ],
+ example:"A prayer list can include personal needs, family, church, nation, leaders, mission and those in suffering.",
+ activity:"Create a seven-day prayer plan with a different focus for each day.",
+ quiz:[["Which is included in the pattern of the Lord's Prayer?",["Forgiveness","Pride","Manipulation","Self-worship"],0]]
+ }
+ ]
+},
+
+F104:{
+ title:"F104 - Christian Character and Discipleship",
+ assignment:"Create a 30-day discipleship and character growth plan based on Scripture.",
+ lessons:[
+ {
+ title:"The Call to Discipleship", scripture:["Luke 9:23","Galatians 5:22-23","James 1:22"],
+ objectives:["Define discipleship.","Recognize the importance of obedience.","Identify areas of Christian character."],
+ content:[
+ ["Following Christ","Discipleship is a continuing life of learning, obedience and transformation rather than merely possessing religious information."],
+ ["Fruit and Character","Christian maturity includes love, self-control, patience and other qualities associated with life shaped by the Spirit."],
+ ["Hearing and Doing","Biblical learning should lead to faithful practice. Knowledge without obedience can produce pride rather than maturity."]
+ ],
+ example:"A ministry gift never removes the need for character. Public gifting and private integrity must grow together.",
+ activity:"Choose one area of character to develop and create measurable actions for the next thirty days.",
+ quiz:[["Discipleship is best described as:",["A continuing life of following and learning","Only attending a class","Only preaching publicly","Memorizing titles"],0]]
+ }
+ ]
+},
+
+C201:{
+ title:"C201 - Old Testament Survey",
+ assignment:"Write a 1,500-word survey tracing one major Old Testament theme from the Pentateuch through the Prophets.",
+ lessons:[
+ {
+ title:"The Pentateuch", scripture:["Genesis 1:1","Exodus 19:3-6","Deuteronomy 6:4-9"],
+ objectives:["Identify the five books of the Pentateuch.","Describe major themes.","Explain covenant as an important biblical concept."],
+ content:[
+ ["Genesis","Genesis addresses beginnings, humanity, sin, God's promises and the ancestors of Israel."],
+ ["Exodus","Exodus tells of deliverance from Egypt, covenant and the formation of Israel as a people."],
+ ["Leviticus, Numbers and Deuteronomy","These books address worship, holiness, community, wilderness experience, law and covenant renewal."],
+ ["Theological Reading","Students should read these books in their ancient setting while also observing their role within the wider biblical story."]
+ ],
+ example:"The covenant at Sinai cannot be understood merely as a collection of random rules; it belongs within Israel's identity and relationship with God.",
+ activity:"Make a chart listing the five books and three major themes for each.",
+ quiz:[["How many books are in the Pentateuch?",["3","5","12","27"],1]]
+ }
+ ]
+},
+
+C202:{
+ title:"C202 - New Testament Survey",
+ assignment:"Compare the presentation of one major theme in two New Testament books.",
+ lessons:[
+ {
+ title:"The Gospels and Jesus", scripture:["Mark 1:1","Luke 4:16-21","John 20:30-31"],
+ objectives:["Identify the four Gospels.","Understand their focus on Jesus.","Recognize literary and theological differences."],
+ content:[
+ ["Four Witnesses","Matthew, Mark, Luke and John all testify to Jesus while presenting material through different literary and theological emphases."],
+ ["Kingdom and Discipleship","Jesus announces God's kingdom and calls people to repentance, faith and discipleship."],
+ ["Reading Comparatively","Similar events may be narrated with different details or emphasis. Students should compare carefully rather than forcing every Gospel into a single flattened account."]
+ ],
+ example:"When studying a miracle, ask what the narrative communicates about Jesus, faith, discipleship and God's reign.",
+ activity:"Read one healing story in two Gospels and list similarities and differences.",
+ quiz:[["Which books are the four Gospels?",["Matthew, Mark, Luke and John","Acts, Romans, James and Jude","Genesis, Exodus, Leviticus and Numbers"],0]]
+ }
+ ]
+},
+
+C203:{
+ title:"C203 - Hermeneutics and Bible Interpretation",
+ assignment:"Prepare a contextual study of a biblical passage including observation, historical context, genre, interpretation and application.",
+ lessons:[
+ {
+ title:"Context, Observation and Interpretation", scripture:["Nehemiah 8:8","Acts 17:11","2 Peter 3:16"],
+ objectives:["Practice observation.","Explain literary and historical context.","Avoid common interpretation errors."],
+ content:[
+ ["Observation","Before deciding what a text means, identify what is actually present: repeated words, argument, speaker, audience and structure."],
+ ["Context","Immediate, literary, historical and canonical contexts all help responsible interpretation."],
+ ["Application","Application should grow from meaning. We should not use Scripture as a blank surface onto which we project any desired message."],
+ ["Humility","Some passages are difficult. Students should avoid pretending certainty where serious interpretive questions remain."]
+ ],
+ example:"Jeremiah 29:11 should be studied within Jeremiah's message to people living through exile rather than immediately treated as a private promise of effortless success.",
+ activity:"Study Philippians 4:10-13 using observation, interpretation and application.",
+ quiz:[["Hermeneutics concerns:",["Biblical interpretation","Church furniture","Only music","Government"],0]]
+ }
+ ]
+},
+
+D301:{
+ title:"D301 - Systematic Theology",
+ assignment:"Write a 2,000-word theological paper on one doctrine, using Scripture responsibly and interacting with differing interpretations.",
+ lessons:[
+ {
+ title:"Doctrine of God", scripture:["Deuteronomy 6:4","Isaiah 6:1-5","John 4:24"],
+ objectives:["Define theology.","Discuss God's attributes.","Practice theological humility."],
+ content:[
+ ["Knowing and Speaking of God","Theology seeks disciplined understanding and faithful speech about God. Christian theology begins with God's revelation rather than human speculation alone."],
+ ["Attributes","Scripture speaks of God's holiness, faithfulness, love, justice, wisdom and power. Students should study attributes within their biblical contexts."],
+ ["Theological Humility","Human language cannot exhaust God. Sound theology combines confidence in revelation with humility concerning the limits of human understanding."]
+ ],
+ example:"Do not build doctrine from one isolated verse. Examine passages, literary context and the broader witness of Scripture.",
+ activity:"Choose two divine attributes and trace each through at least three biblical passages.",
+ quiz:[["Theology is fundamentally concerned with:",["The study of God and faith","Only church buildings","Political campaigns","Computer science"],0]]
+ },
+ {
+ title:"Christology and Salvation", scripture:["Colossians 1:15-20","John 1:1-14","Romans 5:1-11"],
+ objectives:["Study the person and work of Christ.","Explain key salvation concepts.","Connect doctrine with worship and discipleship."],
+ content:[
+ ["Christology","Christology studies the identity and work of Jesus Christ. Important questions include incarnation, ministry, cross, resurrection and lordship."],
+ ["Salvation","Soteriology studies salvation. Biblical language includes grace, justification, reconciliation, redemption, adoption and sanctification."],
+ ["Living Doctrine","Doctrine is not merely an examination subject. Christian belief should shape worship, ethics and mission."]
+ ],
+ example:"When teaching salvation, define terms clearly and support them through careful reading of Scripture.",
+ activity:"Create a glossary defining justification, reconciliation, redemption and sanctification.",
+ quiz:[["The study of salvation is commonly called:",["Soteriology","Ecclesiology","Pneumatology","Homiletics"],0]]
+ }
+ ]
+},
+
+D302:{
+ title:"D302 - Church History",
+ assignment:"Research one major period or movement in church history and explain its continuing influence.",
+ lessons:[
+ {
+ title:"The Early Church", scripture:["Acts 2:42-47","Acts 15:1-35"],
+ objectives:["Describe the growth of the early church.","Recognize major historical questions.","Understand the value of learning from history."],
+ content:[
+ ["Expansion","Acts describes the movement of the gospel from Jerusalem into wider regions."],
+ ["Questions and Councils","The early church faced questions concerning Gentile inclusion, doctrine, worship and leadership."],
+ ["Learning from History","Church history reveals faithfulness, courage, disagreement, reform and failure. Students should learn critically rather than romanticizing every period."]
+ ],
+ example:"The Jerusalem Council demonstrates that serious disagreement can require prayer, discussion, Scripture and communal discernment.",
+ activity:"Create a timeline of five important early church developments.",
+ quiz:[["Which New Testament book narrates much of the early church's expansion?",["Acts","Job","Revelation","Leviticus"],0]]
+ }
+ ]
+},
+
+D303:{
+ title:"D303 - Homiletics and Preaching",
+ assignment:"Prepare a complete sermon manuscript and deliver it before a mentor or ministry leader for feedback.",
+ lessons:[
+ {
+ title:"Preparing a Biblical Sermon", scripture:["2 Timothy 4:1-5","Nehemiah 8:8","1 Corinthians 2:1-5"],
+ objectives:["Move from text to sermon responsibly.","Build a clear sermon structure.","Apply Scripture to hearers."],
+ content:[
+ ["Start with the Text","The preacher begins with careful observation and interpretation rather than searching for a verse to decorate a preselected idea."],
+ ["Big Idea","A sermon should have a clear controlling message derived from the passage."],
+ ["Structure","A common structure includes introduction, explanation, development, illustration, application and conclusion."],
+ ["Delivery","Clarity, prayer, integrity and love matter. A powerful voice cannot replace careful biblical preparation."]
+ ],
+ example:"For a sermon on David and Goliath, do not automatically make the message 'You can defeat any giant.' First examine the narrative, its place in Samuel and what it communicates about God, Israel and David.",
+ activity:"Prepare a three-point outline from a passage of your choice.",
+ quiz:[["A sermon should primarily begin with:",["Careful study of the biblical text","Finding exciting stories first","Copying another preacher"],0]]
+ }
+ ]
+},
+
+D304:{
+ title:"D304 - Christian Ethics and Apologetics",
+ assignment:"Write a reasoned Christian response to a contemporary ethical or apologetic question, using Scripture and clear argument.",
+ lessons:[
+ {
+ title:"Christian Ethics", scripture:["Micah 6:8","Matthew 22:34-40","Romans 12:1-2"],
+ objectives:["Define Christian ethics.","Apply biblical principles responsibly.","Recognize complexity in moral decision making."],
+ content:[
+ ["Ethics and Discipleship","Christian ethics concerns faithful living before God and neighbor."],
+ ["Love and Justice","Biblical ethics includes love, truth, justice, holiness, mercy and responsibility."],
+ ["Wisdom","Not every modern question is answered by a single proof text. Students may need to apply broader biblical principles with wisdom."]
+ ],
+ example:"When facing an ethical issue, identify relevant biblical teachings, distinguish clear commands from complex applications and seek mature counsel.",
+ activity:"Analyze a fictional ethical case using biblical principles.",
+ quiz:[["Christian ethics is concerned with:",["Faithful moral living","Only academic titles","Avoiding all decisions"],0]]
+ }
+ ]
+},
+
+B401:{
+ title:"B401 - Advanced Biblical Theology",
+ assignment:"Write a 3,000-word research paper tracing a biblical theological theme across several books of Scripture.",
+ lessons:[
+ {
+ title:"Kingdom, Covenant and Mission", scripture:["Genesis 12:1-3","Exodus 19:5-6","Mark 1:14-15","Revelation 11:15"],
+ objectives:["Trace a major biblical theme.","Connect Old and New Testament theology.","Avoid simplistic continuity claims."],
+ content:[
+ ["Kingdom","God's reign is a major biblical theme developed through different contexts and literary forms."],
+ ["Covenant","Biblical covenants provide important frameworks for understanding God's relationship with humanity and Israel."],
+ ["Mission","The biblical story moves outward and the New Testament presents the church as participating in God's mission."]
+ ],
+ example:"A biblical theology study should trace development rather than simply placing disconnected verses under one heading.",
+ activity:"Choose 'kingdom' or 'covenant' and create a ten-passage reading plan.",
+ quiz:[["Biblical theology often emphasizes:",["Themes across the biblical canon","Only isolated definitions","Ignoring historical development"],0]]
+ }
+ ]
+},
+
+B402:{
+ title:"B402 - Pneumatology and Spiritual Gifts",
+ assignment:"Prepare a biblical study on the work of the Holy Spirit and the responsible use of one spiritual gift.",
+ lessons:[
+ {
+ title:"The Holy Spirit and the Church", scripture:["John 14:15-27","Acts 1:8","1 Corinthians 12:4-11","Galatians 5:22-23"],
+ objectives:["Study the Spirit's work.","Distinguish gifts from character.","Practice responsible ministry."],
+ content:[
+ ["The Spirit in Christian Life","The New Testament connects the Spirit with empowerment, transformation, guidance, witness and the life of the church."],
+ ["Gifts","Spiritual gifts are presented as diverse and intended for the building up of the community."],
+ ["Fruit and Character","Giftedness does not remove the need for love, self-control, humility or accountability."],
+ ["Order","Ministry should seek the good of others and should be exercised responsibly."]
+ ],
+ example:"A person may demonstrate a spiritual gift and still need correction in character or conduct. Ministry maturity requires both gifting and formation.",
+ activity:"Read 1 Corinthians 12-14 and list principles concerning gifts, love and order.",
+ quiz:[["According to 1 Corinthians, spiritual gifts are intended for:",["Building up the community","Personal superiority","Avoiding love"],0]]
+ }
+ ]
+},
+
+B403:{
+ title:"B403 - Pastoral Leadership and Church Administration",
+ assignment:"Design a ministry structure including vision, leadership roles, accountability, communication and safeguarding principles.",
+ lessons:[
+ {
+ title:"Servant Leadership", scripture:["Mark 10:42-45","1 Peter 5:1-4","1 Timothy 3:1-13"],
+ objectives:["Understand biblical leadership principles.","Build accountability.","Develop healthy ministry systems."],
+ content:[
+ ["Leadership as Service","Jesus challenges leadership models based on domination and presents service as central to Christian leadership."],
+ ["Character","Leadership qualifications emphasize reputation, self-control, faithfulness and ability to care for others."],
+ ["Systems","Healthy ministry benefits from clear roles, communication, financial accountability and shared responsibility."]
+ ],
+ example:"A ministry leader should not attempt to control every function. Teams, delegation and accountability help the church serve effectively.",
+ activity:"Create an organizational chart for a local church with responsibilities and reporting lines.",
+ quiz:[["Christian leadership is modeled primarily as:",["Service and responsibility","Personal domination","Isolation"],0]]
+ }
+ ]
+},
+
+B404:{
+ title:"B404 - Biblical Hebrew and Greek Foundations",
+ assignment:"Complete a word-study exercise showing why dictionary definitions must be interpreted within context.",
+ lessons:[
+ {
+ title:"Using Biblical Language Tools Responsibly", scripture:["Nehemiah 8:8","2 Timothy 2:15"],
+ objectives:["Understand basic language-study limits.","Avoid word-study fallacies.","Use tools responsibly."],
+ content:[
+ ["Why Languages Matter","The biblical writings were produced in ancient languages and historical settings. Basic language knowledge can help students notice grammar, vocabulary and translation questions."],
+ ["Avoiding Misuse","A Greek or Hebrew word does not automatically carry every meaning it ever had. Meaning is shaped by context."],
+ ["Translations","Comparing responsible translations can reveal interpretive decisions, but students should not claim authority merely by quoting a dictionary."]
+ ],
+ example:"A preacher should not impress an audience with a foreign word while ignoring the sentence and argument in which it appears.",
+ activity:"Compare three translations of one verse and record similarities and differences.",
+ quiz:[["A word's meaning should primarily be determined by:",["Its context","The most dramatic dictionary definition","Its sound"],0]]
+ }
+ ]
+},
+
+P501:{
+ title:"P501 - Biblical Foundations of Prophetic Ministry",
+ assignment:"Write a biblical study distinguishing prophecy as a gift, prophetic ministry and the importance of testing and accountability.",
+ lessons:[
+ {
+ title:"What Is Prophecy?", scripture:["Joel 2:28-29","1 Corinthians 14:1-5","1 Thessalonians 5:19-22"],
+ objectives:["Study biblical descriptions of prophecy.","Understand edification and discernment.","Avoid careless claims of divine authority."],
+ content:[
+ ["Biblical Purpose","In 1 Corinthians 14, prophecy is connected with strengthening, encouragement and comfort."],
+ ["Desire and Discernment","The New Testament encourages spiritual gifts while also requiring discernment and testing."],
+ ["Humility","A minister should not use 'God told me' as a weapon to control people or silence legitimate questions."]
+ ],
+ example:"If an impression is uncertain, a mature minister may communicate it humbly and invite discernment rather than claiming infallibility.",
+ activity:"Study 1 Corinthians 14 and write five principles for orderly prophetic ministry.",
+ quiz:[["Believers are instructed to do what with prophetic claims?",["Test and discern","Accept every claim without question","Forbid all questions"],0]]
+ }
+ ]
+},
+
+P502:{
+ title:"P502 - Hearing, Discernment and Testing",
+ assignment:"Maintain a supervised discernment journal recording impressions, Scripture, context, outcomes and mentor feedback.",
+ lessons:[
+ {
+ title:"Discerning Spiritual Impressions", scripture:["1 John 4:1","John 10:27","James 1:5"],
+ objectives:["Practice discernment.","Submit impressions to Scripture.","Value mature counsel and correction."],
+ content:[
+ ["Scripture First","No spiritual impression should be used to contradict the clear moral and theological witness of Scripture."],
+ ["Wisdom and Counsel","Personal impressions may require patient discernment. Mature leaders can help test and evaluate what is claimed."],
+ ["Character","Desire for accuracy must never become an excuse for pride, fear or manipulation."]
+ ],
+ example:"A student records an impression, the context, relevant Scriptures and later feedback rather than immediately making a dramatic public declaration.",
+ activity:"Create a discernment checklist: Scripture, context, character, love, accountability and wise counsel.",
+ quiz:[["According to 1 John 4:1, believers should:",["Test spiritual claims","Believe every voice automatically","Avoid discernment"],0]]
+ }
+ ]
+},
+
+P503:{
+ title:"P503 - Prophetic Practicum and Ethics",
+ assignment:"Complete a supervised prophetic ministry practicum and submit a reflection including feedback, corrections and lessons learned.",
+ lessons:[
+ {
+ title:"Character Before Platform", scripture:["Matthew 7:15-20","1 Corinthians 13","Galatians 5:22-23"],
+ objectives:["Connect ministry with character.","Practice confidentiality.","Receive correction."],
+ content:[
+ ["Fruit","Public ministry is not the only measure of spiritual maturity. Character and conduct matter."],
+ ["Confidentiality","Personal information received in pastoral or ministry contexts should be handled responsibly and not used for public entertainment."],
+ ["Correction","A healthy minister can receive correction, apologize when necessary and continue learning."]
+ ],
+ example:"If a ministry word proves mistaken or harmful, the mature response is not defensiveness. Accountability, correction and pastoral care should follow.",
+ activity:"Write a personal prophetic ethics covenant.",
+ quiz:[["A mature minister should respond to correction with:",["Humility and accountability","Automatic hostility","Refusal to listen"],0]]
+ }
+ ]
+},
+
+M601:{
+ title:"M601 - Preaching and Teaching Practicum",
+ assignment:"Prepare, deliver and evaluate two sermons and one Bible teaching session.",
+ lessons:[
+ {
+ title:"From Study to Delivery", scripture:["Ezra 7:10","2 Timothy 2:15","James 3:1"],
+ objectives:["Prepare responsibly.","Teach clearly.","Evaluate ministry performance."],
+ content:[
+ ["Study","A minister studies before teaching. Preparation includes context, structure, theological reflection and application."],
+ ["Communication","Good teaching uses understandable language, clear structure and appropriate illustrations."],
+ ["Evaluation","Record what worked, what was unclear and what should improve. Invite constructive feedback."]
+ ],
+ example:"After preaching, a student completes an evaluation: Was the text explained? Was the main idea clear? Were applications faithful?",
+ activity:"Record a five-minute teaching and evaluate it using the practicum checklist.",
+ quiz:[["Effective biblical teaching requires:",["Preparation and clarity","Only volume","No study"],0]]
+ }
+ ]
+},
+
+M602:{
+ title:"M602 - Pastoral Care and Ministry Practice",
+ assignment:"Complete supervised ministry activities including visitation, discipleship and pastoral reflection.",
+ lessons:[
+ {
+ title:"Caring for People", scripture:["Galatians 6:1-2","Romans 12:15","James 5:13-16"],
+ objectives:["Develop empathy.","Recognize ministry boundaries.","Practice responsible referral when needed."],
+ content:[
+ ["Presence and Listening","Pastoral care often begins with listening rather than immediately giving answers."],
+ ["Boundaries","Ministers should recognize the limits of their competence and avoid pretending to be specialists in areas requiring professional expertise."],
+ ["Prayer and Support","Prayer, Scripture, practical assistance and connection to appropriate support can all form part of pastoral care."]
+ ],
+ example:"A pastor listening to a person in serious crisis should offer care while also encouraging appropriate professional or emergency support where necessary.",
+ activity:"Conduct a supervised visitation or pastoral conversation and write a reflection without exposing confidential details.",
+ quiz:[["Pastoral care should include:",["Listening and responsible support","Manipulation","Public exposure of private matters"],0]]
+ }
+ ]
+},
+
+M603:{
+ title:"M603 - Evangelism, Missions and Church Planting",
+ assignment:"Create an outreach or church-planting strategy including prayer, community understanding, discipleship and leadership development.",
+ lessons:[
+ {
+ title:"Mission and Witness", scripture:["Matthew 28:18-20","Acts 1:8","1 Peter 3:15"],
+ objectives:["Understand Christian mission.","Practice respectful witness.","Develop discipleship follow-up."],
+ content:[
+ ["Witness","Christian mission includes proclaiming Christ, making disciples and serving communities."],
+ ["Respect","Evangelism should not depend on deception, coercion or exploitation."],
+ ["Discipleship","A mission strategy should not stop at an initial decision. Teaching, community, formation and leadership development are essential."]
+ ],
+ example:"An outreach team should plan follow-up groups for new believers instead of measuring success only by attendance at one event.",
+ activity:"Create a four-week follow-up plan for new believers.",
+ quiz:[["The Great Commission includes:",["Making disciples","Only holding events","Avoiding teaching"],0]]
+ }
+ ]
+},
+
+T701:{
+ title:"T701 - Advanced Biblical and Systematic Theology",
+ assignment:"Write a 4,000-word research paper engaging a theological debate using biblical and scholarly sources.",
+ lessons:[
+ {
+ title:"Theological Method", scripture:["Acts 17:11","2 Timothy 3:16-17"],
+ objectives:["Form research questions.","Evaluate sources.","Construct a theological argument."],
+ content:[
+ ["Research Questions","A strong question is focused, researchable and significant."],
+ ["Sources","Students should distinguish primary sources, biblical texts and secondary scholarship."],
+ ["Argument","A research paper should make a clear claim and support it with evidence rather than simply collecting quotations."]
+ ],
+ example:"Instead of asking 'What does the Bible say about everything?', narrow the question to a specific theme, corpus or theological debate.",
+ activity:"Draft one research question and three subquestions.",
+ quiz:[["A strong academic argument requires:",["A claim supported by evidence","Only many quotations","No research"],0]]
+ }
+ ]
+},
+
+T702:{
+ title:"T702 - Research Methodology and Master's Thesis",
+ assignment:"Submit a Master's research proposal including title, problem, question, literature review, method, outline and bibliography.",
+ lessons:[
+ {
+ title:"Research Proposal", scripture:["Proverbs 18:15"],
+ objectives:["Develop a proposal.","Plan a literature review.","Choose an appropriate method."],
+ content:[
+ ["Problem Statement","The problem explains what requires investigation and why it matters."],
+ ["Literature Review","A review maps major scholarship, debates and gaps related to the research question."],
+ ["Method","The methodology explains how the student will investigate the question and analyze evidence."],
+ ["Academic Integrity","Sources must be acknowledged. Plagiarism and fabricated evidence undermine scholarship and ministry integrity."]
+ ],
+ example:"A thesis proposal might examine how a particular biblical theme has been interpreted within a defined theological tradition and time period.",
+ activity:"Draft a 500-word problem statement.",
+ quiz:[["A literature review primarily:",["Engages relevant scholarship","Lists random websites","Avoids previous research"],0]]
+ }
+ ]
+},
+
+D801:{
+ title:"D801 - Doctoral Research Design",
+ assignment:"Submit a doctoral proposal approved by an academic supervisor or JCRGM doctoral review panel.",
+ lessons:[
+ {
+ title:"Doctoral-Level Research", scripture:["Proverbs 2:1-6"],
+ objectives:["Define originality.","Develop a rigorous question.","Design a defensible methodology."],
+ content:[
+ ["Original Contribution","Doctoral research seeks a meaningful contribution. The contribution may involve new evidence, a new interpretation, a refined method or a significant synthesis."],
+ ["Scope","A doctoral project must be ambitious but manageable."],
+ ["Supervision","Research benefits from qualified feedback. A proposal should be tested and revised rather than treated as untouchable."]
+ ],
+ example:"A broad topic such as 'The Holy Spirit in Africa' must be narrowed into a historically, textually and methodologically manageable research problem.",
+ activity:"Write a one-page doctoral concept note.",
+ quiz:[["Doctoral research should aim for:",["A meaningful scholarly contribution","Only a longer essay","No supervision"],0]]
+ }
+ ]
+},
+
+D802:{
+ title:"D802 - Doctoral Dissertation and Defense",
+ assignment:"Prepare a complete dissertation and oral defense portfolio.",
+ lessons:[
+ {
+ title:"Writing and Defending Research", scripture:["Proverbs 15:22"],
+ objectives:["Organize a dissertation.","Respond to critique.","Present findings clearly."],
+ content:[
+ ["Structure","A typical dissertation includes introduction, literature review, methodology, analysis and conclusion, though exact structure depends on institutional requirements."],
+ ["Revision","Strong research is revised repeatedly after critique and examination."],
+ ["Defense","An oral defense tests the student's understanding of the project, evidence, method and conclusions."]
+ ],
+ example:"During a defense, answer the question asked, explain your reasoning and acknowledge limitations rather than pretending the research has no weaknesses.",
+ activity:"Prepare a ten-minute presentation summarizing a hypothetical dissertation.",
+ quiz:[["A dissertation defense evaluates:",["The researcher's understanding and argument","Only handwriting","Personal popularity"],0]]
+ }
+ ]
+},
+
+P901:{
+ title:"P901 - PhD Research Seminar",
+ assignment:"Submit a full PhD proposal with supervisor feedback and revision history.",
+ lessons:[
+ {
+ title:"From Research Interest to PhD Question", scripture:["Proverbs 25:2"],
+ objectives:["Identify a research gap.","Formulate a precise question.","Develop theoretical framing."],
+ content:[
+ ["Research Gap","A gap is not simply something no one has ever mentioned. It is a significant question that existing research has not adequately addressed."],
+ ["Theoretical Framework","A framework provides concepts through which evidence and arguments are analyzed."],
+ ["Contribution","The proposal should clearly explain why the research matters to scholarship, theology or ministry."]
+ ],
+ example:"Search existing scholarship before claiming originality. A supposedly new topic may already have substantial literature.",
+ activity:"Write a 300-word originality and significance statement.",
+ quiz:[["A PhD research gap should be:",["Significant and researchable","Imaginary","Chosen without reading scholarship"],0]]
+ }
+ ]
+},
+
+P902:{
+ title:"P902 - PhD Dissertation and Viva Preparation",
+ assignment:"Complete dissertation chapters, submit the final thesis and prepare for oral examination.",
+ lessons:[
+ {
+ title:"Completing the PhD Journey", scripture:["Ecclesiastes 7:8"],
+ objectives:["Plan dissertation chapters.","Manage revision.","Prepare for examination."],
+ content:[
+ ["Chapter Planning","Each chapter should have a clear purpose and contribute directly to the research question."],
+ ["Evidence and Claims","Distinguish evidence from interpretation and acknowledge limitations."],
+ ["Viva Preparation","Know your argument, major sources, methodology, findings, contribution and limitations."],
+ ["Integrity","Never fabricate sources, quotations, data or results. Academic integrity is also a matter of Christian character."]
+ ],
+ example:"Prepare a one-page summary answering: What did I study? Why? How? What did I find? Why does it matter?",
+ activity:"Create a final dissertation completion schedule.",
+ quiz:[["Academic integrity requires:",["Honest use and citation of evidence","Fabricating sources","Copying without acknowledgement"],0]]
+ }
+ ]
+}
+};
+
+/* ---------- STUDENT STORAGE ---------- */
+const KEY_STUDENT="jcrgm_student";
+const KEY_STATE="jcrgm_state";
+
+function state(){
+ return JSON.parse(localStorage.getItem(KEY_STATE)||'{"completed":[],"assignments":[],"exams":{},"notes":{},"lastLesson":null}');
+}
+function saveState(s){localStorage.setItem(KEY_STATE,JSON.stringify(s))}
+function student(){return JSON.parse(localStorage.getItem(KEY_STUDENT)||"null")}
+function courseById(id){return COURSES[id]}
+function allLessons(){
+ const a=[];
+ Object.keys(COURSES).forEach(cid=>COURSES[cid].lessons.forEach((l,i)=>a.push({course:cid,index:i,...l})));
+ return a;
+}
+function lessonKey(c,i){return c+"_"+i}
+function assignmentKey(c){return "assignment_"+c}
+
+/* ---------- NAVIGATION ---------- */
+function showPage(id){
+ document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+ const p=document.getElementById(id); if(p)p.classList.add("active");
+ document.querySelectorAll(".nav").forEach(x=>x.classList.toggle("active",x.dataset.page===id));
+ window.scrollTo({top:0,behavior:"smooth"});
+ if(id==="dashboard") updateDashboard();
+ if(id==="records") renderRecords();
+ if(id==="certificate") renderCertificate();
+ if(id==="assignments") renderAssignments();
+}
+document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+document.addEventListener("click",e=>{
+ const b=e.target.closest(".go"); if(b)showPage(b.dataset.target);
+});
+
+/* ---------- REGISTRATION ---------- */
+document.getElementById("registrationForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ const s={
+  id:"JCRGM-"+new Date().getFullYear()+"-"+Math.floor(10000+Math.random()*90000),
+  name:regName.value.trim(),gender:regGender.value,phone:regPhone.value.trim(),
+  email:regEmail.value.trim(),country:regCountry.value.trim(),city:regCity.value.trim(),
+  church:regChurch.value.trim(),role:regRole.value.trim(),programme:regProgramme.value,
+  calling:regCalling.value.trim(),date:new Date().toLocaleDateString()
+ };
+ localStorage.setItem(KEY_STUDENT,JSON.stringify(s));
+ updateDashboard();
+ const msg=`JCRGM THEOLOGY SCHOOL - NEW STUDENT REGISTRATION
+
+Student ID: ${s.id}
+Name: ${s.name}
+Gender: ${s.gender}
+Phone: ${s.phone}
+Email: ${s.email}
+Country: ${s.country}
+City: ${s.city}
+Church/Ministry: ${s.church}
+Ministry Role: ${s.role}
+Programme: ${s.programme}
+
+CALLING / TESTIMONY:
+${s.calling}`;
+ window.open("https://wa.me/260979554970?text="+encodeURIComponent(msg),"_blank");
+ alert("Registration completed. Your Student ID is "+s.id);
+ showPage("dashboard");
+});
+
+/* ---------- CURRICULUM ---------- */
+function renderJourney(){
+ journeyCards.innerHTML=LEVELS.map(l=>`
+ <div class="card"><h3>${l.name}</h3><p>${l.short}</p><button class="btn open-level" data-level="${l.id}">View Courses</button></div>`).join("");
+}
+function renderCurriculum(){
+ curriculumList.innerHTML=LEVELS.map(level=>{
+ const courses=level.courses.filter(id=>COURSES[id]).map(id=>{
+  const c=COURSES[id];
+  return `<div class="course">
+   <div class="course-head" data-course="${id}">
+    <div><strong>${c.title}</strong><br><span class="small">${c.lessons.length} full lessons</span></div><strong>Open ▼</strong>
+   </div>
+   <div class="course-body" id="course-${id}">
+    ${c.lessons.map((l,i)=>`<div class="lesson-row" id="row-${lessonKey(id,i)}">
+     <div><strong>Lesson ${i+1}: ${l.title}</strong><br><span class="small">${l.objectives[0]}</span></div>
+     <button class="btn study-btn" data-course="${id}" data-index="${i}">Study Lesson</button>
+    </div>`).join("")}
+    <div class="assignment"><strong>Course Assignment</strong><p>${c.assignment}</p><button class="btn green assignment-btn" data-course="${id}">Mark Assignment Complete</button></div>
+   </div>
+  </div>`;
+ }).join("");
+ return `<div class="level"><div class="level-head"><div><h3>${level.name}</h3><p class="small">${level.short}</p></div></div>${courses||"<div class='card'>Special programme modules are available in their dedicated section.</div>"}</div>`;
+ }).join("");
+}
+document.addEventListener("click",e=>{
+ const h=e.target.closest(".course-head");
+ if(h){document.getElementById("course-"+h.dataset.course).classList.toggle("open")}
+ const s=e.target.closest(".study-btn");
+ if(s){openLesson(s.dataset.course,+s.dataset.index)}
+ const a=e.target.closest(".assignment-btn");
+ if(a){completeAssignment(a.dataset.course)}
+ const ol=e.target.closest(".open-level");
+ if(ol){
+  showPage("curriculum");
+  const level=LEVELS.find(x=>x.id===ol.dataset.level);
+  if(level&&level.courses[0]){
+   setTimeout(()=>document.getElementById("course-"+level.courses[0])?.scrollIntoView({behavior:"smooth"}),200);
   }
+ }
+});
+
+/* ---------- STUDY ROOM ---------- */
+function renderSidebar(){
+ studySidebar.innerHTML=Object.keys(COURSES).map(cid=>{
+  const c=COURSES[cid];
+  return `<div style="margin-bottom:12px"><strong class="small">${c.title}</strong>
+   ${c.lessons.map((l,i)=>`<button class="side-lesson" data-course="${cid}" data-index="${i}">${i+1}. ${l.title}</button>`).join("")}
+  </div>`;
+ }).join("");
+}
+document.addEventListener("click",e=>{
+ const b=e.target.closest(".side-lesson");
+ if(b)openLesson(b.dataset.course,+b.dataset.index);
+});
+
+function openLesson(cid,index){
+ const c=COURSES[cid], l=c.lessons[index];
+ if(!l)return;
+ const s=state(); s.lastLesson={course:cid,index}; saveState(s);
+ const key=lessonKey(cid,index), saved=s.notes[key]||"";
+ lessonViewer.innerHTML=`
+ <div class="lesson-header">
+  <div class="small" style="color:#fff">${c.title}</div>
+  <h2>Lesson ${index+1}: ${l.title}</h2>
+ </div>
+
+ <div class="lesson-card">
+  <div class="objectives"><h3>Learning Objectives</h3><ul>${l.objectives.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+  <div class="scripture"><h3>Key Scriptures</h3><p>${l.scripture.join(" • ")}</p></div>
+
+  ${l.content.map(x=>`<section><h3 style="color:#3b0a57">${x[0]}</h3><p>${x[1]}</p></section>`).join("")}
+
+  <div class="note-box"><h3>Biblical / Ministry Example</h3><p>${l.example}</p></div>
+  <div class="deep-study"><h3>Practical Study Activity</h3><p>${l.activity}</p>
+  <a href="https://www.biblegateway.com/" target="_blank">Open Bible Study Resource ↗</a></div>
+
+  <div class="personal-notes">
+   <h3>My Personal Study Notes</h3>
+   <textarea id="lessonNotes" placeholder="Write what you have learned, questions you have, sermon ideas or ministry reflections...">${escapeHTML(saved)}</textarea>
+   <br><button class="btn blue" id="saveNotes" data-key="${key}">Save My Notes</button>
+  </div>
+
+  <div class="quiz">
+   <h3>Lesson Knowledge Check</h3>
+   ${l.quiz.map((q,qi)=>`<div style="margin:18px 0"><strong>${qi+1}. ${q[0]}</strong>
+   ${q[1].map((o,oi)=>`<label class="option"><input type="radio" name="q${qi}" value="${oi}"> ${o}</label>`).join("")}</div>`).join("")}
+   <button class="btn" id="submitLessonQuiz" data-course="${cid}" data-index="${index}">Check Answers</button>
+   <div id="quizResult"></div>
+  </div>
+
+  <button class="btn green" id="completeLesson" data-course="${cid}" data-index="${index}">Mark Lesson Complete</button>
+  <button class="btn go" data-target="curriculum">Back to Curriculum</button>
+ </div>`;
+ showPage("study");
+ updateRow(cid,index);
 }
 
-function searchLessons(input) {
-  const lessons = document.querySelectorAll('.lesson');
-  input = input.toLowerCase();
+function escapeHTML(str){return String(str).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 
-  lessons.forEach(l => {
-    if (l.innerText.toLowerCase().includes(input)) {
-      l.style.display = "block";
-    } else {
-      l.style.display = "none";
-    }
+document.addEventListener("click",e=>{
+ const save=e.target.closest("#saveNotes");
+ if(save){
+  const s=state();s.notes[save.dataset.key]=document.getElementById("lessonNotes").value;saveState(s);
+  alert("Your notes have been saved.");
+ }
+ const q=e.target.closest("#submitLessonQuiz");
+ if(q){
+  const l=COURSES[q.dataset.course].lessons[+q.dataset.index];
+  let score=0;
+  l.quiz.forEach((x,i)=>{
+   const selected=document.querySelector(`input[name="q${i}"]:checked`);
+   if(selected && +selected.value===x[2])score++;
   });
-}
-</script>
+  const pct=Math.round(score/l.quiz.length*100);
+  quizResult.innerHTML=`<div class="alert ${pct>=60?"success":"warn"}"><strong>Score: ${pct}%</strong><br>${pct>=60?"Good work. You passed this lesson knowledge check.":"Review the lesson and try again."}</div>`;
+ }
+ const c=e.target.closest("#completeLesson");
+ if(c){
+  const s=state(),k=lessonKey(c.dataset.course,+c.dataset.index);
+  if(!s.completed.includes(k))s.completed.push(k);
+  saveState(s);c.textContent="Lesson Completed ✓";c.classList.add("green");updateRow(c.dataset.course,+c.dataset.index);updateDashboard();
+ }
+});
 
+function updateRow(cid,i){
+ const s=state(),row=document.getElementById("row-"+lessonKey(cid,i));
+ if(row)row.classList.toggle("done",s.completed.includes(lessonKey(cid,i)));
+}
+
+/* ---------- ASSIGNMENTS ---------- */
+function completeAssignment(cid){
+ const s=state(),k=assignmentKey(cid);
+ if(!s.assignments.includes(k))s.assignments.push(k);
+ saveState(s);renderAssignments();updateDashboard();alert("Assignment marked as completed. For formal assessment, the final system should also include lecturer submission and grading.");
+}
+function renderAssignments(){
+ assignmentList.innerHTML=Object.keys(COURSES).map(cid=>{
+  const c=COURSES[cid],done=state().assignments.includes(assignmentKey(cid));
+  return `<div class="card" style="margin-bottom:14px"><h3>${c.title}</h3><p>${c.assignment}</p>
+  <span class="badge ${done?"complete":"pending"}">${done?"COMPLETED":"PENDING"}</span><br><br>
+  <button class="btn ${done?"green":""} assignment-btn" data-course="${cid}">${done?"Assignment Completed ✓":"Mark Assignment Complete"}</button></div>`;
+ }).join("");
+}
+
+/* ---------- DASHBOARD ---------- */
+function updateDashboard(){
+ const st=student(),d=document.getElementById("studentDashboard"),g=document.getElementById("guestDashboard");
+ if(!st){g.style.display="block";d.style.display="none";headerStudent.textContent="Guest Student";return}
+ g.style.display="none";d.style.display="block";headerStudent.textContent=st.name;
+ dashName.textContent=st.name;dashID.textContent=st.id;dashProgramme.textContent=st.programme;
+ const s=state(), totalL=allLessons().length,totalA=Object.keys(COURSES).length,totalE=EXAMS.length;
+ const passed=Object.values(s.exams).filter(x=>x>=60).length;
+ const total=totalL+totalA+totalE,done=s.completed.length+s.assignments.length+passed,pct=Math.round(done/total*100);
+ dashProgress.textContent=pct+"%";dashLessons.textContent=s.completed.length+"/"+totalL;
+ dashAssignments.textContent=s.assignments.length+"/"+totalA;dashExams.textContent=passed+"/"+totalE;
+ dashProgressBar.style.width=pct+"%";dashProgressText.textContent=`${done} of ${total} tracked requirements completed.`;
+ if(s.lastLesson){const l=COURSES[s.lastLesson.course].lessons[s.lastLesson.index];lastLessonText.textContent=COURSES[s.lastLesson.course].title+" — "+l.title}
+}
+continueStudy.onclick=()=>{const s=state();if(s.lastLesson)openLesson(s.lastLesson.course,s.lastLesson.index);else showPage("curriculum")};
+
+/* ---------- EXAMS ---------- */
+const EXAMS=[
+{id:"foundationExam",title:"Foundation Examination",courses:["F101","F102","F103","F104"],
+qs:[
+["Which principle helps prevent taking a verse out of context?",["Careful interpretation","Ignoring surrounding verses","Changing the passage"],0],
+["Christian salvation is described primarily as:",["Earned wages","God's grace received through faith","A political reward"],1],
+["The Lord's Prayer teaches believers to include:",["Forgiveness","Pride","Manipulation"],0]
+]},
+{id:"theologyExam",title:"Theology Examination",courses:["C201","C202","C203","D301"],
+qs:[
+["Hermeneutics is concerned with:",["Biblical interpretation","Church furniture","Music"],0],
+["Christology studies:",["Jesus Christ","Only church buildings","Ancient coins"],0],
+["The Pentateuch contains:",["5 books","4 books","12 books"],0]
+]},
+{id:"ministryExam",title:"Ministry & Leadership Examination",courses:["D303","D304","B403","M601","M602"],
+qs:[
+["A biblical sermon should begin with:",["Careful study of the text","A random title","Only illustrations"],0],
+["Pastoral care should include:",["Listening and responsible support","Manipulation","Public exposure"],0],
+["Christian leadership emphasizes:",["Service and responsibility","Domination","Isolation"],0]
+]},
+{id:"propheticExam",title:"Prophetic Ministry Examination",courses:["P501","P502","P503"],
+qs:[
+["Prophetic claims should be:",["Tested and discerned","Accepted without question","Used to control people"],0],
+["A mature minister should receive correction with:",["Humility","Automatic hostility","Refusal"],0],
+["Character and spiritual gifts should:",["Grow together in maturity","Never be connected","Replace one another"],0]
+]},
+{id:"researchExam",title:"Advanced Research Examination",courses:["T701","T702","D801","D802","P901","P902"],
+qs:[
+["A literature review primarily:",["Engages relevant scholarship","Avoids all sources","Copies quotations"],0],
+["Doctoral research seeks:",["A meaningful contribution","Only more pages","No criticism"],0],
+["Academic integrity forbids:",["Fabricating evidence","Citing sources","Revising drafts"],0]
+]}
+];
+
+function renderExams(){
+ examList.innerHTML=EXAMS.map(ex=>{
+ const old=state().exams[ex.id];
+ return `<div class="card" style="margin-bottom:20px"><h3>${ex.title}</h3>
+ ${ex.qs.map((q,i)=>`<div class="quiz-question"><strong>${i+1}. ${q[0]}</strong>${q[1].map((o,j)=>`<label class="option"><input type="radio" name="${ex.id}_${i}" value="${j}">${o}</label>`).join("")}</div>`).join("")}
+ <button class="btn submit-exam" data-exam="${ex.id}">Submit Examination</button>
+ <div id="exam-result-${ex.id}">${old!==undefined?`<div class="alert ${old>=60?"success":"warn"}">Previous score: ${old}%</div>`:""}</div></div>`;
+ }).join("");
+}
+document.addEventListener("click",e=>{
+ const b=e.target.closest(".submit-exam");if(!b)return;
+ const ex=EXAMS.find(x=>x.id===b.dataset.exam);let score=0;
+ ex.qs.forEach((q,i)=>{const x=document.querySelector(`input[name="${ex.id}_${i}"]:checked`);if(x&&+x.value===q[2])score++});
+ const pct=Math.round(score/ex.qs.length*100),s=state();s.exams[ex.id]=pct;saveState(s);
+ document.getElementById("exam-result-"+ex.id).innerHTML=`<div class="alert ${pct>=60?"success":"warn"}"><strong>Score: ${pct}%</strong><br>${pct>=60?"PASSED ✓":"Not yet passed. Review your lessons and try again."}</div>`;
+ updateDashboard();
+});
+
+/* ---------- PROPHETIC SCHOOL ---------- */
+function renderProphetic(){
+ const ids=["P501","P502","P503"];
+ propheticContent.innerHTML=ids.map(id=>{
+ const c=COURSES[id];
+ return `<div class="level"><div class="level-head"><h3>${c.title}</h3></div>
+ ${c.lessons.map((l,i)=>`<div class="lesson-row"><div><strong>Module ${i+1}: ${l.title}</strong><br>${l.objectives.join(" • ")}</div><button class="btn study-btn" data-course="${id}" data-index="${i}">Open Full Lesson</button></div>`).join("")}
+ <div class="assignment"><strong>Practicum:</strong> ${c.assignment}</div></div>`;
+ }).join("");
+}
+
+/* ---------- PRACTICAL MINISTRY ---------- */
+function renderPractical(){
+ const ids=["M601","M602","M603","D303","B403"];
+ practicalContent.innerHTML=ids.map(id=>{
+ const c=COURSES[id];
+ return `<div class="card" style="margin-bottom:15px"><h3>${c.title}</h3>
+ ${c.lessons.map((l,i)=>`<div class="lesson-row"><div><strong>${l.title}</strong><br><span class="small">${l.activity}</span></div><button class="btn study-btn" data-course="${id}" data-index="${i}">Study & Practice</button></div>`).join("")}
+ </div>`;
+ }).join("");
+}
+
+/* ---------- RECORDS ---------- */
+function renderRecords(){
+ const st=student();
+ if(!st){recordsViewer.innerHTML='<div class="alert warn">Register as a student to view academic records.</div>';return}
+ const s=state();
+ recordsViewer.innerHTML=`<div class="card"><h2>${st.name}</h2><p><strong>Student ID:</strong> ${st.id}</p><p><strong>Programme:</strong> ${st.programme}</p></div>
+ <div class="table-wrap"><table><tr><th>Course</th><th>Lessons</th><th>Assignment</th></tr>
+ ${Object.keys(COURSES).map(cid=>{
+ const c=COURSES[cid],done=c.lessons.filter((l,i)=>s.completed.includes(lessonKey(cid,i))).length;
+ const ad=s.assignments.includes(assignmentKey(cid))?"Completed":"Pending";
+ return `<tr><td>${c.title}</td><td>${done}/${c.lessons.length}</td><td>${ad}</td></tr>`;
+ }).join("")}</table></div>
+ <h3 class="section-title">Examination Results</h3>
+ <div class="table-wrap"><table><tr><th>Examination</th><th>Score</th><th>Status</th></tr>
+ ${EXAMS.map(x=>{const n=s.exams[x.id];return `<tr><td>${x.title}</td><td>${n===undefined?"Not attempted":n+"%"}</td><td>${n===undefined?"Pending":n>=60?"Passed":"Not Passed"}</td></tr>`}).join("")}
+ </table></div>`;
+}
+
+/* ---------- CERTIFICATE ---------- */
+function renderCertificate(){
+ const st=student(),s=state();
+ if(!st){certificateViewer.innerHTML='<div class="alert warn">Register and complete studies to access certificates.</div>';return}
+ const total=allLessons().length+Object.keys(COURSES).length+EXAMS.length;
+ const passed=Object.values(s.exams).filter(x=>x>=60).length;
+ const done=s.completed.length+s.assignments.length+passed;
+ const pct=Math.round(done/total*100);
+ certificateViewer.innerHTML=`<div class="certificate">
+ <h1>JCRGM THEOLOGY SCHOOL</h1>
+ <p>Jesus Christ Redeems Global Ministries</p>
+ <hr>
+ <h2>Certificate of Academic Progress</h2>
+ <p>This certifies that</p>
+ <div class="name">${st.name}</div>
+ <p>Student ID: ${st.id}</p>
+ <p>is currently enrolled in</p>
+ <h2 style="color:#65138a">${st.programme}</h2>
+ <p>Current recorded progress: <strong>${pct}%</strong></p>
+ <p>This document is a progress certificate generated by the JCRGM Theology School application. Final graduation certificates should be issued by authorized JCRGM administration after verification.</p>
+ <br><button class="btn no-print" onclick="window.print()">Print Certificate</button>
+ </div>`;
+}
+
+/* ---------- INITIALIZE ---------- */
+journeyCards.innerHTML="";
+LEVELS.forEach(l=>regProgramme.innerHTML+=`<option>${l.name}</option>`);
+renderJourney();
+renderCurriculum();
+renderSidebar();
+renderAssignments();
+renderExams();
+renderProphetic();
+renderPractical();
+updateDashboard();
+document.getElementById("year").textContent=new Date().getFullYear();
+</script>
 </body>
 </html>
