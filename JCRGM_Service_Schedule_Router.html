@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JCRGM Service Schedule Router</title>
+<style>
+:root{--primary:#17365d;--secondary:#c9a227;--bg:#f4f7fb;--card:#fff;--text:#17202a;--muted:#667085;--danger:#b42318;--success:#087443}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+header{background:linear-gradient(135deg,#102b4e,#1f4d7a);color:white;padding:28px 20px;text-align:center}
+header h1{margin:0;font-size:30px}header p{margin:7px 0 0;color:#e7edf5}
+.container{max-width:1250px;margin:24px auto;padding:0 16px}
+.grid{display:grid;grid-template-columns:360px 1fr;gap:18px}.card{background:var(--card);border-radius:16px;padding:20px;box-shadow:0 5px 20px #102b4e14;margin-bottom:18px}
+h2{font-size:19px;margin:0 0 14px;color:var(--primary)}h3{font-size:16px;color:var(--primary)}
+label{display:block;font-size:13px;font-weight:700;margin:11px 0 6px}input,select,button{font:inherit}
+input,select{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:9px;background:#fff}
+button{border:0;border-radius:9px;padding:10px 14px;cursor:pointer;font-weight:700}
+.primary{background:var(--primary);color:#fff}.gold{background:var(--secondary);color:#fff}.light{background:#eef3f8;color:var(--primary)}.danger{background:#fee4e2;color:var(--danger)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.person{display:flex;align-items:center;justify-content:space-between;background:#f7f9fc;border:1px solid #e4e7ec;padding:9px 10px;border-radius:9px;margin:7px 0}.person button{padding:5px 8px}
+.roles{max-height:420px;overflow:auto}.role{border:1px solid #e4e7ec;padding:9px;border-radius:9px;margin:7px 0}.role strong{display:block}.role small{color:var(--muted)}
+.toolbar{display:flex;gap:10px;align-items:end;flex-wrap:wrap}.toolbar>div{min-width:160px;flex:1}.toolbar button{height:40px}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}.stat{background:#f7f9fc;border-radius:12px;padding:13px}.stat b{font-size:22px;color:var(--primary);display:block}.stat span{font-size:12px;color:var(--muted)}
+.week{border:1px solid #dfe5ec;border-radius:13px;margin:12px 0;overflow:hidden}.week-title{background:#eef3f8;padding:12px 14px;font-weight:800;color:var(--primary);display:flex;justify-content:space-between}.service{padding:12px 14px;border-top:1px solid #edf0f4}.service-title{font-weight:800;margin-bottom:8px}.assignments{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:7px}.assignment{background:#fafafa;border-left:4px solid var(--secondary);padding:8px;border-radius:7px;font-size:13px}.assignment b{display:block;color:var(--primary)}.notice{padding:10px 12px;border-radius:9px;background:#fff8e6;color:#725500;font-size:13px;margin-top:10px}
+.empty{text-align:center;color:var(--muted);padding:35px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,1fr)}}@media print{.no-print{display:none!important}body{background:#fff}.card{box-shadow:none;border:1px solid #ddd}.container{max-width:none}.grid{display:block}}
+</style>
+</head>
+<body>
+<header>
+<h1>JCRGM SERVICE SCHEDULE ROUTER</h1>
+<p>Monthly • Weekly • Service Responsibilities &amp; Automatic Assignment</p>
+</header>
+
+<div class="container">
+<div class="grid">
+<section>
+<div class="card">
+<h2>1. Church Leaders / Pastors</h2>
+<label for="personName">Enter Name</label>
+<input id="personName" placeholder="e.g. Pastor John">
+<div class="actions"><button class="primary" onclick="addPerson()">Add Person</button></div>
+<div id="people" style="margin-top:12px"></div>
+<div class="notice">Add all pastors/leaders who may serve. The router rotates them fairly and avoids assigning the same person twice within one service where possible.</div>
+</div>
+
+<div class="card">
+<h2>2. Month &amp; Schedule</h2>
+<label>Month</label><input type="month" id="month">
+<label>Services per week</label>
+<select id="servicePattern">
+<option value="sun">Sunday Main Service</option>
+<option value="sunwed">Sunday + Wednesday</option>
+<option value="sunsat">Sunday + Saturday</option>
+<option value="sunwedfri">Sunday + Wednesday + Friday</option>
+<option value="custom">Sunday + Wednesday + Friday + Saturday</option>
+</select>
+<div class="actions">
+<button class="gold" onclick="generate()">Auto Schedule</button>
+<button class="light" onclick="saveData()">Save</button>
+<button class="light" onclick="loadData()">Load</button>
+<button class="danger" onclick="clearAll()">Clear</button>
+</div>
+</div>
+
+<div class="card">
+<h2>Responsibilities Included</h2>
+<div class="roles" id="rolesList"></div>
+</div>
+</section>
+
+<main>
+<div class="card no-print">
+<div class="toolbar">
+<div><label>View</label><select id="viewMode" onchange="renderSchedule()"><option value="month">Full Month</option><option value="weekly">Weekly Summary</option></select></div>
+<div><label>Search</label><input id="search" placeholder="Search person or responsibility" oninput="renderSchedule()"></div>
+<button class="primary" onclick="window.print()">Print / Save PDF</button>
+<button class="light" onclick="exportCSV()">Export CSV</button>
+</div>
+</div>
+<div id="summary" class="summary"></div>
+<div id="schedule"></div>
+</main>
+</div>
+</div>
+
+<script>
+const responsibilities=[
+["Service Leader","Coordinates the service and keeps the programme flowing."],
+["Opening Prayer","Leads the opening prayer and commits the service to God."],
+["Worship Leader","Leads worship and congregational participation."],
+["Praise Team / Choir","Coordinates praise, choir or worship support."],
+["Scripture Reading","Reads the appointed Scripture clearly."],
+["Intercession","Leads congregational intercession."],
+["Offering / Giving","Coordinates offering, giving and related announcements."],
+["Announcements","Presents church notices and important information."],
+["Sermon / Word","Preaches or delivers the main Word where applicable."],
+["Altar / Ministry","Coordinates altar ministry, prayer and response."],
+["Holy Communion","Coordinates Holy Communion where scheduled."],
+["Protocol / Ushering","Oversees seating, order and visitor assistance."],
+["Security / Safety","Coordinates basic service safety and emergency readiness."],
+["Media / IT","Handles sound, projection, recording and livestream."],
+["Time Keeper","Monitors programme timing and transitions."],
+["Welcome / Hospitality","Welcomes visitors and supports hospitality."],
+["Children / Sunday School","Coordinates children’s ministry where applicable."],
+["Testimonies","Coordinates and manages testimonies."],
+["Closing Prayer","Closes the service in prayer."],
+["Service Review","Records issues, improvements and follow-up actions."]
+];
+
+let people=[];
+let schedule=[];
+
+function init(){
+document.getElementById("month").value=new Date().toISOString().slice(0,7);
+document.getElementById("rolesList").innerHTML=responsibilities.map(r=>`<div class="role"><strong>${r[0]}</strong><small>${r[1]}</small></div>`).join("");
+loadData(false); renderPeople(); renderSchedule();
+}
+function addPerson(){
+const input=document.getElementById("personName"), name=input.value.trim();
+if(!name)return alert("Enter a pastor/leader name.");
+if(people.some(p=>p.toLowerCase()===name.toLowerCase()))return alert("That person is already on the list.");
+people.push(name); input.value=""; renderPeople();
+}
+function removePerson(i){people.splice(i,1); renderPeople();schedule=[];renderSchedule();}
+function renderPeople(){
+document.getElementById("people").innerHTML=people.length?people.map((p,i)=>`<div class="person"><span>${i+1}. ${escapeHtml(p)}</span><button class="danger" onclick="removePerson(${i})">Remove</button></div>`).join(""):"<div class='empty'>No pastors/leaders added yet.</div>";
+}
+function getServices(pattern){
+const map={sun:[0],sunwed:[0,3],sunsat:[0,6],sunwedfri:[0,3,5],custom:[0,3,5,6]};
+return map[pattern]||[0];
+}
+function serviceName(day){
+return {0:"Sunday Main Service",3:"Wednesday Service",5:"Friday Service",6:"Saturday Service"}[day]||"Church Service";
+}
+function roleCount(){
+return responsibilities.length;
+}
+function generate(){
+if(people.length<2)return alert("Please enter at least 2 pastors/leaders before auto-scheduling.");
+const month=document.getElementById("month").value;
+if(!month)return alert("Select a month.");
+const [year,mo]=month.split("-").map(Number), days=new Date(year,mo,0).getDate(), pattern=document.getElementById("servicePattern").value;
+const serviceDays=getServices(pattern);
+schedule=[];
+let rotation=0;
+for(let d=1;d<=days;d++){
+const date=new Date(year,mo-1,d), dow=date.getDay();
+if(!serviceDays.includes(dow))continue;
+let assignments=[];
+responsibilities.forEach((r,ri)=>{
+// Deterministic rotation spreads responsibilities across the team.
+const person=people[(rotation+ri)%people.length];
+assignments.push({role:r[0],person});
+});
+schedule.push({date:date.toISOString().slice(0,10),day:date.toLocaleDateString(undefined,{weekday:"long"}),service:serviceName(dow),assignments});
+rotation=(rotation+Math.max(1,Math.floor(responsibilities.length/3)))%people.length;
+}
+saveData(false);renderSchedule();
+}
+function renderSchedule(){
+const box=document.getElementById("schedule"), q=(document.getElementById("search").value||"").toLowerCase();
+if(!schedule.length){document.getElementById("summary").innerHTML="";box.innerHTML="<div class='card empty'>Enter your pastors/leaders and click <b>Auto Schedule</b> to generate the monthly roster.</div>";return;}
+let filtered=schedule.map(w=>({...w,assignments:w.assignments.filter(a=>(a.person+" "+a.role+" "+w.service).toLowerCase().includes(q))})).filter(w=>w.assignments.length||!q);
+const total=schedule.length, unique=new Set(schedule.flatMap(s=>s.assignments.map(a=>a.person))).size;
+document.getElementById("summary").innerHTML=`<div class="stat"><b>${total}</b><span>Services</span></div><div class="stat"><b>${unique}</b><span>People Scheduled</span></div><div class="stat"><b>${responsibilities.length}</b><span>Responsibilities</span></div><div class="stat"><b>${total*responsibilities.length}</b><span>Total Assignments</span></div>`;
+if(!filtered.length){box.innerHTML="<div class='card empty'>No matching assignments.</div>";return;}
+box.innerHTML=filtered.map((s,i)=>`<div class="week"><div class="week-title"><span>${formatDate(s.date)} — ${s.service}</span><span>${s.day}</span></div><div class="service"><div class="assignments">${s.assignments.map(a=>`<div class="assignment"><b>${escapeHtml(a.role)}</b>${escapeHtml(a.person)}</div>`).join("")}</div></div></div>`).join("");
+}
+function formatDate(x){return new Date(x+"T12:00:00").toLocaleDateString(undefined,{day:"numeric",month:"long",year:"numeric"});}
+function exportCSV(){
+if(!schedule.length)return alert("Generate a schedule first.");
+let rows=[["Date","Day","Service","Responsibility","Assigned Person"]];
+schedule.forEach(s=>s.assignments.forEach(a=>rows.push([s.date,s.day,s.service,a.role,a.person])));
+const csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\\n");
+const blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+a.href=url;a.download="JCRGM_Service_Schedule.csv";a.click();URL.revokeObjectURL(url);
+}
+function saveData(show=true){
+localStorage.setItem("jcrgm_schedule_data",JSON.stringify({people,schedule,month:document.getElementById("month").value,pattern:document.getElementById("servicePattern").value}));
+if(show)alert("JCRGM schedule saved on this device.");
+}
+function loadData(show=true){
+try{const d=JSON.parse(localStorage.getItem("jcrgm_schedule_data"));if(!d)return;
+people=d.people||[];schedule=d.schedule||[];if(d.month)document.getElementById("month").value=d.month;if(d.pattern)document.getElementById("servicePattern").value=d.pattern;
+renderPeople();renderSchedule();if(show)alert("Saved JCRGM schedule loaded.");
+}catch(e){alert("Unable to load saved data.");}
+}
+function clearAll(){if(confirm("Clear all pastors and schedules?")){people=[];schedule=[];localStorage.removeItem("jcrgm_schedule_data");renderPeople();renderSchedule();}}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+init();
+</script>
+</body>
+</html>
