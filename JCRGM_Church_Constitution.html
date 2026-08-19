@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>JCRGM Church Constitution</title>
+<style>
+:root{--p:#111827;--s:#1f2937;--g:#c89b3c;--gl:#f4e4b7;--bg:#f3f4f6;--w:#fff;--t:#1f2937;--m:#6b7280;--b:#e5e7eb;--side:290px}
+*{box-sizing:border-box;scroll-behavior:smooth}
+body{margin:0;font-family:Georgia,"Times New Roman",serif;color:var(--t);background:var(--bg);line-height:1.7}
+button,input{font:inherit}.app{display:flex;min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--side);background:var(--p);color:#fff;overflow-y:auto;z-index:10}
+.brand{text-align:center;padding:24px 15px;border-bottom:1px solid #ffffff20}.logo{width:70px;height:70px;border:2px solid var(--g);border-radius:50%;margin:auto;display:grid;place-items:center;color:var(--g);font-weight:bold}.brand h3{margin:10px 0 0;font-size:16px}.brand small{color:#d1d5db}
+.nav{padding:12px}.nav button{width:100%;display:block;text-align:left;border:0;background:none;color:#d1d5db;padding:9px 12px;border-radius:7px;cursor:pointer;font-size:12px}.nav button:hover,.nav button.active{background:#c89b3c22;color:#fff}.nav .chapter{color:var(--g);font-weight:bold;margin-top:7px}.nav .sub{padding-left:26px}
+.main{margin-left:var(--side);width:calc(100% - var(--side))}.top{position:sticky;top:0;z-index:5;background:#fffffff5;border-bottom:1px solid var(--b);padding:11px 20px;display:flex;gap:8px}.top input{flex:1;padding:10px 13px;border:1px solid var(--b);border-radius:8px}.top button{border:1px solid var(--b);background:#fff;border-radius:7px;padding:9px 12px;cursor:pointer}.mobile{display:none}
+.content{max-width:1100px;margin:auto;padding:30px 25px 80px}.chapter{display:none}.chapter.active{display:block}
+.cover{min-height:78vh;background:linear-gradient(135deg,#fff,#f8f3e7);border:1px solid var(--b);border-radius:15px;display:grid;place-items:center;text-align:center;padding:40px;margin-bottom:30px}.cover h1{font-size:43px;line-height:1.15}.cross{font-size:65px;color:var(--g)}.cover h2{color:var(--g)}.meta{border-top:1px solid var(--b);padding-top:20px}
+.card,.dept{background:#fff;border:1px solid var(--b);border-radius:11px;padding:22px;margin:15px 0;box-shadow:0 3px 15px #00000008}
+.header{background:linear-gradient(135deg,#111827,#263244);color:#fff;border-radius:12px;padding:30px;margin-bottom:22px}.header h1{color:#fff}.header small{color:#f1cf78}
+h1{font-size:34px}h2{font-size:25px;border-bottom:2px solid var(--gl);padding-bottom:7px}h3{font-size:20px;color:var(--p)}
+.notice{padding:15px 18px;border-left:5px solid var(--g);background:#fffbeb;margin:18px 0}.warn{background:#fef2f2;border-color:#dc2626}
+.accordion{border:1px solid var(--b);border-radius:8px;overflow:hidden;margin:10px 0;background:#fff}.ah{width:100%;border:0;background:#fff;padding:15px 18px;text-align:left;font-weight:bold;cursor:pointer;display:flex;justify-content:space-between}.ac{display:none;padding:0 18px 18px;border-top:1px solid var(--b)}.accordion.open .ac{display:block}
+table{width:100%;border-collapse:collapse;background:#fff;margin:15px 0}th,td{border:1px solid var(--b);padding:9px;vertical-align:top}th{background:#f9fafb}
+.footer{text-align:center;border-top:1px solid var(--b);padding:25px;color:var(--m);margin-top:40px}
+@media(max-width:850px){.sidebar{transform:translateX(-100%);transition:.2s}.sidebar.open{transform:translateX(0)}.main{margin:0;width:100%}.mobile{display:block}.top button:not(.mobile){display:none}.content{padding:18px 12px 60px}.cover h1{font-size:30px}}
+@media print{.sidebar,.top{display:none!important}.main{margin:0;width:100%}.content{max-width:none;padding:0}.chapter{display:block!important;page-break-before:always}.ac{display:block!important}.cover{page-break-after:always}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+<div class="brand"><div class="logo">JCRGM</div><h3>JESUS CHRIST REDEEMS</h3><small>GLOBAL MINISTRIES</small></div>
+<nav class="nav" id="nav"></nav>
+</aside>
+<main class="main">
+<header class="top"><button class="mobile" onclick="toggleMenu()">☰</button><input id="search" placeholder="Search constitution..." oninput="searchDoc()"><button onclick="window.print()">PRINT / PDF</button><button onclick="openAll()">OPEN ALL</button></header>
+<div class="content">
+
+<section id="home" class="chapter active">
+<div class="cover"><div><div class="cross">✝</div><small>OFFICIAL GOVERNANCE DOCUMENT</small><h1>JESUS CHRIST REDEEMS<br>GLOBAL MINISTRIES</h1><h2>JCRGM</h2><p><strong>CONSTITUTION, GOVERNANCE & ADMINISTRATIVE FRAMEWORK</strong></p><p>“Empowered for Greater Works”</p><div class="meta"><strong>HEAD OFFICE</strong><br>Lusaka, Zambia<br><br><strong>FOUNDATION</strong><br>Jesus Christ is Lord and Head of the Church.</div></div></div>
+<div class="card"><h2>Purpose of this document</h2><p>This Constitution establishes the spiritual, governance, administrative, financial, membership, departmental, safeguarding and operational framework of Jesus Christ Redeems Global Ministries.</p><div class="notice warn"><strong>LEGAL REVIEW:</strong> Before formal adoption or registration, have the final document reviewed by a qualified Zambian legal practitioner and aligned with JCRGM's registered particulars and applicable law.</div></div>
+<h2>Table of Contents</h2><div id="toc"></div>
+</section>
+
+<section id="preamble" class="chapter"><div class="header"><small>PREAMBLE</small><h1>PREAMBLE AND FOUNDATIONAL DECLARATION</h1></div><div class="card"><h2>Declaration</h2><p>We, the members of Jesus Christ Redeems Global Ministries, acknowledging God Almighty as Creator and Sovereign Lord, confessing Jesus Christ as Lord and Saviour, and recognizing the authority of Holy Scripture, hereby establish this Constitution to regulate the spiritual, administrative, financial and operational affairs of the Church.</p><p>We commit ourselves to the proclamation of the Gospel, making disciples, strengthening families, developing Christian character, prayer, worship, evangelism, missions, service to humanity and responsible stewardship.</p><blockquote>“Upon this rock I will build my church; and the gates of hell shall not prevail against it.” — Matthew 16:18</blockquote></div></section>
+
+<section id="identity" class="chapter"><div class="header"><small>CHAPTER 1</small><h1>IDENTITY, NAME AND PURPOSE</h1></div>
+<div class="accordion"><button class="ah">Article 1 — Name <span>›</span></button><div class="ac"><p>The name shall be <strong>JESUS CHRIST REDEEMS GLOBAL MINISTRIES (JCRGM)</strong>. The Church may establish branches, ministries, departments, missions, institutions and projects under its authority.</p></div></div>
+<div class="accordion"><button class="ah">Article 2 — Nature <span>›</span></button><div class="ac"><ul><li>Christian religious organization.</li><li>Non-profit ministry.</li><li>Church resources shall serve approved ministry purposes.</li><li>Members do not personally own Church assets by virtue of membership or office.</li><li>The Church shall operate according to its registration status and applicable law.</li></ul></div></div>
+<div class="accordion"><button class="ah">Article 3 — Vision and Mission <span>›</span></button><div class="ac"><p><strong>Vision:</strong> To raise a spiritually mature, Christ-centred and empowered people who fulfil God's purposes and positively influence families, communities, the nation and the world.</p><p><strong>Mission:</strong> Preach the Gospel; make disciples; teach Scripture; develop prayerful believers; equip workers; strengthen families; reach children and youth; support vulnerable persons; plant churches; and participate in missions and community transformation.</p></div></div>
+<div class="accordion"><button class="ah">Article 4 — Core Values <span>›</span></button><div class="ac"><p>Christ-centred faith, biblical truth, prayer, integrity, excellence, servanthood, accountability, love, unity, holiness, compassion, faith, order and stewardship.</p></div></div>
+</section>
+
+<section id="doctrine" class="chapter"><div class="header"><small>CHAPTER 2</small><h1>STATEMENT OF FAITH AND DOCTRINE</h1></div>
+<div class="card"><h2>Articles 5–12</h2><ol><li><strong>Holy Scripture:</strong> The Bible is inspired Scripture and authoritative for faith and conduct.</li><li><strong>Triune God:</strong> One God eternally existing as Father, Son and Holy Spirit.</li><li><strong>Jesus Christ:</strong> Son of God, fully divine and fully human, born of the virgin Mary, crucified, risen, ascended and coming again.</li><li><strong>Salvation:</strong> By God's grace through faith in Jesus Christ, expressed in repentance and transformed living.</li><li><strong>Holy Spirit:</strong> The Spirit convicts, regenerates, sanctifies, empowers, guides and distributes spiritual gifts.</li><li><strong>Church:</strong> The body of Christ called to worship, evangelize, disciple and serve.</li><li><strong>Ordinances:</strong> Baptism and Holy Communion shall be observed according to JCRGM doctrine and ministerial practice.</li><li><strong>Christian Conduct:</strong> Members shall pursue holiness, honesty, love, humility, reconciliation and integrity.</li></ol></div></section>
+
+<section id="membership" class="chapter"><div class="header"><small>CHAPTER 3</small><h1>MEMBERSHIP</h1></div><div class="card"><h2>Membership Categories</h2><ol><li>Regular Members</li><li>Associate Members</li><li>Children</li><li>Youth</li><li>Workers</li><li>Ministers</li><li>Honorary Members</li></ol><h2>Admission</h2><p>A person may be received into membership through the Church's approved process, profession of Christian faith, completion of required orientation and agreement with this Constitution and doctrine.</p><h2>Rights</h2><ul><li>Attend worship.</li><li>Receive pastoral care.</li><li>Participate in approved ministries.</li><li>Receive teaching and spiritual development.</li><li>Raise concerns through proper channels.</li><li>Be treated with dignity and fairness.</li></ul><h2>Responsibilities</h2><ul><li>Live according to Christian principles.</li><li>Support Church unity and mission.</li><li>Serve according to gifts and capacity.</li><li>Protect Church property.</li><li>Maintain appropriate confidentiality.</li><li>Support the Church through prayer, service and giving.</li></ul></div></section>
+
+<section id="leadership" class="chapter"><div class="header"><small>CHAPTER 4</small><h1>LEADERSHIP AND GOVERNANCE</h1></div><div class="card"><h2>Governance Structure</h2><ol><li>Overseer / Presiding Minister</li><li>Senior Pastoral Leadership</li><li>Presbytery / Council of Ministers</li><li>Church Administrative Council</li><li>Department Heads</li><li>Branch Leadership</li><li>Ministry Workers</li><li>General Membership</li></ol><h2>Leadership Principles</h2><ul><li>Leadership is service.</li><li>Authority must be exercised responsibly.</li><li>Leaders remain accountable.</li><li>Leaders shall avoid conflicts of interest.</li><li>Church office shall not be used for unlawful personal enrichment.</li><li>Leaders shall maintain confidentiality and safeguarding standards.</li></ul><h2>Qualifications</h2><p>Leaders should demonstrate Christian character, doctrinal soundness, spiritual maturity, faithfulness, integrity, competence, teamwork and willingness to submit to accountability.</p></div></section>
+
+<section id="pastor" class="chapter"><div class="header"><small>CHAPTER 5</small><h1>OFFICE OF THE OVERSEER</h1></div><div class="card"><h2>Role</h2><p>The Overseer provides spiritual direction, doctrinal oversight, pastoral leadership and strategic direction for JCRGM.</p><h2>Responsibilities</h2><ul><li>Guard the spiritual vision.</li><li>Preside over major spiritual and administrative meetings.</li><li>Appoint or recommend senior leaders according to Church procedure.</li><li>Provide pastoral and spiritual oversight.</li><li>Represent the Church where authorized.</li><li>Approve major ministry initiatives.</li><li>Promote unity and leadership development.</li></ul><h2>Accountability</h2><p>Spiritual authority does not remove financial, legal, safeguarding or administrative accountability. The Overseer shall work with the appropriate governing bodies to ensure responsible governance.</p></div></section>
+
+<section id="departments" class="chapter"><div class="header"><small>CHAPTER 6</small><h1>CHURCH DEPARTMENTS AND MINISTRIES</h1></div>
+<div class="notice">Every department shall have an approved leader, defined responsibilities, appropriate records and reporting requirements. No department is independent of JCRGM unless separately and lawfully constituted.</div>
+<div id="deptList"></div></section>
+
+<section id="discipline" class="chapter"><div class="header"><small>CHAPTER 7</small><h1>DISCIPLINE & RESTORATION</h1></div><div class="card"><h2>Purpose</h2><p>Discipline seeks truth, protection, repentance, restoration, justice and Church order, never revenge or humiliation.</p><h2>Grounds</h2><ul><li>Serious misconduct.</li><li>Fraud or theft.</li><li>Abuse or exploitation.</li><li>Persistent disruptive conduct.</li><li>Serious doctrinal violation.</li><li>Misuse of Church funds.</li><li>Sexual misconduct.</li><li>Falsification of records.</li><li>Conduct seriously damaging to the Church.</li></ul><h2>Process</h2><ol><li>Receive and document concern.</li><li>Assess immediate safeguarding needs.</li><li>Conduct fair inquiry.</li><li>Give the person opportunity to respond.</li><li>Determine action.</li><li>Document outcome.</li><li>Provide appeal where applicable.</li><li>Pursue restoration where possible.</li></ol><div class="notice warn">Criminal, abuse or immediate-danger allegations must not be concealed as internal Church discipline. Applicable legal and reporting obligations must be followed.</div></div></section>
+
+<section id="finance" class="chapter"><div class="header"><small>CHAPTER 8</small><h1>FINANCE, TITHES, OFFERINGS & ACCOUNTABILITY</h1></div><div class="card"><h2>Sources</h2><ul><li>Tithes.</li><li>Offerings.</li><li>Freewill contributions.</li><li>Donations.</li><li>Approved fundraising.</li><li>Grants where appropriate.</li><li>Approved Church activities.</li><li>Other lawful sources.</li></ul><h2>Financial Controls</h2><table><tr><th>Area</th><th>Rule</th></tr><tr><td>Collection</td><td>At least two authorized persons should participate in counting where practical.</td></tr><tr><td>Recording</td><td>Collections should be recorded promptly.</td></tr><tr><td>Banking</td><td>Funds should be deposited without unnecessary delay.</td></tr><tr><td>Payments</td><td>Payments require appropriate authorization and documentation.</td></tr><tr><td>Reconciliation</td><td>Accounts should be reconciled regularly.</td></tr><tr><td>Reporting</td><td>Periodic reports shall be presented to the appropriate governing body.</td></tr></table><h2>Tithes and Offerings</h2><p>The Church shall teach biblical stewardship and encourage giving freely and responsibly. No person shall be coerced through threats, humiliation or manipulation.</p></div></section>
+
+<section id="property" class="chapter"><div class="header"><small>CHAPTER 9</small><h1>PROPERTY, ASSETS & PROJECTS</h1></div><div class="card"><h2>Ownership</h2><p>Property acquired for JCRGM shall be held and administered for Church purposes and not private benefit.</p><h2>Asset Register</h2><p>Maintain records of land, buildings, vehicles, equipment, furniture, instruments, computers and other material assets.</p><h2>Disposal</h2><p>Major assets may only be sold, transferred, donated or disposed of through the required Church approvals and applicable law.</p></div></section>
+
+<section id="meetings" class="chapter"><div class="header"><small>CHAPTER 10</small><h1>MEETINGS & DECISION MAKING</h1></div><div class="card"><h2>Meetings</h2><ul><li>Leadership meetings.</li><li>Pastoral meetings.</li><li>Departmental meetings.</li><li>Workers' meetings.</li><li>General Church meetings.</li><li>Special meetings.</li></ul><h2>Minutes</h2><p>Material decisions shall be recorded with attendees, agenda, resolutions and action points.</p><h2>Quorum</h2><p>Unless this Constitution states otherwise, a committee's quorum shall be determined by its approved terms of reference.</p></div></section>
+
+<section id="elections" class="chapter"><div class="header"><small>CHAPTER 11</small><h1>APPOINTMENTS, ELECTIONS & SUCCESSION</h1></div><div class="card"><p>Ministry positions may be filled by appointment, election, ordination or commissioning according to the nature of the office.</p><h2>Selection Criteria</h2><ul><li>Character.</li><li>Spiritual maturity.</li><li>Competence.</li><li>Faithfulness.</li><li>Agreement with doctrine.</li><li>Ability to serve under authority.</li></ul><h2>Succession</h2><p>The Church shall maintain leadership development and succession planning to reduce disruption when leaders resign, retire, become incapacitated or leave office.</p></div></section>
+
+<section id="records" class="chapter"><div class="header"><small>CHAPTER 12</small><h1>RECORDS & INFORMATION</h1></div><div class="card"><h2>Records</h2><ul><li>Membership register.</li><li>Baptism records.</li><li>Marriage records where maintained.</li><li>Leadership register.</li><li>Minutes.</li><li>Financial records.</li><li>Asset register.</li><li>Property documents.</li><li>Official correspondence.</li><li>Department reports.</li><li>Incident and safeguarding records.</li></ul><h2>Confidentiality</h2><p>Sensitive pastoral, disciplinary, safeguarding and personal information shall only be accessed by authorized persons.</p></div></section>
+
+<section id="conflict" class="chapter"><div class="header"><small>CHAPTER 13</small><h1>DISPUTE RESOLUTION</h1></div><div class="card"><ol><li>Private discussion where appropriate.</li><li>Mediation by a suitable leader.</li><li>Referral to Pastoral Council.</li><li>Formal review where necessary.</li><li>External professional or legal process where appropriate.</li></ol><p>No member shall be punished merely for raising a genuine concern in good faith.</p></div></section>
+
+<section id="safeguarding" class="chapter"><div class="header"><small>CHAPTER 14</small><h1>SAFEGUARDING, CHILD PROTECTION & SAFETY</h1></div><div class="card"><h2>Zero Tolerance</h2><p>JCRGM shall maintain a zero-tolerance position toward abuse, exploitation, sexual misconduct, harassment, trafficking and deliberate harm against children or vulnerable persons.</p><h2>Responsibilities</h2><ul><li>Screen appropriate workers.</li><li>Provide safeguarding training.</li><li>Maintain safe supervision.</li><li>Establish reporting channels.</li><li>Protect complainants from retaliation.</li><li>Keep appropriate records.</li><li>Cooperate with lawful investigations.</li></ul><h2>Children</h2><p>Children's ministry shall operate with age-appropriate supervision, safe environments, responsible adult leadership and appropriate parent/guardian communication.</p></div></section>
+
+<section id="admin" class="chapter"><div class="header"><small>DEPARTMENT</small><h1>ADMINISTRATION</h1></div><div class="card"><ul><li>Maintain Church files.</li><li>Prepare correspondence.</li><li>Maintain calendars.</li><li>Record minutes.</li><li>Maintain membership records.</li><li>Issue approved letters and certificates.</li><li>Maintain registers.</li><li>Coordinate official communication.</li></ul></div></section>
+
+<section id="branches" class="chapter"><div class="header"><small>DEPARTMENT</small><h1>BRANCHES, ASSEMBLIES & CHURCH PLANTING</h1></div><div class="card"><h2>Establishment</h2><p>A branch may be established where there is sufficient membership, leadership capacity, financial sustainability and strategic need.</p><h2>Leadership</h2><p>Every branch shall have an approved leader accountable to central leadership.</p><h2>Reporting</h2><ul><li>Membership.</li><li>Finance.</li><li>Department activity.</li><li>Evangelism.</li><li>Major incidents.</li><li>Annual ministry report.</li></ul></div></section>
+
+<section id="legal" class="chapter"><div class="header"><small>DEPARTMENT</small><h1>LEGAL & REGULATORY COMPLIANCE</h1></div><div class="card"><h2>Responsibilities</h2><ul><li>Maintain registration documents.</li><li>Monitor statutory returns.</li><li>Maintain current office-bearer information.</li><li>Record constitutional amendments.</li><li>Maintain official address information.</li><li>Coordinate legal advice.</li><li>Review contracts.</li><li>Maintain compliance deadlines.</li></ul></div></section>
+
+<section id="amendments" class="chapter"><div class="header"><small>CHAPTER 15</small><h1>AMENDMENT OF THE CONSTITUTION</h1></div><div class="card"><p>Proposed amendments shall be submitted in writing, reviewed for theological, administrative, financial and legal implications, and approved through the Church's prescribed governance process. Where required, statutory notification or approval shall be completed before an amendment becomes effective.</p><p>The identity of Jesus Christ as Head of the Church, the biblical foundation and the core mission shall not be altered in a manner contrary to JCRGM's foundational faith.</p></div></section>
+
+<section id="dissolution" class="chapter"><div class="header"><small>CHAPTER 16</small><h1>DISSOLUTION</h1></div><div class="card"><p>The Church may only be dissolved through the lawful process applicable to its registration status and after approval by the highest authorized Church body.</p><p>After lawful liabilities are settled, remaining assets shall be transferred to a lawful Christian or charitable organization with substantially consistent objectives, subject to applicable law. Assets shall not be distributed among members merely because of membership.</p></div></section>
+
+<section id="schedules" class="chapter"><div class="header"><small>SCHEDULES</small><h1>OFFICIAL SCHEDULES & DECLARATIONS</h1></div><div class="card"><h2>Schedule A — Leadership Structure</h2><table><tr><th>Level</th><th>Function</th></tr><tr><td>Overseer</td><td>Overall spiritual and strategic oversight.</td></tr><tr><td>Presbytery / Senior Ministers</td><td>Spiritual counsel, doctrine and pastoral governance.</td></tr><tr><td>Administrative Council</td><td>Organizational, financial and operational governance.</td></tr><tr><td>Department Heads</td><td>Lead individual ministries.</td></tr><tr><td>Branch Leaders</td><td>Lead approved local assemblies.</td></tr><tr><td>Workers</td><td>Carry out approved ministry functions.</td></tr><tr><td>Members</td><td>Participate in worship, discipleship and mission.</td></tr></table><h2>Schedule B — Leadership Declaration</h2><p>I acknowledge Jesus Christ as Head of the Church. I commit myself to serve JCRGM faithfully, uphold its Constitution and doctrine, protect its members, steward its resources responsibly, maintain confidentiality, submit to accountability and conduct myself with integrity.</p><p>Name: ____________________________</p><p>Position: _________________________</p><p>Signature: ________________________</p><p>Date: ____________________________</p><h2>Schedule C — Adoption</h2><p>Date: ____________________________</p><p>Place: ___________________________</p><p>Presiding Officer: ________________</p><p>Secretary: _______________________</p><div class="notice">Before signing, confirm JCRGM's official registered name, registration number, address, office bearers, governance model, doctrine, membership rules, financial controls, safeguarding policy and statutory compliance requirements.</div></div></section>
+
+<div class="footer"><strong>JESUS CHRIST REDEEMS GLOBAL MINISTRIES</strong><br>JCRGM Constitution & Governance Framework<br><br>Jesus Christ is Lord. To God be the glory.</div>
+</div></main></div>
+
+<script>
+const chapters=[
+["home","HOME / COVER"],["preamble","PREAMBLE & DECLARATION"],["identity","CHAPTER 1 — IDENTITY"],["doctrine","CHAPTER 2 — DOCTRINE"],["membership","CHAPTER 3 — MEMBERSHIP"],["leadership","CHAPTER 4 — LEADERSHIP"],["pastor","CHAPTER 5 — OFFICE OF THE OVERSEER"],["departments","CHAPTER 6 — DEPARTMENTS"],["discipline","CHAPTER 7 — DISCIPLINE"],["finance","CHAPTER 8 — FINANCE"],["property","CHAPTER 9 — PROPERTY"],["meetings","CHAPTER 10 — MEETINGS"],["elections","CHAPTER 11 — APPOINTMENTS"],["records","CHAPTER 12 — RECORDS"],["conflict","CHAPTER 13 — DISPUTE RESOLUTION"],["safeguarding","CHAPTER 14 — SAFEGUARDING"],["amendments","CHAPTER 15 — AMENDMENTS"],["dissolution","CHAPTER 16 — DISSOLUTION"],["schedules","SCHEDULES & DECLARATIONS"]
+];
+const sub=[["worship","Worship & Music"],["prayer","Prayer & Intercession"],["evangelism","Evangelism & Missions"],["children","Children's Ministry"],["youth","Youth Ministry"],["women","Women's Ministry"],["men","Men's Ministry"],["media","Media & ICT"],["protocol","Protocol & Security"],["ushers","Ushering"],["education","Christian Education"],["welfare","Welfare & Benevolence"],["admin","Administration"],["branches","Branches"],["marriage","Marriage & Family"],["legal","Legal & Compliance"]];
+function buildNav(){
+ const n=document.getElementById("nav");
+ n.innerHTML="";
+ chapters.forEach((x,i)=>{let b=document.createElement("button");b.textContent=x[1];b.className=i===0?"active":"";b.onclick=()=>show(x[0]);n.appendChild(b);if(x[0]==="departments"){sub.forEach(s=>{let q=document.createElement("button");q.textContent=s[1];q.className="sub";q.onclick=()=>show(s[0]);n.appendChild(q)})}});
+}
+function buildDepartments(){
+ const data=[
+["Pastoral Ministry","Provides preaching, teaching, counselling, visitation, member follow-up, marriage/family support, prayer and ministerial development."],
+["Prayer & Intercession","Coordinates prayer meetings, fasting, prayer chains, intercession, service prayer and confidential prayer requests."],
+["Worship & Music","Coordinates choir, worship teams, instrumentalists, rehearsals, worship planning, musical training and instruments."],
+["Evangelism","Plans outreaches, street evangelism, soul-winning campaigns, evangelism training and new-convert follow-up."],
+["Missions","Coordinates missionary deployment, support, mission partnerships, church planting and mission reporting."],
+["Children's Ministry","Provides Sunday school, Bible teaching, children's worship, events, parent communication, safeguarding and attendance records."],
+["Youth Ministry","Provides youth Bible studies, worship, mentorship, leadership development, life-skills programmes and conferences."],
+["Women's Ministry","Provides women's discipleship, prayer, mentorship, family support, conferences and skills/empowerment initiatives."],
+["Men's Ministry","Provides men's fellowship, prayer, discipleship, mentorship, family leadership training and community service."],
+["Christian Education","Coordinates membership classes, Bible studies, worker training, leadership development and doctrinal education."],
+["Ushering & Hospitality","Welcomes visitors, manages seating and service flow, assists with offerings, information and emergency response."],
+["Protocol","Coordinates official guests, visiting ministers, VIP arrangements, programme logistics and official communication."],
+["Security & Safety","Protects people/property, manages emergencies, crowd flow, incident reports and lawful emergency-service coordination."],
+["Media, Communications & ICT","Manages live streaming, photography, video, graphics, website, social media, apps, digital archives and cybersecurity."],
+["Finance & Treasury","Manages budgets, bookkeeping, collections, banking, financial reports, expense controls and asset records."],
+["Administration","Maintains minutes, correspondence, membership records, schedules, certificates, filing and archives."],
+["Welfare & Benevolence","Coordinates bereavement, hospital, emergency, food, vulnerable-person and community support."],
+["Marriage & Family","Provides marriage preparation, counselling, family seminars, parenting education and enrichment."],
+["Health & Wellness","Coordinates health awareness, first aid, campaigns, emergency preparedness and professional referrals."],
+["Legal & Compliance","Monitors registration, statutory obligations, constitutional amendments, contracts, compliance calendars and legal advice."],
+["Property & Projects","Maintains property registers, buildings, equipment, construction projects, procurement, asset protection and project budgets."],
+["Church Planting","Identifies mission fields, prepares church planters, develops branches, monitors new assemblies and leadership."]
+ ];
+ document.getElementById("deptList").innerHTML=data.map(d=>`<div class="dept"><h3>${d[0]}</h3><p>${d[1]}</p><p><strong>Core duties:</strong> planning, implementation, records, reporting, teamwork, stewardship and accountability within approved Church policies.</p></div>`).join("");
+}
+function show(id){
+ document.querySelectorAll(".chapter").forEach(x=>x.classList.remove("active"));
+ const el=document.getElementById(id);if(el)el.classList.add("active");
+ document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));
+ [...document.querySelectorAll(".nav button")].find(x=>x.textContent.trim().toLowerCase().includes(id==="home"?"home":(el?.querySelector("h1")?.textContent||"").slice(0,14).toLowerCase()))?.classList.add("active");
+ history.replaceState(null,"","#"+id);window.scrollTo({top:0,behavior:"smooth"});if(innerWidth<=850)document.getElementById("sidebar").classList.remove("open");
+}
+function toggleMenu(){document.getElementById("sidebar").classList.toggle("open")}
+function openAll(){document.querySelectorAll(".accordion").forEach(x=>x.classList.add("open"))}
+function searchDoc(){
+ const q=document.getElementById("search").value.toLowerCase().trim();if(!q)return;
+ let found=[...document.querySelectorAll(".chapter")].find(x=>x.innerText.toLowerCase().includes(q));
+ if(found){show(found.id);openAll()}
+}
+document.addEventListener("click",e=>{let h=e.target.closest(".ah");if(h)h.parentElement.classList.toggle("open")});
+document.addEventListener("DOMContentLoaded",()=>{buildNav();buildDepartments();let h=location.hash.slice(1);if(h&&document.getElementById(h))show(h);let toc=document.getElementById("toc");toc.innerHTML=chapters.slice(1).map(x=>`<div class="card" style="cursor:pointer" onclick="show('${x[0]}')"><strong>${x[1]}</strong><br><small>Click to view full details</small></div>`).join("")});
+</script>
+</body>
+</html>

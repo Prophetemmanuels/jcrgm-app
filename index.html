@@ -26,6 +26,7 @@ button:hover {opacity:0.9;}
 .meditation {background:#8e44ad;}
 .youtube {background:#ff0000;}
 .payments {background:#27ae60;}
+.constitution {background:#8b6b1f;}
 .container {max-width:1000px; margin:30px auto; background:#fff; padding:30px; box-shadow:0 0 12px rgba(0,0,0,0.1);}
 .timer-box {background:#1f3c88; color:#fff; padding:25px; font-size:26px; text-align:center; border-radius:6px; margin-bottom:30px;}
 .timer-box span {color:#ffd700; font-weight:bold;}
@@ -54,17 +55,16 @@ footer {background:#2c3e50; color:#fff; text-align:center; padding:15px;}
 <a href="https://web.facebook.com/pedahzurchurch" target="_blank"><button>📘 Facebook</button></a>
 <a href="https://www.youtube.com/@officialjcrgmtv" target="_blank"><button class="youtube">📺 YouTube</button></a>
 <button class="whatsapp" onclick="showPrayerForm()">💬 Prayer Petitions</button>
-<a href="https://biblegames.co.uk/" target="_blank"><button class="games">🎮 Christian Games</button></a>
-<a href="https://www.youtube.com/watch?v=5EnZCTOmSG4&list=PLq9I4CWie9GCyih9SxcIZ0bXukAWMQCau"><button class="meditation">🎵 Prayer & Meditation</button></a>
+<a href="https://www.biblechallenger.com/" target="_blank"><button class="games">🎮 Christian Games</button></a>
+<a href="https://www.youtube.com/watch?v=Rm0HSONw1d8&list=RDRm0HSONw1d8&start_radio=1"><button class="meditation">🎵 Prayer & Meditation</button></a>
 <button onclick="showMembership()">📝 Membership</button>
 <button onclick="viewMembers()">👥 View Members</button>
 <button onclick="showTithes()">💰 Tithes & Offerings</button>
 <button onclick="showCalendar()">📅 Church Calendar</button>
 <button onclick="window.location.href='jcrgm_policy_system.html'">Church Policy</button>
+<button class="constitution" onclick="window.location.href='JCRGM_Church_Constitution.html'">📖 Church Constitution</button>
 <button onclick="window.location.href='jcrgm_admin.html'"> Admin Panel</button>
 <button onclick="openBibleSchool()" class="meditation">📚 Bible School</button>
-<button onclick="openBibleInstitute()" class="meditation">🎓 JCRGM Bible Institute</button>
-<button onclick="openMasterStudy()" class="meditation">📖 JCRGM Master Study</button>
 <button class="meditation" onclick="openBiblePlan()">📚 Full Bible Teaching Plan</button>
 <button class="meditation" onclick="openPrayerGuide()">🙏 Monthly Prayer Guide</button>
 <button onclick="openCrossover()" class="games">🌙 Crossover Programme</button>
@@ -202,8 +202,6 @@ function openRegister(){window.location.href = "register.html";}
 function showTithes(){document.getElementById('tithesContent').style.display='block';document.getElementById('tithesContent').scrollIntoView({behavior:'smooth'});}
 function showCalendar(){document.getElementById('calendarContent').style.display='block';document.getElementById('calendarContent').scrollIntoView({behavior:'smooth'});}  
 function openBibleSchool() {window.location.href = "./JCRGM_Bible_Institution.html";}
-function openBibleInstitute(){window.location.href='JCRGM%20BIBLE%20INSTITUTE.html';}
-function openMasterStudy(){window.location.href='JCRGM%20MASTER%20STUDY.html';}
 function openBiblePlan() {window.location.href = "full_bible_plan.html";}
 function openCrossover(){ window.location.href = "crossover.html";}
 function openPrayerGuide(){window.location.href = "prayer-guide.html";}
