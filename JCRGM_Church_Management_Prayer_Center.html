@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>JCRGM Church Management & Prayer Center</title>
+<style>
+:root{
+  --bg:#f4f6f9;--card:#fff;--text:#172033;--muted:#697386;--primary:#173b7a;
+  --accent:#c99a2e;--border:#e4e8ef;--danger:#b42318;--success:#16834b;
+}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit} button{cursor:pointer}
+.app{display:flex;min-height:100vh}.sidebar{width:260px;background:#111827;color:#fff;padding:22px 14px;position:fixed;left:0;top:0;bottom:0;overflow:auto}
+.brand{padding:8px 10px 22px;border-bottom:1px solid #2c3545;margin-bottom:15px}.brand h1{font-size:19px;margin:0 0 5px}.brand p{font-size:11px;color:#b8c1d1;margin:0;line-height:1.5}
+.nav button{width:100%;border:0;background:transparent;color:#dbe3ef;text-align:left;padding:12px 13px;border-radius:9px;margin:3px 0}.nav button:hover,.nav button.active{background:#243454;color:#fff}.nav span{display:inline-block;width:24px}
+.main{margin-left:260px;width:calc(100% - 260px);padding:24px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.topbar h2{margin:0;font-size:24px}.clock{font-weight:700;color:var(--primary)}
+.page{display:none}.page.active{display:block}.grid{display:grid;gap:16px}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.two{grid-template-columns:1.1fr .9fr}.three{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(16,24,40,.04)}.stat strong{font-size:28px;display:block;margin-top:8px}.label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+h3{margin:0 0 14px} h4{margin:12px 0 7px}.muted{color:var(--muted)}.gold{color:var(--accent)}
+.btn{border:0;border-radius:8px;padding:9px 13px;background:var(--primary);color:white;font-weight:700}.btn.secondary{background:#e9eef7;color:var(--primary)}.btn.gold{background:var(--accent);color:#fff}.btn.danger{background:var(--danger)}.btn.success{background:var(--success)}.btn.small{padding:6px 9px;font-size:12px}.btn.whatsapp{background:#25D366;color:#fff}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.toolbar{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+input,select,textarea{width:100%;border:1px solid #d5dbe5;border-radius:8px;padding:10px;background:#fff;color:var(--text);outline:none}textarea{min-height:90px;resize:vertical}.form{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.form .full{grid-column:1/-1}.form label{font-size:12px;font-weight:700;display:block;margin-bottom:5px}
+.tablewrap{overflow:auto;border:1px solid var(--border);border-radius:10px}table{width:100%;border-collapse:collapse;min-width:700px}th,td{padding:10px 11px;border-bottom:1px solid var(--border);text-align:left;font-size:13px}th{background:#f7f8fa;color:#596579;font-size:11px;text-transform:uppercase}tr:last-child td{border-bottom:0}
+.badge{display:inline-block;border-radius:99px;padding:4px 8px;font-size:11px;font-weight:700;background:#edf2f8}.badge.green{background:#e7f6ee;color:#117a46}.badge.gold{background:#fbf3dd;color:#8a6714}
+.hero{background:linear-gradient(135deg,#101d35,#173b7a);color:white;border-radius:16px;padding:24px;position:relative;overflow:hidden}.hero:after{content:"✦";position:absolute;right:35px;top:12px;font-size:110px;opacity:.08}.hero h1{margin:0 0 8px;font-size:28px}.hero p{margin:4px 0;color:#dbe5f7}
+.prayer-clock{font-size:46px;font-weight:800;letter-spacing:.04em;margin:12px 0}.progress{height:10px;background:#dbe3ef;border-radius:20px;overflow:hidden}.progress>div{height:100%;background:var(--accent);width:0}
+.guide{display:grid;gap:10px}.guide-item{padding:13px;border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:9px;background:#fff}.guide-item strong{display:block;margin-bottom:5px}.scripture{background:#fbf8ed;border:1px solid #eadcb0;padding:16px;border-radius:10px;font-size:17px;line-height:1.6}
+.empty{padding:30px;text-align:center;color:var(--muted)}.modal{position:fixed;inset:0;background:rgba(10,16,28,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal.show{display:flex}.modalbox{background:white;border-radius:14px;width:min(760px,100%);max-height:90vh;overflow:auto;padding:20px}.close{float:right;border:0;background:#edf0f5;border-radius:50%;width:32px;height:32px}
+.alert{padding:12px;border-radius:9px;background:#fff7e5;border:1px solid #efd69b;color:#6c5318;margin-bottom:12px}.dangerbox{background:#fff0ef;border-color:#f0b4af;color:#8d1e17}
+.kpi{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}.kpi:last-child{border:0}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
+@media(max-width:950px){.sidebar{width:220px}.main{margin-left:220px;width:calc(100% - 220px)}.stats{grid-template-columns:repeat(2,1fr)}.two,.three{grid-template-columns:1fr}}
+@media(max-width:700px){.sidebar{position:relative;width:100%;height:auto}.app{display:block}.main{margin:0;width:100%;padding:14px}.nav{display:grid;grid-template-columns:repeat(2,1fr)}.form{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.topbar{align-items:flex-start;gap:10px}.prayer-clock{font-size:35px}}
+@media print{.sidebar,.topbar,.actions,.no-print{display:none!important}.main{margin:0;width:100%;padding:0}.page{display:none!important}.page.active{display:block!important}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">
+    <h1>JCRGM</h1>
+    <p>Jesus Christ Redeems Global Ministries<br>Church Management & Prayer Center</p>
+  </div>
+  <nav class="nav">
+    <button data-page="dashboard" class="active"><span>⌂</span> Dashboard</button>
+    <button data-page="prayer"><span>🙏</span> Daily Prayer</button>
+    <button data-page="members"><span>👥</span> Members</button>
+    <button data-page="visitors"><span>🚪</span> Visitors</button>
+    <button data-page="attendance"><span>✓</span> Attendance</button>
+    <button data-page="followup"><span>☎</span> Follow-up</button>
+    <button data-page="families"><span>⌂</span> Families</button>
+    <button data-page="events"><span>📅</span> Events</button>
+    <button data-page="departments"><span>▦</span> Departments</button>
+    <button data-page="giving"><span>◇</span> Giving</button>
+    <button data-page="prayerrequests"><span>♡</span> Prayer Requests</button>
+    <button data-page="pastoral"><span>▤</span> Pastoral Notes</button>
+    <button data-page="reports"><span>▥</span> Reports</button>
+    <button data-page="settings"><span>⚙</span> Data & Settings</button>
+  </nav>
+</aside>
+
+<main class="main">
+<div class="topbar"><h2 id="pageTitle">Dashboard</h2><div class="clock" id="liveClock"></div></div>
+
+<section id="dashboard" class="page active">
+  <div class="hero">
+    <h1>JCRGM Church Center</h1>
+    <p id="todayText"></p>
+    <p>Daily corporate prayer: <strong>21:00–22:30</strong></p>
+    <div class="actions" style="margin-top:15px">
+      <button class="btn gold" onclick="showPage('prayer')">Open Prayer Guide</button>
+      <button class="btn secondary" onclick="showPage('members')">Register Member</button>
+    </div>
+  </div>
+  <div class="grid stats" style="margin-top:16px">
+    <div class="card stat"><div class="label">Members</div><strong id="statMembers">0</strong><span class="muted">Registered people</span></div>
+    <div class="card stat"><div class="label">Visitors</div><strong id="statVisitors">0</strong><span class="muted">Visitor records</span></div>
+    <div class="card stat"><div class="label">Prayer Requests</div><strong id="statRequests">0</strong><span class="muted">Active requests</span></div>
+    <div class="card stat"><div class="label">Upcoming Events</div><strong id="statEvents">0</strong><span class="muted">Church calendar</span></div>
+  </div>
+  <div class="grid two" style="margin-top:16px">
+    <div class="card"><h3>Today's Focus</h3><div id="dashboardGuide"></div></div>
+    <div class="card"><h3>Quick Records</h3>
+      <div class="kpi"><span>Active members</span><b id="activeMembers">0</b></div>
+      <div class="kpi"><span>Today's attendance</span><b id="todayAttendance">0</b></div>
+      <div class="kpi"><span>Follow-ups due</span><b id="followupsDue">0</b></div>
+      <div class="kpi"><span>Upcoming events</span><b id="upcomingEvents">0</b></div>
+    </div>
+  </div>
+</section>
+
+<section id="prayer" class="page">
+  <div class="grid two">
+    <div class="card">
+      <div class="label">Daily Corporate Prayer</div>
+      <h3 id="prayerDayTitle"></h3>
+      <div class="prayer-clock" id="prayerClock">01:30:00</div>
+      <div class="progress"><div id="prayerProgress"></div></div>
+      <p class="muted" id="prayerStatus"></p>
+      <div class="actions no-print">
+        <button class="btn" onclick="startPrayer()">Start Session</button>
+        <button class="btn secondary" onclick="pausePrayer()">Pause</button>
+        <button class="btn secondary" onclick="resetPrayer()">Reset</button>
+        <button class="btn gold" onclick="window.print()">Print Guide</button>
+      </div>
+    </div>
+    <div class="card"><div class="label">Meditational Scripture</div><div class="scripture" id="dailyScripture"></div><p class="muted" id="scriptureRef"></p></div>
+  </div>
+  <div class="card" style="margin-top:16px"><h3>Today's Prayer Guide</h3><div class="guide" id="prayerGuide"></div></div>
+  <div class="card" style="margin-top:16px"><div class="toolbar"><h3>Prayer Session Record</h3><button class="btn whatsapp" onclick="sendWhatsAppReport('prayer')">Send Prayer Report to WhatsApp</button></div>
+    <form class="form" onsubmit="savePrayerSession(event)">
+      <div><label>Date</label><input id="psDate" type="date" required></div>
+      <div><label>Number Present</label><input id="psPresent" type="number" min="0" required></div>
+      <div class="full"><label>Session Notes / Testimonies</label><textarea id="psNotes" placeholder="Record general notes, testimonies or key outcomes."></textarea></div>
+      <div><button class="btn success">Save Prayer Session</button></div>
+    </form>
+    <div class="tablewrap" style="margin-top:14px"><table><thead><tr><th>Date</th><th>Present</th><th>Notes</th></tr></thead><tbody id="prayerSessionsTable"></tbody></table></div>
+  </div>
+</section>
+
+<section id="members" class="page">
+  <div class="card">
+    <div class="toolbar"><div><h3>Member Register</h3><span class="muted">Central church membership records</span></div><div class="actions"><button class="btn" onclick="openMember()">+ Add Member</button><button class="btn secondary" onclick="exportCSV('members')">Export CSV</button></div></div>
+    <input id="memberSearch" placeholder="Search name, phone, ministry, status..." oninput="renderMembers()">
+    <div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>Name</th><th>Phone</th><th>Gender</th><th>Joined</th><th>Ministry</th><th>Status</th><th>Actions</th></tr></thead><tbody id="membersTable"></tbody></table></div>
+  </div>
+</section>
+
+<section id="visitors" class="page">
+  <div class="card"><div class="toolbar"><div><h3>Visitor & First-Time Guest Register</h3><span class="muted">Capture details when people come to church</span></div><button class="btn" onclick="openVisitor()">+ Register Visitor</button></div>
+  <div class="tablewrap"><table><thead><tr><th>Date</th><th>Name</th><th>Phone</th><th>Location</th><th>Reason/Interest</th><th>Follow-up</th><th>Actions</th></tr></thead><tbody id="visitorsTable"></tbody></table></div></div>
+</section>
+
+<section id="attendance" class="page">
+  <div class="card"><div class="toolbar"><div><h3>Attendance Register</h3><span class="muted">Sunday services, Bible school, prayer and special meetings</span></div><button class="btn" onclick="openAttendance()">+ Record Attendance</button></div>
+  <div class="form" style="margin-bottom:15px"><div><label>Filter Date</label><input id="attDateFilter" type="date" onchange="renderAttendance()"></div><div><label>Meeting</label><select id="attTypeFilter" onchange="renderAttendance()"><option value="">All meetings</option><option>Sunday Service</option><option>Bible School</option><option>Daily Prayer</option><option>Special Service</option><option>Other</option></select></div></div>
+  <div class="tablewrap"><table><thead><tr><th>Date</th><th>Meeting</th><th>Member/Guest</th><th>Phone</th><th>Present</th><th>Notes</th><th>Actions</th></tr></thead><tbody id="attendanceTable"></tbody></table></div></div>
+</section>
+
+<section id="followup" class="page">
+  <div class="card"><div class="toolbar"><div><h3>Pastoral Follow-up</h3><span class="muted">Track visitors, members, calls, visits and care</span></div><button class="btn" onclick="openFollowup()">+ Add Follow-up</button></div>
+  <div class="tablewrap"><table><thead><tr><th>Due</th><th>Person</th><th>Type</th><th>Assigned To</th><th>Status</th><th>Notes</th><th>Actions</th></tr></thead><tbody id="followupTable"></tbody></table></div></div>
+</section>
+
+<section id="families" class="page">
+  <div class="card"><div class="toolbar"><div><h3>Family Register</h3><span class="muted">Households and family information</span></div><button class="btn" onclick="openFamily()">+ Add Family</button></div>
+  <div class="tablewrap"><table><thead><tr><th>Family</th><th>Head</th><th>Phone</th><th>Address</th><th>Members</th><th>Notes</th><th>Actions</th></tr></thead><tbody id="familiesTable"></tbody></table></div></div>
+</section>
+
+<section id="events" class="page">
+  <div class="card"><div class="toolbar"><div><h3>Church Calendar</h3><span class="muted">Services, conferences, retreats, Bible school and ministry events</span></div><button class="btn" onclick="openEvent()">+ Add Event</button></div>
+  <div class="tablewrap"><table><thead><tr><th>Date</th><th>Event</th><th>Time</th><th>Location</th><th>Leader</th><th>Notes</th><th>Actions</th></tr></thead><tbody id="eventsTable"></tbody></table></div></div>
+</section>
+
+<section id="departments" class="page">
+  <div class="card"><div class="toolbar"><div><h3>Departments & Leadership</h3><span class="muted">Record departments, leaders and ministry assignments</span></div><button class="btn" onclick="openDepartment()">+ Add Department</button></div>
+  <div class="tablewrap"><table><thead><tr><th>Department</th><th>Leader</th><th>Assistant</th><th>Meeting Day</th><th>Members</th><th>Notes</th><th>Actions</th></tr></thead><tbody id="departmentsTable"></tbody></table></div></div>
+</section>
+
+<section id="giving" class="page">
+  <div class="card"><div class="toolbar"><div><h3>Giving & Financial Record</h3><span class="muted">Record offerings, tithes, pledges and other church income</span></div><button class="btn" onclick="openGiving()">+ Add Record</button></div>
+  <div class="alert">Keep financial records carefully and restrict access to authorized church leaders.</div>
+  <div class="tablewrap"><table><thead><tr><th>Date</th><th>Person/Source</th><th>Type</th><th>Amount</th><th>Method</th><th>Reference</th><th>Actions</th></tr></thead><tbody id="givingTable"></tbody></table></div></div>
+</section>
+
+<section id="prayerrequests" class="page">
+  <div class="card"><div class="toolbar"><div><h3>Prayer Request Register</h3><span class="muted">Record requests and track prayer status</span></div><div class="actions"><button class="btn" onclick="openRequest()">+ Add Request</button><button class="btn whatsapp" onclick="sendWhatsAppReport('prayer')">Send Prayer Requests to WhatsApp</button></div></div>
+  <div class="tablewrap"><table><thead><tr><th>Date</th><th>Name</th><th>Request</th><th>Category</th><th>Status</th><th>Follow-up</th><th>Actions</th></tr></thead><tbody id="requestsTable"></tbody></table></div></div>
+</section>
+
+<section id="pastoral" class="page">
+  <div class="card"><h3>Pastoral / Confidential Notes</h3><div class="alert dangerbox">Use this section only for authorized pastoral records. This app stores data in the browser on this device.</div>
+  <button class="btn" onclick="openPastoral()">+ Add Note</button>
+  <div class="tablewrap" style="margin-top:14px"><table><thead><tr><th>Date</th><th>Person</th><th>Category</th><th>Pastor/Leader</th><th>Summary</th><th>Actions</th></tr></thead><tbody id="pastoralTable"></tbody></table></div></div>
+</section>
+
+<section id="reports" class="page">
+  <div class="grid three">
+    <div class="card"><h3>Membership</h3><div class="kpi"><span>Total</span><b id="rMembers">0</b></div><div class="kpi"><span>Active</span><b id="rActive">0</b></div><button class="btn secondary" onclick="printReport('Membership Report')">Print Report</button></div>
+    <div class="card"><h3>Attendance</h3><div class="kpi"><span>Total entries</span><b id="rAttendance">0</b></div><div class="kpi"><span>Present</span><b id="rPresent">0</b></div><button class="btn secondary" onclick="printReport('Attendance Report')">Print Report</button></div>
+    <div class="card"><h3>Prayer</h3><div class="kpi"><span>Requests</span><b id="rRequests">0</b></div><div class="kpi"><span>Sessions</span><b id="rSessions">0</b></div><button class="btn secondary" onclick="showPage('prayer')">Prayer Center</button></div>
+  </div>
+  <div class="card" style="margin-top:16px"><h3>Send Reports to WhatsApp</h3>
+<p class="muted">Prepare a church report and send it to the designated JCRGM WhatsApp number.</p>
+<div class="actions">
+<button class="btn whatsapp" onclick="sendWhatsAppReport('summary')">WhatsApp Church Summary</button>
+<button class="btn whatsapp" onclick="sendWhatsAppReport('members')">WhatsApp Members Report</button>
+<button class="btn whatsapp" onclick="sendWhatsAppReport('attendance')">WhatsApp Attendance</button>
+<button class="btn whatsapp" onclick="sendWhatsAppReport('prayer')">WhatsApp Prayer Report</button>
+<button class="btn whatsapp" onclick="sendWhatsAppReport('giving')">WhatsApp Giving Report</button>
+</div></div>
+<div class="card" style="margin-top:16px"><h3>Data Export</h3><p class="muted">Create a complete backup of the church records stored in this browser.</p><div class="actions"><button class="btn" onclick="backupJSON()">Download Full Backup</button><button class="btn secondary" onclick="document.getElementById('restoreFile').click()">Restore Backup</button><input id="restoreFile" type="file" accept=".json" style="display:none" onchange="restoreJSON(event)"></div></div>
+</section>
+
+<section id="settings" class="page">
+  <div class="grid two">
+    <div class="card"><h3>Church Information</h3><form class="form" onsubmit="saveSettings(event)">
+      <div class="full"><label>Church Name</label><input id="setChurch" value="Jesus Christ Redeems Global Ministries"></div>
+      <div><label>Short Name</label><input id="setShort" value="JCRGM"></div><div><label>Pastor / Prophet</label><input id="setLeader" placeholder="Name"></div>
+      <div><label>Morning Service</label><input id="setMorning" value="09:00–12:00"></div><div><label>Afternoon Service</label><input id="setAfternoon" value="15:00–18:30"></div>
+      <div><label>Daily Prayer</label><input value="21:00–22:30" readonly></div><div><label>Currency</label><input id="setCurrency" value="ZMW"></div>
+      <div class="full"><button class="btn">Save Church Settings</button></div>
+    </form></div>
+    <div class="card"><h3>Data Management</h3><p class="muted">All records are stored locally in this browser using localStorage.</p><div class="actions"><button class="btn" onclick="backupJSON()">Download Backup</button><button class="btn danger" onclick="clearAllData()">Clear All Records</button></div><hr><h4>Daily Prayer</h4><p><b>21:00–22:30 every day</b></p><p class="muted">The guide changes automatically according to the day of the week.</p></div>
+  </div>
+</section>
+<footer>JCRGM Church Management & Prayer Center • Local browser application • Keep regular backups</footer>
+</main>
+</div>
+
+<div class="modal" id="modal"><div class="modalbox"><button class="close" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
+
+<script>
+const KEY='jcrgm_church_center_v1';
+const defaultData={members:[],visitors:[],attendance:[],followups:[],families:[],events:[],departments:[],giving:[],requests:[],pastoral:[],prayerSessions:[],settings:{church:'Jesus Christ Redeems Global Ministries',short:'JCRGM',leader:'',morning:'09:00–12:00',afternoon:'15:00–18:30',currency:'ZMW'}};
+let db=JSON.parse(localStorage.getItem(KEY)||'null')||structuredClone(defaultData);
+function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function today(){return new Date().toISOString().slice(0,10)}
+function fmtDate(x){if(!x)return '';return new Date(x+'T00:00:00').toLocaleDateString(undefined,{day:'2-digit',month:'short',year:'numeric'})}
+const guides=[
+{day:'Sunday',focus:'Worship, thanksgiving & dedication',script:'Enter his gates with thanksgiving and his courts with praise.',ref:'Psalm 100:4',items:[
+['21:00–21:10','Thanksgiving','Thank God for His goodness, salvation, the church, families and His faithfulness.'],
+['21:10–21:25','Worship','Honor God for who He is. Pray with reverence and gratitude.'],
+['21:25–21:45','Church Dedication','Commit JCRGM, its leaders, workers and every gathering into God’s hands.'],
+['21:45–22:10','Souls & Harvest','Pray for salvation, transformed lives and a great harvest of souls.'],
+['22:10–22:30','Declarations','Declare God’s Word over the church, members, families and the coming week.']]},
+{day:'Monday',focus:'Consecration, fasting & spiritual strength',script:'Draw near to God, and he will draw near to you.',ref:'James 4:8',items:[
+['21:00–21:15','Consecration','Repent, surrender afresh and ask God for a clean heart and steadfast spirit.'],
+['21:15–21:35','Spiritual Strength','Pray for strength, holiness, wisdom, discernment and consistency in prayer.'],
+['21:35–21:55','Leaders','Pray for the Prophet, ministers, workers and every person carrying responsibility.'],
+['21:55–22:15','Families','Cover marriages, children, households and young people in prayer.'],
+['22:15–22:30','Declarations','Speak faith, victory, obedience and spiritual growth over JCRGM.']]},
+{day:'Tuesday',focus:'Families, marriages & children',script:'As for me and my house, we will serve the LORD.',ref:'Joshua 24:15',items:[
+['21:00–21:10','Thanksgiving','Thank God for every household represented in JCRGM.'],
+['21:10–21:30','Marriages','Pray for love, unity, wisdom, forgiveness and strong marriages.'],
+['21:30–21:50','Children','Pray for children’s protection, education, character and calling.'],
+['21:50–22:10','Youth','Pray for young people to walk in purpose, purity, wisdom and godly relationships.'],
+['22:10–22:30','Household Declarations','Declare peace, provision, salvation and divine direction over families.']]},
+{day:'Wednesday',focus:'Healing, deliverance & restoration',script:'I am the LORD who heals you.',ref:'Exodus 15:26',items:[
+['21:00–21:10','Praise','Praise God as healer, deliverer and restorer.'],
+['21:10–21:35','Healing','Pray for the sick, strength for the weak and restoration in every area of life.'],
+['21:35–21:55','Freedom','Pray for freedom from oppression, fear, bondage and destructive patterns.'],
+['21:55–22:15','Restoration','Pray for restored families, opportunities, peace, hope and purpose.'],
+['22:15–22:30','Faith Declarations','Declare the promises of God with faith and thanksgiving.']]},
+{day:'Thursday',focus:'Provision, work & open doors',script:'My God will meet all your needs according to the riches of his glory.',ref:'Philippians 4:19',items:[
+['21:00–21:10','Thanksgiving','Thank God for every provision and testimony already received.'],
+['21:10–21:30','Work & Business','Pray for jobs, businesses, wisdom, customers, integrity and fruitful work.'],
+['21:30–21:50','Open Doors','Pray for divine opportunities, favor, contracts, education and new doors.'],
+['21:50–22:10','Financial Wisdom','Pray for stewardship, discipline, generosity and freedom from destructive debt.'],
+['22:10–22:30','Declarations','Declare provision, favor, excellence and fruitful labor.']]},
+{day:'Friday',focus:'Mission, evangelism & the nations',script:'Go into all the world and preach the gospel to all creation.',ref:'Mark 16:15',items:[
+['21:00–21:10','Thanksgiving','Thank God for the privilege of carrying the Gospel.'],
+['21:10–21:30','Souls','Pray for unsaved people, backsliders and those searching for truth.'],
+['21:30–21:50','Evangelism','Pray for boldness, wisdom, compassion and divine appointments.'],
+['21:50–22:10','Nations','Pray for Zambia, leaders, communities, churches and nations of the world.'],
+['22:10–22:30','Mission Declarations','Declare a fruitful harvest and faithful workers for the Gospel.']]},
+{day:'Saturday',focus:'Vision, leadership & preparation',script:'Write the vision; make it plain on tablets.',ref:'Habakkuk 2:2',items:[
+['21:00–21:10','Thanksgiving','Thank God for His direction and every step of progress.'],
+['21:10–21:30','Vision','Pray for clarity, unity and faithful implementation of the church vision.'],
+['21:30–21:50','Leadership','Pray for wisdom, integrity, courage and servant leadership.'],
+['21:50–22:10','Workers','Pray for every department, worker, volunteer and ministry assignment.'],
+['22:10–22:30','Preparation','Pray for the next service and declare order, grace and fruitful ministry.']]}
+];
+function dayGuide(){return guides[new Date().getDay()]}
+function showPage(id){
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));
+ document.getElementById('pageTitle').textContent=document.querySelector(`[data-page="${id}"]`)?.textContent.trim()||'Dashboard';
+ renderAll();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+function renderPrayer(){
+ const g=dayGuide();document.getElementById('prayerDayTitle').textContent=`${g.day}: ${g.focus}`;
+ document.getElementById('dailyScripture').textContent=`“${g.script}”`;document.getElementById('scriptureRef').textContent=g.ref;
+ document.getElementById('prayerGuide').innerHTML=g.items.map(x=>`<div class="guide-item"><strong>${x[0]} • ${x[1]}</strong><span class="muted">${x[2]}</span></div>`).join('');
+ document.getElementById('dashboardGuide').innerHTML=`<div class="badge gold">${g.day}</div><h4>${g.focus}</h4><p class="muted">${g.script}</p><button class="btn small" onclick="showPage('prayer')">View full guide</button>`;
+ document.getElementById('psDate').value ||= today();
+ renderPrayerSessions();
+}
+let prayerTimer=null, prayerSeconds=5400, prayerRunning=false;
+function updatePrayerClock(){
+ let h=Math.floor(prayerSeconds/3600),m=Math.floor((prayerSeconds%3600)/60),s=prayerSeconds%60;
+ document.getElementById('prayerClock').textContent=[h,m,s].map(n=>String(n).padStart(2,'0')).join(':');
+ document.getElementById('prayerProgress').style.width=((5400-prayerSeconds)/5400*100)+'%';
+ document.getElementById('prayerStatus').textContent=prayerRunning?'Prayer session in progress • 21:00–22:30':'Ready for tonight’s prayer session';
+}
+function startPrayer(){if(prayerRunning)return;prayerRunning=true;prayerTimer=setInterval(()=>{if(prayerSeconds>0){prayerSeconds--;updatePrayerClock()}else{pausePrayer();alert('The 21:00–22:30 prayer session timer has finished.')}} ,1000);updatePrayerClock()}
+function pausePrayer(){prayerRunning=false;clearInterval(prayerTimer);updatePrayerClock()}
+function resetPrayer(){pausePrayer();prayerSeconds=5400;updatePrayerClock()}
+function savePrayerSession(e){e.preventDefault();db.prayerSessions.unshift({id:uid(),date:psDate.value,present:+psPresent.value,notes:psNotes.value});save();e.target.reset();psDate.value=today()}
+function renderPrayerSessions(){let a=db.prayerSessions.slice(0,15);document.getElementById('prayerSessionsTable').innerHTML=a.length?a.map(x=>`<tr><td>${fmtDate(x.date)}</td><td>${x.present}</td><td>${esc(x.notes)}</td></tr>`).join(''):`<tr><td colspan="3" class="empty">No prayer sessions recorded.</td></tr>`}
+
+function openMember(id=''){let x=db.members.find(a=>a.id===id)||{};modal(`<h3>${id?'Edit':'Register'} Member</h3><form class="form" onsubmit="submitMember(event,'${id}')">
+<div><label>Full Name</label><input name="name" value="${esc(x.name)}" required></div><div><label>Phone</label><input name="phone" value="${esc(x.phone)}"></div>
+<div><label>Gender</label><select name="gender"><option ${x.gender==='Male'?'selected':''}>Male</option><option ${x.gender==='Female'?'selected':''}>Female</option><option ${!x.gender||x.gender==='Other'?'selected':''}>Other</option></select></div>
+<div><label>Date Joined</label><input name="joined" type="date" value="${x.joined||today()}"></div>
+<div><label>Ministry / Department</label><input name="ministry" value="${esc(x.ministry)}"></div><div><label>Status</label><select name="status"><option ${x.status==='Active'||!x.status?'selected':''}>Active</option><option ${x.status==='Inactive'?'selected':''}>Inactive</option><option ${x.status==='Transferred'?'selected':''}>Transferred</option></select></div>
+<div><label>Date of Birth</label><input name="dob" type="date" value="${x.dob||''}"></div><div><label>Marital Status</label><input name="marital" value="${esc(x.marital)}"></div>
+<div><label>Address / Area</label><input name="address" value="${esc(x.address)}"></div><div><label>Emergency Contact</label><input name="emergency" value="${esc(x.emergency)}"></div>
+<div class="full"><label>Notes</label><textarea name="notes">${esc(x.notes)}</textarea></div><div class="full actions"><button class="btn">Save Member</button><button type="button" class="btn secondary" onclick="closeModal()">Cancel</button></div></form>`)}
+function submitMember(e,id){e.preventDefault();let o=Object.fromEntries(new FormData(e.target));if(id)Object.assign(db.members.find(x=>x.id===id),o);else db.members.unshift({...o,id:uid()});save();closeModal()}
+function renderMembers(){let q=(document.getElementById('memberSearch')?.value||'').toLowerCase();let a=db.members.filter(x=>JSON.stringify(x).toLowerCase().includes(q));document.getElementById('membersTable').innerHTML=a.length?a.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${esc(x.phone)}</td><td>${esc(x.gender)}</td><td>${fmtDate(x.joined)}</td><td>${esc(x.ministry)}</td><td><span class="badge ${x.status==='Active'?'green':''}">${esc(x.status)}</span></td><td><button class="btn small secondary" onclick="openMember('${x.id}')">Edit</button> <button class="btn small danger" onclick="del('members','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No members found.</td></tr>`}
+
+function openVisitor(id=''){let x=db.visitors.find(a=>a.id===id)||{};modal(`<h3>${id?'Edit':'Register'} Visitor</h3><form class="form" onsubmit="submitGeneric(event,'visitors','${id}')">
+<div><label>Full Name</label><input name="name" value="${esc(x.name)}" required></div><div><label>Phone</label><input name="phone" value="${esc(x.phone)}"></div><div><label>Date</label><input name="date" type="date" value="${x.date||today()}"></div><div><label>Location / Area</label><input name="location" value="${esc(x.location)}"></div><div><label>How did you hear about us?</label><input name="source" value="${esc(x.source)}"></div><div><label>Reason / Interest</label><input name="interest" value="${esc(x.interest)}"></div><div><label>Follow-up</label><select name="followup"><option>Pending</option><option ${x.followup==='Completed'?'selected':''}>Completed</option><option ${x.followup==='Not required'?'selected':''}>Not required</option></select></div><div class="full"><label>Notes</label><textarea name="notes">${esc(x.notes)}</textarea></div><div><button class="btn">Save Visitor</button></div></form>`)}
+function renderVisitors(){let a=db.visitors;document.getElementById('visitorsTable').innerHTML=a.length?a.map(x=>`<tr><td>${fmtDate(x.date)}</td><td>${esc(x.name)}</td><td>${esc(x.phone)}</td><td>${esc(x.location)}</td><td>${esc(x.interest)}</td><td><span class="badge ${x.followup==='Completed'?'green':''}">${esc(x.followup)}</span></td><td><button class="btn small secondary" onclick="openVisitor('${x.id}')">Edit</button> <button class="btn small danger" onclick="del('visitors','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No visitors recorded.</td></tr>`}
+
+function openAttendance(id=''){let x=db.attendance.find(a=>a.id===id)||{};modal(`<h3>${id?'Edit':'Record'} Attendance</h3><form class="form" onsubmit="submitGeneric(event,'attendance','${id}')">
+<div><label>Date</label><input name="date" type="date" value="${x.date||today()}"></div><div><label>Meeting</label><select name="type"><option>Sunday Service</option><option>Bible School</option><option>Daily Prayer</option><option>Special Service</option><option>Other</option></select></div>
+<div><label>Member / Guest Name</label><input name="person" value="${esc(x.person)}" required></div><div><label>Phone</label><input name="phone" value="${esc(x.phone)}"></div><div><label>Present</label><select name="present"><option value="Yes" ${x.present!=='No'?'selected':''}>Yes</option><option value="No" ${x.present==='No'?'selected':''}>No</option></select></div><div><label>Notes</label><input name="notes" value="${esc(x.notes)}"></div><div><button class="btn">Save Attendance</button></div></form>`)}
+function renderAttendance(){let d=document.getElementById('attDateFilter')?.value||'',t=document.getElementById('attTypeFilter')?.value||'';let a=db.attendance.filter(x=>(!d||x.date===d)&&(!t||x.type===t));document.getElementById('attendanceTable').innerHTML=a.length?a.map(x=>`<tr><td>${fmtDate(x.date)}</td><td>${esc(x.type)}</td><td>${esc(x.person)}</td><td>${esc(x.phone)}</td><td><span class="badge ${x.present==='Yes'?'green':''}">${x.present}</span></td><td>${esc(x.notes)}</td><td><button class="btn small secondary" onclick="openAttendance('${x.id}')">Edit</button> <button class="btn small danger" onclick="del('attendance','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No attendance records.</td></tr>`}
+
+function openFollowup(id=''){let x=db.followups.find(a=>a.id===id)||{};modal(`<h3>${id?'Edit':'Add'} Follow-up</h3><form class="form" onsubmit="submitGeneric(event,'followups','${id}')"><div><label>Person</label><input name="person" value="${esc(x.person)}" required></div><div><label>Due Date</label><input name="due" type="date" value="${x.due||today()}"></div><div><label>Type</label><select name="type"><option>Phone Call</option><option>Home Visit</option><option>Pastoral Visit</option><option>New Visitor</option><option>Other</option></select></div><div><label>Assigned To</label><input name="assigned" value="${esc(x.assigned)}"></div><div><label>Status</label><select name="status"><option>Pending</option><option>Completed</option><option>Rescheduled</option></select></div><div class="full"><label>Notes</label><textarea name="notes">${esc(x.notes)}</textarea></div><div><button class="btn">Save</button></div></form>`)}
+function renderFollowup(){let a=db.followups;document.getElementById('followupTable').innerHTML=a.length?a.map(x=>`<tr><td>${fmtDate(x.due)}</td><td>${esc(x.person)}</td><td>${esc(x.type)}</td><td>${esc(x.assigned)}</td><td><span class="badge ${x.status==='Completed'?'green':''}">${esc(x.status)}</span></td><td>${esc(x.notes)}</td><td><button class="btn small secondary" onclick="openFollowup('${x.id}')">Edit</button> <button class="btn small danger" onclick="del('followups','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No follow-ups recorded.</td></tr>`}
+
+function openFamily(id=''){let x=db.families.find(a=>a.id===id)||{};modal(`<h3>${id?'Edit':'Add'} Family</h3><form class="form" onsubmit="submitGeneric(event,'families','${id}')"><div><label>Family Name</label><input name="family" value="${esc(x.family)}" required></div><div><label>Head of Family</label><input name="head" value="${esc(x.head)}"></div><div><label>Phone</label><input name="phone" value="${esc(x.phone)}"></div><div><label>Number of Members</label><input name="members" type="number" min="0" value="${x.members||0}"></div><div class="full"><label>Address</label><input name="address" value="${esc(x.address)}"></div><div class="full"><label>Notes</label><textarea name="notes">${esc(x.notes)}</textarea></div><div><button class="btn">Save Family</button></div></form>`)}
+function renderFamilies(){let a=db.families;document.getElementById('familiesTable').innerHTML=a.length?a.map(x=>`<tr><td>${esc(x.family)}</td><td>${esc(x.head)}</td><td>${esc(x.phone)}</td><td>${esc(x.address)}</td><td>${esc(x.members)}</td><td>${esc(x.notes)}</td><td><button class="btn small secondary" onclick="openFamily('${x.id}')">Edit</button> <button class="btn small danger" onclick="del('families','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No families recorded.</td></tr>`}
+
+function openEvent(id=''){let x=db.events.find(a=>a.id===id)||{};modal(`<h3>${id?'Edit':'Add'} Church Event</h3><form class="form" onsubmit="submitGeneric(event,'events','${id}')"><div><label>Date</label><input name="date" type="date" value="${x.date||today()}"></div><div><label>Event Name</label><input name="event" value="${esc(x.event)}" required></div><div><label>Time</label><input name="time" value="${esc(x.time)}"></div><div><label>Location</label><input name="location" value="${esc(x.location)}"></div><div><label>Leader</label><input name="leader" value="${esc(x.leader)}"></div><div class="full"><label>Notes</label><textarea name="notes">${esc(x.notes)}</textarea></div><div><button class="btn">Save Event</button></div></form>`)}
+function renderEvents(){let a=[...db.events].sort((a,b)=>(a.date||'').localeCompare(b.date||''));document.getElementById('eventsTable').innerHTML=a.length?a.map(x=>`<tr><td>${fmtDate(x.date)}</td><td><b>${esc(x.event)}</b></td><td>${esc(x.time)}</td><td>${esc(x.location)}</td><td>${esc(x.leader)}</td><td>${esc(x.notes)}</td><td><button class="btn small secondary" onclick="openEvent('${x.id}')">Edit</button> <button class="btn small danger" onclick="del('events','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No events recorded.</td></tr>`}
+
+function openDepartment(id=''){let x=db.departments.find(a=>a.id===id)||{};modal(`<h3>${id?'Edit':'Add'} Department</h3><form class="form" onsubmit="submitGeneric(event,'departments','${id}')"><div><label>Department</label><input name="department" value="${esc(x.department)}" required></div><div><label>Leader</label><input name="leader" value="${esc(x.leader)}"></div><div><label>Assistant</label><input name="assistant" value="${esc(x.assistant)}"></div><div><label>Meeting Day</label><input name="day" value="${esc(x.day)}"></div><div><label>Number of Members</label><input name="members" type="number" min="0" value="${x.members||0}"></div><div class="full"><label>Notes</label><textarea name="notes">${esc(x.notes)}</textarea></div><div><button class="btn">Save Department</button></div></form>`)}
+function renderDepartments(){let a=db.departments;document.getElementById('departmentsTable').innerHTML=a.length?a.map(x=>`<tr><td>${esc(x.department)}</td><td>${esc(x.leader)}</td><td>${esc(x.assistant)}</td><td>${esc(x.day)}</td><td>${esc(x.members)}</td><td>${esc(x.notes)}</td><td><button class="btn small secondary" onclick="openDepartment('${x.id}')">Edit</button> <button class="btn small danger" onclick="del('departments','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No departments recorded.</td></tr>`}
+
+function openGiving(id=''){let x=db.giving.find(a=>a.id===id)||{};modal(`<h3>${id?'Edit':'Add'} Giving Record</h3><form class="form" onsubmit="submitGeneric(event,'giving','${id}')"><div><label>Date</label><input name="date" type="date" value="${x.date||today()}"></div><div><label>Person / Source</label><input name="source" value="${esc(x.source)}"></div><div><label>Type</label><select name="type"><option>Tithe</option><option>Offering</option><option>Pledge</option><option>Donation</option><option>Other</option></select></div><div><label>Amount</label><input name="amount" type="number" min="0" step="0.01" value="${x.amount||''}"></div><div><label>Method</label><select name="method"><option>Cash</option><option>Bank</option><option>Mobile Money</option><option>Other</option></select></div><div><label>Reference</label><input name="reference" value="${esc(x.reference)}"></div><div><button class="btn">Save Giving Record</button></div></form>`)}
+function renderGiving(){let a=db.giving;document.getElementById('givingTable').innerHTML=a.length?a.map(x=>`<tr><td>${fmtDate(x.date)}</td><td>${esc(x.source)}</td><td>${esc(x.type)}</td><td>${esc(db.settings.currency)} ${Number(x.amount||0).toLocaleString()}</td><td>${esc(x.method)}</td><td>${esc(x.reference)}</td><td><button class="btn small secondary" onclick="openGiving('${x.id}')">Edit</button> <button class="btn small danger" onclick="del('giving','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No giving records.</td></tr>`}
+
+function openRequest(id=''){let x=db.requests.find(a=>a.id===id)||{};modal(`<h3>${id?'Edit':'Add'} Prayer Request</h3><form class="form" onsubmit="submitGeneric(event,'requests','${id}')"><div><label>Date</label><input name="date" type="date" value="${x.date||today()}"></div><div><label>Name</label><input name="name" value="${esc(x.name)}"></div><div><label>Category</label><select name="category"><option>Family</option><option>Healing</option><option>Financial</option><option>Work</option><option>Spiritual</option><option>Other</option></select></div><div><label>Status</label><select name="status"><option>Active</option><option>Answered</option><option>Closed</option></select></div><div class="full"><label>Prayer Request</label><textarea name="request" required>${esc(x.request)}</textarea></div><div class="full"><label>Follow-up Notes</label><textarea name="followup">${esc(x.followup)}</textarea></div><div><button class="btn">Save Request</button></div></form>`)}
+function renderRequests(){let a=db.requests;document.getElementById('requestsTable').innerHTML=a.length?a.map(x=>`<tr><td>${fmtDate(x.date)}</td><td>${esc(x.name)}</td><td>${esc(x.request)}</td><td>${esc(x.category)}</td><td><span class="badge ${x.status==='Answered'?'green':''}">${esc(x.status)}</span></td><td>${esc(x.followup)}</td><td><button class="btn small secondary" onclick="openRequest('${x.id}')">Edit</button> <button class="btn small whatsapp" onclick="sendWhatsAppRequest('${x.id}')">WhatsApp</button> <button class="btn small danger" onclick="del('requests','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No prayer requests recorded.</td></tr>`}
+
+function openPastoral(id=''){let x=db.pastoral.find(a=>a.id===id)||{};modal(`<h3>${id?'Edit':'Add'} Pastoral Note</h3><form class="form" onsubmit="submitGeneric(event,'pastoral','${id}')"><div><label>Date</label><input name="date" type="date" value="${x.date||today()}"></div><div><label>Person</label><input name="person" value="${esc(x.person)}"></div><div><label>Category</label><select name="category"><option>Pastoral Care</option><option>Counselling</option><option>Visit</option><option>Leadership</option><option>Other</option></select></div><div><label>Pastor / Leader</label><input name="leader" value="${esc(x.leader)}"></div><div class="full"><label>Confidential Summary</label><textarea name="summary" required>${esc(x.summary)}</textarea></div><div><button class="btn">Save Note</button></div></form>`)}
+function renderPastoral(){let a=db.pastoral;document.getElementById('pastoralTable').innerHTML=a.length?a.map(x=>`<tr><td>${fmtDate(x.date)}</td><td>${esc(x.person)}</td><td>${esc(x.category)}</td><td>${esc(x.leader)}</td><td>${esc(x.summary)}</td><td><button class="btn small secondary" onclick="openPastoral('${x.id}')">Edit</button> <button class="btn small danger" onclick="del('pastoral','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="6" class="empty">No pastoral notes recorded.</td></tr>`}
+
+function submitGeneric(e,key,id){e.preventDefault();let o=Object.fromEntries(new FormData(e.target));if(id)Object.assign(db[key].find(x=>x.id===id),o);else db[key].unshift({...o,id:uid()});save();closeModal()}
+function del(key,id){if(confirm('Delete this record?')){db[key]=db[key].filter(x=>x.id!==id);save()}}
+function modal(c){document.getElementById('modalContent').innerHTML=c;document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function renderDashboard(){
+ document.getElementById('statMembers').textContent=db.members.length;document.getElementById('statVisitors').textContent=db.visitors.length;document.getElementById('statRequests').textContent=db.requests.filter(x=>x.status==='Active').length;document.getElementById('statEvents').textContent=db.events.filter(x=>x.date>=today()).length;
+ document.getElementById('activeMembers').textContent=db.members.filter(x=>x.status==='Active').length;document.getElementById('todayAttendance').textContent=db.attendance.filter(x=>x.date===today()&&x.present==='Yes').length;document.getElementById('followupsDue').textContent=db.followups.filter(x=>x.status!=='Completed'&&x.due<=today()).length;document.getElementById('upcomingEvents').textContent=db.events.filter(x=>x.date>=today()).length;
+}
+function renderReports(){rMembers.textContent=db.members.length;rActive.textContent=db.members.filter(x=>x.status==='Active').length;rAttendance.textContent=db.attendance.length;rPresent.textContent=db.attendance.filter(x=>x.present==='Yes').length;rRequests.textContent=db.requests.length;rSessions.textContent=db.prayerSessions.length}
+function renderSettings(){setChurch.value=db.settings.church;setShort.value=db.settings.short;setLeader.value=db.settings.leader;setMorning.value=db.settings.morning;setAfternoon.value=db.settings.afternoon;setCurrency.value=db.settings.currency}
+function saveSettings(e){e.preventDefault();db.settings={church:setChurch.value,short:setShort.value,leader:setLeader.value,morning:setMorning.value,afternoon:setAfternoon.value,currency:setCurrency.value};save();alert('Church settings saved.')}
+function updateClock(){let n=new Date();liveClock.textContent=n.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});todayText.textContent=n.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});renderPrayer()}
+setInterval(updateClock,1000);
+
+const WHATSAPP_NUMBER='260979554970';
+
+function openWhatsApp(text){
+  const url='https://wa.me/'+WHATSAPP_NUMBER+'?text='+encodeURIComponent(text);
+  window.open(url,'_blank');
+}
+
+function churchFooter(){
+  return `\n\n🙏 JCRGM\nJesus Christ Redeems Global Ministries\n\n“All things are possible with God.”\n— Matthew 19:26`;
+}
+
+function sendWhatsAppRequest(id){
+  const x=db.requests.find(a=>a.id===id);
+  if(!x){alert('Prayer request not found.');return}
+  const msg=`JCRGM PRAYER REQUEST
+Date: ${fmtDate(x.date)}
+Name: ${x.name||'Not specified'}
+Category: ${x.category||'General'}
+
+Prayer Request:
+${x.request||''}
+
+Status: ${x.status||'Active'}
+Follow-up: ${x.followup||'None'}${churchFooter()}`;
+  openWhatsApp(msg);
+}
+
+function sendWhatsAppReport(type){
+  let msg='', title='';
+  if(type==='summary'){
+    title='JCRGM CHURCH SUMMARY REPORT';
+    msg=`${title}
+Date: ${fmtDate(today())}
+
+MEMBERS
+Total: ${db.members.length}
+Active: ${db.members.filter(x=>x.status==='Active').length}
+
+VISITORS
+Total: ${db.visitors.length}
+
+ATTENDANCE
+Total records: ${db.attendance.length}
+Present entries: ${db.attendance.filter(x=>x.present==='Yes').length}
+
+PRAYER
+Active requests: ${db.requests.filter(x=>x.status==='Active').length}
+Prayer sessions recorded: ${db.prayerSessions.length}
+
+FOLLOW-UP
+Pending: ${db.followups.filter(x=>x.status!=='Completed').length}
+Due today/overdue: ${db.followups.filter(x=>x.status!=='Completed'&&x.due<=today()).length}
+
+EVENTS
+Upcoming: ${db.events.filter(x=>x.date>=today()).length}`;
+  }
+  else if(type==='members'){
+    title='JCRGM MEMBERSHIP REPORT';
+    msg=`${title}
+Date: ${fmtDate(today())}
+
+Total Members: ${db.members.length}
+Active Members: ${db.members.filter(x=>x.status==='Active').length}
+Inactive Members: ${db.members.filter(x=>x.status==='Inactive').length}
+Transferred: ${db.members.filter(x=>x.status==='Transferred').length}
+
+Recent Members:
+${db.members.slice(0,15).map((x,i)=>`${i+1}. ${x.name||''} | ${x.phone||'No phone'} | ${x.ministry||'No ministry'} | ${x.status||''}`).join('\n')||'No members recorded.'}`;
+  }
+  else if(type==='attendance'){
+    const present=db.attendance.filter(x=>x.present==='Yes');
+    title='JCRGM ATTENDANCE REPORT';
+    msg=`${title}
+Date: ${fmtDate(today())}
+
+Total Attendance Records: ${db.attendance.length}
+Present Entries: ${present.length}
+Absent Entries: ${db.attendance.filter(x=>x.present==='No').length}
+
+Recent Attendance:
+${db.attendance.slice(0,20).map((x,i)=>`${i+1}. ${fmtDate(x.date)} | ${x.type||''} | ${x.person||''} | ${x.present||''}`).join('\n')||'No attendance recorded.'}`;
+  }
+  else if(type==='prayer'){
+    title='JCRGM PRAYER REQUEST REPORT';
+    msg=`${title}
+Date: ${fmtDate(today())}
+
+Daily Corporate Prayer: 21:00–22:30
+
+Active Requests: ${db.requests.filter(x=>x.status==='Active').length}
+Answered: ${db.requests.filter(x=>x.status==='Answered').length}
+Closed: ${db.requests.filter(x=>x.status==='Closed').length}
+
+Prayer Requests:
+${db.requests.slice(0,25).map((x,i)=>`${i+1}. ${x.name||'Anonymous'} — ${x.category||'General'} — ${x.status||'Active'}\n   ${x.request||''}`).join('\n')||'No prayer requests recorded.'}
+
+Recent Prayer Sessions:
+${db.prayerSessions.slice(0,10).map(x=>`${fmtDate(x.date)} | Present: ${x.present} | ${x.notes||''}`).join('\n')||'No prayer sessions recorded.'}`;
+  }
+  else if(type==='giving'){
+    const total=db.giving.reduce((s,x)=>s+Number(x.amount||0),0);
+    title='JCRGM GIVING REPORT';
+    msg=`${title}
+Date: ${fmtDate(today())}
+
+Total Recorded Giving: ${db.settings.currency} ${total.toLocaleString()}
+
+Records:
+${db.giving.slice(0,25).map((x,i)=>`${i+1}. ${fmtDate(x.date)} | ${x.type||''} | ${x.source||'Not specified'} | ${db.settings.currency} ${Number(x.amount||0).toLocaleString()} | ${x.method||''}`).join('\n')||'No giving records recorded.'}`;
+  }
+  openWhatsApp(msg+churchFooter());
+}
+
+function renderAll(){renderDashboard();renderPrayer();renderMembers();renderVisitors();renderAttendance();renderFollowup();renderFamilies();renderEvents();renderDepartments();renderGiving();renderRequests();renderPastoral();renderReports();renderSettings();updatePrayerClock()}
+function backupJSON(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`JCRGM-Backup-${today()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function restoreJSON(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.members||!x.settings)throw 0;db=x;save();alert('Backup restored successfully.')}catch{alert('Invalid JCRGM backup file.')}};r.readAsText(f)}
+function clearAllData(){if(confirm('This will permanently remove ALL records from this browser. Download a backup first. Continue?')){localStorage.removeItem(KEY);db=structuredClone(defaultData);save();alert('All records cleared.')}}
+function exportCSV(key){let a=db[key];if(!a.length){alert('No records to export.');return}let cols=[...new Set(a.flatMap(x=>Object.keys(x)))],csv=[cols.join(','),...a.map(x=>cols.map(c=>`"${String(x[c]??'').replace(/"/g,'""')}"`).join(','))].join('\\n');let blob=new Blob([csv],{type:'text/csv'}),el=document.createElement('a');el.href=URL.createObjectURL(blob);el.download=`JCRGM-${key}-${today()}.csv`;el.click()}
+function printReport(title){let old=document.title;document.title=title;window.print();document.title=old}
+renderAll();resetPrayer();
+</script>
+</body>
+</html>
