@@ -59,6 +59,7 @@ footer {background:#2c3e50; color:#fff; text-align:center; padding:15px;}
 <a href="https://chatgpt.com/"><button class="Research"> Research</button></a>
 <button onclick="showMembership()">📝 Membership</button>
 <button onclick="viewMembers()">👥 View Members</button>
+<button onclick="openJCRGMChurchManagementPrayerCenter()">📝 Church Management</button>
 <button onclick="showTithes()">💰 Tithes & Offerings</button>
 <button onclick="showCalendar()">📅 Church Calendar</button>
 <button onclick="openChurchConstitution()">📜 Church Constitution</button>
@@ -199,6 +200,7 @@ function toggleProjector(){document.documentElement.classList.toggle("projector"
 
 // Show sections
 function showMembership(){document.getElementById('membershipContent').style.display='block';document.getElementById('membershipContent').scrollIntoView({behavior:'smooth'});}
+function openJCRGMChurchManagementPrayerCenter(){ window.location.href = "JCRGM_Church_Management_Prayer_Center.html";}
 function viewMembers() {window.location.href = "images.html";}
 function openRegister(){window.location.href = "register.html";}
 function showTithes(){document.getElementById('tithesContent').style.display='block';document.getElementById('tithesContent').scrollIntoView({behavior:'smooth'});}
