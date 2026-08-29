@@ -45,6 +45,29 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
   .card{box-shadow:none}
 }
 </style>
+<style>
+.sidebar .nav-link{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  box-sizing:border-box;
+  padding:12px 14px;
+  margin:2px 0;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:inherit;
+  text-decoration:none;
+  font:inherit;
+  cursor:pointer;
+}
+.sidebar .nav-link:hover{
+  text-decoration:none;
+  background:rgba(255,255,255,.08);
+}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -60,6 +83,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
     <button data-page="visitors"><span>🚪</span> Visitors</button>
     <button data-page="attendance"><span>✓</span> Attendance</button>
     <button data-page="usherattendance"><span>👔</span> Ushers Record</button>
+    <a class="nav-link" href="https://meet.google.com/igi-viab-ujh" target="_blank" rel="noopener noreferrer"><span>🙏</span> Prayer Link</a>
     <button data-page="followup"><span>☎</span> Follow-up</button>
     <button data-page="families"><span>⌂</span> Families</button>
     <button data-page="events"><span>📅</span> Events</button>
