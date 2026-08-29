@@ -33,7 +33,17 @@ input,select,textarea{width:100%;border:1px solid #d5dbe5;border-radius:8px;padd
 footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
 @media(max-width:950px){.sidebar{width:220px}.main{margin-left:220px;width:calc(100% - 220px)}.stats{grid-template-columns:repeat(2,1fr)}.two,.three{grid-template-columns:1fr}}
 @media(max-width:700px){.sidebar{position:relative;width:100%;height:auto}.app{display:block}.main{margin:0;width:100%;padding:14px}.nav{display:grid;grid-template-columns:repeat(2,1fr)}.form{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.topbar{align-items:flex-start;gap:10px}.prayer-clock{font-size:35px}}
-@media print{.sidebar,.topbar,.actions,.no-print{display:none!important}.main{margin:0;width:100%;padding:0}.page{display:none!important}.page.active{display:block!important}.card{box-shadow:none}}
+@media print{
+  .sidebar,.topbar,.actions,.no-print{display:none!important}
+  .main{margin:0;width:100%;padding:0}
+  .page{display:none!important}
+  .page.active{display:block!important}
+  #usherattendance .card{box-shadow:none;border:0}
+  #usherattendance .toolbar .muted{display:block}
+  #usherattendance .form,#usherattendance .alert{display:none!important}
+  #usherattendance table{min-width:0}
+  .card{box-shadow:none}
+}
 </style>
 </head>
 <body>
@@ -49,6 +59,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
     <button data-page="members"><span>👥</span> Members</button>
     <button data-page="visitors"><span>🚪</span> Visitors</button>
     <button data-page="attendance"><span>✓</span> Attendance</button>
+    <button data-page="usherattendance"><span>👔</span> Ushers Record</button>
     <button data-page="followup"><span>☎</span> Follow-up</button>
     <button data-page="families"><span>⌂</span> Families</button>
     <button data-page="events"><span>📅</span> Events</button>
@@ -139,6 +150,53 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
   <div class="tablewrap"><table><thead><tr><th>Date</th><th>Meeting</th><th>Member/Guest</th><th>Phone</th><th>Present</th><th>Notes</th><th>Actions</th></tr></thead><tbody id="attendanceTable"></tbody></table></div></div>
 </section>
 
+<section id="usherattendance" class="page">
+  <div class="card">
+    <div class="toolbar">
+      <div>
+        <h3>Ushers Attendance & Offering Record</h3>
+        <span class="muted">Record men, women, children, visitors, total attendance and offering for each service.</span>
+      </div>
+      <div class="actions">
+        <button class="btn" onclick="openUsherAttendance()">+ New Usher Record</button>
+        <button class="btn secondary" onclick="printUsherAttendanceReport()">Save / Print PDF</button>
+        <button class="btn whatsapp" onclick="sendWhatsAppReport('usherattendance')">Send to WhatsApp</button>
+      </div>
+    </div>
+
+    <div class="form" style="margin-bottom:15px">
+      <div><label>Filter Date</label><input id="usherDateFilter" type="date" onchange="renderUsherAttendance()"></div>
+      <div><label>Service</label>
+        <select id="usherTypeFilter" onchange="renderUsherAttendance()">
+          <option value="">All services</option>
+          <option>Morning Service</option>
+          <option>Afternoon Prophetic Service</option>
+          <option>Friday Service</option>
+          <option>Bible School</option>
+          <option>Special Service</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid stats" style="margin-bottom:16px">
+      <div class="card stat"><div class="label">Men</div><strong id="usherMenTotal">0</strong></div>
+      <div class="card stat"><div class="label">Women</div><strong id="usherWomenTotal">0</strong></div>
+      <div class="card stat"><div class="label">Children</div><strong id="usherChildrenTotal">0</strong></div>
+      <div class="card stat"><div class="label">Visitors</div><strong id="usherVisitorsTotal">0</strong></div>
+      <div class="card stat"><div class="label">Total Attendance</div><strong id="usherGrandTotal">0</strong></div>
+    </div>
+
+    <div class="alert">Offering is recorded for the particular service and is separate from individual giving records.</div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Date</th><th>Service</th><th>Men</th><th>Women</th><th>Children</th><th>Visitors</th><th>Total</th><th>Offering</th><th>Usher</th><th>Actions</th></tr></thead>
+        <tbody id="usherAttendanceTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
 <section id="followup" class="page">
   <div class="card"><div class="toolbar"><div><h3>Pastoral Follow-up</h3><span class="muted">Track visitors, members, calls, visits and care</span></div><button class="btn" onclick="openFollowup()">+ Add Follow-up</button></div>
   <div class="tablewrap"><table><thead><tr><th>Due</th><th>Person</th><th>Type</th><th>Assigned To</th><th>Status</th><th>Notes</th><th>Actions</th></tr></thead><tbody id="followupTable"></tbody></table></div></div>
@@ -183,11 +241,12 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
     <div class="card"><h3>Prayer</h3><div class="kpi"><span>Requests</span><b id="rRequests">0</b></div><div class="kpi"><span>Sessions</span><b id="rSessions">0</b></div><button class="btn secondary" onclick="showPage('prayer')">Prayer Center</button></div>
   </div>
   <div class="card" style="margin-top:16px"><h3>Send Reports to WhatsApp</h3>
-<p class="muted">Prepare a church report and send it to the designated JCRGM WhatsApp number.</p>
+<p class="muted">Prepare church reports and send them to the designated JCRGM WhatsApp number. Ushers can record service attendance and offering, then share or save the report as PDF.</p>
 <div class="actions">
 <button class="btn whatsapp" onclick="sendWhatsAppReport('summary')">WhatsApp Church Summary</button>
 <button class="btn whatsapp" onclick="sendWhatsAppReport('members')">WhatsApp Members Report</button>
 <button class="btn whatsapp" onclick="sendWhatsAppReport('attendance')">WhatsApp Attendance</button>
+<button class="btn whatsapp" onclick="sendWhatsAppReport('usherattendance')">WhatsApp Ushers Record</button>
 <button class="btn whatsapp" onclick="sendWhatsAppReport('prayer')">WhatsApp Prayer Report</button>
 <button class="btn whatsapp" onclick="sendWhatsAppReport('giving')">WhatsApp Giving Report</button>
 </div></div>
@@ -214,8 +273,19 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
 
 <script>
 const KEY='jcrgm_church_center_v1';
-const defaultData={members:[],visitors:[],attendance:[],followups:[],families:[],events:[],departments:[],giving:[],requests:[],pastoral:[],prayerSessions:[],settings:{church:'Jesus Christ Redeems Global Ministries',short:'JCRGM',leader:'',morning:'09:00–12:00',afternoon:'15:00–18:30',currency:'ZMW'}};
+const defaultData={members:[],visitors:[],attendance:[],usherAttendance:[],followups:[],families:[],events:[],departments:[],giving:[],requests:[],pastoral:[],prayerSessions:[],settings:{church:'Jesus Christ Redeems Global Ministries',short:'JCRGM',leader:'',morning:'09:00–12:00',afternoon:'15:00–18:30',currency:'ZMW'}};
 let db=JSON.parse(localStorage.getItem(KEY)||'null')||structuredClone(defaultData);
+
+// Migration for records created with an older version of the app.
+// This prevents the new Ushers Record page from breaking when old
+// localStorage data does not yet contain the usherAttendance array.
+if(!Array.isArray(db.usherAttendance)) db.usherAttendance=[];
+
+// Make sure all existing data collections are present before rendering.
+['members','visitors','attendance','usherAttendance','followups','families','events','departments','giving','requests','pastoral','prayerSessions']
+  .forEach(k=>{if(!Array.isArray(db[k])) db[k]=[]});
+if(!db.settings || typeof db.settings!=='object') db.settings=structuredClone(defaultData.settings);
+localStorage.setItem(KEY,JSON.stringify(db));
 function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
@@ -314,6 +384,168 @@ function openAttendance(id=''){let x=db.attendance.find(a=>a.id===id)||{};modal(
 <div><label>Date</label><input name="date" type="date" value="${x.date||today()}"></div><div><label>Meeting</label><select name="type"><option>Sunday Service</option><option>Bible School</option><option>Daily Prayer</option><option>Special Service</option><option>Other</option></select></div>
 <div><label>Member / Guest Name</label><input name="person" value="${esc(x.person)}" required></div><div><label>Phone</label><input name="phone" value="${esc(x.phone)}"></div><div><label>Present</label><select name="present"><option value="Yes" ${x.present!=='No'?'selected':''}>Yes</option><option value="No" ${x.present==='No'?'selected':''}>No</option></select></div><div><label>Notes</label><input name="notes" value="${esc(x.notes)}"></div><div><button class="btn">Save Attendance</button></div></form>`)}
 function renderAttendance(){let d=document.getElementById('attDateFilter')?.value||'',t=document.getElementById('attTypeFilter')?.value||'';let a=db.attendance.filter(x=>(!d||x.date===d)&&(!t||x.type===t));document.getElementById('attendanceTable').innerHTML=a.length?a.map(x=>`<tr><td>${fmtDate(x.date)}</td><td>${esc(x.type)}</td><td>${esc(x.person)}</td><td>${esc(x.phone)}</td><td><span class="badge ${x.present==='Yes'?'green':''}">${x.present}</span></td><td>${esc(x.notes)}</td><td><button class="btn small secondary" onclick="openAttendance('${x.id}')">Edit</button> <button class="btn small danger" onclick="del('attendance','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No attendance records.</td></tr>`}
+
+
+function openUsherAttendance(id=''){
+  let x=db.usherAttendance.find(a=>a.id===id)||{};
+  modal(`<h3>${id?'Edit':'Record'} Ushers Attendance & Offering</h3>
+  <form class="form" onsubmit="submitUsherAttendance(event,'${id}')">
+    <div><label>Date</label><input name="date" type="date" value="${x.date||today()}" required></div>
+    <div><label>Service</label><select name="service">
+      <option ${x.service==='Morning Service'?'selected':''}>Morning Service</option>
+      <option ${x.service==='Afternoon Prophetic Service'?'selected':''}>Afternoon Prophetic Service</option>
+      <option ${x.service==='Friday Service'?'selected':''}>Friday Service</option>
+      <option ${x.service==='Bible School'?'selected':''}>Bible School</option>
+      <option ${x.service==='Special Service'?'selected':''}>Special Service</option>
+      <option ${x.service==='Other'?'selected':''}>Other</option>
+    </select></div>
+    <div><label>Men</label><input id="uaMen" name="men" type="number" min="0" inputmode="numeric" value="${x.men??0}" required></div>
+    <div><label>Women</label><input id="uaWomen" name="women" type="number" min="0" inputmode="numeric" value="${x.women??0}" required></div>
+    <div><label>Children</label><input id="uaChildren" name="children" type="number" min="0" inputmode="numeric" value="${x.children??0}" required></div>
+    <div><label>Visitors</label><input id="uaVisitors" name="visitors" type="number" min="0" inputmode="numeric" value="${x.visitors??0}" required></div>
+    <div><label>Total Attendance (Automatic)</label><input id="uaTotal" name="total" type="number" min="0" value="${x.total??0}" readonly></div>
+    <div><label>Offering Amount (${esc(db.settings.currency)})</label><input id="uaOffering" name="offering" type="number" min="0" step="0.01" inputmode="decimal" value="${x.offering??''}" required></div>
+    <div><label>Usher / Recorder</label><input name="usher" value="${esc(x.usher)}" placeholder="Name of usher"></div>
+    <div class="full"><label>Service Notes</label><textarea name="notes" placeholder="Any attendance or offering notes...">${esc(x.notes)}</textarea></div>
+    <div class="full actions">
+      <button class="btn success">Save Ushers Record</button>
+      <button type="button" class="btn secondary" onclick="closeModal()">Cancel</button>
+    </div>
+  </form>`);
+  setTimeout(bindUsherNumberFields,0);
+}
+
+function calcUsherTotal(){
+  const m=parseInt(document.getElementById('uaMen')?.value,10)||0;
+  const w=parseInt(document.getElementById('uaWomen')?.value,10)||0;
+  const c=parseInt(document.getElementById('uaChildren')?.value,10)||0;
+  const v=parseInt(document.getElementById('uaVisitors')?.value,10)||0;
+  const t=document.getElementById('uaTotal');
+  if(t)t.value=m+w+c+v;
+}
+
+function bindUsherNumberFields(){
+  ['uaMen','uaWomen','uaChildren','uaVisitors'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){
+      el.removeAttribute('readonly');
+      el.removeAttribute('disabled');
+      el.oninput=calcUsherTotal;
+      el.onchange=calcUsherTotal;
+    }
+  });
+  const offering=document.getElementById('uaOffering');
+  if(offering){
+    offering.removeAttribute('readonly');
+    offering.removeAttribute('disabled');
+  }
+  calcUsherTotal();
+}
+
+function submitUsherAttendance(e,id){
+  e.preventDefault();
+  let o=Object.fromEntries(new FormData(e.target));
+  o.men=Number(o.men||0); o.women=Number(o.women||0); o.children=Number(o.children||0); o.visitors=Number(o.visitors||0);
+  o.total=o.men+o.women+o.children+o.visitors;
+  o.offering=Number(o.offering||0);
+  if(id) Object.assign(db.usherAttendance.find(x=>x.id===id),o);
+  else db.usherAttendance.unshift({...o,id:uid()});
+  save(); closeModal();
+}
+
+function renderUsherAttendance(){
+  if(!Array.isArray(db.usherAttendance)) db.usherAttendance=[];
+  let d=document.getElementById('usherDateFilter')?.value||'', t=document.getElementById('usherTypeFilter')?.value||'';
+  let a=db.usherAttendance.filter(x=>(!d||x.date===d)&&(!t||x.service===t));
+
+  let men=a.reduce((s,x)=>s+Number(x.men||0),0);
+  let women=a.reduce((s,x)=>s+Number(x.women||0),0);
+  let children=a.reduce((s,x)=>s+Number(x.children||0),0);
+  let visitors=a.reduce((s,x)=>s+Number(x.visitors||0),0);
+  let total=a.reduce((s,x)=>s+Number(x.total||0),0);
+
+  document.getElementById('usherMenTotal').textContent=men;
+  document.getElementById('usherWomenTotal').textContent=women;
+  document.getElementById('usherChildrenTotal').textContent=children;
+  document.getElementById('usherVisitorsTotal').textContent=visitors;
+  document.getElementById('usherGrandTotal').textContent=total;
+
+  document.getElementById('usherAttendanceTable').innerHTML=a.length?a.map(x=>`
+    <tr>
+      <td>${fmtDate(x.date)}</td><td>${esc(x.service)}</td>
+      <td>${x.men||0}</td><td>${x.women||0}</td><td>${x.children||0}</td><td>${x.visitors||0}</td>
+      <td><b>${x.total||0}</b></td>
+      <td>${esc(db.settings.currency)} ${Number(x.offering||0).toLocaleString()}</td>
+      <td>${esc(x.usher)}</td>
+      <td>
+        <button class="btn small secondary" onclick="openUsherAttendance('${x.id}')">Edit</button>
+        <button class="btn small whatsapp" onclick="sendWhatsAppUsherAttendance('${x.id}')">WhatsApp</button>
+        <button class="btn small danger" onclick="del('usherAttendance','${x.id}')">Delete</button>
+      </td>
+    </tr>`).join(''):`<tr><td colspan="9" class="empty">No ushers attendance records found.</td></tr>`;
+}
+
+function usherReportText(records){
+  let men=records.reduce((s,x)=>s+Number(x.men||0),0);
+  let women=records.reduce((s,x)=>s+Number(x.women||0),0);
+  let children=records.reduce((s,x)=>s+Number(x.children||0),0);
+  let visitors=records.reduce((s,x)=>s+Number(x.visitors||0),0);
+  let total=records.reduce((s,x)=>s+Number(x.total||0),0);
+  let offering=records.reduce((s,x)=>s+Number(x.offering||0),0);
+  return `JCRGM USHERS ATTENDANCE & OFFERING REPORT
+
+Date: ${fmtDate(today())}
+Records: ${records.length}
+
+ATTENDANCE
+Men: ${men}
+Women: ${women}
+Children: ${children}
+Visitors: ${visitors}
+TOTAL ATTENDANCE: ${total}
+
+TOTAL OFFERING: ${db.settings.currency} ${offering.toLocaleString()}
+
+SERVICE RECORDS
+${records.map((x,i)=>`${i+1}. ${fmtDate(x.date)} | ${x.service||''}
+   Men: ${x.men||0} | Women: ${x.women||0} | Children: ${x.children||0} | Visitors: ${x.visitors||0} | Total: ${x.total||0}
+   Offering: ${db.settings.currency} ${Number(x.offering||0).toLocaleString()}
+   Usher: ${x.usher||'Not specified'}${x.notes?`\n   Notes: ${x.notes}`:''}`).join('\n\n')||'No records recorded.'}${churchFooter()}`;
+}
+
+function sendWhatsAppUsherAttendance(id){
+  let x=db.usherAttendance.find(a=>a.id===id);
+  if(!x){alert('Ushers record not found.');return}
+  openWhatsApp(`JCRGM USHERS ATTENDANCE & OFFERING
+Date: ${fmtDate(x.date)}
+Service: ${x.service||''}
+
+Men: ${x.men||0}
+Women: ${x.women||0}
+Children: ${x.children||0}
+Visitors: ${x.visitors||0}
+TOTAL ATTENDANCE: ${x.total||0}
+
+Offering: ${db.settings.currency} ${Number(x.offering||0).toLocaleString()}
+Usher/Recorder: ${x.usher||'Not specified'}
+Notes: ${x.notes||'None'}${churchFooter()}`);
+}
+
+function sendUsherAttendanceWhatsApp(){
+  sendWhatsAppReport('usherattendance');
+}
+
+function printUsherAttendanceReport(){
+  const oldTitle=document.title;
+  const d=document.getElementById('usherDateFilter')?.value||'';
+  const t=document.getElementById('usherTypeFilter')?.value||'';
+  const records=db.usherAttendance.filter(x=>(!d||x.date===d)&&(!t||x.service===t));
+  if(!records.length){alert('No ushers attendance records match the selected filter.');return}
+  const oldPage=document.querySelector('.page.active')?.id;
+  showPage('usherattendance');
+  document.title='JCRGM Ushers Attendance & Offering Report';
+  setTimeout(()=>{window.print();document.title=oldTitle;if(oldPage)showPage(oldPage)},100);
+}
 
 function openFollowup(id=''){let x=db.followups.find(a=>a.id===id)||{};modal(`<h3>${id?'Edit':'Add'} Follow-up</h3><form class="form" onsubmit="submitGeneric(event,'followups','${id}')"><div><label>Person</label><input name="person" value="${esc(x.person)}" required></div><div><label>Due Date</label><input name="due" type="date" value="${x.due||today()}"></div><div><label>Type</label><select name="type"><option>Phone Call</option><option>Home Visit</option><option>Pastoral Visit</option><option>New Visitor</option><option>Other</option></select></div><div><label>Assigned To</label><input name="assigned" value="${esc(x.assigned)}"></div><div><label>Status</label><select name="status"><option>Pending</option><option>Completed</option><option>Rescheduled</option></select></div><div class="full"><label>Notes</label><textarea name="notes">${esc(x.notes)}</textarea></div><div><button class="btn">Save</button></div></form>`)}
 function renderFollowup(){let a=db.followups;document.getElementById('followupTable').innerHTML=a.length?a.map(x=>`<tr><td>${fmtDate(x.due)}</td><td>${esc(x.person)}</td><td>${esc(x.type)}</td><td>${esc(x.assigned)}</td><td><span class="badge ${x.status==='Completed'?'green':''}">${esc(x.status)}</span></td><td>${esc(x.notes)}</td><td><button class="btn small secondary" onclick="openFollowup('${x.id}')">Edit</button> <button class="btn small danger" onclick="del('followups','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No follow-ups recorded.</td></tr>`}
@@ -449,6 +681,10 @@ ${db.requests.slice(0,25).map((x,i)=>`${i+1}. ${x.name||'Anonymous'} — ${x.cat
 Recent Prayer Sessions:
 ${db.prayerSessions.slice(0,10).map(x=>`${fmtDate(x.date)} | Present: ${x.present} | ${x.notes||''}`).join('\n')||'No prayer sessions recorded.'}`;
   }
+  else if(type==='usherattendance'){
+    const records=db.usherAttendance;
+    msg=usherReportText(records);
+  }
   else if(type==='giving'){
     const total=db.giving.reduce((s,x)=>s+Number(x.amount||0),0);
     title='JCRGM GIVING REPORT';
@@ -463,7 +699,7 @@ ${db.giving.slice(0,25).map((x,i)=>`${i+1}. ${fmtDate(x.date)} | ${x.type||''} |
   openWhatsApp(msg+churchFooter());
 }
 
-function renderAll(){renderDashboard();renderPrayer();renderMembers();renderVisitors();renderAttendance();renderFollowup();renderFamilies();renderEvents();renderDepartments();renderGiving();renderRequests();renderPastoral();renderReports();renderSettings();updatePrayerClock()}
+function renderAll(){renderDashboard();renderPrayer();renderMembers();renderVisitors();renderAttendance();renderUsherAttendance();renderFollowup();renderFamilies();renderEvents();renderDepartments();renderGiving();renderRequests();renderPastoral();renderReports();renderSettings();updatePrayerClock()}
 function backupJSON(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`JCRGM-Backup-${today()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
 function restoreJSON(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.members||!x.settings)throw 0;db=x;save();alert('Backup restored successfully.')}catch{alert('Invalid JCRGM backup file.')}};r.readAsText(f)}
 function clearAllData(){if(confirm('This will permanently remove ALL records from this browser. Download a backup first. Continue?')){localStorage.removeItem(KEY);db=structuredClone(defaultData);save();alert('All records cleared.')}}
