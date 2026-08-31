@@ -170,7 +170,7 @@
     </div>
 
     <!-- Book Grid -->
-    <div id="bookGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div id="bookGrid" class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-5">
       <!-- populated by JS -->
     </div>
 
@@ -415,8 +415,8 @@ function renderBooks(books){
     card.className = 'book-card rounded-sm overflow-hidden flex flex-col fade-in';
     card.style.animationDelay = (i * 40) + 'ms';
     card.innerHTML = `
-      <div class="relative h-64 flex items-stretch">
-        <div class="book-spine w-3"></div>
+      <div class="relative h-40 sm:h-56 md:h-64 flex items-stretch">
+        <div class="book-spine w-2 sm:w-3"></div>
         <div class="cover-wrap flex-1" data-pdf="${b.download}" data-title="${escapeHtml(b.name)}">
           <div class="cover-loading">
             <div class="text-center">
@@ -427,11 +427,11 @@ function renderBooks(books){
           <div class="cover-shine"></div>
         </div>
       </div>
-      <div class="p-4 flex-1 flex flex-col">
-        <h3 class="serif text-lg leading-tight mb-1 text-[#1a1410]">${escapeHtml(b.name)}</h3>
-        <p class="text-xs text-[#1a1410]/50 mb-4">PDF ${b.size ? '· ' + formatSize(b.size) : ''}</p>
+      <div class="p-2 sm:p-4 flex-1 flex flex-col">
+        <h3 class="serif text-sm sm:text-lg leading-tight mb-1 text-[#1a1410] line-clamp-2">${escapeHtml(b.name)}</h3>
+        <p class="text-[10px] sm:text-xs text-[#1a1410]/50 mb-2 sm:mb-4">PDF ${b.size ? '· ' + formatSize(b.size) : ''}</p>
         <div class="mt-auto">
-          <a href="${b.download}" download class="btn-primary block w-full text-center py-2.5 rounded-sm text-xs tracking-[0.2em] uppercase font-medium">Download PDF</a>
+          <a href="${b.download}" download class="btn-primary block w-full text-center py-1.5 sm:py-2.5 rounded-sm text-[10px] sm:text-xs tracking-[0.15em] sm:tracking-[0.2em] uppercase font-medium">Download</a>
         </div>
       </div>
     `;
