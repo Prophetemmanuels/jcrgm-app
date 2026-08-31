@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>JCRGM Library — Jesus Christ Redeems Global Ministries</title>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  // Configure PDF.js worker
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -71,6 +79,24 @@
   .ornate-border{
     border:1px solid var(--gold);
     box-shadow: 0 0 0 4px var(--parchment), 0 0 0 5px rgba(176,141,63,.4);
+  }
+  .cover-wrap{
+    background:linear-gradient(135deg,#2a1810 0%, #0f0805 100%);
+    position:relative;
+    overflow:hidden;
+  }
+  .cover-wrap canvas, .cover-wrap img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,.4));
+  }
+  .cover-loading{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg,#2a1810 0%, #0f0805 100%);
+    color:#b08d3f;
+  }
+  .cover-shine{
+    position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.08) 50%, transparent 60%);
   }
 </style>
 </head>
@@ -227,7 +253,7 @@
     </div>
     <div>
       <h4 class="text-sm tracking-[0.3em] uppercase text-[#b08d3f] mb-3">Contact</h4>
-      <p class="text-sm text-[#f6efe3]/70">+260979554970</p>
+      <p class="text-sm text-[#f6efe3]/70">library@jcrgm.org</p>
       <p class="text-sm text-[#f6efe3]/70">Open every Sunday after service</p>
     </div>
     <div>
@@ -389,16 +415,16 @@ function renderBooks(books){
     card.className = 'book-card rounded-sm overflow-hidden flex flex-col fade-in';
     card.style.animationDelay = (i * 40) + 'ms';
     card.innerHTML = `
-      <div class="relative h-48 flex items-stretch">
-        <div class="book-spine w-4"></div>
-        <div class="flex-1 bg-gradient-to-br from-[#fffdf8] to-[#e8dcc4] flex items-center justify-center p-4 relative">
-          <div class="absolute inset-3 border border-[#b08d3f]/40"></div>
-          <div class="text-center relative z-10">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-[#5b1a1a] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
-            </svg>
-            <p class="serif text-xs text-[#5b1a1a] tracking-widest uppercase">Volume</p>
+      <div class="relative h-64 flex items-stretch">
+        <div class="book-spine w-3"></div>
+        <div class="cover-wrap flex-1" data-pdf="${b.download}" data-title="${escapeHtml(b.name)}">
+          <div class="cover-loading">
+            <div class="text-center">
+              <div class="inline-block w-6 h-6 border-2 border-[#b08d3f] border-t-transparent rounded-full animate-spin"></div>
+              <p class="serif text-[10px] tracking-[0.3em] uppercase mt-2 text-[#b08d3f]/80">Loading Cover</p>
+            </div>
           </div>
+          <div class="cover-shine"></div>
         </div>
       </div>
       <div class="p-4 flex-1 flex flex-col">
@@ -412,6 +438,110 @@ function renderBooks(books){
     `;
     grid.appendChild(card);
   });
+
+  // After cards are in the DOM, render PDF covers lazily
+  lazyRenderCovers();
+}
+
+/* =========================================================
+   PDF COVER RENDERING (lazy, cached)
+   ========================================================= */
+const coverCache = new Map();
+
+function lazyRenderCovers(){
+  const wraps = document.querySelectorAll('.cover-wrap[data-pdf]');
+  if(!('IntersectionObserver' in window)){
+    wraps.forEach(w => renderCover(w));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        renderCover(entry.target);
+        io.unobserve(entry.target);
+      }
+    });
+  }, {rootMargin: '200px'});
+  wraps.forEach(w => io.observe(w));
+}
+
+async function renderCover(wrap){
+  const url   = wrap.dataset.pdf;
+  const title = wrap.dataset.title || 'Book';
+  if(!url || url === '#'){
+    showFallbackCover(wrap, title);
+    return;
+  }
+
+  // Cached?
+  if(coverCache.has(url)){
+    wrap.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = coverCache.get(url);
+    img.alt = title + ' cover';
+    wrap.appendChild(img);
+    const shine = document.createElement('div');
+    shine.className = 'cover-shine';
+    wrap.appendChild(shine);
+    return;
+  }
+
+  if(!window.pdfjsLib){
+    showFallbackCover(wrap, title);
+    return;
+  }
+
+  try {
+    const loadingTask = pdfjsLib.getDocument({ url, disableRange:true, disableStream:true });
+    const pdf = await loadingTask.promise;
+    const page = await pdf.getPage(1);
+
+    // Render at a decent resolution
+    const viewport = page.getViewport({ scale: 1 });
+    const targetWidth = 320;
+    const scale = targetWidth / viewport.width;
+    const scaledViewport = page.getViewport({ scale });
+
+    const canvas = document.createElement('canvas');
+    canvas.width  = scaledViewport.width;
+    canvas.height = scaledViewport.height;
+    const ctx = canvas.getContext('2d');
+
+    await page.render({ canvasContext: ctx, viewport: scaledViewport }).promise;
+
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+    coverCache.set(url, dataUrl);
+
+    wrap.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = dataUrl;
+    img.alt = title + ' cover';
+    img.className = 'fade-in';
+    wrap.appendChild(img);
+    const shine = document.createElement('div');
+    shine.className = 'cover-shine';
+    wrap.appendChild(shine);
+  } catch(err){
+    console.warn('Cover render failed for', title, err);
+    showFallbackCover(wrap, title);
+  }
+}
+
+function showFallbackCover(wrap, title){
+  // Elegant text-based cover when PDF render fails
+  const initials = title.split(/\s+/).slice(0,3).map(w=>w[0]).join('').toUpperCase();
+  wrap.innerHTML = `
+    <div class="w-full h-full flex flex-col items-center justify-center p-4 text-center"
+         style="background:linear-gradient(135deg,#5b1a1a 0%, #2a0a0a 100%); color:#f6efe3;">
+      <div class="absolute inset-3 border border-[#b08d3f]/40"></div>
+      <div class="relative z-10">
+        <div class="serif text-4xl text-[#b08d3f] mb-2">${escapeHtml(initials)}</div>
+        <div class="w-10 h-px bg-[#b08d3f] mx-auto mb-2"></div>
+        <p class="serif text-sm leading-tight px-2">${escapeHtml(title)}</p>
+      </div>
+    </div>
+    <div class="cover-shine"></div>
+  `;
 }
 
 function renderDemoBooks(){
