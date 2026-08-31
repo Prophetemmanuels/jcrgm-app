@@ -157,7 +157,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
 
 <section id="members" class="page">
   <div class="card">
-    <div class="toolbar"><div><h3>Member Register</h3><span class="muted">Central church membership records</span></div><div class="actions"><button class="btn" onclick="openMember()">+ Add Member</button><button class="btn secondary" onclick="exportCSV('members')">Export CSV</button></div></div>
+    <div class="toolbar"><div><h3>Member Register</h3><span class="muted">Central church membership records</span></div><div class="actions"><button class="btn" onclick="openMember()">+ Add Member</button><button class="btn" onclick="saveMembersPDF()">Save All as PDF</button><button class="btn whatsapp" onclick="sendAllMembersWhatsApp()">WhatsApp All Members</button><button class="btn secondary" onclick="exportCSV('members')">Export CSV</button></div></div>
     <input id="memberSearch" placeholder="Search name, phone, ministry, status..." oninput="renderMembers()">
     <div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>Name</th><th>Phone</th><th>Gender</th><th>Joined</th><th>Ministry</th><th>Status</th><th>Actions</th></tr></thead><tbody id="membersTable"></tbody></table></div>
   </div>
@@ -268,7 +268,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
 <p class="muted">Prepare church reports and send them to the designated JCRGM WhatsApp number. Ushers can record service attendance and offering, then share or save the report as PDF.</p>
 <div class="actions">
 <button class="btn whatsapp" onclick="sendWhatsAppReport('summary')">WhatsApp Church Summary</button>
-<button class="btn whatsapp" onclick="sendWhatsAppReport('members')">WhatsApp Members Report</button>
+<button class="btn whatsapp" onclick="sendAllMembersWhatsApp()">WhatsApp Members Report</button>
 <button class="btn whatsapp" onclick="sendWhatsAppReport('attendance')">WhatsApp Attendance</button>
 <button class="btn whatsapp" onclick="sendWhatsAppReport('usherattendance')">WhatsApp Ushers Record</button>
 <button class="btn whatsapp" onclick="sendWhatsAppReport('prayer')">WhatsApp Prayer Report</button>
@@ -286,7 +286,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
       <div><label>Daily Prayer</label><input value="21:00–22:30" readonly></div><div><label>Currency</label><input id="setCurrency" value="ZMW"></div>
       <div class="full"><button class="btn">Save Church Settings</button></div>
     </form></div>
-    <div class="card"><h3>Data Management</h3><p class="muted">All records are stored locally in this browser using localStorage.</p><div class="actions"><button class="btn" onclick="backupJSON()">Download Backup</button><button class="btn danger" onclick="clearAllData()">Clear All Records</button></div><hr><h4>Daily Prayer</h4><p><b>21:00–22:30 every day</b></p><p class="muted">The guide changes automatically according to the day of the week.</p></div>
+    <div class="card"><h3>Data Management</h3><p class="muted">All records are stored locally in this browser using LS.</p><div class="actions"><button class="btn" onclick="backupJSON()">Download Backup</button><button class="btn danger" onclick="clearAllData()">Clear All Records</button></div><hr><h4>Daily Prayer</h4><p><b>21:00–22:30 every day</b></p><p class="muted">The guide changes automatically according to the day of the week.</p></div>
   </div>
 </section>
 <footer>JCRGM Church Management & Prayer Center • Local browser application • Keep regular backups</footer>
@@ -296,21 +296,23 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
 <div class="modal" id="modal"><div class="modalbox"><button class="close" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
 
 <script>
+const LS=(function(){try{const t='__t';LS.setItem(t,'1');LS.removeItem(t);return LS}catch(e){const m={};return{getItem:k=>(k in m?m[k]:null),setItem:(k,v)=>{m[k]=String(v)},removeItem:k=>{delete m[k]}}}})();
+
 const KEY='jcrgm_church_center_v1';
 const defaultData={members:[],visitors:[],attendance:[],usherAttendance:[],followups:[],families:[],events:[],departments:[],giving:[],requests:[],pastoral:[],prayerSessions:[],settings:{church:'Jesus Christ Redeems Global Ministries',short:'JCRGM',leader:'',morning:'09:00–12:00',afternoon:'15:00–18:30',currency:'ZMW'}};
-let db=JSON.parse(localStorage.getItem(KEY)||'null')||structuredClone(defaultData);
+let db=JSON.parse(LS.getItem(KEY)||'null')||structuredClone(defaultData);
 
 // Migration for records created with an older version of the app.
 // This prevents the new Ushers Record page from breaking when old
-// localStorage data does not yet contain the usherAttendance array.
+// LS data does not yet contain the usherAttendance array.
 if(!Array.isArray(db.usherAttendance)) db.usherAttendance=[];
 
 // Make sure all existing data collections are present before rendering.
 ['members','visitors','attendance','usherAttendance','followups','families','events','departments','giving','requests','pastoral','prayerSessions']
   .forEach(k=>{if(!Array.isArray(db[k])) db[k]=[]});
 if(!db.settings || typeof db.settings!=='object') db.settings=structuredClone(defaultData.settings);
-localStorage.setItem(KEY,JSON.stringify(db));
-function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
+LS.setItem(KEY,JSON.stringify(db));
+function save(){LS.setItem(KEY,JSON.stringify(db));renderAll()}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function today(){return new Date().toISOString().slice(0,10)}
@@ -398,7 +400,7 @@ function openMember(id=''){let x=db.members.find(a=>a.id===id)||{};modal(`<h3>${
 <div><label>Address / Area</label><input name="address" value="${esc(x.address)}"></div><div><label>Emergency Contact</label><input name="emergency" value="${esc(x.emergency)}"></div>
 <div class="full"><label>Notes</label><textarea name="notes">${esc(x.notes)}</textarea></div><div class="full actions"><button class="btn">Save Member</button><button type="button" class="btn secondary" onclick="closeModal()">Cancel</button></div></form>`)}
 function submitMember(e,id){e.preventDefault();let o=Object.fromEntries(new FormData(e.target));if(id)Object.assign(db.members.find(x=>x.id===id),o);else db.members.unshift({...o,id:uid()});save();closeModal()}
-function renderMembers(){let q=(document.getElementById('memberSearch')?.value||'').toLowerCase();let a=db.members.filter(x=>JSON.stringify(x).toLowerCase().includes(q));document.getElementById('membersTable').innerHTML=a.length?a.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${esc(x.phone)}</td><td>${esc(x.gender)}</td><td>${fmtDate(x.joined)}</td><td>${esc(x.ministry)}</td><td><span class="badge ${x.status==='Active'?'green':''}">${esc(x.status)}</span></td><td><button class="btn small secondary" onclick="openMember('${x.id}')">Edit</button> <button class="btn small danger" onclick="del('members','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No members found.</td></tr>`}
+function renderMembers(){let q=(document.getElementById('memberSearch')?.value||'').toLowerCase();let a=db.members.filter(x=>JSON.stringify(x).toLowerCase().includes(q));document.getElementById('membersTable').innerHTML=a.length?a.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${esc(x.phone)}</td><td>${esc(x.gender)}</td><td>${fmtDate(x.joined)}</td><td>${esc(x.ministry)}</td><td><span class="badge ${x.status==='Active'?'green':''}">${esc(x.status)}</span></td><td><button class="btn small secondary" onclick="openMember('${x.id}')">Edit</button> <button class="btn small whatsapp" onclick="sendWhatsAppMember('${x.id}')">WhatsApp</button> <button class="btn small danger" onclick="del('members','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No members found.</td></tr>`}
 
 function openVisitor(id=''){let x=db.visitors.find(a=>a.id===id)||{};modal(`<h3>${id?'Edit':'Register'} Visitor</h3><form class="form" onsubmit="submitGeneric(event,'visitors','${id}')">
 <div><label>Full Name</label><input name="name" value="${esc(x.name)}" required></div><div><label>Phone</label><input name="phone" value="${esc(x.phone)}"></div><div><label>Date</label><input name="date" type="date" value="${x.date||today()}"></div><div><label>Location / Area</label><input name="location" value="${esc(x.location)}"></div><div><label>How did you hear about us?</label><input name="source" value="${esc(x.source)}"></div><div><label>Reason / Interest</label><input name="interest" value="${esc(x.interest)}"></div><div><label>Follow-up</label><select name="followup"><option>Pending</option><option ${x.followup==='Completed'?'selected':''}>Completed</option><option ${x.followup==='Not required'?'selected':''}>Not required</option></select></div><div class="full"><label>Notes</label><textarea name="notes">${esc(x.notes)}</textarea></div><div><button class="btn">Save Visitor</button></div></form>`)}
@@ -726,10 +728,282 @@ ${db.giving.slice(0,25).map((x,i)=>`${i+1}. ${fmtDate(x.date)} | ${x.type||''} |
 function renderAll(){renderDashboard();renderPrayer();renderMembers();renderVisitors();renderAttendance();renderUsherAttendance();renderFollowup();renderFamilies();renderEvents();renderDepartments();renderGiving();renderRequests();renderPastoral();renderReports();renderSettings();updatePrayerClock()}
 function backupJSON(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`JCRGM-Backup-${today()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
 function restoreJSON(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.members||!x.settings)throw 0;db=x;save();alert('Backup restored successfully.')}catch{alert('Invalid JCRGM backup file.')}};r.readAsText(f)}
-function clearAllData(){if(confirm('This will permanently remove ALL records from this browser. Download a backup first. Continue?')){localStorage.removeItem(KEY);db=structuredClone(defaultData);save();alert('All records cleared.')}}
+function clearAllData(){if(confirm('This will permanently remove ALL records from this browser. Download a backup first. Continue?')){LS.removeItem(KEY);db=structuredClone(defaultData);save();alert('All records cleared.')}}
 function exportCSV(key){let a=db[key];if(!a.length){alert('No records to export.');return}let cols=[...new Set(a.flatMap(x=>Object.keys(x)))],csv=[cols.join(','),...a.map(x=>cols.map(c=>`"${String(x[c]??'').replace(/"/g,'""')}"`).join(','))].join('\\n');let blob=new Blob([csv],{type:'text/csv'}),el=document.createElement('a');el.href=URL.createObjectURL(blob);el.download=`JCRGM-${key}-${today()}.csv`;el.click()}
 function printReport(title){let old=document.title;document.title=title;window.print();document.title=old}
 renderAll();resetPrayer();
+/* ============================================================
+   MEMBER RECORDS — SAVE AS PDF & SEND TO WHATSAPP
+   Every member record can be saved as a PDF file, and the FULL
+   details of ALL records can be sent to the church WhatsApp
+   number (0979554970 = 260979554970).
+   ============================================================ */
+
+/* ---------- WhatsApp text builders ---------- */
+function memberDetailText(x){
+  var lines=[x.name||'Unnamed Member'];
+  if(x.phone)lines.push('Phone: '+x.phone);
+  if(x.gender)lines.push('Gender: '+x.gender);
+  if(x.joined)lines.push('Date Joined: '+fmtDate(x.joined));
+  if(x.ministry)lines.push('Ministry / Department: '+x.ministry);
+  if(x.status)lines.push('Status: '+x.status);
+  if(x.dob)lines.push('Date of Birth: '+fmtDate(x.dob));
+  if(x.marital)lines.push('Marital Status: '+x.marital);
+  if(x.address)lines.push('Address / Area: '+x.address);
+  if(x.emergency)lines.push('Emergency Contact: '+x.emergency);
+  if(x.notes)lines.push('Notes: '+x.notes);
+  return lines.join('\n');
+}
+
+function membersFullText(title){
+  var m=db.members;
+  var lines=[title||'JCRGM MEMBERSHIP REPORT — ALL RECORDS','Date: '+fmtDate(today()),'',
+    'Total Members: '+m.length,
+    'Active: '+m.filter(function(x){return x.status==='Active'}).length+
+      '   Inactive: '+m.filter(function(x){return x.status==='Inactive'}).length+
+      '   Transferred: '+m.filter(function(x){return x.status==='Transferred'}).length];
+  if(!m.length){lines.push('','No members recorded yet.');return lines.join('\n')}
+  lines.push('');
+  for(var i=0;i<m.length;i++){
+    var x=m[i];
+    lines.push((i+1)+'. '+(x.name||'Unnamed Member'));
+    if(x.phone)lines.push('   • Phone: '+x.phone);
+    if(x.gender)lines.push('   • Gender: '+x.gender);
+    if(x.joined)lines.push('   • Date Joined: '+fmtDate(x.joined));
+    if(x.ministry)lines.push('   • Ministry: '+x.ministry);
+    if(x.status)lines.push('   • Status: '+x.status);
+    if(x.dob)lines.push('   • Date of Birth: '+fmtDate(x.dob));
+    if(x.marital)lines.push('   • Marital Status: '+x.marital);
+    if(x.address)lines.push('   • Address: '+x.address);
+    if(x.emergency)lines.push('   • Emergency Contact: '+x.emergency);
+    if(x.notes)lines.push('   • Notes: '+x.notes);
+    lines.push('');
+    if(lines.join('\n').length>55000){lines.push('…(message truncated — more member records exist)…');break}
+  }
+  return lines.join('\n');
+}
+
+function sendAllMembersWhatsApp(){
+  var n=db.members.length;
+  if(!n){alert('No members recorded yet — add members first.');return}
+  if(!confirm('Send the FULL details of all '+n+' member record(s) to WhatsApp '+WHATSAPP_NUMBER+'?'))return;
+  openWhatsApp(membersFullText('JCRGM MEMBERSHIP REPORT — ALL RECORDS')+churchFooter());
+}
+
+function sendWhatsAppMember(id){
+  var x=db.members.find(function(a){return a.id===id});
+  if(!x){alert('Member not found.');return}
+  openWhatsApp('JCRGM MEMBER RECORD\n\n'+memberDetailText(x)+churchFooter());
+}
+
+/* ---------- Self-contained PDF generator (no external libraries) ---------- */
+function pdfSan(s){
+  s=String(s===undefined||s===null?'':s);
+  var map={'“':'"','”':'"','‘':"'",'’':"'",'–':'-','—':'-','…':'...','•':'-','✓':'x','✔':'x','★':'*','☆':'*','✦':'*','🙏':' ','✨':' ','→':'>','←':'<','↑':'^','↓':'v','·':'.','±':'+','×':'x','÷':'/','₦':'N','€':'EUR','£':'GBP','₹':'Rs'};
+  var ACC={'á':'a','à':'a','â':'a','ä':'a','ã':'a','å':'a','é':'e','è':'e','ê':'e','ë':'e','í':'i','ì':'i','î':'i','ï':'i','ó':'o','ò':'o','ô':'o','ö':'o','õ':'o','ú':'u','ù':'u','û':'u','ü':'u','ç':'c','ñ':'n','ß':'ss','æ':'ae','œ':'oe','ÿ':'y','ý':'y','ø':'o','ð':'d','þ':'th'};
+  var out='';
+  for(var i=0;i<s.length;i++){
+    var c=s[i];
+    if(map[c]!==undefined){out+=map[c];continue}
+    if(ACC[c]!==undefined){out+=ACC[c];continue}
+    var code=c.charCodeAt(0);
+    if(code>=32&&code<=126)out+=c;else out+='?';
+  }
+  return out;
+}
+function pdfEsc(s){return pdfSan(s).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)')}
+function pdfW(s,size){
+  var w=0;
+  for(var i=0;i<s.length;i++){
+    var c=s[i];
+    if(c===' ')w+=0.28*size;
+    else if(c>='A'&&c<='Z')w+=0.667*size;
+    else if(c>='a'&&c<='z')w+=0.5*size;
+    else if(c>='0'&&c<='9')w+=0.556*size;
+    else if(/[MW@]/.test(c))w+=0.9*size;
+    else if(/[ijl.,;:'"!|Il1]/.test(c))w+=0.3*size;
+    else w+=0.5*size;
+  }
+  return w;
+}
+function pdfWrap(s,size,maxW){
+  s=pdfSan(String(s===undefined||s===null?'':s));
+  var words=s.split(/\s+/).filter(function(w){return w.length});
+  var lines=[],cur='';
+  for(var i=0;i<words.length;i++){
+    var w=words[i];
+    var test=cur?cur+' '+w:w;
+    if(pdfW(test,size)<=maxW){cur=test}
+    else{if(cur)lines.push(cur);cur=w;}
+    while(pdfW(cur,size)>maxW&&cur.length>1){
+      var cut=1;
+      while(cut<cur.length&&pdfW(cur.slice(0,cut+1),size)<=maxW)cut++;
+      lines.push(cur.slice(0,cut));cur=cur.slice(cut);
+    }
+  }
+  if(cur)lines.push(cur);
+  if(!lines.length)lines.push('');
+  return lines;
+}
+
+function buildMembersPDF(){
+  var PW=595.28,PH=841.89,ML=48,MR=48,MT=70,MB=50,CW=PW-ML-MR;
+  var NAVY='0.09 0.22 0.48 rg',INK='0.09 0.13 0.20 rg',MUT='0.36 0.41 0.50 rg',ZEBRA='0.96 0.97 0.98 rg',BAND='0.09 0.22 0.48 rg';
+  var pages=[],cur=null,y=0;
+
+  function add(cmd){cur.push(cmd)}
+  function newPage(){
+    cur=[];pages.push(cur);
+    add(BAND+' 0 '+(PH-46)+' '+PW+' 46 re f');
+    add('BT /F2 14 Tf 1 1 1 rg 1 0 0 1 '+ML+' '+(PH-30)+' Tm ('+pdfEsc((db.settings.short||'JCRGM')+' — '+(db.settings.church||'Church'))+') Tj ET');
+    add('BT /F1 8 Tf 1 1 1 rg 1 0 0 1 '+(PW-MR-92)+' '+(PH-30)+' Tm (MEMBER REGISTER) Tj ET');
+    y=PH-MT;
+  }
+  function ensure(h){if(y-h<MB)newPage()}
+  function text(t,x,size,bold,color,yy){
+    if(yy===undefined)yy=y;
+    add('BT /F'+(bold?2:1)+' '+size+' Tf '+(color||INK)+' 1 0 0 1 '+x.toFixed(1)+' '+yy.toFixed(1)+' Tm ('+pdfEsc(t)+') Tj ET');
+  }
+  function rule(x1,y1,x2,y2,w,c){add((c||'0.78 0.82 0.88 RG')+' '+(w||0.6)+' w '+x1.toFixed(1)+' '+y1.toFixed(1)+' m '+x2.toFixed(1)+' '+y2.toFixed(1)+' l S')}
+  function fill(x1,y1,x2,y2,c){add(c+' '+x1.toFixed(1)+' '+y1.toFixed(1)+' '+((x2-x1).toFixed(1))+' '+((y2-y1).toFixed(1))+' re f')}
+
+  newPage();
+  var total=db.members.length;
+  var act=db.members.filter(function(m){return m.status==='Active'}).length;
+  var ina=db.members.filter(function(m){return m.status==='Inactive'}).length;
+  var trf=db.members.filter(function(m){return m.status==='Transferred'}).length;
+
+  /* Title block */
+  ensure(70);
+  text('MEMBER REGISTER',ML,17,true,NAVY);y-=26;
+  text('Generated: '+fmtDate(today())+'   |   Total Members: '+total+'   |   Active: '+act+'   |   Inactive: '+ina+'   |   Transferred: '+trf,ML,9,false,MUT);y-=8;
+  rule(ML,y+6,PW-MR,y+6,1.2,NAVY);
+  y-=16;
+
+  /* Summary table */
+  text('SUMMARY TABLE',ML,11,true,INK);y-=18;
+  var cols=[
+    {label:'#',w:20},
+    {label:'Full Name',w:120},
+    {label:'Phone',w:80},
+    {label:'Gender',w:44},
+    {label:'Joined',w:58},
+    {label:'Ministry / Department',w:100},
+    {label:'Status',w:46}
+  ];
+  fill(ML,y+8,PW-MR,y-10,BAND);
+  var hx=ML;
+  for(var ci=0;ci<cols.length;ci++){text(cols[ci].label,hx+4,8.5,true,'1 1 1 rg',y-5);hx+=cols[ci].w}
+  y-=18;
+  if(total===0){
+    text('No members recorded yet. Use “+ Add Member” to begin the register.',ML+4,y,9,false,MUT);y-=26;
+  }else{
+    for(var r=0;r<total;r++){
+      var m=db.members[r];
+      var cells=[String(r+1),m.name||'',m.phone||'',m.gender||'',m.joined?fmtDate(m.joined):'',m.ministry||'',m.status||''];
+      var linesArr=[],rowLines=1;
+      for(ci=0;ci<cols.length;ci++){
+        var ls=pdfWrap(cells[ci],8.2,cols[ci].w-8);
+        linesArr.push(ls);
+        if(ls.length>rowLines)rowLines=ls.length;
+      }
+      var cellH=rowLines*10.5+7;
+      ensure(cellH+6);
+      if(r%2===1)fill(ML,y+8,PW-MR,y+8-cellH,ZEBRA);
+      var lx=ML;
+      for(ci=0;ci<cols.length;ci++){
+        var ls2=linesArr[ci];
+        for(var li=0;li<ls2.length;li++)text(ls2[li],lx+4,8.2,false,INK,y+8-4.5-10.5*li);
+        lx+=cols[ci].w;
+      }
+      y-=cellH;
+      rule(ML,y+2,PW-MR,y+2,0.5,'0.85 0.88 0.93 RG');
+      y-=4;
+    }
+  }
+  y-=12;
+
+  /* Full details of every member */
+  ensure(90);
+  rule(ML,y+14,PW-MR,y+14,1.2,NAVY);
+  text('FULL DETAILS OF ALL MEMBERS',ML,12,true,NAVY);
+  y-=22;
+  if(total===0){
+    text('No member records to display.',ML,y,9,false,MUT);y-=14;
+  }
+  for(var k=0;k<total;k++){
+    var mem=db.members[k];
+    var det=[];
+    if(mem.phone)det.push(['Phone',mem.phone]);
+    if(mem.gender)det.push(['Gender',mem.gender]);
+    if(mem.joined)det.push(['Date Joined',fmtDate(mem.joined)]);
+    if(mem.ministry)det.push(['Ministry / Department',mem.ministry]);
+    if(mem.status)det.push(['Status',mem.status]);
+    if(mem.dob)det.push(['Date of Birth',fmtDate(mem.dob)]);
+    if(mem.marital)det.push(['Marital Status',mem.marital]);
+    if(mem.address)det.push(['Address / Area',mem.address]);
+    if(mem.emergency)det.push(['Emergency Contact',mem.emergency]);
+    if(mem.notes)det.push(['Notes',mem.notes]);
+    var blockH=30;
+    for(var di=0;di<det.length;di++){blockH+=pdfWrap(det[di][0]+': '+det[di][1],9,CW-20).length*11+2}
+    ensure(blockH+6);
+    fill(ML,y+8,PW-MR,y+8-blockH,'0.985 0.988 0.993 rg');
+    rule(ML,y+8,PW-MR,y+8,1,NAVY);rule(ML,y+8-blockH,PW-MR,y+8-blockH,1,NAVY);
+    rule(ML,y+8,ML,y+8-blockH,1,NAVY);rule(PW-MR,y+8,PW-MR,y+8-blockH,1,NAVY);
+    text((k+1)+'. '+(mem.name||'Unnamed Member'),ML+8,y-4,true,INK);
+    y-=22;
+    for(di=0;di<det.length;di++){
+      var ls3=pdfWrap(det[di][0]+': '+det[di][1],9,CW-20);
+      for(li=0;li<ls3.length;li++){text(ls3[li],ML+8,y,false,INK);y-=11}
+      y-=2;
+    }
+    y-=8;
+  }
+
+  /* Footers */
+  for(var pg=0;pg<pages.length;pg++){
+    var p=pages[pg];
+    p.push('0.85 0.88 0.93 RG 0.6 w '+ML+' 40 m '+(PW-MR)+' 40 l S');
+    p.push('BT /F1 7.5 Tf '+MUT+' 1 0 0 1 '+ML+' 30 Tm ('+pdfEsc((db.settings.church||'JCRGM')+' - Member Register')+') Tj ET');
+    p.push('BT /F1 7.5 Tf '+MUT+' 1 0 0 1 '+(PW-MR-75)+' 30 Tm (Page '+(pg+1)+' of '+pages.length+') Tj ET');
+  }
+
+  /* Assemble file */
+  var kids=[];
+  for(var i2=0;i2<pages.length;i2++)kids.push((5+2*i2)+' 0 R');
+  var pdf='%PDF-1.4\n';
+  var offsets=[0];
+  function obj(s){offsets.push(pdf.length);pdf+=s+'\n'}
+  obj('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj');
+  obj('2 0 obj\n<< /Type /Pages /Kids ['+kids.join(' ')+'] /Count '+pages.length+' >>\nendobj');
+  obj('3 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>\nendobj');
+  obj('4 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>\nendobj');
+  for(var i3=0;i3<pages.length;i3++){
+    var pageObj=5+2*i3,contObj=6+2*i3,content=pages[i3].join('\n');
+    obj(pageObj+' 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents '+contObj+' 0 R >>\nendobj');
+    obj(contObj+' 0 obj\n<< /Length '+content.length+' >>\nstream\n'+content+'\nendstream\nendobj');
+  }
+  var xrefStart=pdf.length;
+  var xref='xref\n0 '+(offsets.length)+'\n0000000000 65535 f \n';
+  for(var oi=1;oi<offsets.length;oi++)xref+=String(offsets[oi]).padStart(10,'0')+' 00000 n \n';
+  pdf+=xref;
+  pdf+='trailer\n<< /Size '+offsets.length+' /Root 1 0 R >>\nstartxref\n'+xrefStart+'\n%%EOF';
+  return pdf;
+}
+
+function saveMembersPDF(){
+  if(!db.members.length){alert('No members recorded yet — add members first.');return}
+  try{
+    var pdf=buildMembersPDF();
+    var blob=new Blob([pdf],{type:'application/pdf'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='JCRGM-Member-Register-'+today()+'.pdf';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(a.href)},800);
+  }catch(err){alert('Could not generate the PDF: '+err.message)}
+}
+
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33b8fa2debe692c',t:'MTc4ODE3NDMzNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
