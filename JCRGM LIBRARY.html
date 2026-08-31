@@ -430,9 +430,8 @@ function renderBooks(books){
       <div class="p-4 flex-1 flex flex-col">
         <h3 class="serif text-lg leading-tight mb-1 text-[#1a1410]">${escapeHtml(b.name)}</h3>
         <p class="text-xs text-[#1a1410]/50 mb-4">PDF ${b.size ? '· ' + formatSize(b.size) : ''}</p>
-        <div class="mt-auto flex gap-2">
-          <a href="${b.download}" download class="btn-primary flex-1 text-center py-2 rounded-sm text-xs tracking-wide font-medium">Download</a>
-          <a href="${b.view}" target="_blank" rel="noopener" class="border border-[#b08d3f] text-[#5b1a1a] hover:bg-[#b08d3f]/10 py-2 px-3 rounded-sm text-xs tracking-wide font-medium">View</a>
+        <div class="mt-auto">
+          <a href="${b.download}" download class="btn-primary block w-full text-center py-2.5 rounded-sm text-xs tracking-[0.2em] uppercase font-medium">Download PDF</a>
         </div>
       </div>
     `;
