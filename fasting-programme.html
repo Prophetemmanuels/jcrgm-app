@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fasting &amp; Prayer Programme — 3 · 7 · 21 · 31 · 40 Days</title>
+<style>
+  :root{
+    --bg0:#090d22; --bg1:#0e1330; --bg2:#141a3d; --bg3:#1b2352; --bg4:#232c63;
+    --gold:#e6c15a; --gold2:#f4d98c; --amber:#ffb84d; --amber-soft:rgba(230,193,90,.14);
+    --ink:#f4eedd; --muted:#a6aed2; --dim:#7f88b3;
+    --line:rgba(230,193,90,.16); --line2:rgba(230,193,90,.32);
+    --red:#ff7b6b; --green:#8ce99a; --purple:#b39ddb; --teal:#7fd8d8;
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --shadow:0 18px 50px rgba(0,0,0,.45);
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(1100px 600px at 85% -10%, rgba(230,193,90,.10), transparent 60%),
+      radial-gradient(900px 500px at -10% 20%, rgba(123,104,238,.12), transparent 60%),
+      linear-gradient(180deg, var(--bg0), var(--bg1) 40%, var(--bg0));
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.6;
+    min-height:100vh;
+  }
+  ::selection{background:rgba(230,193,90,.35)}
+  a{color:var(--gold2)}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+
+  /* ============ HERO ============ */
+  header.hero{
+    position:relative;overflow:hidden;text-align:center;
+    padding:88px 20px 60px;
+    background:
+      radial-gradient(900px 420px at 50% -60px, rgba(230,193,90,.22), transparent 65%),
+      linear-gradient(180deg, rgba(9,13,34,.2), rgba(9,13,34,.92) 82%),
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><circle cx="60" cy="60" r="58" fill="none" stroke="rgba(230,193,90,0.05)" stroke-width="1"/><circle cx="60" cy="60" r="42" fill="none" stroke="rgba(230,193,90,0.04)" stroke-width="1"/></svg>');
+  }
+  .hero .ornament{font-size:30px;letter-spacing:14px;opacity:.85;margin-bottom:6px}
+  .hero h1{
+    font-family:var(--serif);font-weight:700;font-size:clamp(2.1rem,5.5vw,3.6rem);
+    letter-spacing:.06em;text-transform:uppercase;
+    background:linear-gradient(115deg,#fff8e1 0%, var(--gold) 45%, var(--amber) 80%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 60px rgba(230,193,90,.25);
+  }
+  .hero .sub{color:var(--muted);max-width:720px;margin:14px auto 0;font-size:1.06rem}
+  .hero .banner{
+    margin:26px auto 0;max-width:640px;padding:14px 22px;border-radius:12px;
+    border:1px solid var(--line2);background:var(--amber-soft);
+    font-family:var(--serif);font-style:italic;font-size:1.12rem;color:var(--gold2);
+  }
+  .hero .declare{
+    margin-top:18px;font-size:.98rem;color:var(--muted);letter-spacing:.04em;
+  }
+  .hero .declare b{color:var(--gold)}
+  .chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:30px}
+  .chip{
+    text-decoration:none;color:var(--ink);padding:11px 20px;border-radius:999px;
+    border:1px solid var(--line2);background:rgba(20,26,61,.72);font-weight:600;font-size:.95rem;
+    display:inline-flex;align-items:center;gap:9px;transition:.25s;
+  }
+  .chip .n{color:var(--gold);font-family:var(--serif);font-size:1.15rem}
+  .chip:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 10px 26px rgba(230,193,90,.18)}
+  .scroll-hint{margin-top:34px;color:var(--dim);font-size:.85rem;letter-spacing:.2em}
+
+  /* ============ NAV ============ */
+  nav.stick{
+    position:sticky;top:0;z-index:60;
+    background:rgba(9,13,34,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  nav.stick .wrap{display:flex;align-items:center;gap:4px;overflow-x:auto;padding:0 22px}
+  nav.stick a{
+    color:var(--muted);text-decoration:none;font-size:.86rem;font-weight:600;
+    padding:13px 11px;white-space:nowrap;letter-spacing:.02em;transition:.2s;flex-shrink:0;
+  }
+  nav.stick a:hover{color:var(--gold)}
+  nav.stick a .k{color:var(--gold);margin-right:3px}
+  nav.stick .brand{margin-right:auto;font-family:var(--serif);color:var(--gold2);font-weight:700;letter-spacing:.04em;font-size:.92rem}
+  nav.stick .brand small{display:block;font-family:var(--sans);color:var(--dim);font-size:.62rem;letter-spacing:.3em;font-weight:600}
+
+  /* ============ SECTIONS ============ */
+  section{padding:64px 0 10px}
+  .sec-head{text-align:center;margin-bottom:40px}
+  .sec-head .kicker{
+    color:var(--amber);letter-spacing:.32em;font-size:.74rem;font-weight:700;text-transform:uppercase;
+  }
+  .sec-head h2{
+    font-family:var(--serif);font-size:clamp(1.7rem,3.6vw,2.5rem);margin-top:8px;
+    background:linear-gradient(115deg,#fff8e1, var(--gold));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .sec-head p{color:var(--muted);max-width:680px;margin:10px auto 0;font-size:.98rem}
+
+  /* ============ DAILY SPIRITUAL CLOCK ============ */
+  .clock-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+  .clock-card{
+    background:linear-gradient(160deg, var(--bg2), var(--bg1));
+    border:1px solid var(--line);border-radius:var(--radius);padding:22px 22px 20px;
+    position:relative;overflow:hidden;transition:.25s;
+  }
+  .clock-card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+    background:linear-gradient(180deg, var(--gold), var(--amber));
+  }
+  .clock-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .clock-card .time{
+    font-family:var(--serif);font-weight:700;font-size:1.5rem;color:var(--gold);
+    letter-spacing:.02em;
+  }
+  .clock-card .time .tag{display:block;font-family:var(--sans);font-size:.72rem;letter-spacing:.22em;color:var(--amber);text-transform:uppercase;font-weight:700;margin-top:2px}
+  .clock-card h3{margin-top:10px;font-family:var(--serif);font-size:1.18rem;color:var(--ink)}
+  .clock-card p{color:var(--muted);font-size:.9rem;margin-top:8px}
+  .clock-card .ref{
+    display:inline-block;margin-top:12px;font-size:.84rem;color:var(--gold2);
+    text-decoration:none;border:1px solid var(--line2);border-radius:999px;padding:4px 13px;transition:.2s;
+  }
+  .clock-card .ref:hover{background:var(--amber-soft);transform:translateY(-1px)}
+
+  /* ============ HOW TO FAST ============ */
+  .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px}
+  .how-card{
+    background:linear-gradient(160deg, var(--bg2), var(--bg1));
+    border:1px solid var(--line);border-radius:var(--radius);padding:24px;
+  }
+  .how-card h3{font-family:var(--serif);color:var(--gold2);font-size:1.14rem;display:flex;gap:10px;align-items:center}
+  .how-card ul{list-style:none;margin-top:12px}
+  .how-card li{color:var(--muted);font-size:.9rem;padding:7px 0 7px 24px;position:relative;border-bottom:1px dashed rgba(230,193,90,.10)}
+  .how-card li:last-child{border-bottom:none}
+  .how-card li::before{content:"✦";position:absolute;left:0;color:var(--gold);font-size:.8rem}
+  .how-card li b{color:var(--ink)}
+  .how-card.warn{border-color:rgba(255,123,107,.4)}
+  .how-card.warn h3{color:var(--red)}
+  .how-card.warn li::before{content:"⚠";color:var(--red)}
+
+  /* ============ PLANS / TABS ============ */
+  #plans{padding-top:40px}
+  .tabs{
+    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:34px;
+  }
+  .tab{
+    border:1px solid var(--line2);background:rgba(20,26,61,.7);color:var(--muted);
+    padding:12px 22px;border-radius:999px;cursor:pointer;font-weight:700;font-size:.92rem;
+    font-family:var(--sans);transition:.22s;letter-spacing:.02em;
+  }
+  .tab .big{color:var(--gold);font-family:var(--serif);font-size:1.1rem;margin-right:6px}
+  .tab:hover{color:var(--ink);border-color:var(--gold);transform:translateY(-2px)}
+  .tab.active{
+    background:linear-gradient(120deg, var(--gold), var(--amber));
+    color:#221a05;border-color:transparent;box-shadow:0 10px 30px rgba(230,193,90,.28);
+  }
+  .tab.active .big{color:#221a05}
+
+  .plan-panel{display:none;animation:fade .4s ease}
+  .plan-panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  .plan-hero{
+    background:
+      radial-gradient(700px 300px at 100% 0%, rgba(230,193,90,.12), transparent 60%),
+      linear-gradient(160deg, var(--bg2), var(--bg1));
+    border:1px solid var(--line);border-radius:20px;padding:34px 34px 30px;margin-bottom:30px;
+    position:relative;overflow:hidden;
+  }
+  .plan-hero .rib{
+    display:inline-flex;align-items:center;gap:8px;color:var(--amber);letter-spacing:.3em;
+    font-size:.72rem;font-weight:700;text-transform:uppercase;
+  }
+  .plan-hero h2{
+    font-family:var(--serif);font-size:clamp(1.7rem,3.4vw,2.4rem);margin:10px 0 4px;color:var(--ink);
+  }
+  .plan-hero .tagline{color:var(--gold2);font-family:var(--serif);font-style:italic;font-size:1.1rem}
+  .plan-hero p.desc{color:var(--muted);margin-top:14px;max-width:820px;font-size:.97rem}
+  .plan-meta{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+  .plan-meta .pm{
+    background:rgba(9,13,34,.55);border:1px solid var(--line);border-radius:10px;
+    padding:10px 16px;font-size:.82rem;color:var(--muted);
+  }
+  .plan-meta .pm b{display:block;color:var(--gold);font-size:.9rem;font-family:var(--serif);letter-spacing:.03em}
+  .plan-hero .found{
+    margin-top:20px;padding:14px 18px;border-left:3px solid var(--gold);
+    background:var(--amber-soft);border-radius:0 10px 10px 0;
+  }
+  .plan-hero .found .lbl{font-size:.7rem;letter-spacing:.28em;color:var(--amber);font-weight:700;text-transform:uppercase}
+  .plan-hero .found blockquote{font-family:var(--serif);font-style:italic;color:var(--gold2);margin-top:6px;font-size:1.02rem}
+  .plan-hero .found a{font-size:.85rem;text-decoration:none;border-bottom:1px dotted var(--gold);margin-left:8px}
+
+  .plan-toolbar{
+    display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;
+    background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:30px;
+  }
+  .progress-wrap{flex:1 1 260px;min-width:220px}
+  .progress-label{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:7px;letter-spacing:.03em}
+  .progress-label b{color:var(--gold)}
+  .bar{height:10px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;border:1px solid var(--line)}
+  .bar i{
+    display:block;height:100%;width:0%;border-radius:999px;
+    background:linear-gradient(90deg, var(--gold), var(--amber));
+    transition:width .5s ease;box-shadow:0 0 14px rgba(230,193,90,.5);
+  }
+  .toolbar-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{
+    border:1px solid var(--line2);background:transparent;color:var(--ink);cursor:pointer;
+    padding:9px 16px;border-radius:999px;font-weight:600;font-size:.84rem;font-family:var(--sans);
+    transition:.2s;
+  }
+  .btn:hover{border-color:var(--gold);color:var(--gold)}
+  .btn.gold{background:linear-gradient(120deg, var(--gold), var(--amber));border-color:transparent;color:#221a05}
+  .btn.gold:hover{color:#221a05;filter:brightness(1.06)}
+
+  /* ============ WEEK BLOCKS & DAY CARDS ============ */
+  .week{margin-bottom:38px}
+  .week-head{
+    display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;
+    border-bottom:2px solid var(--line2);padding-bottom:10px;margin-bottom:20px;
+  }
+  .week-head .wl{
+    font-family:var(--serif);font-weight:700;color:#221a05;
+    background:linear-gradient(120deg, var(--gold), var(--amber));
+    padding:5px 16px;border-radius:999px;font-size:.82rem;letter-spacing:.12em;
+  }
+  .week-head .wt{font-family:var(--serif);font-size:1.3rem;color:var(--ink)}
+  .week-head .wd{margin-left:auto;color:var(--dim);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+  .day-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(305px,1fr));gap:18px}
+
+  .day-card{
+    position:relative;background:linear-gradient(165deg, var(--bg3), var(--bg2));
+    border:1px solid var(--line);border-radius:var(--radius);padding:22px 20px 20px;
+    display:flex;flex-direction:column;gap:0;transition:.25s;overflow:hidden;
+  }
+  .day-card:hover{transform:translateY(-5px);border-color:var(--line2);box-shadow:var(--shadow)}
+  .day-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .day-num{
+    font-family:var(--serif);font-weight:700;font-size:1.9rem;color:transparent;line-height:1;
+    background:linear-gradient(120deg, var(--gold2), var(--gold));
+    -webkit-background-clip:text;background-clip:text;
+  }
+  .day-num small{font-size:.78rem;color:var(--dim);font-family:var(--sans);letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+  .check{display:inline-flex;align-items:center;gap:7px;font-size:.74rem;color:var(--dim);font-weight:600;cursor:pointer;user-select:none}
+  .check input{width:17px;height:17px;accent-color:#e6b34f;cursor:pointer}
+  .day-card.done .check{color:var(--green)}
+  .day-theme{font-family:var(--serif);font-size:1.22rem;color:var(--ink);margin:4px 0 2px}
+  .day-ref a{
+    font-size:.82rem;color:var(--gold2);text-decoration:none;font-weight:600;
+    border-bottom:1px dotted var(--gold);
+  }
+  .day-ref a:hover{color:#fff}
+  .day-text{
+    font-family:var(--serif);font-style:italic;color:var(--muted);font-size:.9rem;
+    border-left:2px solid rgba(230,193,90,.35);padding-left:12px;margin-top:12px;
+  }
+  .day-target{
+    margin-top:14px;padding:12px 14px;border-radius:10px;
+    background:linear-gradient(135deg, rgba(230,193,90,.16), rgba(255,184,77,.07));
+    border:1px solid rgba(230,193,90,.38);
+    font-size:.88rem;color:var(--ink);
+  }
+  .day-target .tl{
+    display:block;font-size:.68rem;letter-spacing:.22em;color:var(--amber);
+    font-weight:800;text-transform:uppercase;margin-bottom:4px;
+  }
+  .day-tag{
+    position:absolute;top:14px;right:-34px;transform:rotate(40deg);
+    background:linear-gradient(120deg, var(--gold), var(--amber));color:#221a05;
+    font-size:.64rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+    padding:4px 42px;box-shadow:0 4px 12px rgba(0,0,0,.35);
+  }
+  .day-card.finish{outline:2px solid var(--gold);outline-offset:-2px}
+
+  .celebration{
+    display:none;text-align:center;padding:26px;margin-bottom:30px;border-radius:var(--radius);
+    background:linear-gradient(135deg, rgba(140,233,154,.12), rgba(230,193,90,.1));
+    border:1px solid rgba(140,233,154,.4);
+  }
+  .celebration.show{display:block;animation:fade .5s}
+  .celebration h3{font-family:var(--serif);color:var(--green);font-size:1.5rem}
+  .celebration p{color:var(--muted);margin-top:6px}
+
+  /* ============ PRAYER TARGETS ============ */
+  .targets-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .target-item{
+    display:flex;gap:12px;align-items:flex-start;padding:15px 16px;
+    background:var(--bg2);border:1px solid var(--line);border-radius:12px;cursor:pointer;transition:.2s;
+  }
+  .target-item:hover{border-color:var(--line2);transform:translateY(-2px)}
+  .target-item input{width:18px;height:18px;accent-color:#e6b34f;margin-top:4px;flex-shrink:0}
+  .target-item .tt{font-size:.92rem;color:var(--ink);font-weight:600}
+  .target-item .ts{display:block;font-size:.78rem;color:var(--dim);margin-top:2px}
+  .target-item.checked .tt{color:var(--dim);text-decoration:line-through}
+
+  /* ============ SCRIPTURE LIBRARY ============ */
+  .lib-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px}
+  .lib-card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .lib-card h3{
+    font-family:var(--serif);color:var(--gold2);font-size:1.05rem;letter-spacing:.03em;
+    display:flex;gap:9px;align-items:center;margin-bottom:10px;
+  }
+  .lib-card ul{list-style:none}
+  .lib-card li{padding:6px 0;border-bottom:1px dashed rgba(230,193,90,.12)}
+  .lib-card li:last-child{border-bottom:none}
+  .lib-card a{
+    color:var(--muted);text-decoration:none;font-size:.9rem;transition:.15s;display:flex;justify-content:space-between;gap:8px;
+  }
+  .lib-card a:hover{color:var(--gold)}
+  .lib-card a .v{color:var(--gold);font-weight:700;font-family:var(--serif);white-space:nowrap}
+
+  /* ============ VERSION STRIP ============ */
+  .version-strip{
+    display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;
+    margin:0 auto 34px;padding:12px 18px;border:1px dashed var(--line2);border-radius:12px;
+    background:rgba(20,26,61,.5);max-width:640px;font-size:.86rem;color:var(--muted);
+  }
+  .version-strip select{
+    background:var(--bg3);color:var(--gold2);border:1px solid var(--line2);border-radius:8px;
+    padding:7px 12px;font-weight:700;font-family:var(--sans);cursor:pointer;
+  }
+
+  /* ============ FOOTER ============ */
+  footer{margin-top:80px;padding:44px 0 60px;border-top:1px solid var(--line);text-align:center}
+  footer .verse{font-family:var(--serif);font-style:italic;color:var(--gold2);font-size:1.12rem;max-width:640px;margin:0 auto 18px}
+  footer .small{color:var(--dim);font-size:.82rem;letter-spacing:.05em}
+  footer .small a{color:var(--dim);text-decoration:none;border-bottom:1px dotted var(--dim)}
+
+  /* ============ RESPONSIVE ============ */
+  @media(max-width:640px){
+    .plan-hero{padding:26px 20px}
+    section{padding:46px 0 8px}
+    .week-head .wd{width:100%;margin-left:0}
+  }
+
+  /* ============ PRINT ============ */
+  @media print{
+    body{background:#fff;color:#111}
+    .no-print,.scroll-hint,.tabs,.plan-toolbar,.day-tag,.check,.chips,.version-strip{display:none !important}
+    nav.stick{position:static;background:#fff}
+    nav.stick a,nav.stick .brand{color:#111}
+    .plan-panel{display:block !important;page-break-before:always}
+    .day-card,.plan-hero,.clock-card,.how-card,.target-item,.lib-card{
+      background:#fff !important;border:1px solid #bbb !important;color:#111;
+    }
+    .day-num,.plan-meta .pm b,.day-theme,.sec-head h2,.hero h1{color:#111 !important;-webkit-text-fill-color:#111;background:none}
+    .day-text,.day-target,.clock-card p,.how-card li,.target-item .tt{color:#333}
+    .day-ref a,.clock-card .ref,.lib-card a{color:#555}
+    .day-target{border-color:#c9a34a;background:#faf5e8}
+    .bar{border:1px solid #bbb;background:#eee}
+    .bar i{background:#c9a34a}
+    a{text-decoration:none}
+    a[href^="http"]::after{content:" (" attr(href) ")";font-size:.7em;color:#888;word-break:break-all}
+    .day-card{page-break-inside:avoid}
+    .week{margin-bottom:20px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="wrap">
+    <div class="ornament">✦ ✦ ✦</div>
+    <h1>Fasting &amp; Prayer Programme</h1>
+    <p class="sub">A Spirit-ordained journey of consecration, intercession, the Word and breakthrough —
+      <em>3 · 7 · 21 · 31 · 40 days</em> — built around your daily spiritual clock.</p>
+    <div class="banner">“Sanctify a fast, call a solemn assembly… turn ye even to me with all your heart, and with fasting, and with weeping, and with mourning.” — <b>Joel 2:12–15</b></div>
+    <p class="declare">I DECLARE: <b>“I have set my face to seek the Lord with fasting, prayer and the Word — and I will not let go until my answer comes.”</b></p>
+    <div class="chips no-print">
+      <a class="chip" href="#plans" onclick="showPlan(0)"><span class="n">3</span> Days · The Esther Fast</a>
+      <a class="chip" href="#plans" onclick="showPlan(1)"><span class="n">7</span> Days · The Jericho Fast</a>
+      <a class="chip" href="#plans" onclick="showPlan(2)"><span class="n">21</span> Days · The Daniel Fast</a>
+      <a class="chip" href="#plans" onclick="showPlan(3)"><span class="n">31</span> Days · Spiritual Progression</a>
+      <a class="chip" href="#plans" onclick="showPlan(4)"><span class="n">40</span> Days · The Mountain of God</a>
+    </div>
+    <div class="scroll-hint no-print">▼ SCROLL TO BEGIN THE JOURNEY ▼</div>
+  </div>
+</header>
+
+<!-- ================= NAV ================= -->
+<nav class="stick no-print">
+  <div class="wrap">
+    <span class="brand">Fasting &amp; Prayer<small>PROGRAMME</small></span>
+    <a href="#clock"><span class="k">◷</span> The Daily Clock</a>
+    <a href="#howto"><span class="k">◆</span> How to Fast</a>
+    <a href="#plans" onclick="showPlan(0)"><span class="k">3</span> Esther</a>
+    <a href="#plans" onclick="showPlan(1)"><span class="k">7</span> Jericho</a>
+    <a href="#plans" onclick="showPlan(2)"><span class="k">21</span> Daniel</a>
+    <a href="#plans" onclick="showPlan(3)"><span class="k">31</span> Progression</a>
+    <a href="#plans" onclick="showPlan(4)"><span class="k">40</span> Mountain</a>
+    <a href="#targets"><span class="k">🎯</span> Prayer Targets</a>
+    <a href="#scriptures"><span class="k">✞</span> Scriptures</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ================= DAILY SPIRITUAL CLOCK ================= -->
+  <section id="clock">
+    <div class="sec-head">
+      <div class="kicker">The Foundation of Every Fast</div>
+      <h2>Your Daily Spiritual Clock</h2>
+      <p>This is the heartbeat of the entire programme. Fasting is far more than food —
+        it is a <b>full day of spiritual appointments</b>. Every plan below runs on this rhythm.</p>
+    </div>
+    <div class="clock-grid" id="clockGrid"></div>
+  </section>
+
+  <!-- ================= HOW TO FAST ================= -->
+  <section id="howto">
+    <div class="sec-head">
+      <div class="kicker">Preparation</div>
+      <h2>How to Fast</h2>
+      <p>Choose your fast wisely, walk in grace, and guard your heart — a fast without prayer and the Word is only a diet.</p>
+    </div>
+    <div class="how-grid" id="howGrid"></div>
+  </section>
+
+  <!-- ================= PLANS ================= -->
+  <section id="plans">
+    <div class="sec-head">
+      <div class="kicker">The Programme</div>
+      <h2>Choose Your Season of Fasting</h2>
+      <p>Select the length the Lord is leading you into. Every day carries its own <b>Prayer Target</b> to acknowledge and declare.</p>
+    </div>
+
+    <div class="tabs no-print" id="tabs"></div>
+
+    <div class="version-strip no-print">
+      <span>📖 Every scripture opens in:</span>
+      <select id="versionSel">
+        <option value="KJV" selected>King James Version (KJV)</option>
+        <option value="NKJV">New King James (NKJV)</option>
+        <option value="NIV">New International Version (NIV)</option>
+        <option value="ESV">English Standard Version (ESV)</option>
+      </select>
+      <span>— click any reference to read it online.</span>
+    </div>
+
+    <div id="planPanels"></div>
+  </section>
+
+  <!-- ================= PRAYER TARGETS ================= -->
+  <section id="targets">
+    <div class="sec-head">
+      <div class="kicker">Acknowledge &amp; Declare</div>
+      <h2>Master Prayer Targets</h2>
+      <p>These are the altar of the whole programme. Acknowledge each one daily — tick them as you intercede, and declare them at the corporate prayer hour (21:00).</p>
+    </div>
+    <div class="targets-grid" id="targetsGrid"></div>
+  </section>
+
+  <!-- ================= SCRIPTURES ================= -->
+  <section id="scriptures">
+    <div class="sec-head">
+      <div class="kicker">The Word</div>
+      <h2>Scripture Library</h2>
+      <p>All the key passages behind this programme — meditate on them, memorize them, and let them become your weapons.</p>
+    </div>
+    <div class="lib-grid" id="libGrid"></div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <p class="verse">“But thou, when thou fastest, anoint thine head, and wash thy face; that thou appear not unto men to fast, but unto thy Father which is in secret: and thy Father, which seeth in secret, shall reward thee openly.” — <b>Matthew 6:17–18</b></p>
+    <p class="small">May your fast be fruitful and your fire never go out. Seek first His Kingdom. &nbsp;·&nbsp; Build your programme on the Word — every reference links to <a href="https://www.biblegateway.com" target="_blank" rel="noopener">BibleGateway</a>.</p>
+  </footer>
+</main>
+
+<noscript><p style="text-align:center;padding:40px;color:#fff">Please enable JavaScript to view the full fasting programme.</p></noscript>
+
+<script>
+/* ============================================================
+   FASTING & PRAYER PROGRAMME — data + rendering
+   ============================================================ */
+var VERSION = 'KJV';
+var CURRENT = 0;
+var SAVED = {};
+
+function bglink(ref){
+  return 'https://www.biblegateway.com/passage/?search=' + encodeURIComponent(ref) + '&version=' + VERSION;
+}
+
+/* ---------- DAILY SPIRITUAL CLOCK ---------- */
+var CLOCK = [
+  {time:'03:00', tag:'Night Watch', title:'Personal Encounter with God', ref:'Psalm 63:1', text:'“O God, thou art my God; early will I seek thee…” Rise before the day begins. Praise, worship, the Word, and silence before His throne. This is the anchor of your whole day.'},
+  {time:'12:00', tag:'Noon', title:'Midday Alignment', ref:'Psalm 55:17', text:'“Evening, and morning, and at noon, will I pray…” Re-align your spirit — short prayers of thanksgiving, surrender and focus as the pressures of the day rise.'},
+  {time:'15:00', tag:'The Ninth Hour', title:'Intercession &amp; the Watch', ref:'Acts 3:1', text:'Peter and John went up to the temple at the ninth hour. Take your watch position — intercede for the church, the nation, and every request on your list.'},
+  {time:'17:00', tag:'The Meal', title:'Daniel Meal', ref:'Daniel 1:12', text:'“Pulse to eat, and water to drink.” This is when you break the daily fast — one simple, set-apart meal, taken with thanksgiving and moderation.'},
+  {time:'19:00', tag:'Training', title:'Training &amp; Scripture', ref:'Joshua 1:8', text:'Meditate on the day’s scripture day and night. Study, memorise, journal what the Lord has said, and let the Word train your spirit.'},
+  {time:'21:00–22:30', tag:'United Prayer', title:'Corporate Church Prayer', ref:'Acts 16:25', text:'Paul and Silas prayed at midnight — chains fell off. Gather with the body (online or in person) in one accord; a united shout moves mountains.'}
+];
+
+/* ---------- HOW TO FAST ---------- */
+var HOW = [
+  {title:'🍽️ Types of Fasts', items:[
+    '<b>Complete fast</b> — water only (best for 1–3 days; with medical care beyond that).',
+    '<b>Daniel fast</b> — vegetables, fruits, water; no meat, sweets, wine or delicacies (Daniel 1:12; 10:3).',
+    '<b>Partial fast</b> — one simple meal a day (e.g. the 17:00 Daniel Meal).',
+    '<b>Media / sugar fast</b> — a food alternative for those who cannot fast food.',
+    '<b>Prayer-and-Word fast</b> — the food is secondary; every plan here is this kind of fast.'
+  ]},
+  {title:'🕯️ Daily Rhythm (All Plans)', items:[
+    '<b>03:00</b> — Personal encounter: praise, Word, silence.',
+    '<b>12:00</b> — Midday alignment: thanks &amp; surrender.',
+    '<b>15:00</b> — Intercession &amp; the watch (ninth hour).',
+    '<b>17:00</b> — Daniel meal: break the fast with thanks.',
+    '<b>19:00</b> — Training: scripture study &amp; journal.',
+    '<b>21:00–22:30</b> — Corporate church prayer.'
+  ]},
+  {title:'📖 Practical Guidelines', items:[
+    '<b>Start small</b> — if 40 days is too much, begin with 3 and build.',
+    '<b>Drink water steadily</b> through the day; break meals gently.',
+    '<b>Confess and forgive first</b> — bitterness blocks breakthrough (Matthew 6:14–15).',
+    '<b>Keep a journal</b> — write the Word, your prayers and what you hear.',
+    '<b>Fast in community</b> — accountability multiplies strength.',
+    '<b>Grace, not guilt</b> — if you stumble, continue; the Father sees in secret.'
+  ]},
+  {title:'🛡️ Health &amp; Safety', items:[
+    '<b>Consult your doctor</b> before any extended fast, especially if you are on medication, pregnant, nursing, diabetic or under 18.',
+    '<b>Long fasts (21+)</b> should generally be Daniel or partial fasts — not water-only.',
+    '<b>Physical weakness is normal</b> in the first days; rest and reduce heavy activity.',
+    '<b>If a medical condition forbids food-fasting</b>, fast media, sugar or comfort instead — God honours the heart, not the stomach.',
+    '<b>Break extended fasts gradually</b> — light soups and fruits before heavy meals.'
+  ]}
+];
+
+/* ---------- THE FIVE PLANS ---------- */
+var PLANS = [
+/* ================= 3-DAY — ESTHER ================= */
+{ key:'p3', tab:'3-Day Fast', name:'The Esther Fast', icon:'👑', daysNum:3,
+  tagline:'Seeking Divine Favour', fastType:'Complete or partial fast (as you are led)',
+  foundation:{ref:'Esther 4:16', text:'“Go, gather together all the Jews… and fast ye for me, and neither eat nor drink three days, night or day: I also and my maidens will fast likewise; and so will I go in unto the king… and if I perish, I perish.”'},
+  desc:'A short, intense season for urgent needs — a fast of bold faith and divine favour. Queen Esther faced death to save her people, and three days of fasting turned an entire nation’s fate. Use it when you need favour, doors to open, and swift, decisive breakthrough.',
+  weeks:[{label:'The Three Days', title:'Consecration → Favour → Victory', from:1, to:3}],
+  days:[
+    {t:'Consecration & Preparation', r:'Esther 4:16', q:'“…fast ye for me, and neither eat nor drink three days, night or day…”', g:'Set yourself apart. Consecrate your body, mind and spirit for the days ahead, and lay your specific request before the Lord — just as Esther did.', tag:'Opening Day'},
+    {t:'Favour & Open Doors', r:'Esther 5:2', q:'“…she obtained favour in his sight: and the king held out to her the golden sceptre.”', g:'Pray for divine favour before God and man — favour that opens doors no power can shut, and grants you access to the king’s heart.'},
+    {t:'Victory & Deliverance', r:'Esther 9:22', q:'“…the month which was turned unto them from sorrow to joy, and from mourning into a good day.”', g:'Declare your victory! Decree that sorrow is turned to joy, mourning into dancing, and every plot of the enemy is completely reversed.', tag:'Victory Day'}
+  ]},
+
+/* ================= 7-DAY — JERICHO ================= */
+{ key:'p7', tab:'7-Day Fast', name:'The Jericho Fast', icon:'🏰', daysNum:7,
+  tagline:'Walls Come Down', fastType:'Daniel fast / partial fast',
+  foundation:{ref:'Joshua 6:1–5,20', text:'“Now Jericho was straitly shut up because of the children of Israel… And the LORD said unto Joshua, See, I have given into thine hand Jericho… and the wall of the city shall fall down flat…”'},
+  desc:'Six days of silent, faithful marching — one circuit a day — then on the seventh day, seven circuits and a great shout. This fast is for every wall that has shut you in: stagnation, sickness, opposition, closed doors. Walls fall at the shout of faith.',
+  weeks:[{label:'One Week', title:'Six Days of Marching — Day Seven, the Shout', from:1, to:7}],
+  days:[
+    {t:'Silence & Surrender', r:'Joshua 6:1–3', q:'“Now Jericho was straitly shut up… and the LORD said unto Joshua, See, I have given into thine hand Jericho.”', g:'Enter the fast in holy silence. Name your Jericho walls — the obstacles in your life — and surrender them to God in stillness.', tag:'Opening Day'},
+    {t:'The March of Faith', r:'Joshua 6:4', q:'“And seven priests shall bear before the ark seven trumpets of rams’ horns… and ye shall compass the city.”', g:'Take the first step of obedience. March by faith, not by sight — even when nothing around you seems to change.'},
+    {t:'Word & Worship', r:'Joshua 6:5', q:'“…when they make a long blast with the ram’s horn… all the people shall shout with a great shout; and the wall of the city shall fall down flat.”', g:'Make worship your weapon. Let the shout of the King be heard in your home, your workplace and your heart today.'},
+    {t:'Deep Cleansing', r:'Joshua 6:6–7', q:'“And Joshua the son of Nun called the priests, and said unto them… And he said unto the people, Pass on, and compass the city.”', g:'Search your heart and sanctify your household. Remove every “accursed thing” — every sin and compromise — and cleanse your hands.'},
+    {t:'Shouting Faith', r:'Joshua 6:8–10', q:'“But Joshua had commanded the people, saying, Ye shall not shout… until the day I bid you shout.”', g:'Cultivate the faith that shouts BEFORE the wall falls. Your victory is already decreed in heaven — agree with it now.'},
+    {t:'Persistence', r:'Joshua 6:11–14', q:'“And the second day they compassed the city once… and returned into the camp: so they did six days.”', g:'Do not quit on the sixth day. Your breakthrough is one day closer — keep marching, keep praying, keep believing.'},
+    {t:'The Shout & Breakthrough', r:'Joshua 6:15–16,20', q:'“And it came to pass on the seventh day… and the people shouted with a great shout… and the wall fell down flat.”', g:'SHOUT YOUR BREAKTHROUGH! Praise loudly and corporately — declare every wall falling flat, every gate opening, today!', tag:'Breakthrough Day'}
+  ]},
+
+/* ================= 21-DAY — DANIEL ================= */
+{ key:'p21', tab:'21-Day Fast', name:'The Daniel Fast', icon:'📜', daysNum:21,
+  tagline:'Revelation & Breakthrough', fastType:'Daniel fast — vegetables, fruits & water',
+  foundation:{ref:'Daniel 10:2–3,12', text:'“In those days I Daniel was mourning three full weeks. I ate no pleasant bread, neither came flesh nor wine in my mouth… Then said he unto me, Fear not, Daniel: for from the first day… thy words were heard.”'},
+  desc:'Three full weeks — the pattern of Daniel, whose answer was delayed by spiritual warfare for exactly 21 days, yet was heard on day one. This fast is for revelation, deep cleansing, prolonged intercession and the breaking of stubborn, long-standing battles.',
+  weeks:[
+    {label:'Week 1', title:'Consecration & the Foundation', from:1, to:7},
+    {label:'Week 2', title:'The Wrestling Season', from:8, to:14},
+    {label:'Week 3', title:'Breakthrough & the Answer', from:15, to:21}
+  ],
+  days:[
+    {t:'A Purpose in Your Heart', r:'Daniel 1:8', q:'“But Daniel purposed in his heart that he would not defile himself with the portion of the king’s meat.”', g:'Make a firm, unshakable decision today — purpose in your heart to honour God with your body, time and appetite through these three weeks.', tag:'Opening Day'},
+    {t:'Set-Apart Purity', r:'Daniel 1:12', q:'“Prove thy servants, I beseech thee, ten days; and let them give us pulse to eat, and water to drink.”', g:'Ask God to prove His faithfulness through your purity — let your body be a living sacrifice, holy and acceptable.'},
+    {t:'Wisdom from Above', r:'Daniel 1:17', q:'“As for these four children, God gave them knowledge and skill in all learning and wisdom.”', g:'Pray for the spirit of wisdom and revelation — knowledge, skill and understanding for your assignment, studies and ministry.'},
+    {t:'Favour with Men', r:'Daniel 1:9', q:'“Now God had brought Daniel into favour and tender love with the prince of the eunuchs.”', g:'Intercede for divine favour — that God would position you before leaders, kings and decision-makers for His purposes.'},
+    {t:'Prayer & Supplication', r:'Daniel 9:3', q:'“And I set my face unto the Lord God, to seek by prayer and supplications, with fasting, and sackcloth, and ashes.”', g:'Set your face like flint. Begin serious, sustained intercession — let fasting accompany your supplications every day.'},
+    {t:'Confession & Repentance', r:'Daniel 9:4–5', q:'“And I prayed unto the LORD my God, and made my confession… We have sinned, and have committed iniquity.”', g:'Confess and repent — personally and corporately — and intercede for your family, church and nation with clean hands.'},
+    {t:'Persistence', r:'Daniel 10:2', q:'“In those days I Daniel was mourning three full weeks.”', g:'Commit to the FULL three weeks. Do not waver — persistence is what positions you for the revelation to come.', tag:'End of Week 1'},
+    {t:'The Wrestling Season', r:'Daniel 10:3', q:'“I ate no pleasant bread, neither came flesh nor wine in my mouth… till three whole weeks were fulfilled.”', g:'Expect spiritual resistance — the enemy fights hardest when your answer is near. Stand firm, stay set-apart.'},
+    {t:'Spiritual Strength', r:'Daniel 10:8–9', q:'“Therefore I was left alone… there remained no strength in me… Yet heard I the voice of his words.”', g:'When you feel weak and overwhelmed, press closer — your weakness is the doorway into His strength.'},
+    {t:'Hope Renewed', r:'Daniel 10:12', q:'“Then said he unto me, Fear not, Daniel: for from the first day that thou didst set thine heart… thy words were heard.”', g:'Rejoice! Your words were heard from DAY ONE. The answer is already on its way — keep believing, keep standing.'},
+    {t:'Angelic Ministry', r:'Daniel 10:13', q:'“But the prince of the kingdom of Persia withstood me one and twenty days: but, lo, Michael… came to help me.”', g:'Warfare is real — but help has been dispatched. Pray against every “prince of Persia” blocking your answer, and thank God for Michael’s aid.'},
+    {t:'Standing Firm', r:'Daniel 10:14–15', q:'“Now I am come to make thee understand what shall befall thy people… And when he had spoken such words… I set my face toward the ground.”', g:'Strengthen your resolve. You are standing in the gap for others — do not let pressure silence your faith.'},
+    {t:'Refreshing & Renewal', r:'Daniel 10:16–17', q:'“And, behold, one like the similitude of the sons of men touched my lips: then I opened my mouth…”', g:'Receive the supernatural touch today. Let God refresh, restore and strengthen your inner man for the final stretch.'},
+    {t:'Empowered for Battle', r:'Daniel 10:18', q:'“And there came again and touched me one like the appearance of a man, and he strengthened me.”', g:'Receive fresh strength — you are being empowered for the final days of this war. The best is yet ahead.', tag:'End of Week 2'},
+    {t:'Breakthrough Season', r:'Daniel 10:19', q:'“O man greatly beloved, fear not: peace be unto thee, be strong, yea, be strong.”', g:'Declare peace over your life. You are GREATLY BELOVED — your breakthrough season has arrived. Receive it.', tag:'Breakthrough Season'},
+    {t:'Fear Not', r:'Daniel 10:19', q:'“And when he had spoken unto me, I was strengthened, and said, Let my lord speak; for thou hast strengthened me.”', g:'Put off fear completely. Speak to God with boldness today — you have been strengthened for this very hour.'},
+    {t:'The Revealer of Mysteries', r:'Daniel 2:22', q:'“He revealeth the deep and secret things: he knoweth what is in the darkness, and the light dwelleth with him.”', g:'Ask for revelation — secrets, strategies and mysteries of your season to be revealed to you in dreams, visions and the Word.'},
+    {t:'Faithful in the Furnace', r:'Daniel 3:17–18', q:'“Our God whom we serve is able to deliver us… But if not… we will not serve thy gods, nor worship the golden image.”', g:'Stand boldly in the fire. Even if God does not deliver the way you expect, refuse to bow to pressure, fear or compromise.'},
+    {t:'Boldness in the Den', r:'Daniel 6:10', q:'“Now when Daniel knew that the writing was signed… he kneeled upon his knees three times a day, and prayed, and gave thanks.”', g:'Guard your prayer life under pressure. Keep your 03:00, 12:00 and 15:00 encounters — thanks and all — no matter what.'},
+    {t:'Shut the Mouths of Lions', r:'Daniel 6:22', q:'“My God hath sent his angel, and hath shut the lions’ mouths, that they have not hurt me.”', g:'Pray for angelic protection. Declare every lion of opposition silenced, every trap exposed, every accuser confounded.'},
+    {t:'The Answer Arrives', r:'Daniel 10:12–13, 12:13', q:'“…thy words were heard… But go thou thy way till the end be: for thou shalt rest, and stand in thy lot at the end of the days.”', g:'Receive your answer and your lot! The 21 days are fulfilled — stand in your inheritance, for the door is open.', tag:'ANSWER DAY'}
+  ]},
+
+/* ================= 31-DAY — SPIRITUAL PROGRESSION ================= */
+{ key:'p31', tab:'31-Day Fast', name:'Spiritual Progression', icon:'🔥', daysNum:31,
+  tagline:'One Month with God', fastType:'Daniel fast / partial fast, with the full daily prayer clock',
+  foundation:{ref:'Romans 12:1–2', text:'“I beseech you therefore, brethren, by the mercies of God, that ye present your bodies a living sacrifice, holy, acceptable unto God… and be not conformed to this world: but be ye transformed by the renewing of your mind.”'},
+  desc:'Your entire month follows one powerful pattern: 03:00 personal encounter → 12:00 midday alignment → 15:00 intercession → 17:00 Daniel meal → 19:00 training & scripture → 21:00–22:30 corporate church prayer. This combines personal prayer, Scripture, fasting, prophetic development and corporate prayer — the fast is not only about food, it is the transformation of your whole life.',
+  weeks:[
+    {label:'Week 1', title:'Consecration — Personal Encounter', from:1, to:7},
+    {label:'Week 2', title:'Cleansing & Deliverance', from:8, to:14},
+    {label:'Week 3', title:'Intercession & Spiritual Warfare', from:15, to:21},
+    {label:'Week 4', title:'Prophetic Development & Destiny', from:22, to:28},
+    {label:'Week 5', title:'Breakthrough & Celebration', from:29, to:31}
+  ],
+  days:[
+    {t:'Consecration', r:'Leviticus 20:7–8', q:'“Sanctify yourselves therefore, and be ye holy: for I am the LORD your God.”', g:'Consecrate your body, time and appetite — you are set apart for a month of encounter. Begin at 03:00 tomorrow with purpose.', tag:'Month Opening'},
+    {t:'Humility', r:'James 4:10', q:'“Humble yourselves in the sight of the Lord, and he shall lift you up.”', g:'Lay down pride and self-sufficiency. Posture your heart low so God can lift you high this month.'},
+    {t:'Repentance', r:'Acts 3:19', q:'“Repent ye therefore, and be converted, that your sins may be blotted out, when the times of refreshing shall come.”', g:'Turn fully — let seasons of refreshing come as you turn from every known sin. Make full confession at 15:00.'},
+    {t:'Cleansing', r:'Psalm 51:10', q:'“Create in me a clean heart, O God; and renew a right spirit within me.”', g:'Ask for deep internal cleansing — a pure heart and a steadfast spirit. Let the Word wash you at 19:00 training.'},
+    {t:'Renewing the Mind', r:'Romans 12:2', q:'“Be ye transformed by the renewing of your mind.”', g:'Renew your thinking with Scripture — let your mind be transformed this week, one verse at a time.'},
+    {t:'The Fear of the Lord', r:'Proverbs 9:10', q:'“The fear of the LORD is the beginning of wisdom: and the knowledge of the holy is understanding.”', g:'Cultivate holy reverence — wisdom and revelation flow from the fear of the Lord. Ask for it at midnight.'},
+    {t:'First Love', r:'Revelation 2:4–5', q:'“Nevertheless I have somewhat against thee, because thou hast left thy first love. Remember therefore from whence thou art fallen, and repent.”', g:'Return to your first love — rekindle the passion of your early walk with God. End Week 1 in wholehearted worship.', tag:'End of Week 1'},
+    {t:'Deliverance', r:'Isaiah 61:1', q:'“…he hath sent me to bind up the brokenhearted, to proclaim liberty to the captives, and the opening of the prison to them that are bound.”', g:'Proclaim liberty — pray for every chain, addiction, fear and bondage to break at the 15:00 watch today.', tag:'Deliverance Week'},
+    {t:'Forgiveness', r:'Matthew 6:14–15', q:'“For if ye forgive men their trespasses, your heavenly Father will also forgive you.”', g:'Release everyone who has hurt you — unforgiveness is a prison; forgiveness sets YOU free. Pray it at noon.'},
+    {t:'Inner Healing', r:'Psalm 147:3', q:'“He healeth the broken in heart, and bindeth up their wounds.”', g:'Surrender your wounds to the Healer — let God bind up every broken place within at the 03:00 encounter.'},
+    {t:'Breaking Bondage', r:'Galatians 5:1', q:'“Stand fast therefore in the liberty wherewith Christ hath made us free, and be not entangled again with the yoke of bondage.”', g:'Break every yoke — declare generational and habitual bondages shattered by the blood of Jesus.'},
+    {t:'Walking in the Spirit', r:'Galatians 5:16', q:'“Walk in the Spirit, and ye shall not fulfil the lust of the flesh.”', g:'Walk by the Spirit today — let the flesh be starved and the spirit be fed. This is the essence of fasting.'},
+    {t:'The Word', r:'Hebrews 4:12', q:'“For the word of God is quick, and powerful, and sharper than any twoedged sword.”', g:'Feed on the Word — let it divide, judge and re-shape your inner life during the 19:00 training hour.'},
+    {t:'Prayer Life', r:'1 Thessalonians 5:16–18', q:'“Pray without ceasing. In every thing give thanks.”', g:'Deepen your prayer life — keep the six daily appointments and add spontaneous, ceaseless prayer throughout the day.', tag:'End of Week 2'},
+    {t:'The Call to Intercession', r:'1 Timothy 2:1', q:'“I exhort therefore, that, first of all, supplications, prayers, intercessions, and giving of thanks, be made for all men.”', g:'Intercede for leaders, the lost, the church and the nation — you are a priest before God. Lead the 21:00 prayer.', tag:'Intercession Week'},
+    {t:'The Battle Belongs to the Lord', r:'2 Chronicles 20:15', q:'“…be not afraid nor dismayed… for the battle is not yours, but God’s.”', g:'Hand the fight to God — stand still, worship, and watch Him fight for you. Declare it at the 15:00 watch.'},
+    {t:'Spiritual Armour', r:'Ephesians 6:11–12', q:'“Put on the whole armour of God… for we wrestle not against flesh and blood, but against principalities, against powers.”', g:'Put on every piece of the armour today — you are wrestling with powers, not people. Dress at 03:00.'},
+    {t:'The Shield of Faith', r:'Ephesians 6:16', q:'“Above all, taking the shield of faith, wherewith ye shall be able to quench all the fiery darts of the wicked.”', g:'Raise your shield — quench every fiery dart of doubt, fear, sickness and accusation with faith in the Word.'},
+    {t:'The Sword of the Spirit', r:'Ephesians 6:17', q:'“And take the helmet of salvation, and the sword of the Spirit, which is the word of God.”', g:'Wield the Word — speak scriptures out loud today. The sword only works when it is in your mouth.'},
+    {t:'Perseverance', r:'Galatians 6:9', q:'“And let us not be weary in well doing: for in due season we shall reap, if we faint not.”', g:'Do not faint — your harvest is due. Keep sowing prayer, obedience and love through to the end.'},
+    {t:'The Watch', r:'Habakkuk 2:1', q:'“I will stand upon my watch, and set me upon the tower, and will watch to see what he will say unto me.”', g:'Take your watch position — at 15:00 and through the night, stand on the tower and listen for His voice.', tag:'End of Week 3'},
+    {t:'Hearing God’s Voice', r:'John 10:27', q:'“My sheep hear my voice, and I know them, and they follow me.”', g:'Tune your ears — expect God to speak today. Write down in your journal everything you hear at 03:00.', tag:'Prophetic Week'},
+    {t:'The Prophetic Voice', r:'1 Corinthians 14:3', q:'“But he that prophesieth speaketh unto men to edification, and exhortation, and comfort.”', g:'Ask to speak words that build — edify, exhort and comfort those around you today. Let your mouth be an altar.'},
+    {t:'Vision & Revelation', r:'Proverbs 29:18', q:'“Where there is no vision, the people perish.”', g:'Ask for vision — see your life, family and church as God sees them. Write the vision at the 19:00 training hour.'},
+    {t:'Purpose & Destiny', r:'Jeremiah 29:11', q:'“For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.”', g:'Pray into your destiny — declare God’s good plans for your future unfolding now, month by month.'},
+    {t:'Divine Guidance', r:'Psalm 32:8', q:'“I will instruct thee and teach thee in the way which thou shalt go: I will guide thee with mine eye.”', g:'Ask for direction — commit every decision of this season to His instruction. Follow the cloud by day and fire by night.'},
+    {t:'Open Doors', r:'Revelation 3:8', q:'“Behold, I have set before thee an open door, and no man can shut it.”', g:'Declare open doors — doors of opportunity, favour, ministry and provision that NO man can shut.', tag:'End of Week 4'},
+    {t:'Gifts of the Spirit', r:'1 Corinthians 12:7–11', q:'“But the manifestation of the Spirit is given to every man to profit withal.”', g:'Earnestly desire spiritual gifts — ask for your place in the Body and the assignment you were created for.'},
+    {t:'The Fruit of the Spirit', r:'Galatians 5:22–23', q:'“But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith, meekness, temperance.”', g:'Pray in the fruit — that love, joy and peace would be visibly evident in your life to everyone you meet.'},
+    {t:'Breakthrough', r:'Micah 2:13', q:'“The breaker is come up before them: they have broken up, and have passed through the gate, and are gone out by it.”', g:'The Breaker has gone before you — pass through every closed gate and possess your ground!', tag:'Breakthrough'},
+    {t:'Thanksgiving & Celebration', r:'Psalm 100:4', q:'“Enter into his gates with thanksgiving, and into his courts with praise: be thankful unto him, and bless his name.”', g:'Celebrate the completion — give thanks with your whole heart. The month is finished, the seed is sown; expect the harvest!', tag:'CELEBRATION DAY'}
+  ]},
+
+/* ================= 40-DAY — MOUNTAIN OF GOD ================= */
+{ key:'p40', tab:'40-Day Fast', name:'The Mountain of God', icon:'🏔️', daysNum:40,
+  tagline:'40 Days of Transformation', fastType:'Daniel fast / partial fast (consult your doctor for extended fasts)',
+  foundation:{ref:'Matthew 4:1–2 · Exodus 34:28', text:'“Then was Jesus led up of the Spirit into the wilderness… and when he had fasted forty days and forty nights…” · “And he was there with the LORD forty days and forty nights; he did neither eat bread, nor drink water.”'},
+  desc:'Forty days is God’s number of transformation — Moses on Sinai, Elijah to Horeb, Jesus in the wilderness. It is a season of complete re-formation: from Egypt to the Promised Land, from the desert to the mountain of His glory. Walk the wilderness with Him, and come out on the mountaintop.',
+  weeks:[
+    {label:'Week 1', title:'Entering the Wilderness — Preparation', from:1, to:7},
+    {label:'Week 2', title:'Purification — Brokenness & Cleansing', from:8, to:14},
+    {label:'Week 3', title:'Provision — The Table in the Wilderness', from:15, to:21},
+    {label:'Week 4', title:'Warfare — Battles & Breakthroughs', from:22, to:28},
+    {label:'Week 5', title:'Intimacy — The Glory of His Presence', from:29, to:35},
+    {label:'Week 6', title:'Commissioning — The Mountaintop', from:36, to:40}
+  ],
+  days:[
+    {t:'The Wilderness Call', r:'Matthew 4:1', q:'“Then was Jesus led up of the Spirit into the wilderness to be tempted of the devil.”', g:'Answer the call — embrace the wilderness season. It is the SPIRIT who leads you there, and it is for your good.', tag:'Opening Day'},
+    {t:'Led by the Spirit', r:'Luke 4:1', q:'“And Jesus being full of the Holy Ghost… was led by the Spirit into the wilderness.”', g:'Be full of the Spirit — let every step of these forty days be Spirit-led, not self-led. Yield at the 03:00 encounter.'},
+    {t:'The Fast Begins', r:'Matthew 4:2', q:'“And when he had fasted forty days and forty nights, he was afterward an hungred.”', g:'Begin with resolve — forty days of set-apartness starts now. The hunger is a sign the battle has begun; feed on the Word.'},
+    {t:'The Testing of Faith', r:'Deuteronomy 8:2', q:'“And thou shalt remember all the way which the LORD thy God led thee these forty years in the wilderness, to humble thee, and to prove thee.”', g:'Embrace the proving — God is humbling and testing you to reveal what is truly in your heart. Let Him finish the work.'},
+    {t:'Humility & Dependence', r:'Deuteronomy 8:3', q:'“…man doth not live by bread only, but by every word that proceedeth out of the mouth of the LORD.”', g:'Live by every Word — let the Word of God become your true bread through these forty days.'},
+    {t:'The Word in the Desert', r:'Matthew 4:4', q:'“It is written, Man shall not live by bread alone, but by every word that proceedeth out of the mouth of God.”', g:'Answer every test with “It is written” — make the Word your weapon and your food from this day forward.'},
+    {t:'Trusting the Father’s Care', r:'1 Peter 5:7', q:'“Casting all your care upon him; for he careth for you.”', g:'Cast every care — provision, family, finances, health — upon the Father who cares for you. Take them to 12:00 alignment.', tag:'End of Week 1'},
+    {t:'Resisting the Tempter', r:'Matthew 4:10', q:'“Then saith Jesus unto him, Get thee hence, Satan: for it is written, Thou shalt worship the Lord thy God, and him only shalt thou serve.”', g:'Command the tempter to leave. Worship God only — and watch every temptation flee at the 15:00 watch.', tag:'Temptation Overcome'},
+    {t:'Angels Ministering', r:'Matthew 4:11', q:'“Then the devil leaveth him, and, behold, angels came and ministered unto him.”', g:'Expect angelic ministry — after every battle comes the ministration. Be ministered to and refreshed today.'},
+    {t:'The Mountain of God', r:'Exodus 34:2', q:'“And be ready in the morning, and come up in the morning unto mount Sinai… and present thyself there to me in the top of the mount.”', g:'Climb — come up to the mountain of God. Be ready at dawn (03:00) for an encounter with the Most High.'},
+    {t:'The Glory of the Lord', r:'Exodus 24:17', q:'“And the sight of the glory of the LORD was like devouring fire on the top of the mount.”', g:'Cry out for the manifest glory — that the fire of His presence would rest visibly on your life, home and church.'},
+    {t:'A Table in the Wilderness', r:'Psalm 78:19', q:'“Can God furnish a table in the wilderness?”', g:'Answer the question with faith: YES. Expect God to furnish a table for you even in the desert of this season.'},
+    {t:'Daily Manna', r:'Exodus 16:4', q:'“Behold, I will rain bread from heaven for you… that I may prove them, whether they will walk in my law, or no.”', g:'Collect your daily manna — fresh Word and fresh grace for TODAY. Do not live on yesterday’s bread.'},
+    {t:'Water from the Rock', r:'Exodus 17:6', q:'“Behold, I will stand before thee there upon the rock in Horeb; and thou shalt smite the rock, and there shall come water out of it.”', g:'Drink from the Rock — Christ is your supply. Receive rivers of refreshment in this dry place.', tag:'End of Week 2'},
+    {t:'Rest in His Presence', r:'Exodus 33:14', q:'“And he said, My presence shall go with thee, and I will give thee rest.”', g:'Rest in His presence — let the burden lift as you simply abide in Him. Stillness is a weapon.', tag:'Provision Week'},
+    {t:'The Pillar of Cloud', r:'Exodus 13:21', q:'“And the LORD went before them by day in a pillar of a cloud, to lead them the way.”', g:'Follow the cloud — ask for clear daily leading; let God go before you in every decision this week.'},
+    {t:'The Pillar of Fire', r:'Exodus 13:21–22', q:'“…and by night in a pillar of fire, to give them light… the pillar of the cloud by day, and the pillar of fire by night.”', g:'Receive light in the night seasons — pray for guidance in seasons of darkness, confusion and waiting.'},
+    {t:'The Glory Cloud', r:'Exodus 40:34', q:'“Then a cloud covered the tent of the congregation, and the glory of the LORD filled the tabernacle.”', g:'Pray for the glory to fill YOUR temple — your body is the tabernacle of the Holy Spirit. Let it be fully His.'},
+    {t:'Strength Renewed', r:'Isaiah 40:31', q:'“But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles.”', g:'Wait upon the Lord — exchange your weariness for eagle strength at the 03:00 and 19:00 hours today.'},
+    {t:'Perseverance', r:'Hebrews 12:1', q:'“…let us run with patience the race that is set before us.”', g:'Run with patience — you are halfway through the wilderness. Fix your eyes on the finish and keep running.'},
+    {t:'Leaving Egypt Behind', r:'Exodus 14:13', q:'“And Moses said unto the people, Fear ye not, stand still, and see the salvation of the LORD.”', g:'Stop looking back at Egypt — stand still and watch God’s salvation unfold before your eyes.', tag:'Red Sea Crossing'},
+    {t:'Crossing the Red Sea', r:'Exodus 14:21–22', q:'“And the LORD caused the sea to go back… and the children of Israel went into the midst of the sea upon the dry ground.”', g:'Walk through your Red Sea — every impossibility parts before the God who makes a way where there is no way.', tag:'Warfare Week'},
+    {t:'Bitter Waters Made Sweet', r:'Exodus 15:23–25', q:'“And when they came to Marah, they could not drink of the waters… and the LORD shewed him a tree… and the waters were made sweet.”', g:'Let the Tree (the Cross) sweeten every bitter experience in your life — disappointments, losses, betrayals.'},
+    {t:'Healing & Wholeness', r:'Exodus 15:26', q:'“…for I am the LORD that healeth thee.”', g:'Declare healing — Jehovah Rapha is your Physician. Pray for complete wholeness of body, soul and spirit today.'},
+    {t:'The Song of Deliverance', r:'Exodus 15:1–2', q:'“The LORD is my strength and song, and he is become my salvation.”', g:'Sing your deliverance — let praise erupt from the other side of your sea. Worship at 15:00 and 21:00.'},
+    {t:'The Wilderness Road', r:'Deuteronomy 29:5', q:'“And I have led you forty years in the wilderness: your clothes are not waxen old upon thee.”', g:'Trust the long road — God preserves you supernaturally through every season of waiting. He is leading, always.'},
+    {t:'Unworn Garments', r:'Deuteronomy 8:4', q:'“Thy raiment waxed not old upon thee, and thy foot did not swell, these forty years.”', g:'Praise Him for preservation — declare that God keeps, clothes and sustains you day by day through this fast.'},
+    {t:'Shod for the Journey', r:'Deuteronomy 29:5', q:'“…and thy shoe is not waxen old upon thy foot.”', g:'Be ready to move — your feet are shod; the journey ahead is prepared and your steps are ordered by the Lord.', tag:'End of Week 4'},
+    {t:'Presence Goes Before', r:'Exodus 33:14–15', q:'“My presence shall go with thee… If thy presence go not with me, carry us not up hence.”', g:'Refuse to move without Him — His presence is your only guarantee of success. Pray it at the 03:00 encounter.', tag:'Glory Week'},
+    {t:'The Cleft of the Rock', r:'Exodus 33:22', q:'“And it shall come to pass, while my glory passeth by, that I will put thee in a clift of the rock.”', g:'Hide in the Rock — find your shelter and safety in Christ as the glory of God passes by your life.'},
+    {t:'The Goodness of God', r:'Exodus 33:19', q:'“And he said, I will make all my goodness pass before thee…”', g:'Ask to see His goodness — that goodness, mercy and favour would visibly pass before you this week.'},
+    {t:'Face to Face', r:'Exodus 33:11', q:'“And the LORD spake unto Moses face to face, as a man speaketh unto his friend.”', g:'Cry for friendship with God — intimacy that hears Him speak to you face to face, not from afar.'},
+    {t:'Show Me Thy Glory', r:'Exodus 33:18', q:'“And he said, I beseech thee, shew me thy glory.”', g:'Make Moses’ prayer your own — “Show me Your glory.” This is the deepest desire of this season.', tag:'Show Me Your Glory'},
+    {t:'Forty Days with God', r:'Exodus 34:28', q:'“And he was there with the LORD forty days and forty nights; he did neither eat bread, nor drink water.”', g:'Savour the season — forty days of being with the Lord is transforming your life forever. Do not rush the mountain.', tag:'End of Week 5'},
+    {t:'The Law of the Lord', r:'Psalm 19:7–8', q:'“The law of the LORD is perfect, converting the soul: the testimony of the LORD is sure, making wise the simple.”', g:'Love the Word — let it convert your soul, make you wise and rejoice your heart at the 19:00 training hour.', tag:'Commissioning'},
+    {t:'The Radiant Face', r:'Exodus 34:29', q:'“And it came to pass… Moses wist not that the skin of his face shone while he talked with him.”', g:'Let the glory show — your time with God is changing your countenance. Let His light shine on everyone you meet.'},
+    {t:'The Tabernacle of Meeting', r:'Exodus 33:7', q:'“And it came to pass, that every one which sought the LORD went out unto the tabernacle of the congregation.”', g:'Make your home a tabernacle of meeting — a place where people can come and find the Lord.'},
+    {t:'The Mercy Seat', r:'Exodus 25:22', q:'“And there I will meet with thee, and I will commune with thee from above the mercy seat.”', g:'Approach the mercy seat with boldness — commune with God from the place of blood-bought access.'},
+    {t:'Ready for the Promise', r:'Numbers 13:30', q:'“And Caleb stilled the people before Moses, and said, Let us go up at once, and possess it; for we are well able to overcome it.”', g:'Speak Caleb’s faith — “we are well able.” The giants look big, but the promise is bigger. Possess it!', tag:'End of Week 6'},
+    {t:'Commissioned', r:'Joshua 1:2–3', q:'“Moses my servant is dead; now therefore arise, go over this Jordan… Every place that the sole of your foot shall tread upon, that have I given unto you.”', g:'Receive your commission — ARISE, cross over, and possess every place your foot treads. The wilderness is behind you; the Promise Land is before you!', tag:'COMMISSIONING DAY'}
+  ]}
+];
+
+/* ---------- PRAYER TARGETS ---------- */
+var TARGETS = [
+  {t:'Personal consecration & a holy life', s:'“Be ye holy; for I am holy” — 1 Peter 1:16'},
+  {t:'Family salvation & unity', s:'“Believe on the Lord Jesus Christ, and thou shalt be saved, and thy house” — Acts 16:31'},
+  {t:'Church revival & spiritual fire', s:'“Wilt thou not revive us again?” — Psalm 85:6'},
+  {t:'The nation — peace, leadership & godly governance', s:'“…that we may lead a quiet and peaceable life” — 1 Timothy 2:2'},
+  {t:'The youth & the next generation', s:'“…I will pour out my Spirit upon all flesh… your young men shall see visions” — Joel 2:28'},
+  {t:'Provision, finances & debt freedom', s:'“…my God shall supply all your need” — Philippians 4:19'},
+  {t:'Healing of the sick & brokenhearted', s:'“I am the LORD that healeth thee” — Exodus 15:26'},
+  {t:'Deliverance from every bondage & addiction', s:'“…if the Son therefore shall make you free, ye shall be free indeed” — John 8:36'},
+  {t:'Destiny, calling & open doors', s:'“…I have set before thee an open door” — Revelation 3:8'},
+  {t:'Wisdom & direction for decisions', s:'“If any of you lack wisdom, let him ask of God” — James 1:5'},
+  {t:'The harvest — souls saved & missions', s:'“The harvest truly is plenteous, but the labourers are few” — Matthew 9:37'},
+  {t:'Unity of the Body of Christ', s:'“…that they all may be one” — John 17:21'},
+  {t:'Marriages & godly homes', s:'“As for me and my house, we will serve the LORD” — Joshua 24:15'},
+  {t:'Protection over loved ones', s:'“…the angel of the LORD encampeth round about them that fear him” — Psalm 34:7'},
+  {t:'A deeper personal encounter with God', s:'“Show me thy glory” — Exodus 33:18'}
+];
+
+/* ---------- SCRIPTURE LIBRARY ---------- */
+var LIB = [
+  {g:'🔥 Foundations of Fasting', v:[
+    ['Joel 2:12–13','Turn to me with fasting and weeping… rend your heart.'],
+    ['Isaiah 58:6–8','The fast I have chosen: to loose the bands of wickedness.'],
+    ['Matthew 6:16–18','When thou fastest… thy Father which seeth in secret.'],
+    ['Mark 9:29','This kind can come forth by nothing, but by prayer and fasting.'],
+    ['Acts 13:2–3','As they ministered to the Lord, and fasted… separate me Barnabas.'],
+    ['2 Chronicles 7:14','If my people… shall humble themselves, and pray.'],
+    ['Ezra 8:23','So we fasted and besought our God for this.']]},
+  {g:'🕊️ Consecration & Purity', v:[
+    ['Leviticus 20:7–8','Sanctify yourselves… for I am the LORD your God.'],
+    ['Romans 12:1–2','Present your bodies a living sacrifice.'],
+    ['1 Corinthians 6:19–20','Your body is the temple of the Holy Ghost.'],
+    ['Daniel 1:8','Daniel purposed in his heart that he would not defile himself.'],
+    ['Psalm 24:3–4','Who shall ascend into the hill of the LORD? He that hath clean hands.']]},
+  {g:'🙏 Prayer & Intercession', v:[
+    ['1 Timothy 2:1','Supplications, prayers, intercessions… for all men.'],
+    ['Ephesians 6:18','Praying always with all prayer and supplication in the Spirit.'],
+    ['Philippians 4:6–7','Be careful for nothing; but in every thing by prayer and supplication.'],
+    ['Jeremiah 33:3','Call unto me, and I will answer thee, and shew thee great and mighty things.'],
+    ['Acts 3:1','Peter and John went up together into the temple at the hour of prayer.'],
+    ['Psalm 55:17','Evening, and morning, and at noon, will I pray.']]},
+  {g:'⚔️ Spiritual Warfare', v:[
+    ['Ephesians 6:10–18','Put on the whole armour of God.'],
+    ['2 Corinthians 10:4–5','Casting down imaginations… bringing into captivity every thought.'],
+    ['2 Chronicles 20:15','The battle is not yours, but God’s.'],
+    ['Daniel 10:12–13','Thy words were heard… the prince of Persia withstood me.'],
+    ['Luke 10:19','I give unto you power to tread on serpents and scorpions.'],
+    ['Revelation 12:11','They overcame him by the blood of the Lamb.']]},
+  {g:'🩹 Deliverance & Healing', v:[
+    ['Isaiah 61:1–3','He hath sent me to bind up the brokenhearted… proclaim liberty.'],
+    ['Exodus 15:26','I am the LORD that healeth thee.'],
+    ['Psalm 107:20','He sent his word, and healed them, and delivered them.'],
+    ['1 Peter 2:24','By whose stripes ye were healed.'],
+    ['Psalm 147:3','He healeth the broken in heart, and bindeth up their wounds.'],
+    ['John 8:36','If the Son therefore shall make you free, ye shall be free indeed.']]},
+  {g:'🌾 Provision & Breakthrough', v:[
+    ['Philippians 4:19','My God shall supply all your need.'],
+    ['Micah 2:13','The breaker is come up before them.'],
+    ['Isaiah 43:19','Behold, I will do a new thing… I will even make a way in the wilderness.'],
+    ['Exodus 16:4','Behold, I will rain bread from heaven for you.'],
+    ['Psalm 78:19','Can God furnish a table in the wilderness?'],
+    ['Joshua 6:20','The people shouted… and the wall fell down flat.']]},
+  {g:'📯 Prophetic & Direction', v:[
+    ['Proverbs 29:18','Where there is no vision, the people perish.'],
+    ['Amos 3:7','The Lord GOD will do nothing, but he revealeth his secret.'],
+    ['Psalm 32:8','I will instruct thee and teach thee in the way which thou shalt go.'],
+    ['John 10:27','My sheep hear my voice.'],
+    ['1 Corinthians 14:3','He that prophesieth speaketh unto men to edification.'],
+    ['Habakkuk 2:1–2','I will stand upon my watch… write the vision.']]},
+  {g:'💪 Strength & Perseverance', v:[
+    ['Isaiah 40:31','They that wait upon the LORD shall renew their strength.'],
+    ['Galatians 6:9','Let us not be weary in well doing… we shall reap.'],
+    ['Hebrews 12:1–2','Let us run with patience the race that is set before us.'],
+    ['Philippians 1:6','He which hath begun a good work… will perform it.'],
+    ['2 Corinthians 12:9','My grace is sufficient for thee.'],
+    ['Psalm 34:4','I sought the LORD, and he heard me, and delivered me from all my fears.']]},
+  {g:'🎶 Thanksgiving & Praise', v:[
+    ['Psalm 100','Enter into his gates with thanksgiving, and into his courts with praise.'],
+    ['Psalm 103:1–5','Bless the LORD, O my soul… who healeth all thy diseases.'],
+    ['1 Thessalonians 5:16–18','Rejoice evermore. Pray without ceasing. In every thing give thanks.'],
+    ['Psalm 150','Let every thing that hath breath praise the LORD.'],
+    ['Exodus 15:1–2','The LORD is my strength and song.'],
+    ['Psalm 30:11','Thou hast turned for me my mourning into dancing.']]}
+];
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderClock(){
+  var h = document.getElementById('clockGrid');
+  h.innerHTML = CLOCK.map(function(c){
+    return '<div class="clock-card">' +
+      '<div class="time">' + c.time + '<span class="tag">' + c.tag + '</span></div>' +
+      '<h3>' + c.title + '</h3>' +
+      '<p>' + c.text + '</p>' +
+      '<a class="ref" href="' + bglink(c.ref) + '" target="_blank" rel="noopener">✞ ' + esc(c.ref) + ' — read online ↗</a>' +
+    '</div>';
+  }).join('');
+}
+
+function renderHow(){
+  var h = document.getElementById('howGrid');
+  h.innerHTML = HOW.map(function(card, i){
+    var warn = i === 3 ? ' warn' : '';
+    var lis = card.items.map(function(it){ return '<li>' + it + '</li>'; }).join('');
+    return '<div class="how-card' + warn + '"><h3>' + card.title + '</h3><ul>' + lis + '</ul></div>';
+  }).join('');
+}
+
+/* ---------- PLAN RENDERING ---------- */
+function dayCard(p, d){
+  var id = p.key + '-d' + d.d;
+  var done = !!SAVED[id];
+  var tag = d.tag ? '<span class="day-tag">' + esc(d.tag) + '</span>' : '';
+  return '<article class="day-card' + (done ? ' done' : '') + '" id="' + id + '">' + tag +
+    '<div class="day-top">' +
+      '<span class="day-num">' + String(d.d).padStart(2,'0') + '<br><small>' + (p.weeks[0] ? 'day' : 'day') + '</small></span>' +
+      '<label class="check"><input type="checkbox" data-plan="' + p.key + '" data-day="' + d.d + '"' + (done ? ' checked' : '') + '> Done ✓</label>' +
+    '</div>' +
+    '<h4 class="day-theme">' + esc(d.t) + '</h4>' +
+    '<p class="day-ref"><a href="' + bglink(d.r) + '" target="_blank" rel="noopener">' + esc(d.r) + ' ↗</a></p>' +
+    '<blockquote class="day-text">' + d.q + '</blockquote>' +
+    '<div class="day-target"><span class="tl">🎯 Prayer Target</span>' + d.g + '</div>' +
+  '</article>';
+}
+
+function renderPlans(){
+  var tabs = document.getElementById('tabs');
+  tabs.innerHTML = PLANS.map(function(p, i){
+    return '<button class="tab' + (i === CURRENT ? ' active' : '') + '" data-i="' + i + '" onclick="showPlan(' + i + ')">' +
+      '<span class="big">' + p.daysNum + '</span> ' + p.tab + '</button>';
+  }).join('');
+
+  var panels = document.getElementById('planPanels');
+  panels.innerHTML = PLANS.map(function(p, i){
+    /* group days by week */
+    var weeksHtml = p.weeks.map(function(w){
+      var days = p.days.filter(function(d){ return d.d >= w.from && d.d <= w.to; })
+                         .map(function(d){ return dayCard(p, d); }).join('');
+      return '<div class="week">' +
+        '<div class="week-head">' +
+          '<span class="wl">' + esc(w.label) + '</span>' +
+          '<span class="wt">' + esc(w.title) + '</span>' +
+          '<span class="wd">Days ' + w.from + ' – ' + w.to + '</span>' +
+        '</div>' +
+        '<div class="day-grid">' + days + '</div>' +
+      '</div>';
+    }).join('');
+
+    /* jump-to-day select */
+    var opts = p.days.map(function(d){ return '<option value="' + p.key + '-d' + d.d + '">Day ' + d.d + ' — ' + esc(d.t) + '</option>'; }).join('');
+
+    var meta = '<div class="plan-meta">' +
+      '<div class="pm"><b>' + p.daysNum + ' Days</b>Duration</div>' +
+      '<div class="pm"><b>' + esc(p.fastType) + '</b>Type of Fast</div>' +
+      '<div class="pm"><b>' + esc(String(p.weeks.length)) + ' Seasons</b>Weekly Divisions</div>' +
+      '<div class="pm"><b>6 Appointments</b>Daily Prayer Clock</div>' +
+    '</div>';
+
+    var found = '<div class="found"><span class="lbl">Scripture Foundation</span>' +
+      '<blockquote>' + p.foundation.text + '</blockquote>' +
+      '<a href="' + bglink(p.foundation.ref) + '" target="_blank" rel="noopener">' + esc(p.foundation.ref) + ' — read it now ↗</a></div>';
+
+    return '<section class="plan-panel' + (i === CURRENT ? ' active' : '') + '" id="plan-' + p.key + '">' +
+      '<div class="plan-hero">' +
+        '<span class="rib">' + p.icon + ' ' + esc(p.name) + '</span>' +
+        '<h2>' + p.daysNum + '-Day Programme</h2>' +
+        '<div class="tagline">' + esc(p.tagline) + '</div>' +
+        '<p class="desc">' + p.desc + '</p>' + meta + found +
+      '</div>' +
+
+      '<div class="plan-toolbar">' +
+        '<div class="progress-wrap">' +
+          '<div class="progress-label"><span>Progress — ' + esc(p.name) + '</span><b id="prog-' + p.key + '">0 / ' + p.daysNum + '</b></div>' +
+          '<div class="bar"><i id="bar-' + p.key + '"></i></div>' +
+        '</div>' +
+        '<div class="toolbar-actions">' +
+          '<select class="btn" id="jump-' + p.key +'" onchange="jumpTo(this.value)"><option value="">— Jump to a day —</option>' + opts + '</select>' +
+          '<button class="btn gold" onclick="printPlan(\'' + p.key + '\')">🖨 Print this plan</button>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="celebration" id="celebrate-' + p.key + '">' +
+        '<h3>🎉 Fasting Complete — Well Done, Faithful One!</h3>' +
+        '<p>The seed is sown and heaven has recorded it. Now stand still and watch the harvest come in. “I have fought a good fight, I have finished my course, I have kept the faith.” — 2 Timothy 4:7</p>' +
+      '</div>' +
+
+      weeksHtml +
+    '</section>';
+  }).join('');
+}
+
+/* ---------- PRAYER TARGETS & LIBRARY ---------- */
+function renderTargets(){
+  var h = document.getElementById('targetsGrid');
+  h.innerHTML = TARGETS.map(function(t, i){
+    var id = 'tg-' + i;
+    var checked = !!SAVED[id];
+    return '<label class="target-item' + (checked ? ' checked' : '') + '" for="' + id + '">' +
+      '<input type="checkbox" id="' + id + '"' + (checked ? ' checked' : '') + ' onchange="toggleTarget(\'' + id + '\', this.checked)">' +
+      '<span><span class="tt">' + esc(t.t) + '</span><span class="ts">' + esc(t.s) + '</span></span>' +
+    '</label>';
+  }).join('');
+}
+
+function renderLib(){
+  var h = document.getElementById('libGrid');
+  h.innerHTML = LIB.map(function(g){
+    var lis = g.v.map(function(v){
+      return '<li><a href="' + bglink(v[0]) + '" target="_blank" rel="noopener"><span>' + esc(v[1]) + '</span><span class="v">' + esc(v[0]) + '</span></a></li>';
+    }).join('');
+    return '<div class="lib-card"><h3>' + g.g + '</h3><ul>' + lis + '</ul></div>';
+  }).join('');
+}
+
+/* ============================================================
+   INTERACTIONS
+   ============================================================ */
+function showPlan(i){
+  CURRENT = i;
+  document.querySelectorAll('.tab').forEach(function(t, j){ t.classList.toggle('active', j === i); });
+  document.querySelectorAll('.plan-panel').forEach(function(p, j){ p.classList.toggle('active', j === i); });
+  updateProgress(PLANS[i].key);
+  document.getElementById('plans').scrollIntoView({behavior:'smooth'});
+}
+
+function jumpTo(id){
+  var el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function toggleTarget(id, checked){
+  try{ localStorage.setItem(id, checked ? '1' : '0'); }catch(e){}
+  SAVED[id] = checked;
+  var lab = document.getElementById(id);
+  if(lab) lab.closest('.target-item').classList.toggle('checked', checked);
+}
+
+function updateProgress(key){
+  var p = PLANS.filter(function(x){ return x.key === key; })[0];
+  if(!p) return;
+  var done = 0;
+  p.days.forEach(function(d){
+    if(SAVED[p.key + '-d' + d.d]) done++;
+  });
+  var pct = Math.round(done / p.daysNum * 100);
+  var bar = document.getElementById('bar-' + key);
+  var lbl = document.getElementById('prog-' + key);
+  var cel = document.getElementById('celebrate-' + key);
+  if(bar) bar.style.width = pct + '%';
+  if(lbl) lbl.textContent = done + ' / ' + p.daysNum;
+  if(cel) cel.classList.toggle('show', done === p.daysNum && p.daysNum > 0);
+  /* also mark card visual state */
+  p.days.forEach(function(d){
+    var card = document.getElementById(p.key + '-d' + d.d);
+    if(card) card.classList.toggle('done', !!SAVED[p.key + '-d' + d.d]);
+  });
+}
+
+function updateAllProgress(){
+  PLANS.forEach(function(p){ updateProgress(p.key); });
+}
+
+function printPlan(key){
+  var panels = document.querySelectorAll('.plan-panel');
+  panels.forEach(function(p){ p.classList.remove('active'); });
+  var target = document.getElementById('plan-' + key);
+  if(target) target.classList.add('active');
+  /* re-sync tab state for on-screen view */
+  PLANS.forEach(function(p, i){ if(p.key === key) CURRENT = i; });
+  document.querySelectorAll('.tab').forEach(function(t, j){ t.classList.toggle('active', j === CURRENT); });
+  window.print();
+}
+
+/* ---------- PROGRESS SAVING ---------- */
+function loadSaved(){
+  try{
+    var keys = Object.keys(localStorage);
+    keys.forEach(function(k){ if(k.indexOf('p3-d')===0 || k.indexOf('p7-d')===0 || k.indexOf('p21-d')===0 || k.indexOf('p31-d')===0 || k.indexOf('p40-d')===0 || k.indexOf('tg-')===0){ SAVED[k] = localStorage.getItem(k) === '1'; } });
+  }catch(e){ /* sandboxed preview has no localStorage — fine */ }
+}
+
+/* ---------- EVENT DELEGATION for day checkboxes ---------- */
+document.addEventListener('change', function(ev){
+  var el = ev.target;
+  if(el && el.matches && el.matches('.day-card input[type=checkbox]')){
+    var key = el.getAttribute('data-plan') + '-d' + el.getAttribute('data-day');
+    SAVED[key] = el.checked;
+    try{ localStorage.setItem(key, el.checked ? '1' : '0'); }catch(e){}
+    updateProgress(el.getAttribute('data-plan'));
+  }
+});
+
+document.getElementById('versionSel').addEventListener('change', function(){
+  VERSION = this.value;
+  renderClock();
+  renderPlans();
+  renderLib();
+  updateAllProgress();
+});
+
+/* ---------- INIT ---------- */
+/* number every day (1..N) so week filtering and progress work */
+PLANS.forEach(function(p){ p.days.forEach(function(d, i){ d.d = i + 1; }); });
+loadSaved();
+renderClock();
+renderHow();
+renderPlans();
+renderTargets();
+renderLib();
+updateAllProgress();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a33b496b0b29b3a4',t:'MTc4ODE3MTQ2MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
