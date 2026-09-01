@@ -115,9 +115,14 @@
                                 <span id="nextEventTime">20:00 - 04:00 HRS</span>
                             </span>
                         </div>
-                        <div class="flex items-center justify-center lg:justify-start gap-1.5 text-sm">
-                            <i data-lucide="map-pin" class="w-4 h-4 text-rose-400"></i>
-                            <span id="nextEventVenue" class="font-medium text-slate-300">JCRGM CHURCH</span>
+                        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 text-sm">
+                            <span class="flex items-center gap-1.5">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-rose-400"></i>
+                                <span id="nextEventVenue" class="font-medium text-slate-300">JCRGM CHURCH</span>
+                            </span>
+                            <a id="directionsLink" href="https://maps.app.goo.gl/t8LcZowDWVmsAiJu8" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg gold-gradient text-brand-navy text-xs font-bold uppercase tracking-wider hover:brightness-110 transition shadow-md">
+                                <i data-lucide="navigation" class="w-3.5 h-3.5"></i> Get Directions
+                            </a>
                         </div>
                     </div>
 
@@ -243,6 +248,15 @@
                 <p class="text-xs text-slate-400 max-w-lg leading-relaxed">
                     Kindly note that schedules are prepared to keep up with punctuality and excellence. Please follow all that is recorded on the liturgical church calendar.
                 </p>
+                
+                <!-- Church Location / Get Directions Button -->
+                <a id="footerDirectionsLink" href="https://maps.app.goo.gl/t8LcZowDWVmsAiJu8" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl gold-gradient text-brand-navy text-xs font-bold uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-brand-gold/10">
+                    <i data-lucide="map-pin" class="w-4 h-4"></i> Find Us – Get Directions
+                </a>
+                <p class="text-[10px] text-slate-500 mt-1 max-w-md leading-relaxed">
+                    Jesus Christ Redeems Global Ministries<br>
+                    <a id="footerLocationLink" href="https://maps.app.goo.gl/t8LcZowDWVmsAiJu8" target="_blank" rel="noopener noreferrer" class="text-brand-gold hover:underline">https://maps.app.goo.gl/t8LcZowDWVmsAiJu8</a>
+                </p>
             </div>
             
             <!-- Prepared By / Bishop Signature Section -->
@@ -329,7 +343,7 @@
                             <i data-lucide="flame" class="w-4 h-4"></i> The Power of Persistent Prayer
                         </h5>
                         <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                            Persistent prayer is the unyielding posture of absolute faith that refuses to settle for anything less than Heaven’s answer. As illustrated in <span class="italic text-brand-gold">Luke 18:1-8</span>, consistency in prayer is not attempting to bend God's will; it is building a solid spiritual conduit of authority that dismantles persistent dark configurations and demands dynamic supernatural outcomes in our lives.
+                            Persistent prayer is the unyielding posture of absolute faith that refuses to settle for anything less than Heaven's answer. As illustrated in <span class="italic text-brand-gold">Luke 18:1-8</span>, consistency in prayer is not attempting to bend God's will; it is building a solid spiritual conduit of authority that dismantles persistent dark configurations and demands dynamic supernatural outcomes in our lives.
                         </p>
                     </div>
 
@@ -411,6 +425,14 @@
 
     <!-- MAIN JAVASCRIPT SYSTEM ENGINE -->
     <script>
+        // ============================================
+        // ⛪ CHURCH CENTRAL CONFIGURATION
+        // ============================================
+        // 👉 TO CHANGE VENUE: Just update the link below ONCE — it propagates everywhere.
+        const CHURCH_LOCATION_URL = "https://maps.app.goo.gl/t8LcZowDWVmsAiJu8";
+        const CHURCH_NAME = "Jesus Christ Redeems Global Ministries";
+        // ============================================
+
         // System variables
         let currentYear = new Date().getFullYear();
         let currentMonthIndex = new Date().getMonth(); // 0-11
@@ -717,6 +739,18 @@
             return `${day}${suffix} ${month} ${year}`;
         }
 
+        // Helper: Update the church location links across the page
+        function updateLocationLinks() {
+            const links = document.querySelectorAll('[data-location-link]');
+            links.forEach(el => {
+                el.href = CHURCH_LOCATION_URL;
+                // If element has text content placeholder, update it
+                if (el.dataset.locationLink === "text") {
+                    el.textContent = CHURCH_LOCATION_URL;
+                }
+            });
+        }
+
         // UI Views Switching Engine
         function setView(view) {
             activeView = view;
@@ -853,8 +887,8 @@
             }
 
             // Construct beautiful URL-safe text message template
-            const messageHeader = `*JCRGM ONE-ON-ONE ENCOUNTER BOOKING*`;
-            const messageBody = `\n\n🕊️ *Event:* Night of the Redeemed (${eventTargetDateText})\n👑 *Request:* Personal Encounter with Bishop Emmanuel Sakala\n\n👤 *Full Name:* ${name}\n📞 *WhatsApp Contact:* ${phone}\n🔥 *Focus Area:* ${reason}\n\n📝 *Prayer Notes:* ${notes}`;
+            const messageHeader = `*${CHURCH_NAME} - ONE-ON-ONE ENCOUNTER BOOKING*`;
+            const messageBody = `\n\n🕊️ *Event:* Night of the Redeemed (${eventTargetDateText})\n👑 *Request:* Personal Encounter with Bishop Emmanuel Sakala\n\n👤 *Full Name:* ${name}\n📞 *WhatsApp Contact:* ${phone}\n🔥 *Focus Area:* ${reason}\n\n📝 *Prayer Notes:* ${notes}\n\n📍 *Church Location:* ${CHURCH_LOCATION_URL}`;
             const finalCompiledText = encodeURIComponent(messageHeader + messageBody);
 
             // Populate URLs
@@ -1170,6 +1204,7 @@
         window.onload = () => {
             setView('calendar');
             document.getElementById('currentYearDisplay').innerText = currentYear;
+            updateLocationLinks();
             renderAll();
             checkMonthChangeNotification();
         }
