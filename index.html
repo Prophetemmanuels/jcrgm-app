@@ -17,13 +17,15 @@
 
 <style>
 /* ============================================================
-   JCRGM — Professional Interface
+   JCRGM — ROYAL EDITION (Rich Flare System)
    ============================================================ */
 :root{
   --primary:#1f3c88;
   --primary-dark:#16295e;
   --primary-light:#3b5bb5;
   --accent:#ffd700;
+  --gold-deep:#b8912c;
+  --gold-soft:#e9cf7d;
   --ink:#1e2a3a;
   --muted:#64748b;
   --bg:#eef2f7;
@@ -37,8 +39,17 @@
 }
 
 *{box-sizing:border-box;}
-
 html{scroll-behavior:smooth;}
+
+::selection{background:var(--accent);color:var(--primary-dark);}
+
+/* Rich scrollbar */
+::-webkit-scrollbar{width:11px;}
+::-webkit-scrollbar-track{background:#e6ecf5;}
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,var(--gold-soft),var(--gold-deep));
+  border-radius:99px;border:2px solid #e6ecf5;
+}
 
 body{
   font-family:"Segoe UI", "Inter", Arial, sans-serif;
@@ -63,11 +74,47 @@ body{
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
 
 /* ============================================================
+   ✨ FLARE SYSTEM — ambient fixed layers
+   ============================================================ */
+#flareLayer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;}
+.orb-a{
+  width:520px;height:520px;top:-140px;left:-120px;
+  background:radial-gradient(circle,rgba(212,175,55,.22),transparent 70%);
+  animation:drift 16s ease-in-out infinite alternate;
+}
+.orb-b{
+  width:640px;height:640px;bottom:-200px;right:-160px;
+  background:radial-gradient(circle,rgba(59,91,181,.16),transparent 70%);
+  animation:drift 20s ease-in-out infinite alternate-reverse;
+}
+.aurora{
+  position:absolute;left:50%;bottom:-260px;transform:translateX(-50%);
+  width:1200px;height:520px;
+  background:radial-gradient(50% 50% at 50% 50%, rgba(255,215,0,.10), transparent 70%);
+  animation:auroraBreathe 9s ease-in-out infinite;
+}
+@keyframes drift{from{transform:translate(0,0);}to{transform:translate(60px,40px);}}
+@keyframes auroraBreathe{
+  0%,100%{opacity:.5;transform:translateX(-50%) scale(1);}
+  50%{opacity:1;transform:translateX(-50%) scale(1.08);}
+}
+
+#flareCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* Cinematic vignette */
+#vignette{
+  position:fixed;inset:0;z-index:60;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 40%, transparent 58%, rgba(10,15,35,.15) 100%);
+}
+
+/* ============================================================
    HEADER / HERO
    ============================================================ */
 header{
   position:relative;
-  background:linear-gradient(135deg,#16295e 0%,#1f3c88 45%,#2c3e50 100%);
+  z-index:1;
+  background:linear-gradient(135deg,#101d44 0%,#1f3c88 45%,#2c3e50 100%);
   color:#fff;
   padding:56px 20px 46px;
   text-align:center;
@@ -78,7 +125,7 @@ header::before{
   content:"";
   position:absolute; inset:0;
   background:
-    radial-gradient(600px 220px at 20% 0%, rgba(255,215,0,.10), transparent 60%),
+    radial-gradient(600px 220px at 20% 0%, rgba(255,215,0,.12), transparent 60%),
     radial-gradient(700px 260px at 85% 100%, rgba(59,91,181,.35), transparent 60%);
   pointer-events:none;
 }
@@ -89,10 +136,76 @@ header::after{
   background-size:200% 100%;
   animation:shimmer 6s linear infinite;
 }
+
+/* --- Cathedral god rays --- */
+.god-rays{
+  position:absolute;top:-42%;left:50%;
+  width:170vmax;height:170vmax;
+  transform:translateX(-50%);
+  background:repeating-conic-gradient(
+    from 0deg at 50% 0%,
+    rgba(255,225,130,.07) 0deg 3.5deg,
+    transparent 3.5deg 13deg
+  );
+  -webkit-mask-image:radial-gradient(circle at 50% 0%, black 0%, transparent 58%);
+  mask-image:radial-gradient(circle at 50% 0%, black 0%, transparent 58%);
+  animation:raysRotate 110s linear infinite;
+  pointer-events:none;
+  will-change:transform;
+}
+@keyframes raysRotate{to{transform:translateX(-50%) rotate(18deg);}}
+
+/* --- Radiant halo behind title --- */
+.halo{
+  position:absolute;top:6%;left:50%;
+  width:640px;height:340px;
+  transform:translate(-50%,-28%);
+  background:radial-gradient(closest-side, rgba(255,215,0,.22), transparent 70%);
+  filter:blur(8px);
+  animation:haloBreathe 6s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes haloBreathe{
+  0%,100%{opacity:.55;transform:translate(-50%,-28%) scale(1);}
+  50%{opacity:1;transform:translate(-50%,-28%) scale(1.06);}
+}
+
+/* --- Twinkling star field --- */
+.stars{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    radial-gradient(1.4px 1.4px at 8% 22%, rgba(255,255,255,.85), transparent),
+    radial-gradient(1px 1px at 22% 68%, rgba(255,246,200,.8), transparent),
+    radial-gradient(1.6px 1.6px at 35% 14%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1px 1px at 48% 82%, rgba(255,255,255,.75), transparent),
+    radial-gradient(1.4px 1.4px at 61% 26%, rgba(255,246,200,.8), transparent),
+    radial-gradient(1px 1px at 74% 58%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1.6px 1.6px at 86% 18%, rgba(255,255,255,.85), transparent),
+    radial-gradient(1px 1px at 93% 74%, rgba(255,246,200,.75), transparent),
+    radial-gradient(1.2px 1.2px at 15% 88%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1.2px 1.2px at 55% 48%, rgba(255,246,200,.6), transparent),
+    radial-gradient(1px 1px at 80% 40%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1.3px 1.3px at 4% 55%, rgba(255,246,200,.7), transparent);
+  animation:twinkle 4.5s ease-in-out infinite alternate;
+}
+.stars::after{
+  content:"";position:absolute;inset:0;
+  background-image:
+    radial-gradient(1.2px 1.2px at 28% 40%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1px 1px at 42% 74%, rgba(255,246,200,.7), transparent),
+    radial-gradient(1.5px 1.5px at 67% 62%, rgba(255,255,255,.8), transparent),
+    radial-gradient(1px 1px at 90% 34%, rgba(255,246,200,.7), transparent),
+    radial-gradient(1.3px 1.3px at 12% 12%, rgba(255,255,255,.65), transparent),
+    radial-gradient(1px 1px at 72% 88%, rgba(255,246,200,.65), transparent),
+    radial-gradient(1.1px 1.1px at 97% 52%, rgba(255,255,255,.6), transparent);
+  animation:twinkle 6s ease-in-out 2s infinite alternate;
+}
+@keyframes twinkle{from{opacity:.35;}to{opacity:1;}}
+
 .header-badge{
   display:inline-flex; align-items:center; gap:8px;
   background:rgba(255,255,255,.12);
-  border:1px solid rgba(255,255,255,.22);
+  border:1px solid rgba(255,215,0,.4);
   backdrop-filter:blur(6px);
   padding:6px 18px;
   border-radius:999px;
@@ -102,6 +215,8 @@ header::after{
   color:#ffe38a;
   margin-bottom:18px;
   animation:fadeUp .7s ease both;
+  box-shadow:0 0 22px rgba(255,215,0,.18), inset 0 0 14px rgba(255,215,0,.06);
+  text-shadow:0 0 12px rgba(255,215,0,.55);
 }
 header h1{
   margin:0 0 10px;
@@ -111,7 +226,16 @@ header h1{
   text-shadow:0 2px 18px rgba(0,0,0,.35);
   animation:fadeUp .7s .08s ease both;
 }
-header h1 .gold{color:var(--accent);}
+/* Liquid gold shimmer on the ministry name */
+header h1 .gold{
+  background:linear-gradient(110deg,#ffd700 15%,#fff7cf 38%,#f0b90b 55%,#fff7cf 72%,#ffd700 90%);
+  background-size:220% 100%;
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;
+  animation:goldSweep 5s linear infinite;
+  filter:drop-shadow(0 0 14px rgba(255,215,0,.35));
+}
+@keyframes goldSweep{to{background-position:-220% 0;}}
 #serviceDate{
   margin:0 0 22px;
   font-size:16px;
@@ -175,14 +299,25 @@ button:active{transform:translateY(0) scale(.98);}
 }
 .nav-group{
   background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.14);
+  border:1px solid rgba(255,215,0,.18);
   border-radius:var(--radius);
   backdrop-filter:blur(8px);
   padding:14px 16px 10px;
   margin-bottom:14px;
   transition:var(--transition);
+  position:relative;
 }
-.nav-group:hover{background:rgba(255,255,255,.11); border-color:rgba(255,255,255,.24);}
+.nav-group::before{
+  content:"";position:absolute;left:0;top:14px;bottom:14px;width:2px;border-radius:99px;
+  background:linear-gradient(180deg,transparent,var(--accent),transparent);
+  opacity:.55;transition:var(--transition);
+}
+.nav-group:hover{
+  background:rgba(255,255,255,.11);
+  border-color:rgba(255,215,0,.42);
+  box-shadow:0 0 26px rgba(255,215,0,.10), inset 0 0 20px rgba(255,215,0,.04);
+}
+.nav-group:hover::before{opacity:1;top:8px;bottom:8px;}
 .nav-group-title{
   display:block;
   font-size:11.5px;
@@ -192,23 +327,72 @@ button:active{transform:translateY(0) scale(.98);}
   color:#ffe38a;
   margin:2px 6px 8px;
   opacity:.95;
+  text-shadow:0 0 10px rgba(255,215,0,.35);
 }
 .nav-group button{font-size:13.5px; padding:9px 16px;}
 
 /* ============================================================
-   MAIN CONTAINER
+   LUXURY MAIN CARD — gold gradient frame + ornaments
    ============================================================ */
 .container{
   max-width:1060px;
   margin:-26px auto 40px;
-  background:var(--card);
-  padding:clamp(22px,4vw,44px);
+  padding:clamp(26px,4vw,46px);
   border-radius:calc(var(--radius) + 6px);
-  box-shadow:var(--shadow-lg);
   position:relative;
   z-index:2;
   animation:fadeUp .8s .2s ease both;
+  border:1.6px solid transparent;
+  background:
+    linear-gradient(var(--card),var(--card)) padding-box,
+    linear-gradient(135deg,#f2d478 0%,#c9a227 28%,#8a6d1d 50%,#e9cf7d 74%,#f2d478 100%) border-box;
+  background-size:100% 100%,300% 300%;
+  background-position:0 0,0% 50%;
+  animation:fadeUp .8s .2s ease both, borderFlow 14s ease infinite;
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 1px rgba(212,175,55,.10),
+    0 30px 80px -24px rgba(212,175,55,.22);
 }
+@keyframes borderFlow{
+  0%,100%{background-position:0 0,0% 50%;}
+  50%{background-position:0 0,100% 50%;}
+}
+
+/* Gold corner brackets */
+.container::before,.container::after{
+  content:"";position:absolute;width:54px;height:54px;
+  border:3px solid #d4af37;opacity:.85;pointer-events:none;z-index:3;
+}
+.container::before{top:12px;left:12px;border-right:none;border-bottom:none;border-radius:12px 0 0 0;}
+.container::after{bottom:12px;right:12px;border-left:none;border-top:none;border-radius:0 0 12px 0;}
+
+/* Floating cross crest on the card seam */
+.cross-badge{
+  position:absolute;top:-24px;left:50%;
+  transform:translateX(-50%);
+  width:48px;height:48px;border-radius:50%;
+  background:linear-gradient(135deg,#101d44,#1f3c88);
+  color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:800;
+  border:2px solid var(--accent);
+  z-index:4;
+  animation:float 5s ease-in-out infinite, crestGlow 3.5s ease-in-out infinite;
+}
+@keyframes crestGlow{
+  0%,100%{box-shadow:0 0 0 5px rgba(255,215,0,.14),0 8px 24px rgba(212,175,55,.45);}
+  50%{box-shadow:0 0 0 11px rgba(255,215,0,.03),0 8px 34px rgba(212,175,55,.65);}
+}
+
+/* Cursor-following gold spotlight */
+.spotlight{
+  position:absolute;inset:0;border-radius:inherit;
+  pointer-events:none;z-index:1;
+  background:radial-gradient(340px circle at var(--mx,50%) var(--my,-40px), rgba(255,215,0,.10), transparent 65%);
+  opacity:0;transition:opacity .5s ease;
+}
+.container:hover .spotlight{opacity:1;}
 
 h2{
   font-size:clamp(19px,2.6vw,25px);
@@ -218,6 +402,12 @@ h2{
   padding-left:14px;
   border-left:5px solid var(--accent);
   letter-spacing:.3px;
+}
+/* Gold flourish under every heading */
+h2::after{
+  content:"";display:block;width:78px;height:3px;margin-top:9px;margin-left:0;
+  border-radius:99px;
+  background:linear-gradient(90deg,var(--accent),rgba(255,215,0,0));
 }
 .service-time{
   display:inline-block;
@@ -229,11 +419,12 @@ h2{
   font-size:14px;
   margin:4px 0 16px;
   border:1px solid #d4dff3;
+  box-shadow:inset 0 1px 0 #fff, 0 2px 8px rgba(31,60,136,.08);
 }
 
 /* ---------- Timer box ---------- */
 .timer-box{
-  background:linear-gradient(135deg,#16295e,#1f3c88 55%,#2b4aa0);
+  background:linear-gradient(135deg,#0f1c40,#1f3c88 55%,#2b4aa0);
   color:#fff;
   padding:34px 26px;
   font-size:clamp(19px,2.8vw,27px);
@@ -241,7 +432,7 @@ h2{
   border-radius:var(--radius);
   margin-bottom:30px;
   line-height:1.7;
-  box-shadow:var(--shadow-md);
+  box-shadow:var(--shadow-md), 0 0 42px rgba(255,215,0,.14);
   position:relative;
   overflow:hidden;
   animation:pulseGlow 3.2s ease-in-out infinite;
@@ -249,14 +440,28 @@ h2{
 .timer-box::before{
   content:"";
   position:absolute; inset:0;
-  background:radial-gradient(500px 160px at 50% -30%, rgba(255,215,0,.14), transparent 70%);
+  background:radial-gradient(500px 160px at 50% -30%, rgba(255,215,0,.16), transparent 70%);
   pointer-events:none;
+}
+/* Sweeping light beam across the timer */
+.timer-box::after{
+  content:"";
+  position:absolute;top:-10%;bottom:-10%;width:38%;left:-60%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.14),transparent);
+  transform:skewX(-12deg);
+  animation:beamSweep 7s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes beamSweep{
+  0%{left:-60%;}
+  55%{left:125%;}
+  100%{left:125%;}
 }
 .timer-box span{
   color:var(--accent);
   font-weight:800;
   font-variant-numeric:tabular-nums;
-  text-shadow:0 0 18px rgba(255,215,0,.45);
+  text-shadow:0 0 18px rgba(255,215,0,.55);
 }
 
 /* ---------- Scripture box ---------- */
@@ -270,7 +475,7 @@ h2{
   font-size:19px;
   line-height:1.7;
   color:#4b4630;
-  box-shadow:var(--shadow-sm);
+  box-shadow:var(--shadow-sm), inset 0 0 34px rgba(255,215,0,.10);
   animation:fadeUp .6s ease both;
 }
 #scriptureBox strong{color:var(--primary-dark); letter-spacing:.4px;}
@@ -286,7 +491,7 @@ table{
   margin-bottom:34px;
   border-radius:var(--radius);
   overflow:hidden;
-  box-shadow:var(--shadow-sm);
+  box-shadow:var(--shadow-sm), 0 6px 18px -8px rgba(212,175,55,.18);
   border:1px solid var(--border);
   animation:fadeUp .6s ease both;
 }
@@ -298,12 +503,25 @@ th{
   letter-spacing:.6px;
   text-transform:uppercase;
   font-size:12.5px;
+  border-bottom:2px solid rgba(255,215,0,.55);
+  text-shadow:0 1px 2px rgba(0,0,0,.25);
 }
 td{border-bottom:1px solid var(--border); background:#fff; transition:var(--transition);}
 tbody tr:last-child td, table tr:last-child td{border-bottom:none;}
 tr:nth-child(even) td{background:#f8fafd;}
 tr:hover td{background:#eef3fc;}
 .calendar-table th{background:linear-gradient(135deg,var(--primary-dark),var(--primary));}
+
+/* Map link inside calendar venue cells */
+.venue-link{
+  color:var(--primary);
+  font-weight:700;
+  text-decoration:underline dotted var(--primary-light);
+  text-underline-offset:3px;
+  white-space:nowrap;
+  transition:var(--transition);
+}
+.venue-link:hover{color:var(--primary-dark); text-decoration-style:solid; text-shadow:0 0 10px rgba(255,215,0,.5);}
 
 /* Program highlight states */
 .current-program td{
@@ -337,9 +555,11 @@ tr:hover td{background:#eef3fc;}
   margin-top:30px;
   background:#fbfcfe;
   border:1px solid var(--border);
+  border-top:3px solid transparent;
+  border-image:linear-gradient(90deg,var(--accent),rgba(255,215,0,0)) 1;
   border-radius:var(--radius);
   padding:26px 28px 30px;
-  box-shadow:var(--shadow-sm);
+  box-shadow:var(--shadow-sm), 0 -6px 18px -10px rgba(212,175,55,.25);
   animation:fadeUp .55s ease both;
 }
 .hidden-section h2{margin-top:0;}
@@ -366,7 +586,7 @@ input, textarea{
 input:focus, textarea:focus{
   outline:none;
   border-color:var(--primary-light);
-  box-shadow:0 0 0 4px rgba(31,60,136,.12);
+  box-shadow:0 0 0 4px rgba(31,60,136,.12), 0 0 18px rgba(255,215,0,.22);
   transform:translateY(-1px);
 }
 textarea{min-height:110px; resize:vertical;}
@@ -375,7 +595,7 @@ form button{margin:18px 0 0;}
 /* Tithes list */
 #tithesContent ul{list-style:none; padding:0; margin:14px 0 4px;}
 #tithesContent li{
-  background:#fff;
+  background:linear-gradient(90deg,#ffffff,#fdfcf6);
   border:1px solid var(--border);
   border-left:5px solid #27ae60;
   border-radius:10px;
@@ -385,12 +605,17 @@ form button{margin:18px 0 0;}
   box-shadow:var(--shadow-sm);
   transition:var(--transition);
 }
-#tithesContent li:hover{transform:translateX(6px); box-shadow:var(--shadow-md);}
+#tithesContent li:hover{
+  transform:translateX(6px);
+  box-shadow:var(--shadow-md), 0 0 16px rgba(39,174,96,.18);
+  border-left-color:var(--accent);
+}
 
 /* ============================================================
    FOOTER
    ============================================================ */
 footer{
+  position:relative;
   background:linear-gradient(135deg,#1a2436,#2c3e50);
   color:#c9d4e3;
   text-align:center;
@@ -398,8 +623,25 @@ footer{
   font-size:14.5px;
   line-height:2;
   border-top:4px solid var(--accent);
+  z-index:1;
+  overflow:hidden;
+}
+footer::before{
+  content:"";
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:60%;height:110px;
+  background:radial-gradient(50% 100% at 50% 0%, rgba(255,215,0,.14), transparent 70%);
+  pointer-events:none;
 }
 footer strong{color:#fff;}
+footer a.map-link{
+  color:var(--accent);
+  font-weight:700;
+  text-decoration:none;
+  border-bottom:2px dotted var(--accent);
+  transition:var(--transition);
+}
+footer a.map-link:hover{color:#fff; border-bottom-color:#fff; text-shadow:0 0 12px rgba(255,215,0,.6);}
 
 /* ============================================================
    PROJECTOR MODE
@@ -409,23 +651,56 @@ footer strong{color:#fff;}
 .projector .timer-box, .projector table{font-size:28px;}
 .projector body{background:#0c1222;}
 .projector .container{margin-top:20px; box-shadow:none;}
+/* Tone down the ambience for projection clarity */
+.projector #vignette{display:none;}
+.projector #flareCanvas{opacity:.3;}
+.projector #flareLayer{opacity:.4;}
+.projector .cross-badge{display:none;}
+
+/* ============================================================
+   ACCESSIBILITY — respect reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+}
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width:640px){
   header{padding:40px 14px 36px;}
-  .container{margin:-18px 10px 26px; padding:18px 14px;}
+  .container{margin:-18px 10px 26px; padding:20px 14px;}
+  .container::before,.container::after{width:34px;height:34px;}
   th, td{padding:10px 10px; font-size:13.5px;}
   button{width:calc(100% - 10px);}
   .nav-group button{width:auto;}
   .timer-box{padding:24px 16px;}
+  .halo{width:90vw;}
 }
 </style>
 </head>
 
 <body>
+
+<!-- ✨ AMBIENT FLARE LAYERS (purely decorative) -->
+<div id="flareLayer" aria-hidden="true">
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="aurora"></div>
+</div>
+<canvas id="flareCanvas" aria-hidden="true"></canvas>
+<div id="vignette" aria-hidden="true"></div>
+
 <header>
+  <!-- Cathedral light effects (behind content) -->
+  <div class="god-rays" aria-hidden="true"></div>
+  <div class="halo" aria-hidden="true"></div>
+  <div class="stars" aria-hidden="true"></div>
+
 <div class="header-badge">✝ Welcome to the House of the Lord</div>
 <h1>Jesus Christ Redeems <span class="gold">Global Ministries</span></h1>
 <p id="serviceDate"></p>
@@ -478,6 +753,9 @@ footer strong{color:#fff;}
 </header>
 
 <div class="container">
+  <div class="cross-badge" aria-hidden="true">✝</div>
+  <div class="spotlight" aria-hidden="true"></div>
+
 <div class="timer-box" id="timerBox">Loading…</div>
 
 <!-- Scripture Box -->
@@ -571,6 +849,7 @@ footer strong{color:#fff;}
 
 <footer>
 📞 <strong>Phone:</strong> 0979554970 &nbsp;|&nbsp; ✉ <strong>Email:</strong> pedahzurministries@gmail.com<br>
+📍 <strong>Location:</strong> <a id="footerMapLink" href="#" target="_blank" rel="noopener" class="map-link">Find Our Church on Google Maps</a><br>
 © <span id="year"></span> Jesus Christ Redeems Global Ministries — All Rights Reserved
 </footer>
 
@@ -584,11 +863,36 @@ footer strong{color:#fff;}
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js');}
 
+// ============================================================
+//  CHURCH CONFIG — SINGLE SOURCE OF TRUTH
+//  👉 If the venue ever changes, update ONLY 'mapLink' below.
+//     Every map reference on this page updates automatically.
+//  👉 'mapVenueLabel' controls the venue text shown in the
+//     calendar rows. Change it once here and all rows follow.
+// ============================================================
+const CHURCH_CONFIG = {
+  fullName: "Jesus Christ Redeems Global Ministries",
+  mapVenueLabel: "JCRGM CHURCH", // 🏷️ Venue display text — edit here only
+  mapLink: "https://maps.app.goo.gl/t8LcZowDWVmsAiJu8" // 📍 UPDATE THIS LINE ONLY
+};
+
+// Venue renderer: main church venue becomes a live Google Maps link.
+// Other venues ("AS DIRECTED") stay as plain text.
+function venueCell(venue){
+  if (venue === CHURCH_CONFIG.mapVenueLabel){
+    return `<a href="${CHURCH_CONFIG.mapLink}" target="_blank" rel="noopener" class="venue-link" title="View church location on Google Maps">${venue} 📍</a>`;
+  }
+  return venue;
+}
+
 // Display date & year
 const today = new Date();
 const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
 document.getElementById("serviceDate").innerText = "Today: " + today.toLocaleDateString('en-GB', options);
 document.getElementById("year").innerText=new Date().getFullYear();
+
+// Inject map link into footer (single source: CHURCH_CONFIG)
+document.getElementById("footerMapLink").href = CHURCH_CONFIG.mapLink;
 
 // Projector toggle
 function toggleProjector(){document.documentElement.classList.toggle("projector");}
@@ -761,32 +1065,34 @@ function generateCalendar() {
     const easterMonday = new Date(easter);
     easterMonday.setDate(easter.getDate() + 1);
 
+    const CHURCH = CHURCH_CONFIG.mapVenueLabel; // single source for venue text
+
     const events = [
     // Fixed holidays
-    { date: new Date(year, 0, 1), event: "NEW YEAR", program: "YEAR BLESSINGS", time: "00:01HRS", venue: "PAMI CHURCH" },
+    { date: new Date(year, 0, 1), event: "NEW YEAR", program: "YEAR BLESSINGS", time: "00:01HRS", venue: CHURCH },
     { date: new Date(year, 1, 14), event: "PEDAHZUR SUPPORT TEAM", program: "Support Meeting", time: "14HRS", venue: "AS DIRECTED" },
 
     // Church events
-    { date: new Date(year, 2, 5), event: "WOMEN DAY", program: "Women Sunday", time: "09:30 – 13:30", venue: "PAMI CHURCH" },
-    { date: new Date(year, 2, 12), event: "YOUTH DAY", program: "Youth Sunday", time: "09:30", venue: "PAMI CHURCH" },
+    { date: new Date(year, 2, 5), event: "WOMEN DAY", program: "Women Sunday", time: "09:30 – 13:30", venue: CHURCH },
+    { date: new Date(year, 2, 12), event: "YOUTH DAY", program: "Youth Sunday", time: "09:30", venue: CHURCH },
     { date: new Date(year, 7, 8), event: "PAMI ANNIVERSARY", program: "Anniversary Celebration", time: "14HRS", venue: "AS DIRECTED" },
-    { date: new Date(year, 7, 23), event: "PEDAHZUR SUPPORT TEAM", program: "Support Meeting", time: "14:00HRS", venue: "PAMI CHURCH" },
+    { date: new Date(year, 7, 23), event: "PEDAHZUR SUPPORT TEAM", program: "Support Meeting", time: "14:00HRS", venue: CHURCH },
 
     // Easter
     { date: goodFriday, event: "GOOD FRIDAY", program: "PRAYER SUMMIT", time: "14HRS - 17HRS", venue: "AS DIRECTED" },
     { date: holySaturday, event: "HOLY SATURDAY", program: "PRAYER SUMMIT", time: "14HRS - 17HRS", venue: "AS DIRECTED" },
-    { date: easter, event: "RESURRECTION SUNDAY", program: "REDEMPTION SUNDAY", time: "09:00 – 13:30", venue: "PAMI CHURCH" },
+    { date: easter, event: "RESURRECTION SUNDAY", program: "REDEMPTION SUNDAY", time: "09:00 – 13:30", venue: CHURCH },
     { date: easterMonday, event: "EASTER MONDAY", program: "PRAYER SUMMIT", time: "14HRS - 17HRS", venue: "AS DIRECTED" },
 
     // Other national holidays
-    { date: new Date(year, 4, 1), event: "LABOR DAY", program: "MOUNTAIN PRAYERS", time: "08:00 – 16:00", venue: "PAMI CHURCH" },
-    { date: new Date(year, 4, 25), event: "AFRICA FREEDOM DAY", program: "MOUNTAIN PRAYERS", time: "08:00 – 16:00", venue: "PAMI CHURCH" },
-    { date: new Date(year, 6, 4), event: "UNITY DAY", program: "PRAYER CAMP", time: "04HRS", venue: "PAMI CHURCH" },
+    { date: new Date(year, 4, 1), event: "LABOR DAY", program: "MOUNTAIN PRAYERS", time: "08:00 – 16:00", venue: CHURCH },
+    { date: new Date(year, 4, 25), event: "AFRICA FREEDOM DAY", program: "MOUNTAIN PRAYERS", time: "08:00 – 16:00", venue: CHURCH },
+    { date: new Date(year, 6, 4), event: "UNITY DAY", program: "PRAYER CAMP", time: "04HRS", venue: CHURCH },
     { date: new Date(year, 7, 7), event: "FARMERS DAY", program: "Congregational Thanksgiving Service", time: "14HRS – 17HRS", venue: "AS DIRECTED" },
 
     // Christmas
     { date: new Date(year, 11, 25), event: "CHRISTMAS DAY", program: "CHRISTMAS CELEBRATION", time: "14HRS", venue: "AS DIRECTED" },
-    { date: new Date(year, 11, 31), event: "NEW YEARS EVE", program: "CROSSOVER NIGHT", time: "20HRS – 04HRS", venue: "PAMI CHURCH" }
+    { date: new Date(year, 11, 31), event: "NEW YEARS EVE", program: "CROSSOVER NIGHT", time: "20HRS – 04HRS", venue: CHURCH }
 ];
 
     events.sort((a, b) => a.date - b.date);
@@ -813,7 +1119,7 @@ events.forEach(e => {
         <td>${e.event}</td>
         <td>${e.program}</td>
         <td>${e.time}</td>
-        <td>${e.venue}</td>
+        <td>${venueCell(e.venue)}</td>
     </tr>`;
 
     tbody.innerHTML += row;
@@ -822,6 +1128,109 @@ events.forEach(e => {
 
 // Run it
 generateCalendar();
+
+/* ============================================================
+   ✨ GOLD DUST FLARE ENGINE — floating embers & sparkles
+   (lightweight canvas; auto-scales to screen size; pauses
+   when tab is hidden; disabled for reduced-motion users)
+   ============================================================ */
+(function(){
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canvas = document.getElementById('flareCanvas');
+  if(!canvas || reduceMotion) return;
+
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], sparkles = [], running = true;
+
+  function seed(){
+    const count = Math.min(70, Math.floor(window.innerWidth / 16));
+    particles = Array.from({length: count}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: 0.6 + Math.random() * 1.8,
+      s: 0.12 + Math.random() * 0.4,
+      phase: Math.random() * Math.PI * 2,
+      a: 0.25 + Math.random() * 0.45,
+      tw: 0.5 + Math.random() * 1.5
+    }));
+    sparkles = Array.from({length: 6}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      size: 4 + Math.random() * 7,
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.004,
+      a: 0.22 + Math.random() * 0.28,
+      vy: 0.05 + Math.random() * 0.1
+    }));
+  }
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    seed();
+  }
+
+  function drawSparkle(x, y, size, rot, alpha){
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    ctx.strokeStyle = `rgba(255,224,130,${alpha})`;
+    ctx.lineWidth = 1.1;
+    ctx.beginPath();
+    ctx.moveTo(-size, 0); ctx.lineTo(size, 0);
+    ctx.moveTo(0, -size); ctx.lineTo(0, size);
+    ctx.stroke();
+    ctx.fillStyle = `rgba(255,244,200,${alpha})`;
+    ctx.beginPath(); ctx.arc(0, 0, 1.4, 0, 7); ctx.fill();
+    ctx.restore();
+  }
+
+  function frame(t){
+    requestAnimationFrame(frame);
+    if(!running){ return; }
+    ctx.clearRect(0, 0, W, H);
+    const time = t / 1000;
+
+    for(const p of particles){
+      p.y -= p.s;
+      if(p.y < -8){ p.y = H + 8; p.x = Math.random() * W; }
+      const x = p.x + Math.sin(time * 0.6 + p.phase) * 5;
+      const tw = 0.55 + 0.45 * Math.sin(time * p.tw * 2 + p.phase);
+      const a = p.a * tw;
+      // soft glow halo
+      ctx.fillStyle = `rgba(255,215,0,${a * 0.25})`;
+      ctx.beginPath(); ctx.arc(x, p.y, p.r * 3, 0, 7); ctx.fill();
+      // bright core
+      ctx.fillStyle = `rgba(255,236,170,${a})`;
+      ctx.beginPath(); ctx.arc(x, p.y, p.r, 0, 7); ctx.fill();
+    }
+
+    for(const s of sparkles){
+      s.y -= s.vy; s.rot += s.vr;
+      if(s.y < -20){ s.y = H + 20; s.x = Math.random() * W; }
+      const a = s.a * (0.6 + 0.4 * Math.sin(time * 1.3 + s.rot * 5));
+      drawSparkle(s.x, s.y, s.size, s.rot, a);
+    }
+  }
+
+  window.addEventListener('resize', resize);
+  document.addEventListener('visibilitychange', () => { running = !document.hidden; });
+  resize();
+  requestAnimationFrame(frame);
+})();
+
+/* ============================================================
+   ✨ CURSOR SPOTLIGHT — gold sheen follows the mouse on card
+   ============================================================ */
+(function(){
+  const card = document.querySelector('.container');
+  if(!card) return;
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  });
+})();
 </script>
 </body>
 </html>
