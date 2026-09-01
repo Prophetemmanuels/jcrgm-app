@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jesus Christ Redeems Global Ministries - Dynamic Church Calendar</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            navy: '#0B1E36',
+                            gold: '#D4AF37',
+                            goldDark: '#AA7C11',
+                            goldLight: '#F3E5AB',
+                            slate: '#1E293B',
+                            accent: '#C5A880'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gold-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #AA7C11 100%);
+        }
+        .navy-gradient {
+            background: linear-gradient(135deg, #0F172A 0%, #0B1E36 100%);
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4AF37;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-[#09111e] text-slate-100 font-sans min-h-screen antialiased selection:bg-brand-gold selection:text-brand-navy">
+
+    <!-- Top Glow Effects -->
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-brand-gold/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute top-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+
+        <!-- HEADER SECTION -->
+        <header class="text-center mb-10 flex flex-col items-center">
+            <!-- Church Emblem Placeholder -->
+            <div class="w-20 h-20 bg-gradient-to-tr from-brand-gold to-brand-goldLight rounded-full p-1.5 shadow-lg shadow-brand-gold/20 mb-4 flex items-center justify-center">
+                <div class="w-full h-full bg-brand-navy rounded-full flex items-center justify-center text-brand-gold">
+                    <i data-lucide="cross" class="w-10 h-10 animate-pulse"></i>
+                </div>
+            </div>
+            <h1 class="text-xs sm:text-sm uppercase tracking-[0.25em] text-brand-gold font-bold mb-1 px-4 text-center">Jesus Christ Redeems Global Ministries</h1>
+            <p class="font-serif italic text-3xl md:text-5xl text-white font-semibold mb-4 tracking-wide">Liturgical &amp; Public Calendar</p>
+            <div class="h-0.5 w-24 gold-gradient rounded-full mb-6"></div>
+
+            <!-- Year Selector -->
+            <div class="flex items-center gap-3 bg-brand-slate/40 border border-slate-700/60 rounded-full p-1.5 shadow-inner">
+                <button onclick="changeYear(-1)" class="p-2 hover:bg-brand-gold/10 rounded-full text-brand-gold transition duration-200">
+                    <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                </button>
+                <span id="currentYearDisplay" class="text-xl font-bold tracking-widest text-white px-4">2026</span>
+                <button onclick="changeYear(1)" class="p-2 hover:bg-brand-gold/10 rounded-full text-brand-gold transition duration-200">
+                    <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- COUNTDOWN TO NEXT EVENT -->
+        <section class="mb-12">
+            <div class="navy-gradient border border-brand-gold/30 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-brand-gold/5 rounded-full blur-3xl"></div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+                    <div class="lg:col-span-5 text-center lg:text-left">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-gold/10 text-brand-gold border border-brand-gold/20 uppercase tracking-widest mb-3">
+                            <i data-lucide="bell" class="w-3.5 h-3.5 animate-bounce"></i> Upcoming Event
+                        </span>
+                        <h2 id="nextEventTitle" class="text-2xl md:text-3xl font-bold text-white mb-2 leading-tight">Crossover Night</h2>
+                        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-sm text-slate-300 mb-2">
+                            <span class="flex items-center gap-1.5">
+                                <i data-lucide="calendar" class="w-4 h-4 text-brand-gold"></i>
+                                <span id="nextEventDate">Dec 31, 2026</span>
+                            </span>
+                            <span class="flex items-center gap-1.5">
+                                <i data-lucide="clock" class="w-4 h-4 text-brand-gold"></i>
+                                <span id="nextEventTime">20:00 - 04:00 HRS</span>
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-center lg:justify-start gap-1.5 text-sm">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-rose-400"></i>
+                            <span id="nextEventVenue" class="font-medium text-slate-300">JCRGM CHURCH</span>
+                        </div>
+                    </div>
+
+                    <!-- Live Countdown Grid -->
+                    <div class="lg:col-span-7 flex flex-wrap justify-center gap-4">
+                        <div class="glass-dark border border-slate-700 w-24 h-24 sm:w-28 sm:h-28 rounded-2xl flex flex-col items-center justify-center shadow-lg">
+                            <span id="cd-days" class="text-3xl sm:text-4xl font-extrabold text-white">00</span>
+                            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 mt-1 font-semibold">Days</span>
+                        </div>
+                        <div class="glass-dark border border-slate-700 w-24 h-24 sm:w-28 sm:h-28 rounded-2xl flex flex-col items-center justify-center shadow-lg">
+                            <span id="cd-hours" class="text-3xl sm:text-4xl font-extrabold text-white">00</span>
+                            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 mt-1 font-semibold">Hours</span>
+                        </div>
+                        <div class="glass-dark border border-slate-700 w-24 h-24 sm:w-28 sm:h-28 rounded-2xl flex flex-col items-center justify-center shadow-lg">
+                            <span id="cd-mins" class="text-3xl sm:text-4xl font-extrabold text-white">00</span>
+                            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 mt-1 font-semibold">Mins</span>
+                        </div>
+                        <div class="glass-dark border border-slate-700 w-24 h-24 sm:w-28 sm:h-28 rounded-2xl flex flex-col items-center justify-center shadow-lg">
+                            <span id="cd-secs" class="text-3xl sm:text-4xl font-extrabold text-brand-gold">00</span>
+                            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 mt-1 font-semibold">Secs</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW CONTROL BAR & SEARCH -->
+        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-8">
+            <div class="flex items-center gap-2 bg-brand-slate/40 border border-slate-800 rounded-xl p-1 self-start">
+                <button onclick="setView('calendar')" id="btnViewCalendar" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2">
+                    <i data-lucide="grid" class="w-4 h-4"></i> Month Grid
+                </button>
+                <button onclick="setView('list')" id="btnViewList" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2">
+                    <i data-lucide="list" class="w-4 h-4"></i> Complete Chart
+                </button>
+            </div>
+            
+            <div class="relative flex-grow md:max-w-md">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <i data-lucide="search" class="w-5 h-5"></i>
+                </div>
+                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Search holidays, church programmes, or venues..." 
+                    class="w-full bg-brand-slate/40 border border-slate-700/60 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition duration-200">
+            </div>
+        </div>
+
+        <!-- MAIN CALENDAR CONTAINER -->
+        <main class="grid grid-cols-1 gap-8">
+            
+            <!-- MONTH GRID VIEW -->
+            <div id="calendarView" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left: Interactive Month Browser Grid -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h3 id="currentMonthNameHeader" class="text-2xl font-bold font-serif text-white flex items-center gap-2">
+                            <i data-lucide="calendar-days" class="text-brand-gold"></i> January
+                        </h3>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeMonth(-1)" class="p-2 bg-brand-slate/40 border border-slate-700/60 rounded-lg hover:bg-brand-gold/10 text-brand-gold transition">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="changeMonth(1)" class="p-2 bg-brand-slate/40 border border-slate-700/60 rounded-lg hover:bg-brand-gold/10 text-brand-gold transition">
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Dynamic Month Calendar Grid -->
+                    <div class="glass-dark border border-slate-800 rounded-3xl p-6 shadow-xl">
+                        <!-- Days of Week Headers -->
+                        <div class="grid grid-cols-7 gap-2 text-center text-xs font-bold uppercase tracking-wider text-brand-gold mb-4 pb-2 border-b border-slate-800">
+                            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                        </div>
+                        <div id="calendarDaysGrid" class="grid grid-cols-7 gap-2 sm:gap-3 text-center">
+                            <!-- Dynamic days injected via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Selected Month Programmes Detail Panel -->
+                <div class="space-y-6">
+                    <h3 class="text-xl font-bold font-serif text-white flex items-center gap-2">
+                        <i data-lucide="sparkles" class="text-brand-gold"></i> Scheduled Programmes
+                    </h3>
+                    <div id="monthEventsList" class="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                        <!-- Dynamic Month Event Cards Injected Here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPLETE CHART TABLE VIEW -->
+            <div id="listView" class="hidden">
+                <div class="glass-dark border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-brand-navy/80 border-b border-slate-700/60 text-xs uppercase tracking-wider font-semibold text-brand-gold">
+                                    <th class="py-4 px-6">Zambia Public Holidays</th>
+                                    <th class="py-4 px-6">Holiday Description</th>
+                                    <th class="py-4 px-6">Church Scheduled Dates</th>
+                                    <th class="py-4 px-6">Church Programmes</th>
+                                    <th class="py-4 px-6">Time Scale</th>
+                                    <th class="py-4 px-6">Venue Location</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fullEventTableBody" class="divide-y divide-slate-800/60 text-sm">
+                                <!-- Dynamic complete list parsed here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- FOOTER DISCLOSURE SIGNATURE -->
+        <footer class="mt-16 border-t border-slate-800/80 pt-8 pb-12 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="space-y-2 text-center md:text-left">
+                <div class="flex items-center justify-center md:justify-start gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-brand-gold animate-ping"></span>
+                    <p class="text-xs font-semibold text-brand-gold uppercase tracking-widest">Punctuality &amp; Excellence</p>
+                </div>
+                <p class="text-xs text-slate-400 max-w-lg leading-relaxed">
+                    Kindly note that schedules are prepared to keep up with punctuality and excellence. Please follow all that is recorded on the liturgical church calendar.
+                </p>
+            </div>
+            
+            <!-- Prepared By / Bishop Signature Section -->
+            <div class="flex items-center gap-4 bg-brand-slate/40 border border-slate-800/80 rounded-2xl px-6 py-4 shadow-lg">
+                <i data-lucide="award" class="w-10 h-10 text-brand-gold"></i>
+                <div class="text-left">
+                    <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Authorized Prepared By</p>
+                    <p class="text-sm font-bold text-white">Bishop Emmanuel Sakala</p>
+                    <p class="text-[11px] text-brand-gold italic">Presiding Bishop, JCRGM</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- MONTH TRANSITION ALERT MODAL (NEW MONTH NOTIFICATION) -->
+    <div id="newMonthModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+        <div class="glass-dark border border-brand-gold/30 rounded-3xl p-8 max-w-md w-full shadow-2xl relative text-center">
+            <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-24 h-24 bg-gradient-to-tr from-brand-gold to-brand-goldLight rounded-full p-1.5 shadow-xl">
+                <div class="w-full h-full bg-brand-navy rounded-full flex items-center justify-center text-brand-gold">
+                    <i data-lucide="crown" class="w-12 h-12"></i>
+                </div>
+            </div>
+            
+            <div class="mt-12 space-y-4">
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-brand-gold/10 text-brand-gold border border-brand-gold/20 uppercase tracking-widest">
+                    A New Month Has Arrived
+                </span>
+                <h3 id="modalMonthName" class="text-3xl font-serif font-bold text-white">Welcome!</h3>
+                <p class="text-sm text-slate-300 leading-relaxed italic">
+                    "Behold, I do a new thing; now it shall spring forth; shall ye not know it? I will even make a way in the wilderness, and rivers in the desert." - Isaiah 43:19
+                </p>
+                <div class="p-4 bg-brand-slate/60 border border-slate-700/60 rounded-2xl text-left space-y-2">
+                    <p class="text-xs uppercase text-brand-gold font-bold tracking-wider">Highlight Church Events This Month:</p>
+                    <div id="modalMonthEvents" class="text-sm space-y-1 text-slate-200">
+                        <!-- Dynamic Highlights Filled Dynamically -->
+                    </div>
+                </div>
+                <button onclick="closeNewMonthModal()" class="w-full py-3 rounded-xl gold-gradient font-bold text-brand-navy hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-brand-gold/10">
+                    Receive Grace &amp; Access Schedule
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAILED EXPLANATORY MODAL FOR "THE NIGHT OF THE REDEEMED" WITH BISHOP COUNSELING REGISTRATION -->
+    <div id="theologicalModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300 overflow-y-auto">
+        <div class="glass-dark border border-brand-gold/40 rounded-3xl p-6 md:p-8 max-w-4xl w-full shadow-2xl relative my-8 overflow-hidden">
+            <!-- Radiant light flare backdrops -->
+            <div class="absolute -top-16 -left-16 w-36 h-36 bg-brand-gold/10 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-16 -right-16 w-36 h-36 bg-sky-500/10 rounded-full blur-2xl"></div>
+
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6 relative z-10">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-brand-gold/15 rounded-xl flex items-center justify-center text-brand-gold">
+                        <i data-lucide="shield-alert" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-white font-serif">Night of the Redeemed Portal</h4>
+                        <p class="text-xs text-brand-gold font-semibold uppercase tracking-widest">Counseling Registration &amp; Prayer Convocation</p>
+                    </div>
+                </div>
+                <button onclick="closeTheologicalModal()" class="p-2 hover:bg-white/5 rounded-full text-slate-400 hover:text-white transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
+                <!-- Left Column: Theological Teachings -->
+                <div class="lg:col-span-6 space-y-6 text-left pr-0 lg:pr-4 lg:border-r lg:border-slate-850">
+                    <!-- Redemption Section -->
+                    <div class="space-y-2">
+                        <h5 class="text-sm uppercase tracking-widest text-brand-gold font-bold flex items-center gap-2">
+                            <i data-lucide="key-round" class="w-4 h-4"></i> What is Redemption?
+                        </h5>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                            <strong class="text-white">Redemption</strong> is the ultimate legal divine exchange. We, who were once bound to spiritual insolvency and captivity, have been purchased back and restored into complete alignment with God's original master design. It is not a passive rescue; it is a ransom paid in full by the blood of Jesus Christ, changing our status from <span class="italic text-brand-gold">slaves of sin to heirs of the King.</span>
+                        </p>
+                    </div>
+
+                    <!-- Persistent Prayer Section -->
+                    <div class="space-y-2">
+                        <h5 class="text-sm uppercase tracking-widest text-brand-gold font-bold flex items-center gap-2">
+                            <i data-lucide="flame" class="w-4 h-4"></i> The Power of Persistent Prayer
+                        </h5>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                            Persistent prayer is the unyielding posture of absolute faith that refuses to settle for anything less than Heaven’s answer. As illustrated in <span class="italic text-brand-gold">Luke 18:1-8</span>, consistency in prayer is not attempting to bend God's will; it is building a solid spiritual conduit of authority that dismantles persistent dark configurations and demands dynamic supernatural outcomes in our lives.
+                        </p>
+                    </div>
+
+                    <!-- Guidance Info-box -->
+                    <div class="bg-brand-navy/60 border border-brand-gold/20 rounded-2xl p-4 flex gap-3 items-start">
+                        <i data-lucide="info" class="w-5 h-5 text-brand-gold shrink-0 mt-0.5"></i>
+                        <p class="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
+                            The <strong class="text-white">Night of the Redeemed</strong> quarterly vigils are highly strategic spiritual seasons. Use the adjacent form to book an appointment with Bishop Emmanuel Sakala.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Column: Encounter Booking Form -->
+                <div class="lg:col-span-6 text-left space-y-4">
+                    <div class="p-1">
+                        <h5 class="text-base font-bold text-white mb-1 flex items-center gap-2">
+                            <i data-lucide="user-check" class="text-brand-gold"></i> Book One-on-One Encounter
+                        </h5>
+                        <p class="text-xs text-slate-400">Fill in your information below to register and secure your direct appointment space with the Bishop.</p>
+                    </div>
+
+                    <form id="encounterBookingForm" onsubmit="handleBookingSubmit(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-wider text-brand-gold font-semibold mb-1">Your Full Name</label>
+                            <input type="text" id="b_name" required placeholder="Enter your full name" 
+                                class="w-full bg-slate-900/80 border border-slate-700/60 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-wider text-brand-gold font-semibold mb-1">WhatsApp / Contact Number</label>
+                            <input type="tel" id="b_phone" required placeholder="e.g. 097XXXXXXXX" 
+                                class="w-full bg-slate-900/80 border border-slate-700/60 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-wider text-brand-gold font-semibold mb-1">Primary Area of Prayer &amp; Counseling</label>
+                            <select id="b_reason" class="w-full bg-slate-900 border border-slate-700/60 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-gold transition">
+                                <option value="Spiritual Growth & Counseling">Spiritual Growth &amp; Alignment Counseling</option>
+                                <option value="Deliverance & Breaking Limitations">Deliverance &amp; Breaking Foundations</option>
+                                <option value="Marital & Family Restoration">Marital &amp; Family Restoration</option>
+                                <option value="Career & Business Breakthrough">Career, Finance &amp; Business Breakthrough</option>
+                                <option value="Healing & Wholeness">Divine Healing &amp; Supernatural Health</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-wider text-brand-gold font-semibold mb-1">Brief Description / Prayer Request</label>
+                            <textarea id="b_notes" rows="2" placeholder="Briefly describe what you are believing God for..." 
+                                class="w-full bg-slate-900/80 border border-slate-700/60 rounded-xl px-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-gold transition"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 rounded-xl gold-gradient font-bold text-xs uppercase tracking-widest text-brand-navy hover:brightness-110 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2">
+                            <i data-lucide="check-square" class="w-4 h-4"></i> Validate &amp; Choose WhatsApp Office
+                        </button>
+                    </form>
+
+                    <!-- WHATSAPP DISPATCH INSTRUCTIONS PANEL (Initially hidden, revealed on submit validation) -->
+                    <div id="whatsappDispatchPanel" class="hidden p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl space-y-3 animate-fadeIn">
+                        <div class="flex items-center gap-2 text-emerald-400">
+                            <i data-lucide="message-square" class="w-5 h-5"></i>
+                            <h6 class="text-xs font-bold uppercase tracking-wider">Registration Package Ready!</h6>
+                        </div>
+                        <p class="text-[11px] text-slate-300 leading-relaxed">
+                            Your registration details are compiled. Choose one of the church administration offices below to instantly send your request details directly through WhatsApp:
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                            <a id="btn_send_admin1" target="_blank" href="#" class="px-4 py-2.5 bg-[#25D366] hover:bg-[#20ba5a] text-black text-center text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition">
+                                <i data-lucide="phone" class="w-3.5 h-3.5"></i> Office 1 (0979554970)
+                            </a>
+                            <a id="btn_send_admin2" target="_blank" href="#" class="px-4 py-2.5 bg-[#25D366] hover:bg-[#20ba5a] text-black text-center text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition">
+                                <i data-lucide="phone" class="w-3.5 h-3.5"></i> Office 2 (0978548813)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN JAVASCRIPT SYSTEM ENGINE -->
+    <script>
+        // System variables
+        let currentYear = new Date().getFullYear();
+        let currentMonthIndex = new Date().getMonth(); // 0-11
+        let activeView = 'calendar'; // 'calendar' or 'list'
+        let countdownInterval;
+        let searchFilter = "";
+
+        // Core dynamic computation helpers
+        
+        // 1. Gregorian Easter Calculation Algorithm (Computus)
+        function calculateEaster(year) {
+            const f = Math.floor;
+            const G = year % 19;
+            const C = f(year / 100);
+            const H = (C - f(C / 4) - f((8 * C + 13) / 25) + 19 * G + 15) % 30;
+            const I = H - f(H / 28) * (1 - f(29 / (H + 1)) * f((21 - G) / 11));
+            const J = (year + f(year / 4) + I + 2 - C + f(C / 4)) % 7;
+            const L = I - J;
+            const month = 3 + f((L + 40) / 44);
+            const day = L + 28 - 31 * f(month / 4);
+            return new Date(year, month - 1, day);
+        }
+
+        // 2. Find closest Sunday on or prior to target date
+        function getSundayOnOrBefore(year, month, targetDay) {
+            let target = new Date(year, month, targetDay);
+            while (target.getDay() !== 0) {
+                target.setDate(target.getDate() - 1);
+            }
+            return target;
+        }
+
+        // 3. Find first Monday of a given month
+        function getFirstMonday(year, month) {
+            let d = new Date(year, month, 1);
+            while (d.getDay() !== 1) {
+                d.setDate(d.getDate() + 1);
+            }
+            return d;
+        }
+
+        // 4. Find the last Friday of a given month
+        function getLastFridayOfMonth(year, monthIndex) {
+            let d = new Date(year, monthIndex + 1, 0); // Last day of that month
+            while (d.getDay() !== 5) { // 5 is Friday
+                d.setDate(d.getDate() - 1);
+            }
+            return d;
+        }
+
+        // Generate entire annual schema mapped to dynamic holiday rules
+        function getLiturgicalCalendar(year) {
+            // Computed dynamic references
+            const easter = calculateEaster(year);
+            const goodFriday = new Date(easter); goodFriday.setDate(easter.getDate() - 2);
+            const holySaturday = new Date(easter); holySaturday.setDate(easter.getDate() - 1);
+            const resurrectionSunday = easter;
+            const easterMonday = new Date(easter); easterMonday.setDate(easter.getDate() + 1);
+
+            const heroesDay = getFirstMonday(year, 6); // 1st Monday of July
+            const unityDay = new Date(heroesDay); unityDay.setDate(heroesDay.getDate() + 1); // Tuesday after 1st Monday of July
+            const farmersDay = getFirstMonday(year, 7); // 1st Monday of August
+
+            const womenSunday = getSundayOnOrBefore(year, 2, 8); // Sunday on or before March 8
+            const youthSunday = getSundayOnOrBefore(year, 2, 13); // Sunday on or before March 13
+
+            // Night of the Redeemed (Last Friday of March, June, September, December)
+            const nightRedeemedMarch = getLastFridayOfMonth(year, 2);
+            const nightRedeemedJune = getLastFridayOfMonth(year, 5);
+            const nightRedeemedSept = getLastFridayOfMonth(year, 8);
+            const nightRedeemedDec = getLastFridayOfMonth(year, 11);
+
+            return [
+                {
+                    holiday: "1st January",
+                    holidayName: "New Year",
+                    churchDate: new Date(year, 0, 1),
+                    churchName: "Years Blessings",
+                    time: "00:01 HRS",
+                    venue: "JCRGM CHURCH",
+                    type: "holiday"
+                },
+                {
+                    holiday: "-",
+                    holidayName: "-",
+                    churchDate: new Date(year, 1, 14),
+                    churchName: "JCRGM Support Team",
+                    time: "14:00 HRS",
+                    venue: "AS DIRECTED",
+                    type: "church"
+                },
+                {
+                    holiday: "8th March",
+                    holidayName: "Women Day",
+                    churchDate: womenSunday,
+                    churchName: "Women Sunday",
+                    time: "09:30 - 13:30 HRS",
+                    venue: "JCRGM CHURCH",
+                    type: "holiday"
+                },
+                {
+                    holiday: "13th March",
+                    holidayName: "Youth Day",
+                    churchDate: youthSunday,
+                    churchName: "Youth Sunday",
+                    time: "09:30 HRS",
+                    venue: "JCRGM CHURCH",
+                    type: "holiday"
+                },
+                {
+                    holiday: "Good Friday",
+                    holidayName: "Good Friday",
+                    churchDate: goodFriday,
+                    churchName: "Prayer Summit",
+                    time: "14:00 - 17:00 HRS",
+                    venue: "AS DIRECTED",
+                    type: "holiday"
+                },
+                {
+                    holiday: "Holy Saturday",
+                    holidayName: "Holy Saturday",
+                    churchDate: holySaturday,
+                    churchName: "Prayer Summit",
+                    time: "14:00 - 17:00 HRS",
+                    venue: "AS DIRECTED",
+                    type: "holiday"
+                },
+                {
+                    holiday: "Resurrection Sunday",
+                    holidayName: "Resurrection Sunday",
+                    churchDate: resurrectionSunday,
+                    churchName: "Redemption Sunday",
+                    time: "09:00 - 13:30 HRS",
+                    venue: "JCRGM CHURCH",
+                    type: "holiday"
+                },
+                {
+                    holiday: "Easter Monday",
+                    holidayName: "Easter",
+                    churchDate: easterMonday,
+                    churchName: "Prayer Summit",
+                    time: "14:00 - 17:00 HRS",
+                    venue: "AS DIRECTED",
+                    type: "holiday"
+                },
+                {
+                    holiday: "1st May",
+                    holidayName: "Labor Day",
+                    churchDate: new Date(year, 4, 1),
+                    churchName: "Mountain Prayers",
+                    time: "08:00 - 16:00 HRS",
+                    venue: "JCRGM CHURCH",
+                    type: "holiday"
+                },
+                {
+                    holiday: "25th May",
+                    holidayName: "Africa Freedom Day",
+                    churchDate: new Date(year, 4, 25),
+                    churchName: "Mountain Prayers",
+                    time: "08:00 - 16:00 HRS",
+                    venue: "JCRGM CHURCH",
+                    type: "holiday"
+                },
+                {
+                    holiday: "3rd July (1st Mon)",
+                    holidayName: "Heroes Day",
+                    churchDate: heroesDay,
+                    churchName: "Mountain Prayer Camp",
+                    time: "20:00 HRS TO LATE",
+                    venue: "JCRGM CHURCH",
+                    type: "holiday"
+                },
+                {
+                    holiday: "4th July (1st Tue)",
+                    holidayName: "Unity Day",
+                    churchDate: unityDay,
+                    churchName: "Prayer Camp",
+                    time: "04:00 HRS",
+                    venue: "JCRGM CHURCH",
+                    type: "holiday"
+                },
+                {
+                    holiday: "7th August (1st Mon)",
+                    holidayName: "Farmers Day",
+                    churchDate: farmersDay,
+                    churchName: "Congregational Thanks Giving Service",
+                    time: "14:00 - 17:00 HRS",
+                    venue: "AS DIRECTED",
+                    type: "holiday"
+                },
+                {
+                    holiday: "-",
+                    holidayName: "-",
+                    churchDate: new Date(year, 7, 8),
+                    churchName: "JCRGM Anniversary",
+                    time: "14:00 HRS",
+                    venue: "AS DIRECTED",
+                    type: "church"
+                },
+                {
+                    holiday: "-",
+                    holidayName: "-",
+                    churchDate: new Date(year, 7, 23),
+                    churchName: "JCRGM Support Team",
+                    time: "14:00 HRS",
+                    venue: "JCRGM CHURCH",
+                    type: "church"
+                },
+                {
+                    holiday: "18th October",
+                    holidayName: "National Prayer Day",
+                    churchDate: new Date(year, 9, 18),
+                    churchName: "Zoom Prophetic Service",
+                    time: "21:30 HRS",
+                    venue: "ZOOM",
+                    type: "holiday"
+                },
+                {
+                    holiday: "24th October",
+                    holidayName: "Independence Day",
+                    churchDate: new Date(year, 9, 24),
+                    churchName: "Zoom Prophetic Service",
+                    time: "21:30 HRS",
+                    venue: "ZOOM",
+                    type: "holiday"
+                },
+                {
+                    holiday: "25th December",
+                    holidayName: "Christmas Day",
+                    churchDate: new Date(year, 11, 25),
+                    churchName: "Christmas Celebration",
+                    time: "14:00 HRS",
+                    venue: "AS DIRECTED",
+                    type: "holiday"
+                },
+                {
+                    holiday: "31st December",
+                    holidayName: "New Years Eve",
+                    churchDate: new Date(year, 11, 31),
+                    churchName: "Crossover Night",
+                    time: "20:00 - 04:00 HRS",
+                    venue: "JCRGM CHURCH",
+                    type: "holiday"
+                },
+                // THE NIGHT OF THE REDEEMED QUARTERLY ADDITIONS
+                {
+                    holiday: "-",
+                    holidayName: "-",
+                    churchDate: nightRedeemedMarch,
+                    churchName: "Night of the Redeemed",
+                    time: "21:00 - 05:00 HRS",
+                    venue: "JCRGM CHURCH",
+                    type: "special",
+                    description: "Redemption & Persistent Prayer Vigil"
+                },
+                {
+                    holiday: "-",
+                    holidayName: "-",
+                    churchDate: nightRedeemedJune,
+                    churchName: "Night of the Redeemed",
+                    time: "21:00 - 05:00 HRS",
+                    venue: "JCRGM CHURCH",
+                    type: "special",
+                    description: "Redemption & Persistent Prayer Vigil"
+                },
+                {
+                    holiday: "-",
+                    holidayName: "-",
+                    churchDate: nightRedeemedSept,
+                    churchName: "Night of the Redeemed",
+                    time: "21:00 - 05:00 HRS",
+                    venue: "JCRGM CHURCH",
+                    type: "special",
+                    description: "Redemption & Persistent Prayer Vigil"
+                },
+                {
+                    holiday: "-",
+                    holidayName: "-",
+                    churchDate: nightRedeemedDec,
+                    churchName: "Night of the Redeemed",
+                    time: "21:00 - 05:00 HRS",
+                    venue: "JCRGM CHURCH",
+                    type: "special",
+                    description: "Redemption & Persistent Prayer Vigil"
+                }
+            ];
+        }
+
+        // Global Formatters
+        const formatDate = (date) => {
+            return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        const formatFullDateOrdinal = (date) => {
+            const day = date.getDate();
+            const month = date.toLocaleDateString('en-GB', { month: 'long' });
+            const year = date.getFullYear();
+            
+            let suffix = "th";
+            if (day === 1 || day === 21 || day === 31) suffix = "st";
+            else if (day === 2 || day === 22) suffix = "nd";
+            else if (day === 3 || day === 23) suffix = "rd";
+
+            return `${day}${suffix} ${month} ${year}`;
+        }
+
+        // UI Views Switching Engine
+        function setView(view) {
+            activeView = view;
+            const cv = document.getElementById('calendarView');
+            const lv = document.getElementById('listView');
+            const btnC = document.getElementById('btnViewCalendar');
+            const btnL = document.getElementById('btnViewList');
+
+            if (view === 'calendar') {
+                cv.classList.remove('hidden');
+                lv.classList.add('hidden');
+                btnC.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 bg-brand-gold text-brand-navy shadow-lg shadow-brand-gold/15";
+                btnL.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-slate-300 hover:text-white hover:bg-white/5";
+            } else {
+                cv.classList.add('hidden');
+                lv.classList.remove('hidden');
+                btnL.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 bg-brand-gold text-brand-navy shadow-lg shadow-brand-gold/15";
+                btnC.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-slate-300 hover:text-white hover:bg-white/5";
+            }
+        }
+
+        // Month Selection Handlers
+        function changeMonth(direction) {
+            currentMonthIndex += direction;
+            if (currentMonthIndex < 0) {
+                currentMonthIndex = 11;
+                changeYear(-1);
+            } else if (currentMonthIndex > 11) {
+                currentMonthIndex = 0;
+                changeYear(1);
+            } else {
+                renderAll();
+            }
+        }
+
+        function changeYear(direction) {
+            currentYear += direction;
+            document.getElementById('currentYearDisplay').innerText = currentYear;
+            renderAll();
+        }
+
+        // Search Interface Implementation
+        function handleSearch() {
+            searchFilter = document.getElementById('searchInput').value.toLowerCase();
+            renderAll();
+        }
+
+        // Countdown Timer Engine
+        function startCountdown(targetDate, timeString) {
+            clearInterval(countdownInterval);
+
+            let hours = 0;
+            let minutes = 0;
+            const timeMatch = timeString.match(/(\d{2}):(\d{2})/);
+            if (timeMatch) {
+                hours = parseInt(timeMatch[1], 10);
+                minutes = parseInt(timeMatch[2], 10);
+            }
+
+            const targetTime = new Date(targetDate);
+            targetTime.setHours(hours, minutes, 0, 0);
+
+            function update() {
+                const now = new Date().getTime();
+                const diff = targetTime.getTime() - now;
+
+                if (diff <= 0) {
+                    document.getElementById('cd-days').innerText = "00";
+                    document.getElementById('cd-hours').innerText = "00";
+                    document.getElementById('cd-mins').innerText = "00";
+                    document.getElementById('cd-secs').innerText = "00";
+                    return;
+                }
+
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('cd-days').innerText = String(d).padStart(2, '0');
+                document.getElementById('cd-hours').innerText = String(h).padStart(2, '0');
+                document.getElementById('cd-mins').innerText = String(m).padStart(2, '0');
+                document.getElementById('cd-secs').innerText = String(s).padStart(2, '0');
+            }
+
+            update();
+            countdownInterval = setInterval(update, 1000);
+        }
+
+        // Modal triggers for Theological explanation & Resetting the Booking Form
+        function openTheologicalModal() {
+            const modal = document.getElementById('theologicalModal');
+            
+            // Reset booking form on open
+            document.getElementById('encounterBookingForm').reset();
+            document.getElementById('encounterBookingForm').classList.remove('hidden');
+            document.getElementById('whatsappDispatchPanel').classList.add('hidden');
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.add('opacity-100');
+            }, 50);
+        }
+
+        function closeTheologicalModal() {
+            const modal = document.getElementById('theologicalModal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Interactive WhatsApp Booking Compilation Handler
+        function handleBookingSubmit(event) {
+            event.preventDefault();
+
+            // Retrieve Inputs
+            const name = document.getElementById('b_name').value;
+            const phone = document.getElementById('b_phone').value;
+            const reason = document.getElementById('b_reason').value;
+            const notes = document.getElementById('b_notes').value || "No additional specific detail provided.";
+
+            // Resolve target context: Grab the next upcoming Night of the Redeemed date
+            const calendar = getLiturgicalCalendar(currentYear);
+            const today = new Date();
+            const upcomingNights = calendar
+                .filter(ev => ev.churchName === "Night of the Redeemed" && ev.churchDate >= today)
+                .sort((a,b) => a.churchDate - b.churchDate);
+            
+            // Default target date presentation text
+            let eventTargetDateText = "Next Scheduled Convocation";
+            if (upcomingNights.length > 0) {
+                eventTargetDateText = formatFullDateOrdinal(upcomingNights[0].churchDate);
+            }
+
+            // Construct beautiful URL-safe text message template
+            const messageHeader = `*JCRGM ONE-ON-ONE ENCOUNTER BOOKING*`;
+            const messageBody = `\n\n🕊️ *Event:* Night of the Redeemed (${eventTargetDateText})\n👑 *Request:* Personal Encounter with Bishop Emmanuel Sakala\n\n👤 *Full Name:* ${name}\n📞 *WhatsApp Contact:* ${phone}\n🔥 *Focus Area:* ${reason}\n\n📝 *Prayer Notes:* ${notes}`;
+            const finalCompiledText = encodeURIComponent(messageHeader + messageBody);
+
+            // Populate URLs
+            const admin1Phone = "260979554970"; 
+            const admin2Phone = "260978548813"; 
+
+            document.getElementById('btn_send_admin1').href = `https://api.whatsapp.com/send?phone=${admin1Phone}&text=${finalCompiledText}`;
+            document.getElementById('btn_send_admin2').href = `https://api.whatsapp.com/send?phone=${admin2Phone}&text=${finalCompiledText}`;
+
+            // Reveal Dispatch Interface
+            document.getElementById('encounterBookingForm').classList.add('hidden');
+            document.getElementById('whatsappDispatchPanel').classList.remove('hidden');
+        }
+
+        // Render functions
+        function renderAll() {
+            const calendar = getLiturgicalCalendar(currentYear);
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            
+            document.getElementById('currentMonthNameHeader').innerHTML = `
+                <i data-lucide="calendar-days" class="text-brand-gold"></i> ${months[currentMonthIndex]} ${currentYear}
+            `;
+
+            // Filter Calendar based on Search
+            const filteredCalendar = calendar.filter(ev => {
+                const searchString = `${ev.holidayName} ${ev.churchName} ${ev.venue} ${ev.time}`.toLowerCase();
+                return searchString.includes(searchFilter);
+            });
+
+            // 1. Render Month Grid Panel View
+            renderMonthGrid(months[currentMonthIndex], filteredCalendar);
+
+            // 2. Render Scheduled List for Current Month
+            renderMonthEventsList(months[currentMonthIndex], filteredCalendar);
+
+            // 3. Render Complete Data Table Chart
+            renderFullEventTable(filteredCalendar);
+
+            // 4. Update Header Next Event Countdown Target
+            updateUpcomingCountdown(calendar);
+
+            // Ensure Icon Render Triggered
+            lucide.createIcons();
+        }
+
+        function renderMonthGrid(monthName, calendar) {
+            const gridContainer = document.getElementById('calendarDaysGrid');
+            gridContainer.innerHTML = "";
+
+            const monthMap = {
+                "January": 0, "February": 1, "March": 2, "April": 3, "May": 4, "June": 5, 
+                "July": 6, "August": 7, "September": 8, "October": 9, "November": 10, "December": 11
+            };
+            const monthIdx = monthMap[monthName];
+
+            const firstDay = new Date(currentYear, monthIdx, 1).getDay();
+            const daysInMonth = new Date(currentYear, monthIdx + 1, 0).getDate();
+
+            // Populate Empty Spacers for Off-Month Starts
+            for (let i = 0; i < firstDay; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = "py-4 opacity-0 pointer-events-none";
+                gridContainer.appendChild(emptyCell);
+            }
+
+            // Build Individual Calendar Days
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateRef = new Date(currentYear, monthIdx, day);
+                const dayEvents = calendar.filter(ev => ev.churchDate.toDateString() === dateRef.toDateString());
+                
+                const dayButton = document.createElement('div');
+                const isToday = new Date().toDateString() === dateRef.toDateString();
+
+                let styleClasses = "relative py-3 rounded-xl flex flex-col items-center justify-center transition duration-200 border cursor-default ";
+                
+                if (isToday) {
+                    styleClasses += "bg-brand-gold/25 border-brand-gold text-white font-bold ring-2 ring-brand-gold/30";
+                } else if (dayEvents.length > 0) {
+                    const hasSpecialEvent = dayEvents.some(e => e.type === 'special');
+                    if(hasSpecialEvent) {
+                        styleClasses += "bg-amber-500/25 border-brand-gold hover:bg-amber-500/35 cursor-pointer text-white font-bold animate-pulse";
+                        dayButton.onclick = openTheologicalModal;
+                    } else {
+                        styleClasses += "bg-brand-slate/80 border-slate-700/80 hover:border-brand-gold hover:bg-brand-gold/5 text-white font-semibold";
+                    }
+                } else {
+                    styleClasses += "bg-slate-900/40 border-slate-800/40 text-slate-500 hover:text-slate-300";
+                }
+
+                dayButton.className = styleClasses;
+                
+                let dotIndicators = "";
+                if (dayEvents.length > 0) {
+                    dotIndicators = `
+                        <span class="absolute bottom-1.5 flex gap-1">
+                            ${dayEvents.map(e => {
+                                if (e.type === 'special') return `<span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>`;
+                                return `<span class="w-1.5 h-1.5 rounded-full ${e.type === 'holiday' ? 'bg-brand-gold' : 'bg-sky-400'}"></span>`;
+                            }).join('')}
+                        </span>
+                    `;
+                }
+
+                dayButton.innerHTML = `
+                    <span class="text-sm">${day}</span>
+                    ${dotIndicators}
+                `;
+                
+                gridContainer.appendChild(dayButton);
+            }
+        }
+
+        function renderMonthEventsList(monthName, calendar) {
+            const listContainer = document.getElementById('monthEventsList');
+            listContainer.innerHTML = "";
+
+            const monthMap = {
+                "January": 0, "February": 1, "March": 2, "April": 3, "May": 4, "June": 5, 
+                "July": 6, "August": 7, "September": 8, "October": 9, "November": 10, "December": 11
+            };
+            const targetMonth = monthMap[monthName];
+
+            const monthlyEvents = calendar.filter(ev => ev.churchDate.getMonth() === targetMonth);
+
+            if (monthlyEvents.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center py-10 bg-brand-slate/20 border border-slate-800 rounded-2xl">
+                        <i data-lucide="calendar-off" class="w-10 h-10 text-slate-600 mx-auto mb-3"></i>
+                        <p class="text-sm text-slate-500">No scheduled programmes for this month.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort ascending
+            monthlyEvents.sort((a, b) => a.churchDate - b.churchDate);
+
+            monthlyEvents.forEach(ev => {
+                const isHoliday = ev.type === 'holiday';
+                const isSpecial = ev.type === 'special';
+                const card = document.createElement('div');
+                
+                let cardStyle = `p-5 rounded-2xl glass-dark border transition duration-300 relative overflow-hidden flex flex-col justify-between ${isHoliday ? 'border-brand-gold/15' : 'border-slate-800'}`;
+                if (isSpecial) {
+                    cardStyle = "p-5 rounded-2xl bg-gradient-to-br from-brand-navy via-[#1e1e2d] to-[#0B1E36] border border-brand-gold/50 cursor-pointer shadow-lg shadow-brand-gold/5 relative overflow-hidden flex flex-col justify-between hover:border-brand-gold transition duration-300 hover:scale-[1.01]";
+                    card.onclick = openTheologicalModal;
+                } else {
+                    cardStyle += " hover:scale-[1.01] hover:border-brand-gold/40";
+                }
+
+                card.className = cardStyle;
+                
+                let tag = "";
+                if (isSpecial) {
+                    tag = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider mb-2 bg-brand-gold/25 text-brand-gold border border-brand-gold/40 animate-pulse"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> One-on-One Encounter Bookings Open</span>`;
+                } else {
+                    tag = `<span class="inline-block px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider mb-2 ${isHoliday ? 'bg-brand-gold/15 text-brand-gold' : 'bg-sky-500/10 text-sky-400'}">
+                                ${isHoliday ? 'Zambian Public Holiday' : 'Liturgical Event'}
+                            </span>`;
+                }
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-4 mb-3">
+                        <div>
+                            ${tag}
+                            <h4 class="text-lg font-bold text-white tracking-wide flex items-center gap-1.5">${ev.churchName} ${isSpecial ? `<i data-lucide="help-circle" class="w-4 h-4 text-brand-gold"></i>` : ""}</h4>
+                            ${isHoliday && ev.holidayName !== ev.churchName ? `<p class="text-xs text-slate-400 italic">Observing: ${ev.holidayName}</p>` : ''}
+                            ${isSpecial ? `<p class="text-xs text-brand-gold/80 italic mt-0.5">${ev.description}</p>` : ''}
+                        </div>
+                        <div class="text-right flex flex-col items-end">
+                            <span class="text-xs font-semibold text-brand-gold flex items-center gap-1">
+                                <i data-lucide="clock" class="w-3.5 h-3.5"></i> ${ev.time}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between border-t border-slate-800/80 pt-3 mt-2 text-xs text-slate-400">
+                        <span class="flex items-center gap-1">
+                            <i data-lucide="calendar-range" class="w-3.5 h-3.5 text-brand-gold"></i>
+                            ${formatFullDateOrdinal(ev.churchDate)}
+                        </span>
+                        <span class="flex items-center gap-1 font-semibold text-slate-300">
+                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-400"></i>
+                            ${ev.venue}
+                        </span>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        function renderFullEventTable(calendar) {
+            const tableBody = document.getElementById('fullEventTableBody');
+            tableBody.innerHTML = "";
+
+            if (calendar.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-12 text-slate-500">
+                            <i data-lucide="database-zap" class="w-12 h-12 text-slate-600 mx-auto mb-4"></i>
+                            No events found matching your search.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            calendar.forEach(ev => {
+                const tr = document.createElement('tr');
+                const isSpecial = ev.type === 'special';
+                
+                tr.className = `hover:bg-brand-slate/20 transition-colors border-b border-slate-800/40 ${isSpecial ? 'bg-brand-gold/5 cursor-pointer font-semibold' : ''}`;
+                if (isSpecial) tr.onclick = openTheologicalModal;
+
+                tr.innerHTML = `
+                    <td class="py-4 px-6 font-semibold text-brand-gold whitespace-nowrap">${ev.holiday}</td>
+                    <td class="py-4 px-6 text-slate-300 max-w-xs">${isSpecial ? '<span class="flex items-center gap-1 text-xs text-brand-gold italic font-normal"><i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> Redemption, Prayer & Booking</span>' : ev.holidayName}</td>
+                    <td class="py-4 px-6 font-medium text-white whitespace-nowrap">${formatDate(ev.churchDate)}</td>
+                    <td class="py-4 px-6 font-semibold text-white tracking-wide flex items-center gap-1.5">${ev.churchName} ${isSpecial ? `<i data-lucide="help-circle" class="w-3.5 h-3.5 text-brand-gold animate-bounce"></i>` : ""}</td>
+                    <td class="py-4 px-6 text-slate-300 whitespace-nowrap">${ev.time}</td>
+                    <td class="py-4 px-6 text-slate-300 font-semibold whitespace-nowrap">${ev.venue}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Countdown Timer Target Picker
+        function updateUpcomingCountdown(calendar) {
+            const now = new Date();
+            const futureEvents = calendar
+                .filter(ev => {
+                    const eventTime = new Date(ev.churchDate);
+                    const match = ev.time.match(/(\d{2}):(\d{2})/);
+                    if (match) {
+                        eventTime.setHours(parseInt(match[1], 10), parseInt(match[2], 10), 0, 0);
+                    } else {
+                        eventTime.setHours(0, 0, 0, 0);
+                    }
+                    return eventTime.getTime() >= now.getTime();
+                })
+                .sort((a, b) => a.churchDate - b.churchDate);
+
+            if (futureEvents.length > 0) {
+                const nextEv = futureEvents[0];
+                document.getElementById('nextEventTitle').innerText = nextEv.churchName;
+                document.getElementById('nextEventDate').innerText = formatFullDateOrdinal(nextEv.churchDate);
+                document.getElementById('nextEventTime').innerText = nextEv.time;
+                document.getElementById('nextEventVenue').innerText = nextEv.venue;
+                
+                startCountdown(nextEv.churchDate, nextEv.time);
+            } else {
+                document.getElementById('nextEventTitle').innerText = "No upcoming events in " + currentYear;
+                document.getElementById('nextEventDate').innerText = "-";
+                document.getElementById('nextEventTime').innerText = "-";
+                document.getElementById('nextEventVenue').innerText = "-";
+                clearInterval(countdownInterval);
+            }
+        }
+
+        // AUTO-DETECTION: Welcome Notification on Month Entry
+        function checkMonthChangeNotification() {
+            const systemDate = new Date();
+            const lastViewedMonth = localStorage.getItem('jcrgm_last_viewed_month');
+            const currentSystemMonth = systemDate.getMonth().toString() + '_' + systemDate.getFullYear().toString();
+
+            if (lastViewedMonth !== currentSystemMonth) {
+                localStorage.setItem('jcrgm_last_viewed_month', currentSystemMonth);
+                triggerNewMonthModal(systemDate);
+            }
+        }
+
+        function triggerNewMonthModal(date) {
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const currentMonthName = months[date.getMonth()];
+            
+            document.getElementById('modalMonthName').innerText = `Welcome to ${currentMonthName}!`;
+            
+            const calendar = getLiturgicalCalendar(date.getFullYear());
+            const thisMonthEvents = calendar.filter(ev => ev.churchDate.getMonth() === date.getMonth());
+            
+            let highlightHTML = "";
+            if (thisMonthEvents.length > 0) {
+                thisMonthEvents.slice(0, 3).forEach(ev => {
+                    highlightHTML += `
+                        <div class="flex items-center justify-between text-xs py-1 border-b border-slate-700/40 last:border-0">
+                            <span class="text-white font-medium">${ev.churchName}</span>
+                            <span class="text-brand-gold">${formatDate(ev.churchDate)}</span>
+                        </div>
+                    `;
+                });
+            } else {
+                highlightHTML = "<p class='text-xs text-slate-400'>No major public holiday programmes this month.</p>";
+            }
+
+            document.getElementById('modalMonthEvents').innerHTML = highlightHTML;
+
+            const modal = document.getElementById('newMonthModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.add('opacity-100');
+            }, 50);
+        }
+
+        function closeNewMonthModal() {
+            const modal = document.getElementById('newMonthModal');
+            modal.classList.remove('opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Initialize App on Page Load
+        window.onload = () => {
+            setView('calendar');
+            document.getElementById('currentYearDisplay').innerText = currentYear;
+            renderAll();
+            checkMonthChangeNotification();
+        }
+    </script>
+</body>
+</html>
