@@ -72,7 +72,7 @@ textarea,input,select{width:100%;background:#081523;border:1px solid var(--line)
 <div class="grid">
   <div class="card wide"><h2>Today's Mission</h2>
     <p class="muted">Do not merely finish chapters. Seek understanding, obedience, remembrance and transformation.</p>
-    <div class="verse">“Your word is a lamp to my feet and a light to my path.” <span class="ref">— Psalm 119:105</span></div>
+    <div class="verse">“Your word is a lamp to my feet and a light to my path.” <span class="ref">— Psalm 119:105</span></div><div class="scriptureBox" style="margin-top:14px"><h3>📜 Scripture for Today</h3><p class="muted">Choose your main Scripture for today.</p><div class="row3"><div><label>Book</label><select id="todayBook"></select></div><div><label>Chapter</label><input id="todayChapter" type="number" min="1" value="1"></div><div><label>Verse (optional)</label><input id="todayVerse" placeholder="e.g. 1-10"></div></div><br><div class="actions"><button class="btn primary" onclick="generateTodayScripture()">Generate Scripture</button><button class="btn" onclick="openTodayLogos()">Open in Logos</button><button class="btn" onclick="studyTodayScripture()">Study This</button></div><div id="todayScriptureResult" style="margin-top:12px"><div class="muted">No Scripture selected for today yet.</div></div></div>
     <div class="progress"><div class="bar" id="daybar"></div></div>
     <small class="muted"><span id="daypct">0</span>% of today's rhythm completed</small>
   </div>
@@ -306,7 +306,7 @@ function loadDaily(){let a=JSON.parse(localStorage.getItem('jcrgmDailyAdvanced')
 function renderBooks(){let el=document.getElementById('books');el.innerHTML='';BOOKS.forEach((b)=>{let q=document.createElement('button');q.className='book';q.innerHTML='<b>'+b+'</b><small>'+(state.done.includes(b)?'✓ Studied':'Not yet studied')+'</small>';q.onclick=()=>{document.getElementById('sBook').value=b;currentRef=b+' 1';state.done=state.done.includes(b)?state.done.filter(x=>x!==b):[...state.done,b];save();renderBooks();go('scripture');loadScripture()};el.appendChild(q)})}
 function initBooks(){
 let s=document.getElementById('sBook');s.innerHTML=BOOKS.map(b=>'<option>'+b+'</option>').join('');
-let mb=document.getElementById('memBook');if(mb)mb.innerHTML=BOOKS.map(b=>'<option>'+b+'</option>').join('');
+let mb=document.getElementById('memBook');if(mb)mb.innerHTML=BOOKS.map(b=>'<option>'+b+'</option>').join('');let tb=document.getElementById('todayBook');if(tb)tb.innerHTML=BOOKS.map(b=>'<option>'+b+'</option>').join('');
 }
 function passageValue(){let b=document.getElementById('sBook').value,c=document.getElementById('sChapter').value||1,v=document.getElementById('sVerse').value.trim();return b+' '+c+(v?':'+v:'')}
 async function loadScripture(){let ref=passageValue();currentRef=ref;let box=document.getElementById('scriptureResult');box.innerHTML='<div class="muted">Loading Scripture…</div>';try{let r=await fetch('https://bible-api.com/'+encodeURIComponent(ref)+'?translation=kjv');if(!r.ok)throw Error();let d=await r.json();let txt=(d.verses||[]).map(x=>x.text).join(' ').trim();if(!txt)throw Error();box.innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(d.reference||ref)+'</span><span class="pill">KJV</span></div>'}catch(e){box.innerHTML='<b>Could not load this passage.</b><p class="muted">Check your internet connection, then try again. You can still open the reference directly in Logos or Bible.com.</p>'}}
@@ -375,6 +375,10 @@ function saveJournal(){if(!journalText.value.trim())return toast('Write somethin
 function renderJournal(){let e=document.getElementById('journalList');e.innerHTML=state.journal.length?state.journal.map(x=>`<div class="listItem"><b>${esc(x.title)}</b><small class="muted"> ${esc(x.date)}</small><p>${esc(x.text).replace(/\n/g,'<br>')}</p></div>`).join(''):'No entries yet.'}
 function renderTopics(){document.getElementById('topicsList').innerHTML=TOPICS.map(t=>`<button class="btn tagbtn" onclick="topicSearch('${esc(t)}')">${esc(t)}</button>`).join('')}
 function topicSearch(t){openLink('https://www.blueletterbible.org/search/search.cfm?Criteria='+encodeURIComponent(t));toast('Opening topic search')}
+async function generateTodayScripture(){let b=todayBook.value,c=todayChapter.value||1,v=todayVerse.value.trim(),ref=b+' '+c+(v?':'+v:'');currentRef=ref;localStorage.setItem('jcrgmTodayScripture',ref);let box=todayScriptureResult;box.innerHTML='<div class="muted">Loading Scripture…</div>';try{let r=await fetch('https://bible-api.com/'+encodeURIComponent(ref)+'?translation=kjv');if(!r.ok)throw Error();let d=await r.json(),txt=(d.verses||[]).map(x=>x.text).join(' ').trim();if(!txt)throw Error();localStorage.setItem('jcrgmTodayScriptureText',txt);box.innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(d.reference||ref)+'</span><span class="pill">KJV</span></div>';toast('Today’s Scripture selected')}catch(e){box.innerHTML='<b>Could not generate this passage.</b><p class="muted">Check your internet connection and try again, or open the reference in Logos.</p>'}}
+function openTodayLogos(){let ref=localStorage.getItem('jcrgmTodayScripture')||'Genesis 1';openLink('https://app.logos.com/search?query='+encodeURIComponent(ref))}
+function studyTodayScripture(){let ref=localStorage.getItem('jcrgmTodayScripture')||'';passage.value=ref;go('study')}
+function loadTodayScripture(){let ref=localStorage.getItem('jcrgmTodayScripture');if(!ref)return;let m=ref.match(/^(.*) (\d+)(?::(.+))?$/);if(m){todayBook.value=m[1];todayChapter.value=m[2];todayVerse.value=m[3]||''}let txt=localStorage.getItem('jcrgmTodayScriptureText');if(txt)todayScriptureResult.innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(ref)+'</span><span class="pill">KJV</span></div>'}
 function showToday(){go('dashboard');toast('Begin with prayer, then read slowly.')}
 function openLink(u){window.open(u,'_blank','noopener,noreferrer')}
 function toggleTheme(){document.body.classList.toggle('light');state.dark=!document.body.classList.contains('light');save()}
@@ -400,7 +404,7 @@ document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','SELECT'].include
 document.getElementById('focusMin').addEventListener('change',resetTimer);
 document.getElementById('defaultFocus').addEventListener('change',e=>{document.getElementById('focusMin').value=e.target.value;resetTimer()});
 
-initBooks();loadDaily();renderBooks();renderMemory();renderJournal();renderStudies();renderMeditations();renderTopics();timerDisplay();
+initBooks();loadDaily();loadTodayScripture();renderBooks();renderMemory();renderJournal();renderStudies();renderMeditations();renderTopics();timerDisplay();
 if(state.dark===false)document.body.classList.add('light');
 </script>
 </body>
