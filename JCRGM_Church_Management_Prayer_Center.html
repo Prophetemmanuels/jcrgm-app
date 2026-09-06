@@ -44,6 +44,31 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
   #usherattendance table{min-width:0}
   .card{box-shadow:none}
 }
+
+/* ===== CEREMONY REGISTRATION & CERTIFICATE CENTER ===== */
+.events-nav-wrap{margin:3px 0}
+.events-nav-main{width:100%;border:0;background:transparent;color:#dbe3ef;text-align:left;padding:12px 13px;border-radius:9px;font:inherit;font-weight:600;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.events-nav-main:hover,.events-nav-main.open{background:#243454;color:#fff}
+.events-nav-main .ev-arrow{transition:transform .2s}.events-nav-main.open .ev-arrow{transform:rotate(180deg)}
+.events-submenu{display:none;padding:2px 0 5px 10px}
+.events-submenu.show{display:block;animation:evSlide .2s ease}
+.events-submenu button{width:100%;border:0;background:rgba(255,255,255,.04);color:#cbd5e1;text-align:left;padding:9px 12px;border-radius:8px;margin:2px 0;font:inherit;font-size:12px;cursor:pointer}
+.events-submenu button:hover{background:rgba(201,154,46,.18);color:#fff}
+@keyframes evSlide{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.ceremony-hero{background:linear-gradient(135deg,#101d35,#173b7a);color:#fff;border-radius:16px;padding:22px;position:relative;overflow:hidden;margin-bottom:16px}
+.ceremony-hero h2{margin:0 0 7px}.ceremony-hero p{margin:0;color:#dbe5f7;max-width:760px;line-height:1.55}
+.ceremony-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}
+.ceremony-chip{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:.18s;box-shadow:0 2px 8px rgba(16,24,40,.04)}
+.ceremony-chip:hover{transform:translateY(-2px);border-color:#c99a2e}
+.ceremony-chip b{display:block;margin-bottom:5px}.ceremony-chip span{font-size:12px;color:var(--muted)}
+.ceremony-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:14px}
+.ceremony-toolbar .actions{margin-left:auto}
+.ceremony-status{display:inline-block;border-radius:99px;padding:4px 8px;font-size:11px;font-weight:800;background:#edf2f8}
+.ceremony-status.registered{background:#fff4d6;color:#8a6714}.ceremony-status.approved{background:#e8f1ff;color:#173b7a}.ceremony-status.completed{background:#e7f6ee;color:#117a46}.ceremony-status.cancelled{background:#fff0ef;color:#8d1e17}
+.certificate-preview{background:#fff;border:12px double #c99a2e;border-radius:8px;padding:35px;text-align:center;min-height:390px;display:flex;flex-direction:column;justify-content:center}
+.certificate-preview .cert-title{font-size:28px;letter-spacing:.08em;color:#173b7a;font-weight:900}.certificate-preview .cert-name{font-size:30px;font-weight:900;margin:18px 0;color:#172033}.certificate-preview .cert-line{max-width:620px;margin:0 auto;line-height:1.7;color:#596579}.cert-signs{display:flex;justify-content:space-around;gap:20px;margin-top:38px}.cert-signs div{min-width:150px;border-top:1px solid #172033;padding-top:6px;font-size:11px}
+@media(max-width:1000px){.ceremony-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.ceremony-grid{grid-template-columns:1fr}.ceremony-toolbar{align-items:stretch}.ceremony-toolbar .actions{margin-left:0}}
 </style>
 <style>
 .sidebar .nav-link{
@@ -101,6 +126,19 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
 .btn.join:hover{filter:brightness(1.05)}
 .prayer-close{position:absolute;top:14px;right:14px;border:0;background:rgba(255,255,255,.15);color:#fff;border-radius:50%;width:34px;height:34px;font-size:18px;cursor:pointer;z-index:2}
 @media(max-width:520px){.slots{grid-template-columns:1fr}.prayer-body,.prayer-header{padding-left:20px;padding-right:20px}.prayer-actions{padding:14px 20px 18px;flex-direction:column-reverse;align-items:stretch}.prayer-actions .btn{width:100%}}
+  .ceremony-catalogue-card{margin-top:16px}
+  .catalogue-search-row{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin:0 0 18px}
+  .catalogue-search-row input,.catalogue-search-row select{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:11px;background:#fff;font:inherit}
+  .catalogue-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .catalogue-item{border:1px solid var(--border);border-radius:14px;padding:15px;background:linear-gradient(145deg,#fff,#f7f9fc);transition:.2s;box-shadow:0 3px 12px rgba(0,0,0,.04)}
+  .catalogue-item:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.08)}
+  .catalogue-item h4{margin:0 0 7px;font-size:15px}
+  .catalogue-item p{margin:0 0 12px;font-size:12px;color:#667085;line-height:1.45}
+  .catalogue-item .catalogue-actions{display:flex;gap:7px;flex-wrap:wrap}
+  .catalogue-item .btn{font-size:11px;padding:8px 10px}
+  .catalogue-category{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;padding:4px 7px;border-radius:999px;background:#eef2f7;color:#475467}
+  @media(max-width:900px){.catalogue-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:560px){.catalogue-grid,.catalogue-search-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -120,7 +158,17 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
     <button class="nav-link prayer-link" onclick="openPrayerLink()"><span>🙏</span> Prayer Link</button>
     <button data-page="followup"><span>☎</span> Follow-up</button>
     <button data-page="families"><span>⌂</span> Families</button>
-    <button data-page="events"><span>📅</span> Events</button>
+    <div class="events-nav-wrap">
+  <button class="events-nav-main" id="eventsNavButton" type="button" onclick="toggleEventsMenu()">
+    <span><span style="display:inline-block;width:24px">📅</span> Events</span><span class="ev-arrow">⌄</span>
+  </button>
+  <div class="events-submenu" id="eventsSubmenu">
+    <button type="button" onclick="openEventsSection('calendar')">📅 Ceremony Calendar</button>
+    <button type="button" onclick="openEventsSection('register')">📝 Member Registration</button>
+    <button type="button" onclick="openEventsSection('registry')">📖 Ceremony Register</button>
+    <button type="button" onclick="openEventsSection('certificates')">🏆 Certificates</button>
+  </div>
+</div>
     <button data-page="departments"><span>▦</span> Departments</button>
     <button data-page="giving"><span>◇</span> Giving</button>
     <button data-page="prayerrequests"><span>♡</span> Prayer Requests</button>
@@ -267,8 +315,104 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
 </section>
 
 <section id="events" class="page">
-  <div class="card"><div class="toolbar"><div><h3>Church Calendar</h3><span class="muted">Services, conferences, retreats, Bible school and ministry events</span></div><button class="btn" onclick="openEvent()">+ Add Event</button></div>
-  <div class="tablewrap"><table><thead><tr><th>Date</th><th>Event</th><th>Time</th><th>Location</th><th>Leader</th><th>Notes</th><th>Actions</th></tr></thead><tbody id="eventsTable"></tbody></table></div></div>
+  <div class="ceremony-hero">
+    <div class="label" style="color:#e6c15a">JCRGM CEREMONIES & EVENTS</div>
+    <h2>Church Ceremony Registration Center</h2>
+    <p>Members can select a ceremony, enter their details, register for the scheduled date, and send the registration to the JCRGM WhatsApp office. The church register keeps the participation record and can produce certificates for ceremonies marked as successfully completed.</p>
+    <div class="ceremony-grid" id="ceremonyQuickList"></div>
+  </div>
+
+  <div class="card ceremony-catalogue-card" id="ceremonyCatalogueCard">
+    <div class="ceremony-toolbar">
+      <div>
+        <h3>📚 JCRGM Ceremony Catalogue</h3>
+        <span class="muted">Browse the complete catalogue of church ceremonies. Select any ceremony to register a member or add it to the ceremony calendar.</span>
+      </div>
+      <div class="actions">
+        <button class="btn secondary" type="button" onclick="printCeremonyCatalogue()">🖨 Print Catalogue</button>
+      </div>
+    </div>
+    <div class="catalogue-search-row">
+      <input id="ceremonyCatalogueSearch" type="search" placeholder="🔎 Search ceremony catalogue..." oninput="renderCeremonyCatalogue()">
+      <select id="ceremonyCatalogueGroup" onchange="renderCeremonyCatalogue()">
+        <option value="">All categories</option>
+        <option value="Sacraments & Ordinances">Sacraments & Ordinances</option>
+        <option value="Family & Life Ceremonies">Family & Life Ceremonies</option>
+        <option value="Leadership & Ministry">Leadership & Ministry</option>
+        <option value="Education & Training">Education & Training</option>
+        <option value="Membership & Dedication">Membership & Dedication</option>
+        <option value="Services & Special Gatherings">Services & Special Gatherings</option>
+        <option value="Missions & Commissioning">Missions & Commissioning</option>
+      </select>
+    </div>
+    <div id="ceremonyCatalogue" class="catalogue-grid"></div>
+  </div>
+
+  <div class="card ceremony-calendar-card">
+    <div class="ceremony-toolbar">
+      <div><h3>📅 Ceremony Calendar</h3><span class="muted">Schedule and manage church ceremonies and special events.</span></div>
+      <div class="actions">
+        <button class="btn" onclick="openCeremony()">+ Add Ceremony</button>
+        <button class="btn secondary" onclick="openEventsSection('register')">📝 Register Member</button>
+        <button class="btn secondary" onclick="exportCSV('events')">Export Events CSV</button>
+      </div>
+    </div>
+    <div class="form" style="margin-bottom:15px">
+      <div><label>Filter Ceremony Type</label><select id="ceremonyTypeFilter" onchange="renderEvents()"><option value="">All ceremonies</option></select></div>
+      <div><label>Show</label><select id="ceremonyDateFilter" onchange="renderEvents()"><option value="all">All records</option><option value="upcoming">Upcoming</option><option value="past">Past</option></select></div>
+    </div>
+    <div class="tablewrap"><table><thead><tr><th>Date</th><th>Ceremony</th><th>Time</th><th>Location</th><th>Leader</th><th>Registrations</th><th>Status</th><th>Actions</th></tr></thead><tbody id="eventsTable"></tbody></table></div>
+  </div>
+
+  <div class="card" id="ceremonyRegisterCard" style="margin-top:16px">
+    <div class="ceremony-toolbar">
+      <div><h3>📝 Member Ceremony Registration</h3><span class="muted">Register a member for a scheduled church ceremony.</span></div>
+      <div class="actions">
+        <button class="btn whatsapp" onclick="sendAllCeremonyRegistrationsWhatsApp()">WhatsApp Registration Report</button>
+        <button class="btn secondary" onclick="exportCSV('ceremonyRegistrations')">Export Registration CSV</button>
+      </div>
+    </div>
+    <div class="alert">After saving, the member can send the registration directly to <b>0979554970</b> through WhatsApp. Registration is stored locally on this device for the church register.</div>
+    <form class="form" onsubmit="submitCeremonyRegistration(event)">
+      <div><label>Select Ceremony</label><select id="regCeremonyId" name="ceremonyId" required onchange="updateRegistrationDate()"></select></div>
+      <div><label>Registration Date</label><input name="registeredDate" type="date" value="" required></div>
+      <div><label>Full Name</label><input name="name" required placeholder="Member's full name"></div>
+      <div><label>Phone Number</label><input name="phone" required placeholder="0979..."></div>
+      <div><label>Gender</label><select name="gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+      <div><label>Member ID / Membership No.</label><input name="memberNo" placeholder="Optional"></div>
+      <div><label>Date of Birth</label><input name="dob" type="date"></div>
+      <div><label>Church Department / Ministry</label><input name="ministry"></div>
+      <div><label>Role in Ceremony</label><input name="role" placeholder="Participant / Couple / Candidate / Child / Witness"></div>
+      <div><label>Number of Guests</label><input name="guests" type="number" min="0" value="0"></div>
+      <div><label>Preferred Certificate Name</label><input name="certificateName" placeholder="Name exactly as it should appear"></div>
+      <div><label>Registration Status</label><select name="status"><option>Registered</option><option>Approved</option><option>Waitlisted</option></select></div>
+      <div class="full"><label>Additional Details / Notes</label><textarea name="notes" placeholder="Special requirements, family details, witnesses, etc."></textarea></div>
+      <div class="full actions">
+        <button class="btn success" type="submit">Save Registration</button>
+        <button class="btn whatsapp" type="button" onclick="sendRegistrationFormWhatsApp()">Send Registration to WhatsApp</button>
+        <button class="btn secondary" type="reset">Clear Form</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card" style="margin-top:16px" id="ceremonyRegistryCard">
+    <div class="ceremony-toolbar">
+      <div><h3>📖 Ceremony Register</h3><span class="muted">Master register of everyone registered and their ceremony outcome.</span></div>
+      <div class="actions">
+        <button class="btn secondary" onclick="printCeremonyRegister()">Print / Save PDF</button>
+        <button class="btn secondary" onclick="exportCSV('ceremonyRegistrations')">Export CSV</button>
+      </div>
+    </div>
+    <div class="tablewrap"><table><thead><tr><th>Member</th><th>Ceremony</th><th>Date</th><th>Phone</th><th>Role</th><th>Status</th><th>Certificate</th><th>Actions</th></tr></thead><tbody id="ceremonyRegistrationsTable"></tbody></table></div>
+  </div>
+
+  <div class="card" style="margin-top:16px" id="certificateCard">
+    <div class="ceremony-toolbar">
+      <div><h3>🏆 Ceremony Certificates</h3><span class="muted">Certificates are generated from completed ceremony records.</span></div>
+      <button class="btn gold" onclick="showCompletedCertificates()">View Completed Ceremonies</button>
+    </div>
+    <div id="certificateList" class="guide"></div>
+  </div>
 </section>
 
 <section id="departments" class="page">
@@ -386,11 +530,11 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
 const LS=(function(){try{const t='__t';LS.setItem(t,'1');LS.removeItem(t);return LS}catch(e){const m={};return{getItem:k=>(k in m?m[k]:null),setItem:(k,v)=>{m[k]=String(v)},removeItem:k=>{delete m[k]}}}})();
 
 const KEY='jcrgm_church_center_v1';
-const defaultData={members:[],visitors:[],attendance:[],usherAttendance:[],followups:[],families:[],events:[],departments:[],giving:[],requests:[],pastoral:[],prayerSessions:[],settings:{church:'Jesus Christ Redeems Global Ministries',short:'JCRGM',leader:'',morning:'09:00–12:00',afternoon:'15:00–18:30',currency:'ZMW'}};
+const defaultData={members:[],visitors:[],attendance:[],usherAttendance:[],followups:[],families:[],events:[],ceremonyRegistrations:[],departments:[],giving:[],requests:[],pastoral:[],prayerSessions:[],settings:{church:'Jesus Christ Redeems Global Ministries',short:'JCRGM',leader:'',morning:'09:00–12:00',afternoon:'15:00–18:30',currency:'ZMW'}};
 let db=JSON.parse(LS.getItem(KEY)||'null')||structuredClone(defaultData);
 
 if(!Array.isArray(db.usherAttendance)) db.usherAttendance=[];
-['members','visitors','attendance','usherAttendance','followups','families','events','departments','giving','requests','pastoral','prayerSessions']
+['members','visitors','attendance','usherAttendance','followups','families','events','ceremonyRegistrations','departments','giving','requests','pastoral','prayerSessions']
   .forEach(k=>{if(!Array.isArray(db[k])) db[k]=[]});
 if(!db.settings || typeof db.settings!=='object') db.settings=structuredClone(defaultData.settings);
 LS.setItem(KEY,JSON.stringify(db));
@@ -671,6 +815,374 @@ function openFamily(id=''){let x=db.families.find(a=>a.id===id)||{};modal(`<h3>$
 function renderFamilies(){let a=db.families;document.getElementById('familiesTable').innerHTML=a.length?a.map(x=>`<tr><td>${esc(x.family)}</td><td>${esc(x.head)}</td><td>${esc(x.phone)}</td><td>${esc(x.address)}</td><td>${esc(x.members)}</td><td>${esc(x.notes)}</td><td><button class="btn small secondary" onclick="openFamily('${x.id}')">Edit</button> <button class="btn small danger" onclick="del('families','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No families recorded.</td></tr>`}
 
 function openEvent(id=''){let x=db.events.find(a=>a.id===id)||{};modal(`<h3>${id?'Edit':'Add'} Church Event</h3><form class="form" onsubmit="submitGeneric(event,'events','${id}')"><div><label>Date</label><input name="date" type="date" value="${x.date||today()}"></div><div><label>Event Name</label><input name="event" value="${esc(x.event)}" required></div><div><label>Time</label><input name="time" value="${esc(x.time)}"></div><div><label>Location</label><input name="location" value="${esc(x.location)}"></div><div><label>Leader</label><input name="leader" value="${esc(x.leader)}"></div><div class="full"><label>Notes</label><textarea name="notes">${esc(x.notes)}</textarea></div><div><button class="btn">Save Event</button></div></form>`)}
+
+/* ============================================================
+   CEREMONY REGISTRATION CENTER
+   ============================================================ */
+const CEREMONY_TYPES=[
+  'Water Baptism',
+  'Child Dedication',
+  'Baby Blessing',
+  'Holy Communion',
+  'Marriage / Wedding',
+  'Wedding Anniversary',
+  'Engagement / Introduction',
+  'Funeral / Memorial Service',
+  'Ordination',
+  'Ministerial Licensing',
+  'Pastoral Installation',
+  'Deacon / Elder Ordination',
+  'Leadership Commissioning',
+  'Bible School Graduation',
+  'Theology School Graduation',
+  'Prophetic Ministry Graduation',
+  'Christian Education Graduation',
+  'Membership / New Members Reception',
+  'Church Membership Transfer',
+  'Confirmation / Faith Commitment',
+  'Naming Ceremony',
+  'Thanksgiving Service',
+  'House Dedication',
+  'Business / Career Dedication',
+  'Healing / Special Thanksgiving',
+  'Evangelism / Outreach Commissioning',
+  'Missionary Commissioning',
+  'Youth Dedication',
+  'Women Ministry Ceremony',
+  'Men Ministry Ceremony',
+  'Children Ministry Ceremony',
+  'Choir / Praise Team Commissioning',
+  'Department Leadership Handover',
+  'Workers Commissioning',
+  'Prayer / Prophetic Service',
+  'Conference',
+  'Convention',
+  'Retreat',
+  'Revival / Crusade',
+  'Other Church Ceremony'
+];
+
+function toggleEventsMenu(){
+  const m=document.getElementById('eventsSubmenu'),b=document.getElementById('eventsNavButton');
+  m.classList.toggle('show');b.classList.toggle('open');
+}
+function openEventsSection(section){
+  showPage('events');
+  document.getElementById('eventsSubmenu')?.classList.add('show');
+  document.getElementById('eventsNavButton')?.classList.add('open');
+  setTimeout(()=>{
+    const ids={calendar:'ceremony-calendar-card',register:'ceremonyRegisterCard',registry:'ceremonyRegistryCard',certificates:'certificateCard'};
+    const el=document.getElementById(ids[section]);
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+    if(section==='certificates')renderCertificates();
+  },80);
+}
+function ceremonyCategory(type){
+  const m={
+    'Water Baptism':'Sacraments & Ordinances','Holy Communion':'Sacraments & Ordinances','Confirmation / Faith Commitment':'Sacraments & Ordinances',
+    'Child Dedication':'Family & Life Ceremonies','Baby Blessing':'Family & Life Ceremonies','Marriage / Wedding':'Family & Life Ceremonies',
+    'Wedding Anniversary':'Family & Life Ceremonies','Engagement / Introduction':'Family & Life Ceremonies','Funeral / Memorial Service':'Family & Life Ceremonies',
+    'Naming Ceremony':'Family & Life Ceremonies','House Dedication':'Family & Life Ceremonies','Youth Dedication':'Family & Life Ceremonies',
+    'Women Ministry Ceremony':'Membership & Dedication','Men Ministry Ceremony':'Membership & Dedication','Children Ministry Ceremony':'Membership & Dedication',
+    'Ordination':'Leadership & Ministry','Ministerial Licensing':'Leadership & Ministry','Pastoral Installation':'Leadership & Ministry',
+    'Deacon / Elder Ordination':'Leadership & Ministry','Leadership Commissioning':'Leadership & Ministry','Choir / Praise Team Commissioning':'Leadership & Ministry',
+    'Department Leadership Handover':'Leadership & Ministry','Workers Commissioning':'Leadership & Ministry',
+    'Bible School Graduation':'Education & Training','Theology School Graduation':'Education & Training','Prophetic Ministry Graduation':'Education & Training',
+    'Christian Education Graduation':'Education & Training',
+    'Membership / New Members Reception':'Membership & Dedication','Church Membership Transfer':'Membership & Dedication',
+    'Thanksgiving Service':'Services & Special Gatherings','Healing / Special Thanksgiving':'Services & Special Gatherings',
+    'Prayer / Prophetic Service':'Services & Special Gatherings','Conference':'Services & Special Gatherings','Convention':'Services & Special Gatherings',
+    'Retreat':'Services & Special Gatherings','Revival / Crusade':'Services & Special Gatherings','Business / Career Dedication':'Services & Special Gatherings',
+    'Evangelism / Outreach Commissioning':'Missions & Commissioning','Missionary Commissioning':'Missions & Commissioning'
+  };
+  return m[type]||'Services & Special Gatherings';
+}
+function ceremonyDescription(type){
+  const d={
+    'Water Baptism':'Public identification with Christ through baptism.',
+    'Child Dedication':'Prayer and dedication of a child to God by the family and church.',
+    'Baby Blessing':'A blessing service for babies and their families.',
+    'Holy Communion':'Corporate remembrance of Christ through the Lord’s Supper.',
+    'Marriage / Wedding':'Christian marriage solemnization and covenant ceremony.',
+    'Wedding Anniversary':'Thanksgiving and recommitment for a marriage anniversary.',
+    'Engagement / Introduction':'Formal family/church introduction before marriage.',
+    'Funeral / Memorial Service':'Christian funeral, remembrance and comfort service.',
+    'Ordination':'Recognition and setting apart of a person for ministry service.',
+    'Ministerial Licensing':'Formal recognition of ministerial authorization.',
+    'Pastoral Installation':'Public installation of a pastor into a pastoral assignment.',
+    'Deacon / Elder Ordination':'Setting apart leaders for recognized church service.',
+    'Leadership Commissioning':'Prayer and commissioning for church leadership responsibility.',
+    'Bible School Graduation':'Recognition of successful Bible school studies.',
+    'Theology School Graduation':'Recognition of completed theological training.',
+    'Prophetic Ministry Graduation':'Recognition of completed prophetic ministry training.',
+    'Christian Education Graduation':'Recognition of completed Christian education training.',
+    'Membership / New Members Reception':'Formal welcome and reception of new members.',
+    'Church Membership Transfer':'Official recording and reception of a transferred member.',
+    'Confirmation / Faith Commitment':'Public confirmation of faith and commitment to Christian discipleship.',
+    'Naming Ceremony':'Formal naming and blessing of a child.',
+    'Thanksgiving Service':'A dedicated service of thanksgiving to God.',
+    'House Dedication':'Prayer and dedication of a home to God.',
+    'Business / Career Dedication':'Prayer and dedication of work, business or career.',
+    'Healing / Special Thanksgiving':'Special thanksgiving or healing-focused service.',
+    'Evangelism / Outreach Commissioning':'Commissioning people for evangelism and outreach.',
+    'Missionary Commissioning':'Prayer and commissioning for missionary assignment.',
+    'Youth Dedication':'Dedication and prayer for young people and their calling.',
+    'Women Ministry Ceremony':'Special women’s ministry ceremony or recognition.',
+    'Men Ministry Ceremony':'Special men’s ministry ceremony or recognition.',
+    'Children Ministry Ceremony':'Children’s ministry ceremony or recognition.',
+    'Choir / Praise Team Commissioning':'Commissioning worship and music ministry personnel.',
+    'Department Leadership Handover':'Formal transition of departmental responsibility.',
+    'Workers Commissioning':'Commissioning church workers for service.',
+    'Prayer / Prophetic Service':'Special prayer, prophetic ministry and spiritual gathering.',
+    'Conference':'Structured teaching, fellowship and ministry conference.',
+    'Convention':'Large church-wide or ministry convention.',
+    'Retreat':'Set-apart period for prayer, teaching, reflection and fellowship.',
+    'Revival / Crusade':'Special evangelistic or revival gathering.',
+    'Other Church Ceremony':'Custom ceremony not listed elsewhere in the catalogue.'
+  };
+  return d[type]||'Church ceremony available for scheduling and registration.';
+}
+function renderCeremonyCatalogue(){
+  const el=document.getElementById('ceremonyCatalogue'); if(!el)return;
+  const q=(document.getElementById('ceremonyCatalogueSearch')?.value||'').toLowerCase().trim();
+  const g=document.getElementById('ceremonyCatalogueGroup')?.value||'';
+  const list=CEREMONY_TYPES.filter(t=>(!q||t.toLowerCase().includes(q)||ceremonyDescription(t).toLowerCase().includes(q))&&(!g||ceremonyCategory(t)===g));
+  el.innerHTML=list.length?list.map(t=>`
+    <div class="catalogue-item">
+      <span class="catalogue-category">${esc(ceremonyCategory(t))}</span>
+      <h4>${esc(t)}</h4>
+      <p>${esc(ceremonyDescription(t))}</p>
+      <div class="catalogue-actions">
+        <button class="btn small" type="button" onclick="registerFromCatalogue('${esc(t).replace(/'/g,"\\\\'")}')">📝 Register</button>
+        <button class="btn small secondary" type="button" onclick="addCatalogueCeremony('${esc(t).replace(/'/g,"\\\\'")}')">＋ Schedule</button>
+      </div>
+    </div>`).join(''):`<div class="empty" style="grid-column:1/-1">No ceremony found in the catalogue.</div>`;
+}
+function registerFromCatalogue(type){
+  openEventsSection('register');
+  setTimeout(()=>{
+    const s=document.getElementById('regCeremonyId');
+    if(s){
+      const match=[...s.options].find(o=>o.textContent.startsWith(type+' —')||o.textContent===type);
+      if(match)s.value=match.value;
+      else alert('Please schedule "'+type+'" first, then register the member for its date.');
+    }
+  },120);
+}
+function addCatalogueCeremony(type){
+  openEvent();
+  setTimeout(()=>{
+    const s=document.querySelector('#modalRoot select[name="event"]');
+    if(s)s.value=type;
+  },80);
+}
+function printCeremonyCatalogue(){
+  const w=window.open('','_blank'); if(!w){alert('Please allow pop-ups to print the catalogue.');return}
+  const items=CEREMONY_TYPES.map((t,i)=>`<tr><td>${i+1}</td><td>${esc(t)}</td><td>${esc(ceremonyCategory(t))}</td><td>${esc(ceremonyDescription(t))}</td></tr>`).join('');
+  w.document.write(`<!doctype html><html><head><title>JCRGM Ceremony Catalogue</title><style>
+  body{font-family:Arial,sans-serif;padding:30px;color:#172033}h1{text-align:center}p{text-align:center;color:#667085}
+  table{width:100%;border-collapse:collapse;margin-top:25px}th,td{border:1px solid #ddd;padding:8px;text-align:left;font-size:12px}th{background:#f1f4f8}
+  </style></head><body><h1>JCRGM Ceremony Catalogue</h1><p>Jesus Christ Redeems Global Ministries</p>
+  <table><thead><tr><th>#</th><th>Ceremony</th><th>Category</th><th>Description</th></tr></thead><tbody>${items}</tbody></table>
+  <script>window.onload=()=>window.print()<\/script></body></html>`);
+  w.document.close();
+}
+
+function ceremonyTypesOptions(selected=''){
+  return CEREMONY_TYPES.map(t=>`<option ${t===selected?'selected':''}>${esc(t)}</option>`).join('');
+}
+function seedCeremonyTypes(){
+  const sel=document.getElementById('ceremonyTypeFilter');
+  if(sel)sel.innerHTML='<option value="">All ceremonies</option>'+CEREMONY_TYPES.map(t=>`<option>${esc(t)}</option>`).join('');
+  const reg=document.getElementById('regCeremonyId');
+  if(reg){
+    const upcoming=db.events.filter(x=>x.date>=today()).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+    reg.innerHTML='<option value="">Select a scheduled ceremony</option>'+upcoming.map(x=>`<option value="${x.id}">${esc(x.event)} — ${fmtDate(x.date)}${x.time?' • '+esc(x.time):''}</option>`).join('');
+  }
+}
+function openEvent(id=''){
+  let x=db.events.find(a=>a.id===id)||{};
+  modal(`<h3>${id?'Edit':'Add'} Church Ceremony / Event</h3>
+  <form class="form" onsubmit="submitCeremonyEvent(event,'${id}')">
+    <div><label>Ceremony Type</label><select name="event" required>${ceremonyTypesOptions(x.event)}</select></div>
+    <div><label>Date</label><input name="date" type="date" value="${x.date||today()}" required></div>
+    <div><label>Time</label><input name="time" value="${esc(x.time)}" placeholder="e.g. 09:00–12:00"></div>
+    <div><label>Location</label><input name="location" value="${esc(x.location)}" placeholder="Church / venue"></div>
+    <div><label>Leader / Officiant</label><input name="leader" value="${esc(x.leader)}"></div>
+    <div><label>Maximum Participants</label><input name="capacity" type="number" min="0" value="${x.capacity||''}" placeholder="0 = no limit"></div>
+    <div><label>Registration Required</label><select name="registrationRequired"><option ${x.registrationRequired!=='No'?'selected':''}>Yes</option><option ${x.registrationRequired==='No'?'selected':''}>No</option></select></div>
+    <div><label>Ceremony Status</label><select name="status"><option ${x.status==='Scheduled'||!x.status?'selected':''}>Scheduled</option><option ${x.status==='Completed'?'selected':''}>Completed</option><option ${x.status==='Cancelled'?'selected':''}>Cancelled</option></select></div>
+    <div class="full"><label>Notes / Requirements</label><textarea name="notes">${esc(x.notes)}</textarea></div>
+    <div class="full actions"><button class="btn success">Save Ceremony</button><button type="button" class="btn secondary" onclick="closeModal()">Cancel</button></div>
+  </form>`);
+}
+function submitCeremonyEvent(e,id){
+  e.preventDefault();
+  let o=Object.fromEntries(new FormData(e.target));o.capacity=Number(o.capacity||0);
+  if(id)Object.assign(db.events.find(x=>x.id===id),o);else db.events.unshift({...o,id:uid()});
+  save();closeModal();seedCeremonyTypes();
+}
+function ceremonyRegistrationsFor(eventId){return db.ceremonyRegistrations.filter(r=>r.ceremonyId===eventId)}
+function renderCeremonyQuickList(){
+  const el=document.getElementById('ceremonyQuickList');if(!el)return;
+  const upcoming=db.events.filter(x=>x.date>=today()&&x.status!=='Cancelled').sort((a,b)=>(a.date||'').localeCompare(b.date||'')).slice(0,8);
+  el.innerHTML=upcoming.length?upcoming.map(x=>`<div class="ceremony-chip" onclick="selectCeremonyForRegistration('${x.id}')"><b>${esc(x.event)}</b><span>${fmtDate(x.date)}${x.time?' • '+esc(x.time):''}</span><br><span>${ceremonyRegistrationsFor(x.id).length} registered • Tap to register</span></div>`).join(''):`<div class="ceremony-chip"><b>No ceremonies scheduled</b><span>Use “+ Add Ceremony” to create the first ceremony.</span></div>`;
+}
+function renderEvents(){
+  seedCeremonyTypes();
+  renderCeremonyCatalogue();
+  renderCeremonyQuickList();
+  let type=document.getElementById('ceremonyTypeFilter')?.value||'',range=document.getElementById('ceremonyDateFilter')?.value||'all';
+  let a=[...db.events].filter(x=>!type||x.event===type).filter(x=>range==='all'||(range==='upcoming'?x.date>=today():x.date<today())).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+  document.getElementById('eventsTable').innerHTML=a.length?a.map(x=>{
+    const count=ceremonyRegistrationsFor(x.id).length, status=x.status||'Scheduled';
+    return `<tr><td>${fmtDate(x.date)}</td><td><b>${esc(x.event)}</b></td><td>${esc(x.time)}</td><td>${esc(x.location)}</td><td>${esc(x.leader)}</td><td><b>${count}</b>${x.capacity?' / '+x.capacity:''}</td><td><span class="ceremony-status ${status.toLowerCase()}">${esc(status)}</span></td><td><button class="btn small" onclick="selectCeremonyForRegistration('${x.id}')">Register</button> <button class="btn small secondary" onclick="openEvent('${x.id}')">Edit</button> <button class="btn small whatsapp" onclick="sendCeremonyEventWhatsApp('${x.id}')">WhatsApp</button> <button class="btn small danger" onclick="del('events','${x.id}')">Delete</button></td></tr>`;
+  }).join(''):`<tr><td colspan="8" class="empty">No ceremonies match the selected filter.</td></tr>`;
+  renderCeremonyRegistrations();renderCertificates();
+}
+function selectCeremonyForRegistration(id){
+  openEventsSection('register');
+  setTimeout(()=>{const s=document.getElementById('regCeremonyId');if(s){s.value=id;updateRegistrationDate();}},100);
+}
+function updateRegistrationDate(){
+  const id=document.getElementById('regCeremonyId')?.value;
+  const ev=db.events.find(x=>x.id===id);
+  const f=document.querySelector('#ceremonyRegisterCard input[name="registeredDate"]');
+  if(ev&&f)f.value=today();
+}
+function submitCeremonyRegistration(e){
+  e.preventDefault();
+  const o=Object.fromEntries(new FormData(e.target));
+  if(!o.ceremonyId){alert('Please select a ceremony.');return}
+  const ev=db.events.find(x=>x.id===o.ceremonyId);
+  if(!ev){alert('Ceremony not found.');return}
+  const existing=db.ceremonyRegistrations.filter(r=>r.ceremonyId===o.ceremonyId&&r.phone===o.phone);
+  if(existing.length&&!confirm('This phone number is already registered for this ceremony. Save another registration?'))return;
+  o.guests=Number(o.guests||0);o.id=uid();o.certificateEligible=false;o.certificateNumber='';o.ceremonyName=ev.event;o.ceremonyDate=ev.date;
+  db.ceremonyRegistrations.unshift(o);save();e.target.reset();document.querySelector('#ceremonyRegisterCard input[name="registeredDate"]').value=today();
+  alert('Registration saved. You can now send it to the JCRGM WhatsApp office.');
+  sendRegistrationObjectWhatsApp(o);
+}
+function getRegistrationFormObject(){
+  const form=document.querySelector('#ceremonyRegisterCard form');if(!form)return null;
+  const o=Object.fromEntries(new FormData(form));if(!o.ceremonyId)return null;
+  const ev=db.events.find(x=>x.id===o.ceremonyId);if(ev){o.ceremonyName=ev.event;o.ceremonyDate=ev.date}
+  return o;
+}
+function registrationMessage(r){
+  return `JCRGM CEREMONY REGISTRATION
+Ceremony: ${r.ceremonyName||'Not specified'}
+Ceremony Date: ${r.ceremonyDate?fmtDate(r.ceremonyDate):'Not specified'}
+Registration Date: ${r.registeredDate?fmtDate(r.registeredDate):fmtDate(today())}
+
+MEMBER DETAILS
+Full Name: ${r.name||'Not specified'}
+Phone: ${r.phone||'Not specified'}
+Gender: ${r.gender||'Not specified'}
+Member No.: ${r.memberNo||'Not specified'}
+Date of Birth: ${r.dob?fmtDate(r.dob):'Not specified'}
+Department / Ministry: ${r.ministry||'Not specified'}
+Role: ${r.role||'Participant'}
+Guests: ${r.guests||0}
+
+Certificate Name: ${r.certificateName||r.name||'Not specified'}
+Registration Status: ${r.status||'Registered'}
+Notes: ${r.notes||'None'}${churchFooter()}`;
+}
+function sendRegistrationFormWhatsApp(){
+  const r=getRegistrationFormObject();if(!r){alert('Select a ceremony and complete the registration details first.');return}
+  sendRegistrationObjectWhatsApp(r);
+}
+function sendRegistrationObjectWhatsApp(r){openWhatsApp(registrationMessage(r))}
+function sendAllCeremonyRegistrationsWhatsApp(){
+  if(!db.ceremonyRegistrations.length){alert('No ceremony registrations recorded yet.');return}
+  const msg=`JCRGM CEREMONY REGISTRATION REPORT
+Date: ${fmtDate(today())}
+Total Registrations: ${db.ceremonyRegistrations.length}
+
+${db.ceremonyRegistrations.slice(0,40).map((r,i)=>`${i+1}. ${r.name||''} | ${r.ceremonyName||''} | ${r.ceremonyDate?fmtDate(r.ceremonyDate):''} | ${r.phone||''} | ${r.status||''}`).join('\n')}${db.ceremonyRegistrations.length>40?'\n…more records exist…':''}${churchFooter()}`;
+  openWhatsApp(msg);
+}
+function renderCeremonyRegistrations(){
+  const el=document.getElementById('ceremonyRegistrationsTable');if(!el)return;
+  const a=db.ceremonyRegistrations;
+  el.innerHTML=a.length?a.map(r=>`<tr><td><b>${esc(r.name)}</b><br><span class="muted">${esc(r.certificateName||'')}</span></td><td>${esc(r.ceremonyName||'')}</td><td>${fmtDate(r.ceremonyDate)}</td><td>${esc(r.phone)}</td><td>${esc(r.role)}</td><td><span class="ceremony-status ${(r.status||'Registered').toLowerCase()}">${esc(r.status||'Registered')}</span></td><td>${r.certificateNumber?'<span class="badge green">'+esc(r.certificateNumber)+'</span>':'—'}</td><td><button class="btn small secondary" onclick="openCeremonyRegistration('${r.id}')">Edit</button> <button class="btn small" onclick="markCeremonyCompleted('${r.id}')">Complete</button> <button class="btn small gold" onclick="generateCertificate('${r.id}')">Certificate</button> <button class="btn small whatsapp" onclick="sendRegistrationObjectWhatsApp(db.ceremonyRegistrations.find(x=>x.id==='${r.id}'))">WhatsApp</button> <button class="btn small danger" onclick="delCeremonyRegistration('${r.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="8" class="empty">No ceremony registrations recorded yet.</td></tr>`;
+}
+function openCeremonyRegistration(id){
+  const r=db.ceremonyRegistrations.find(x=>x.id===id);if(!r)return;
+  modal(`<h3>Edit Ceremony Registration</h3><form class="form" onsubmit="updateCeremonyRegistration(event,'${id}')">
+    <div><label>Member Name</label><input name="name" value="${esc(r.name)}" required></div><div><label>Phone</label><input name="phone" value="${esc(r.phone)}" required></div>
+    <div><label>Ceremony</label><select name="ceremonyId" required>${db.events.map(e=>`<option value="${e.id}" ${e.id===r.ceremonyId?'selected':''}>${esc(e.event)} — ${fmtDate(e.date)}</option>`).join('')}</select></div>
+    <div><label>Registration Date</label><input name="registeredDate" type="date" value="${r.registeredDate||today()}"></div>
+    <div><label>Gender</label><select name="gender"><option ${r.gender==='Male'?'selected':''}>Male</option><option ${r.gender==='Female'?'selected':''}>Female</option><option ${r.gender==='Other'?'selected':''}>Other</option></select></div>
+    <div><label>Member No.</label><input name="memberNo" value="${esc(r.memberNo)}"></div>
+    <div><label>Date of Birth</label><input name="dob" type="date" value="${r.dob||''}"></div><div><label>Ministry</label><input name="ministry" value="${esc(r.ministry)}"></div>
+    <div><label>Role</label><input name="role" value="${esc(r.role)}"></div><div><label>Guests</label><input name="guests" type="number" min="0" value="${r.guests||0}"></div>
+    <div><label>Certificate Name</label><input name="certificateName" value="${esc(r.certificateName||r.name)}"></div>
+    <div><label>Status</label><select name="status"><option>Registered</option><option>Approved</option><option>Waitlisted</option><option>Completed</option><option>Cancelled</option></select></div>
+    <div class="full"><label>Notes</label><textarea name="notes">${esc(r.notes)}</textarea></div>
+    <div class="full actions"><button class="btn success">Save Changes</button><button type="button" class="btn secondary" onclick="closeModal()">Cancel</button></div>
+  </form>`);
+}
+function updateCeremonyRegistration(e,id){
+  e.preventDefault();let o=Object.fromEntries(new FormData(e.target));o.guests=Number(o.guests||0);
+  const ev=db.events.find(x=>x.id===o.ceremonyId);if(ev){o.ceremonyName=ev.event;o.ceremonyDate=ev.date}
+  Object.assign(db.ceremonyRegistrations.find(x=>x.id===id),o);save();closeModal();
+}
+function markCeremonyCompleted(id){
+  const r=db.ceremonyRegistrations.find(x=>x.id===id);if(!r)return;
+  r.status='Completed';r.certificateEligible=true;
+  if(!r.certificateNumber)r.certificateNumber='JCRGM-'+new Date().getFullYear()+'-'+String(db.ceremonyRegistrations.filter(x=>x.certificateNumber).length+1).padStart(4,'0');
+  save();alert('Ceremony marked as completed. Certificate is now available.');
+}
+function delCeremonyRegistration(id){if(confirm('Delete this ceremony registration?')){db.ceremonyRegistrations=db.ceremonyRegistrations.filter(x=>x.id!==id);save()}}
+function certificateData(r){
+  const ev=db.events.find(x=>x.id===r.ceremonyId);
+  return {name:r.certificateName||r.name||'Participant',ceremony:r.ceremonyName||ev?.event||'Church Ceremony',date:r.ceremonyDate||ev?.date||today(),number:r.certificateNumber||'JCRGM-CERT-'+Date.now(),leader:ev?.leader||db.settings.leader||'Authorized Church Leader'};
+}
+function generateCertificate(id){
+  const r=db.ceremonyRegistrations.find(x=>x.id===id);if(!r)return;
+  if(r.status!=='Completed'){if(!confirm('This ceremony is not marked Completed. Mark it completed and generate the certificate?'))return;markCeremonyCompleted(id)}
+  const d=certificateData(r);r.certificateNumber=d.number;save();
+  const w=window.open('','_blank','width=1000,height=800');
+  if(!w){alert('Please allow pop-ups for certificate printing.');return}
+  w.document.write(`<!doctype html><html><head><title>${esc(d.number)}</title><style>
+  body{font-family:Georgia,serif;background:#f4f1e8;margin:0;padding:35px}.cert{background:#fff;max-width:900px;min-height:650px;margin:auto;padding:55px;border:14px double #c99a2e;text-align:center;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center}.small{letter-spacing:.16em;font:700 13px Arial;color:#8a6714}.title{font:900 34px Georgia;color:#173b7a;margin:16px 0}.name{font:900 38px Georgia;color:#172033;border-bottom:1px solid #c99a2e;display:inline-block;padding:8px 25px}.body{font:18px Georgia;line-height:1.8;color:#404b5c;max-width:720px;margin:22px auto}.meta{font:700 12px Arial;color:#697386}.sign{display:flex;justify-content:space-around;margin-top:45px;font:11px Arial;color:#172033}.sign div{width:190px;border-top:1px solid #172033;padding-top:7px}@media print{body{background:#fff;padding:0}.cert{border:14px double #c99a2e;max-width:none;min-height:100vh}}button{padding:10px 16px;margin:12px;border:0;background:#173b7a;color:#fff;border-radius:7px}@media print{button{display:none}}</style></head><body><div class="cert">
+  <div class="small">${esc(db.settings.church||'JESUS CHRIST REDEEMS GLOBAL MINISTRIES')}</div>
+  <div class="title">CERTIFICATE OF PARTICIPATION / COMPLETION</div>
+  <div class="body">This certificate is proudly presented to</div>
+  <div class="name">${esc(d.name)}</div>
+  <div class="body">in recognition of successful participation and completion of the church ceremony<br><b>${esc(d.ceremony)}</b><br>held on <b>${esc(fmtDate(d.date))}</b>.</div>
+  <div class="meta">Certificate No.: ${esc(d.number)}</div>
+  <div class="sign"><div>Authorized Church Leader</div><div>Church Official / Secretary</div></div>
+  </div><div style="text-align:center"><button onclick="window.print()">Print / Save as PDF</button></div><script>setTimeout(()=>window.print(),500)<\/script></body></html>`);
+  w.document.close();
+}
+function renderCertificates(){
+  const el=document.getElementById('certificateList');if(!el)return;
+  const a=db.ceremonyRegistrations.filter(r=>r.status==='Completed'||r.certificateEligible);
+  el.innerHTML=a.length?a.map(r=>`<div class="guide-item"><strong>${esc(r.name)} — ${esc(r.ceremonyName)}</strong><span class="muted">${fmtDate(r.ceremonyDate)} • Certificate ${esc(r.certificateNumber||'pending')}</span><div class="actions" style="margin-top:8px"><button class="btn gold small" onclick="generateCertificate('${r.id}')">Generate Certificate</button></div></div>`).join(''):`<div class="empty">No completed ceremonies yet. Complete a ceremony registration to make its certificate available.</div>`;
+}
+function showCompletedCertificates(){renderCertificates();const el=document.getElementById('certificateCard');if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
+function printCeremonyRegister(){
+  const old=document.title;document.title='JCRGM Ceremony Register';window.print();document.title=old;
+}
+function sendCeremonyEventWhatsApp(id){
+  const e=db.events.find(x=>x.id===id);if(!e)return;
+  const regs=ceremonyRegistrationsFor(id);
+  openWhatsApp(`JCRGM CEREMONY
+Ceremony: ${e.event}
+Date: ${fmtDate(e.date)}
+Time: ${e.time||'Not specified'}
+Location: ${e.location||'Not specified'}
+Leader: ${e.leader||'Not specified'}
+Status: ${e.status||'Scheduled'}
+Registrations: ${regs.length}${e.capacity?' / '+e.capacity:''}
+
+REGISTERED MEMBERS
+${regs.slice(0,30).map((r,i)=>`${i+1}. ${r.name||''} | ${r.phone||''} | ${r.role||'Participant'} | ${r.status||'Registered'}`).join('\n')||'No registrations yet.'}${churchFooter()}`);
+}
+
 function renderEvents(){let a=[...db.events].sort((a,b)=>(a.date||'').localeCompare(b.date||''));document.getElementById('eventsTable').innerHTML=a.length?a.map(x=>`<tr><td>${fmtDate(x.date)}</td><td><b>${esc(x.event)}</b></td><td>${esc(x.time)}</td><td>${esc(x.location)}</td><td>${esc(x.leader)}</td><td>${esc(x.notes)}</td><td><button class="btn small secondary" onclick="openEvent('${x.id}')">Edit</button> <button class="btn small danger" onclick="del('events','${x.id}')">Delete</button></td></tr>`).join(''):`<tr><td colspan="7" class="empty">No events recorded.</td></tr>`}
 
 function openDepartment(id=''){let x=db.departments.find(a=>a.id===id)||{};modal(`<h3>${id?'Edit':'Add'} Department</h3><form class="form" onsubmit="submitGeneric(event,'departments','${id}')"><div><label>Department</label><input name="department" value="${esc(x.department)}" required></div><div><label>Leader</label><input name="leader" value="${esc(x.leader)}"></div><div><label>Assistant</label><input name="assistant" value="${esc(x.assistant)}"></div><div><label>Meeting Day</label><input name="day" value="${esc(x.day)}"></div><div><label>Number of Members</label><input name="members" type="number" min="0" value="${x.members||0}"></div><div class="full"><label>Notes</label><textarea name="notes">${esc(x.notes)}</textarea></div><div><button class="btn">Save Department</button></div></form>`)}
