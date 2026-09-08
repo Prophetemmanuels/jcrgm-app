@@ -523,36 +523,36 @@ footer{
 
 <header>
 
-```
 <h1>JCRGM SERVICE SCHEDULE ROUTER</h1>
 
 <p>
-    Monthly • Weekly • Service Responsibilities &amp;
+    Monthly • Weekly • Service Responsibilities &
     Automatic Assignment
 </p>
 
 <div class="zambia-clock">
 
-    <div
-        class="time"
-        id="zambiaTime"
-    >
-        --:--:--
-    </div>
+```
+<div
+    class="time"
+    id="zambiaTime"
+>
+    --:--:--
+</div>
 
-    <div
-        class="date"
-        id="zambiaDate"
-    >
-        Loading date...
-    </div>
+<div
+    class="date"
+    id="zambiaDate"
+>
+    Loading date...
+</div>
 
-    <div class="zone">
-        Zambia Time • Africa/Lusaka • CAT (UTC+2)
-    </div>
-
+<div class="zone">
+    Zambia Time • Africa/Lusaka • CAT (UTC+2)
 </div>
 ```
+
+</div>
 
 </header>
 
@@ -564,63 +564,63 @@ footer{
 
 <div class="card">
 
-```
 <h2>JCRGM Service Times</h2>
 
 <div class="service-times">
 
-    <div class="service-time-card">
+```
+<div class="service-time-card">
 
-        <div class="day">
-            Sunday Morning
-        </div>
-
-        <div class="name">
-            Main Service
-        </div>
-
-        <div class="time">
-            09:00 – 12:30
-        </div>
-
+    <div class="day">
+        Sunday Morning
     </div>
 
-
-    <div class="service-time-card">
-
-        <div class="day">
-            Sunday Afternoon
-        </div>
-
-        <div class="name">
-            Prophetic Ministry
-        </div>
-
-        <div class="time">
-            15:00 – 18:30
-        </div>
-
+    <div class="name">
+        Main Service
     </div>
 
+    <div class="time">
+        09:00 – 12:30
+    </div>
 
-    <div class="service-time-card">
+</div>
 
-        <div class="day">
-            Friday
-        </div>
 
-        <div class="name">
-            Midweek Service
-        </div>
+<div class="service-time-card">
 
-        <div class="time">
-            15:00 – 18:00
-        </div>
+    <div class="day">
+        Sunday Afternoon
+    </div>
 
+    <div class="name">
+        Prophetic Ministry
+    </div>
+
+    <div class="time">
+        15:00 – 18:00
+    </div>
+
+</div>
+
+
+<div class="service-time-card">
+
+    <div class="day">
+        Friday
+    </div>
+
+    <div class="name">
+        Midweek Service
+    </div>
+
+    <div class="time">
+        15:00 – 18:00
     </div>
 
 </div>
 ```
+
+</div>
 
 </div>
 
@@ -642,7 +642,6 @@ footer{
 
 <div class="card">
 
-```
 <h2>1. Church Leaders / Pastors</h2>
 
 <label for="personName">
@@ -650,20 +649,23 @@ footer{
 </label>
 
 <input
-    id="personName"
-    type="text"
-    placeholder="e.g. Pastor John"
-    autocomplete="off"
+id="personName"
+type="text"
+placeholder="e.g. Pastor John"
+autocomplete="off"
+
 >
 
 <div class="actions">
 
-    <button
-        class="primary"
-        onclick="addPerson()"
-    >
-        Add Person
-    </button>
+```
+<button
+    class="primary"
+    onclick="addPerson()"
+>
+    Add Person
+</button>
+```
 
 </div>
 
@@ -674,13 +676,14 @@ footer{
 
 <div class="notice">
 
-    Add all pastors/leaders who may serve.
+```
+Add all pastors/leaders who may serve.
 
-    The router automatically rotates assignments
-    across the team.
+The router automatically rotates assignments
+across the team.
+```
 
 </div>
-```
 
 </div>
 
@@ -690,7 +693,6 @@ footer{
 
 <div class="card">
 
-```
 <h2>2. Schedule Controls</h2>
 
 <label for="month">
@@ -698,10 +700,10 @@ footer{
 </label>
 
 <input
-    type="month"
-    id="month"
->
+type="month"
+id="month"
 
+>
 
 <label for="servicePattern">
     Services to Schedule
@@ -709,57 +711,59 @@ footer{
 
 <select id="servicePattern">
 
-    <option value="jcrgm">
-        JCRGM Standard Schedule
-    </option>
+```
+<option value="jcrgm">
+    JCRGM Standard Schedule
+</option>
 
-    <option value="sun">
-        Sunday Services Only
-    </option>
+<option value="sun">
+    Sunday Services Only
+</option>
 
-    <option value="fri">
-        Friday Service Only
-    </option>
+<option value="fri">
+    Friday Service Only
+</option>
 
-    <option value="sunfri">
-        Sunday + Friday Services
-    </option>
+<option value="sunfri">
+    Sunday + Friday Services
+</option>
+```
 
 </select>
 
-
 <div class="actions">
 
-    <button
-        class="gold"
-        onclick="generate()"
-    >
-        Auto Schedule
-    </button>
+```
+<button
+    class="gold"
+    onclick="generate()"
+>
+    Auto Schedule
+</button>
 
-    <button
-        class="light"
-        onclick="saveData()"
-    >
-        Save
-    </button>
+<button
+    class="light"
+    onclick="saveData()"
+>
+    Save
+</button>
 
-    <button
-        class="light"
-        onclick="loadData()"
-    >
-        Load
-    </button>
+<button
+    class="light"
+    onclick="loadData()"
+>
+    Load
+</button>
 
-    <button
-        class="danger"
-        onclick="clearAll()"
-    >
-        Clear
-    </button>
+<button
+    class="danger"
+    onclick="clearAll()"
+>
+    Clear
+</button>
+```
 
 </div>
-```
 
 </div>
 
@@ -769,14 +773,12 @@ footer{
 
 <div class="card">
 
-```
 <h2>3. Responsibilities Included</h2>
 
 <div
     class="roles"
     id="rolesList"
 ></div>
-```
 
 </div>
 
@@ -794,68 +796,68 @@ footer{
 
 <div class="card no-print">
 
-```
 <h2>4. Schedule Tools</h2>
 
 <div class="toolbar">
 
-    <div>
+```
+<div>
 
-        <label>
-            View
-        </label>
+    <label>
+        View
+    </label>
 
-        <select
-            id="viewMode"
-            onchange="renderSchedule()"
-        >
-
-            <option value="month">
-                Full Month
-            </option>
-
-            <option value="weekly">
-                Weekly Summary
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <div>
-
-        <label>
-            Search
-        </label>
-
-        <input
-            id="search"
-            type="text"
-            placeholder="Search person or responsibility"
-            oninput="renderSchedule()"
-        >
-
-    </div>
-
-
-    <button
-        class="primary"
-        onclick="window.print()"
+    <select
+        id="viewMode"
+        onchange="renderSchedule()"
     >
-        Print / Save PDF
-    </button>
 
+        <option value="month">
+            Full Month
+        </option>
 
-    <button
-        class="light"
-        onclick="exportCSV()"
-    >
-        Export CSV
-    </button>
+        <option value="weekly">
+            Weekly Summary
+        </option>
+
+    </select>
 
 </div>
+
+
+<div>
+
+    <label>
+        Search
+    </label>
+
+    <input
+        id="search"
+        type="text"
+        placeholder="Search person or responsibility"
+        oninput="renderSchedule()"
+    >
+
+</div>
+
+
+<button
+    class="primary"
+    onclick="window.print()"
+>
+    Print / Save PDF
+</button>
+
+
+<button
+    class="light"
+    onclick="exportCSV()"
+>
+    Export CSV
+</button>
 ```
+
+</div>
 
 </div>
 
@@ -877,17 +879,17 @@ footer{
 
 <div class="card">
 
-```
 <div class="schedule-header">
 
-    <h2>
-        5. Generated Service Schedule
-    </h2>
+```
+<h2>
+    5. Generated Service Schedule
+</h2>
+```
 
 </div>
 
 <div id="schedule"></div>
-```
 
 </div>
 
@@ -905,6 +907,12 @@ footer{
 
 /* =========================================================
    RESPONSIBILITIES
+   REMOVED:
+   - Worship Leader
+   - Praise Team / Choir
+   - Announcements
+   - Altar / Ministry
+   - Media / IT
 ========================================================= */
 
 const responsibilities = [
@@ -920,16 +928,6 @@ const responsibilities = [
     ],
 
     [
-        "Worship Leader",
-        "Leads worship and congregational participation."
-    ],
-
-    [
-        "Praise Team / Choir",
-        "Coordinates praise, choir or worship support."
-    ],
-
-    [
         "Scripture Reading",
         "Reads the appointed Scripture clearly."
     ],
@@ -941,22 +939,12 @@ const responsibilities = [
 
     [
         "Offering / Giving",
-        "Coordinates offering, giving and related announcements."
-    ],
-
-    [
-        "Announcements",
-        "Presents church notices and important information."
+        "Coordinates offering, giving and related arrangements."
     ],
 
     [
         "Sermon / Word",
         "Preaches or delivers the main Word where applicable."
-    ],
-
-    [
-        "Altar / Ministry",
-        "Coordinates altar ministry, prayer and response."
     ],
 
     [
@@ -972,11 +960,6 @@ const responsibilities = [
     [
         "Security / Safety",
         "Coordinates basic service safety and emergency readiness."
-    ],
-
-    [
-        "Media / IT",
-        "Handles sound, projection, recording and livestream."
     ],
 
     [
@@ -1029,7 +1012,6 @@ function updateZambiaClock(){
 
     const now = new Date();
 
-
     const time =
         new Intl.DateTimeFormat(
             "en-GB",
@@ -1041,7 +1023,6 @@ function updateZambiaClock(){
                 hour12:false
             }
         ).format(now);
-
 
     const date =
         new Intl.DateTimeFormat(
@@ -1055,16 +1036,13 @@ function updateZambiaClock(){
             }
         ).format(now);
 
-
     document.getElementById("zambiaTime")
         .textContent =
         time + " CAT";
 
-
     document.getElementById("zambiaDate")
         .textContent =
         date;
-
 
     updateCurrentService();
 
@@ -1079,7 +1057,6 @@ function updateCurrentService(){
 
     const now = new Date();
 
-
     const dateParts =
         new Intl.DateTimeFormat(
             "en-US",
@@ -1092,36 +1069,10 @@ function updateCurrentService(){
             }
         ).formatToParts(now);
 
-
-    const year =
-        Number(
-            dateParts.find(
-                p => p.type === "year"
-            ).value
-        );
-
-
-    const month =
-        Number(
-            dateParts.find(
-                p => p.type === "month"
-            ).value
-        );
-
-
-    const dayNumber =
-        Number(
-            dateParts.find(
-                p => p.type === "day"
-            ).value
-        );
-
-
     const weekday =
         dateParts.find(
             p => p.type === "weekday"
         ).value;
-
 
     const timeParts =
         new Intl.DateTimeFormat(
@@ -1134,14 +1085,12 @@ function updateCurrentService(){
             }
         ).formatToParts(now);
 
-
     const hour =
         Number(
             timeParts.find(
                 p => p.type === "hour"
             ).value
         );
-
 
     const minute =
         Number(
@@ -1150,18 +1099,14 @@ function updateCurrentService(){
             ).value
         );
 
-
     const currentMinutes =
         hour * 60 + minute;
-
 
     let message =
         "No JCRGM service is currently in progress.";
 
 
-    /*
-       Sunday
-    */
+    /* Sunday */
 
     if(weekday === "Sunday"){
 
@@ -1174,28 +1119,28 @@ function updateCurrentService(){
                 "🟢 Sunday Morning Service is currently in progress • 09:00–12:30";
 
         }
+
         else if(
             currentMinutes >= 900 &&
-            currentMinutes < 1170
+            currentMinutes < 1080
         ){
 
             message =
-                "🟢 Sunday Afternoon Prophetic Ministry is currently in progress • 15:00–18:30";
+                "🟢 Sunday Afternoon Prophetic Ministry is currently in progress • 15:00–18:00";
 
         }
+
         else{
 
             message =
-                "🔵 Sunday • JCRGM Services: 09:00–12:30 and 15:00–18:30";
+                "🔵 Sunday • JCRGM Services: 09:00–12:30 and 15:00–18:00";
 
         }
 
     }
 
 
-    /*
-       Friday
-    */
+    /* Friday */
 
     else if(weekday === "Friday"){
 
@@ -1208,6 +1153,7 @@ function updateCurrentService(){
                 "🟢 Friday Midweek Service is currently in progress • 15:00–18:00";
 
         }
+
         else{
 
             message =
@@ -1231,14 +1177,6 @@ function updateCurrentService(){
 
 function init(){
 
-    /*
-       Current month using the computer's local
-       calendar values.
-
-       We intentionally DO NOT use toISOString()
-       for date selection.
-    */
-
     const now = new Date();
 
     const year =
@@ -1249,15 +1187,10 @@ function init(){
             now.getMonth() + 1
         ).padStart(2,"0");
 
-
     document.getElementById("month")
         .value =
         `${year}-${month}`;
 
-
-    /*
-       Display responsibilities.
-    */
 
     document.getElementById("rolesList")
         .innerHTML =
@@ -1305,10 +1238,8 @@ function addPerson(){
     const input =
         document.getElementById("personName");
 
-
     const name =
         input.value.trim();
-
 
     if(!name){
 
@@ -1318,7 +1249,6 @@ function addPerson(){
 
         return;
     }
-
 
     if(
         people.some(
@@ -1334,7 +1264,6 @@ function addPerson(){
 
         return;
     }
-
 
     people.push(name);
 
@@ -1355,11 +1284,6 @@ function removePerson(index){
 
     renderPeople();
 
-    /*
-       Team changed, therefore the old
-       generated roster is cleared.
-    */
-
     schedule = [];
 
     renderSchedule();
@@ -1376,7 +1300,6 @@ function renderPeople(){
     const box =
         document.getElementById("people");
 
-
     if(!people.length){
 
         box.innerHTML =
@@ -1384,7 +1307,6 @@ function renderPeople(){
 
         return;
     }
-
 
     box.innerHTML =
         people.map(
@@ -1421,8 +1343,12 @@ function getServices(pattern){
     /*
        Sunday = 0
        Friday = 5
-    */
 
+       Current JCRGM times:
+       Sunday Morning: 09:00–12:30
+       Sunday Afternoon: 15:00–18:00
+       Friday: 15:00–18:00
+    */
 
     const sundayServices = [
 
@@ -1435,7 +1361,7 @@ function getServices(pattern){
         {
             day:0,
             name:"Sunday Afternoon Prophetic Ministry",
-            time:"15:00–18:30"
+            time:"15:00–18:00"
         }
 
     ];
@@ -1473,10 +1399,6 @@ function getServices(pattern){
 
     }
 
-
-    /*
-       Default JCRGM schedule.
-    */
 
     return [
         ...sundayServices,
@@ -1556,12 +1478,6 @@ function generate(){
         dayNumber++
     ){
 
-        /*
-           Use noon rather than midnight.
-           This prevents timezone-related
-           date changes.
-        */
-
         const date =
             new Date(
                 year,
@@ -1622,13 +1538,6 @@ function generate(){
                     }
                 );
 
-
-                /*
-                   IMPORTANT:
-                   Manually construct YYYY-MM-DD.
-
-                   This avoids UTC conversion.
-                */
 
                 const localDate =
                     year +
@@ -1709,8 +1618,7 @@ function renderSchedule(){
 
     const search =
         (
-            document.getElementById("search")
-            .value ||
+            document.getElementById("search").value ||
             ""
         ).toLowerCase();
 
@@ -1943,10 +1851,6 @@ function renderSchedule(){
 ========================================================= */
 
 function formatDate(dateString){
-
-    /*
-       Noon prevents UTC date shifting.
-    */
 
     const date =
         new Date(
@@ -2220,45 +2124,25 @@ function clearAll(){
     }
 
 
-    /*
-       Completely clear application memory.
-    */
-
     people = [];
 
     schedule = [];
 
-
-    /*
-       Completely remove saved data.
-    */
 
     localStorage.removeItem(
         "jcrgm_schedule_data"
     );
 
 
-    /*
-       Clear search.
-    */
-
     document.getElementById(
         "search"
     ).value = "";
 
 
-    /*
-       Reset service selection.
-    */
-
     document.getElementById(
         "servicePattern"
     ).value = "jcrgm";
 
-
-    /*
-       Reset to current month.
-    */
 
     const now =
         new Date();
@@ -2279,10 +2163,6 @@ function clearAll(){
     ).value =
         `${year}-${month}`;
 
-
-    /*
-       Refresh every part of the screen.
-    */
 
     renderPeople();
 
