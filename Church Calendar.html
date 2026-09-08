@@ -7,13 +7,10 @@
 
     <title>JCRGM | The Night of the Redeemed</title>
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
 
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <script>
@@ -126,6 +123,7 @@
             0% {
                 left: -120%;
             }
+
             45%,100% {
                 left: 140%;
             }
@@ -136,6 +134,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -154,8 +153,58 @@
             0%,100% {
                 box-shadow: 0 0 0 0 rgba(212,175,55,.25);
             }
+
             50% {
                 box-shadow: 0 0 0 10px rgba(212,175,55,0);
+            }
+        }
+
+        /* =========================================================
+           NIGHT OF THE REDEEMED RED BLINKING DOT
+        ========================================================== */
+
+        .night-redeemed-dot {
+            width: 9px;
+            height: 9px;
+            background: #ef4444;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow:
+                0 0 6px rgba(239,68,68,.95),
+                0 0 12px rgba(239,68,68,.55);
+            animation: nightRedeemedBlink 1s infinite;
+        }
+
+        @keyframes nightRedeemedBlink {
+
+            0%, 45% {
+                opacity: 1;
+                transform: scale(1);
+                box-shadow:
+                    0 0 6px rgba(239,68,68,.95),
+                    0 0 12px rgba(239,68,68,.55);
+            }
+
+            50%, 100% {
+                opacity: .20;
+                transform: scale(.70);
+                box-shadow:
+                    0 0 2px rgba(239,68,68,.3);
+            }
+        }
+
+        .night-redeemed-label {
+            color: #ef4444;
+            animation: nightLabelPulse 1.5s infinite;
+        }
+
+        @keyframes nightLabelPulse {
+            0%,100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .55;
             }
         }
 
@@ -186,22 +235,23 @@
 
 <body class="min-h-screen antialiased selection:bg-brand-gold selection:text-brand-navy">
 
-    <!-- BACKGROUND LIGHT EFFECTS -->
+    <!-- BACKGROUND -->
     <div class="fixed top-0 left-1/4 w-96 h-96 bg-brand-gold/10 rounded-full blur-[120px] pointer-events-none"></div>
     <div class="fixed top-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-    <!-- MAIN APPLICATION -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
 
-        <!-- =========================================================
-             HEADER
-        ========================================================== -->
+        <!-- HEADER -->
         <header class="text-center mb-10 flex flex-col items-center">
 
             <div class="w-20 h-20 bg-gradient-to-tr from-brand-gold to-brand-goldLight rounded-full p-1.5 shadow-lg shadow-brand-gold/20 mb-4 flex items-center justify-center">
+
                 <div class="w-full h-full bg-brand-navy rounded-full flex items-center justify-center text-brand-gold">
+
                     <i data-lucide="cross" class="w-10 h-10"></i>
+
                 </div>
+
             </div>
 
             <h1 class="text-xs sm:text-sm uppercase tracking-[0.25em] text-brand-gold font-bold mb-1 px-4">
@@ -219,8 +269,11 @@
 
                 <button
                     onclick="changeYear(-1)"
+                    aria-label="Previous year"
                     class="p-2 hover:bg-brand-gold/10 rounded-full text-brand-gold transition">
+
                     <i data-lucide="chevron-left" class="w-5 h-5"></i>
+
                 </button>
 
                 <span
@@ -231,17 +284,23 @@
 
                 <button
                     onclick="changeYear(1)"
+                    aria-label="Next year"
                     class="p-2 hover:bg-brand-gold/10 rounded-full text-brand-gold transition">
+
                     <i data-lucide="chevron-right" class="w-5 h-5"></i>
+
                 </button>
 
             </div>
+
+            <p class="text-[10px] text-slate-500 uppercase tracking-widest mt-3">
+                Entire calendar synchronized with selected year
+            </p>
+
         </header>
 
 
-        <!-- =========================================================
-             NEXT EVENT / COUNTDOWN
-        ========================================================== -->
+        <!-- NEXT EVENT -->
         <section class="mb-12">
 
             <div class="premium-gradient border border-brand-gold/30 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
@@ -269,13 +328,19 @@
                         <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-sm text-slate-300 mb-2">
 
                             <span class="flex items-center gap-1.5">
+
                                 <i data-lucide="calendar" class="w-4 h-4 text-brand-gold"></i>
+
                                 <span id="nextEventDate">—</span>
+
                             </span>
 
                             <span class="flex items-center gap-1.5">
+
                                 <i data-lucide="clock" class="w-4 h-4 text-brand-gold"></i>
+
                                 <span id="nextEventTime">—</span>
+
                             </span>
 
                         </div>
@@ -283,12 +348,15 @@
                         <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 text-sm">
 
                             <span class="flex items-center gap-1.5">
+
                                 <i data-lucide="map-pin" class="w-4 h-4 text-rose-400"></i>
+
                                 <span
                                     id="nextEventVenue"
                                     class="font-medium text-slate-300">
                                     —
                                 </span>
+
                             </span>
 
                             <a
@@ -299,6 +367,7 @@
                                 class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg gold-gradient text-brand-navy text-xs font-bold uppercase tracking-wider hover:brightness-110 transition shadow-md">
 
                                 <i data-lucide="navigation" class="w-3.5 h-3.5"></i>
+
                                 Get Directions
 
                             </a>
@@ -309,38 +378,70 @@
 
 
                     <!-- COUNTDOWN -->
+
                     <div class="lg:col-span-7 flex flex-wrap justify-center gap-4">
 
                         <div class="glass-dark border border-slate-700 w-24 h-24 sm:w-28 sm:h-28 rounded-2xl flex flex-col items-center justify-center shadow-lg">
-                            <span id="cd-days" class="text-3xl sm:text-4xl font-extrabold text-white">00</span>
-                            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 mt-1 font-semibold">Days</span>
+
+                            <span id="cd-days" class="text-3xl sm:text-4xl font-extrabold text-white">
+                                00
+                            </span>
+
+                            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 mt-1 font-semibold">
+                                Days
+                            </span>
+
                         </div>
 
-                        <div class="glass-dark border border-slate-700 w-24 h-24 sm:w-28 sm:h-28 rounded-2xl flex flex-col items-center justify-center shadow-lg">
-                            <span id="cd-hours" class="text-3xl sm:text-4xl font-extrabold text-white">00</span>
-                            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 mt-1 font-semibold">Hours</span>
-                        </div>
 
                         <div class="glass-dark border border-slate-700 w-24 h-24 sm:w-28 sm:h-28 rounded-2xl flex flex-col items-center justify-center shadow-lg">
-                            <span id="cd-mins" class="text-3xl sm:text-4xl font-extrabold text-white">00</span>
-                            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 mt-1 font-semibold">Mins</span>
+
+                            <span id="cd-hours" class="text-3xl sm:text-4xl font-extrabold text-white">
+                                00
+                            </span>
+
+                            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 mt-1 font-semibold">
+                                Hours
+                            </span>
+
                         </div>
+
+
+                        <div class="glass-dark border border-slate-700 w-24 h-24 sm:w-28 sm:h-28 rounded-2xl flex flex-col items-center justify-center shadow-lg">
+
+                            <span id="cd-mins" class="text-3xl sm:text-4xl font-extrabold text-white">
+                                00
+                            </span>
+
+                            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 mt-1 font-semibold">
+                                Mins
+                            </span>
+
+                        </div>
+
 
                         <div class="glass-dark border border-brand-gold/30 w-24 h-24 sm:w-28 sm:h-28 rounded-2xl flex flex-col items-center justify-center shadow-lg pulse-gold">
-                            <span id="cd-secs" class="text-3xl sm:text-4xl font-extrabold text-brand-gold">00</span>
-                            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 mt-1 font-semibold">Secs</span>
+
+                            <span id="cd-secs" class="text-3xl sm:text-4xl font-extrabold text-brand-gold">
+                                00
+                            </span>
+
+                            <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 mt-1 font-semibold">
+                                Secs
+                            </span>
+
                         </div>
 
                     </div>
 
                 </div>
             </div>
+
         </section>
 
 
-        <!-- =========================================================
-             VIEW CONTROLS
-        ========================================================== -->
+        <!-- VIEW CONTROLS -->
+
         <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-8">
 
             <div class="flex items-center gap-2 bg-brand-slate/40 border border-slate-800 rounded-xl p-1 self-start">
@@ -351,9 +452,11 @@
                     class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2">
 
                     <i data-lucide="grid" class="w-4 h-4"></i>
+
                     Month Grid
 
                 </button>
+
 
                 <button
                     onclick="setView('list')"
@@ -361,6 +464,7 @@
                     class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2">
 
                     <i data-lucide="list" class="w-4 h-4"></i>
+
                     Complete Chart
 
                 </button>
@@ -369,10 +473,13 @@
 
 
             <!-- SEARCH -->
+
             <div class="relative flex-grow md:max-w-md">
 
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+
                     <i data-lucide="search" class="w-5 h-5"></i>
+
                 </div>
 
                 <input
@@ -383,17 +490,18 @@
                     class="w-full bg-brand-slate/40 border border-slate-700/60 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition">
 
             </div>
+
         </div>
 
 
-        <!-- =========================================================
-             CALENDAR VIEW
-        ========================================================== -->
+        <!-- MAIN -->
+
         <main>
 
             <div id="calendarView" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                 <!-- MONTH GRID -->
+
                 <div class="lg:col-span-2 space-y-6">
 
                     <div class="flex items-center justify-between">
@@ -401,9 +509,9 @@
                         <h3
                             id="currentMonthNameHeader"
                             class="text-2xl font-bold font-serif text-white flex items-center gap-2">
-                            <i data-lucide="calendar-days" class="text-brand-gold"></i>
                             January 2026
                         </h3>
+
 
                         <div class="flex items-center gap-2">
 
@@ -415,6 +523,7 @@
 
                             </button>
 
+
                             <button
                                 onclick="changeMonth(1)"
                                 class="p-2 bg-brand-slate/40 border border-slate-700/60 rounded-lg hover:bg-brand-gold/10 text-brand-gold transition">
@@ -424,6 +533,7 @@
                             </button>
 
                         </div>
+
                     </div>
 
 
@@ -441,16 +551,19 @@
 
                         </div>
 
+
                         <div
                             id="calendarDaysGrid"
                             class="grid grid-cols-7 gap-2 sm:gap-3 text-center">
                         </div>
 
                     </div>
+
                 </div>
 
 
                 <!-- MONTH EVENTS -->
+
                 <div class="space-y-6">
 
                     <h3 class="text-xl font-bold font-serif text-white flex items-center gap-2">
@@ -460,6 +573,7 @@
                         Scheduled Programmes
 
                     </h3>
+
 
                     <div
                         id="monthEventsList"
@@ -471,9 +585,8 @@
             </div>
 
 
-            <!-- =====================================================
-                 COMPLETE CHART
-            ====================================================== -->
+            <!-- COMPLETE CHART -->
+
             <div id="listView" class="hidden">
 
                 <div class="glass-dark border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
@@ -486,12 +599,29 @@
 
                                 <tr class="bg-brand-navy/80 border-b border-slate-700/60 text-xs uppercase tracking-wider font-semibold text-brand-gold">
 
-                                    <th class="py-4 px-6">Public Holiday</th>
-                                    <th class="py-4 px-6">Description</th>
-                                    <th class="py-4 px-6">Scheduled Date</th>
-                                    <th class="py-4 px-6">Church Programme</th>
-                                    <th class="py-4 px-6">Time</th>
-                                    <th class="py-4 px-6">Venue</th>
+                                    <th class="py-4 px-6">
+                                        Public Holiday
+                                    </th>
+
+                                    <th class="py-4 px-6">
+                                        Description
+                                    </th>
+
+                                    <th class="py-4 px-6">
+                                        Scheduled Date
+                                    </th>
+
+                                    <th class="py-4 px-6">
+                                        Church Programme
+                                    </th>
+
+                                    <th class="py-4 px-6">
+                                        Time
+                                    </th>
+
+                                    <th class="py-4 px-6">
+                                        Venue
+                                    </th>
 
                                 </tr>
 
@@ -505,15 +635,16 @@
                         </table>
 
                     </div>
+
                 </div>
+
             </div>
 
         </main>
 
 
-        <!-- =========================================================
-             FOOTER
-        ========================================================== -->
+        <!-- FOOTER -->
+
         <footer class="mt-16 border-t border-slate-800/80 pt-8 pb-12 flex flex-col md:flex-row justify-between items-center gap-6">
 
             <div class="space-y-2 text-center md:text-left">
@@ -528,11 +659,15 @@
 
                 </div>
 
+
                 <p class="text-xs text-slate-400 max-w-lg leading-relaxed">
+
                     Kindly note that schedules are prepared to maintain punctuality,
                     order and excellence. Please follow all programmes recorded on
                     the official JCRGM calendar.
+
                 </p>
+
 
                 <a
                     id="footerDirectionsLink"
@@ -542,9 +677,11 @@
                     class="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl gold-gradient text-brand-navy text-xs font-bold uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-lg">
 
                     <i data-lucide="map-pin" class="w-4 h-4"></i>
+
                     Find Us – Get Directions
 
                 </a>
+
 
                 <p class="text-[10px] text-slate-500 mt-1 max-w-md leading-relaxed">
 
@@ -590,9 +727,8 @@
     </div>
 
 
-    <!-- =============================================================
-         NEW MONTH MODAL
-    ============================================================= -->
+    <!-- NEW MONTH MODAL -->
+
     <div
         id="newMonthModal"
         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
@@ -609,11 +745,13 @@
 
             </div>
 
+
             <div class="mt-12 space-y-4">
 
                 <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-brand-gold/10 text-brand-gold border border-brand-gold/20 uppercase tracking-widest">
                     A New Month Has Arrived
                 </span>
+
 
                 <h3
                     id="modalMonthName"
@@ -621,13 +759,21 @@
                     Welcome!
                 </h3>
 
+
                 <p class="text-sm text-slate-300 leading-relaxed italic">
+
                     "Behold, I do a new thing; now it shall spring forth;
                     shall ye not know it? I will even make a way in the wilderness,
                     and rivers in the desert."
+
                     <br>
-                    <span class="text-brand-gold">— Isaiah 43:19</span>
+
+                    <span class="text-brand-gold">
+                        — Isaiah 43:19
+                    </span>
+
                 </p>
+
 
                 <div class="p-4 bg-brand-slate/60 border border-slate-700/60 rounded-2xl text-left space-y-2">
 
@@ -642,6 +788,7 @@
 
                 </div>
 
+
                 <button
                     onclick="closeNewMonthModal()"
                     class="w-full py-3 rounded-xl gold-gradient font-bold text-brand-navy hover:brightness-110 active:scale-95 transition-all shadow-lg">
@@ -651,13 +798,14 @@
                 </button>
 
             </div>
+
         </div>
+
     </div>
 
 
-    <!-- =============================================================
-         NIGHT OF THE REDEEMED PROFESSIONAL PORTAL
-    ============================================================= -->
+    <!-- NIGHT OF THE REDEEMED PORTAL -->
+
     <div
         id="theologicalModal"
         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300 overflow-y-auto">
@@ -665,10 +813,12 @@
         <div class="premium-gradient border border-brand-gold/40 rounded-3xl p-6 md:p-8 max-w-5xl w-full shadow-2xl relative my-8 overflow-hidden">
 
             <div class="absolute -top-20 -left-20 w-48 h-48 bg-brand-gold/10 rounded-full blur-3xl"></div>
+
             <div class="absolute -bottom-20 -right-20 w-48 h-48 bg-sky-500/10 rounded-full blur-3xl"></div>
 
 
             <!-- MODAL HEADER -->
+
             <div class="flex items-center justify-between border-b border-slate-800 pb-5 mb-7 relative z-10">
 
                 <div class="flex items-center gap-4">
@@ -679,6 +829,7 @@
 
                     </div>
 
+
                     <div>
 
                         <p
@@ -687,11 +838,13 @@
                             THE NIGHT OF THE REDEEMED
                         </p>
 
+
                         <h4
                             id="modalSeasonTitle"
                             class="text-2xl md:text-3xl font-bold text-white font-serif">
                             Season 1
                         </h4>
+
 
                         <p
                             id="modalEventDate"
@@ -702,6 +855,7 @@
                     </div>
 
                 </div>
+
 
                 <button
                     onclick="closeTheologicalModal()"
@@ -714,13 +868,14 @@
             </div>
 
 
-            <!-- MODAL CONTENT -->
+            <!-- CONTENT -->
+
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
 
                 <!-- LEFT -->
+
                 <div class="lg:col-span-6 space-y-6 text-left pr-0 lg:pr-5 lg:border-r lg:border-slate-800">
 
-                    <!-- SEASON HERO -->
                     <div class="relative overflow-hidden rounded-3xl border border-brand-gold/25 bg-brand-gold/5 p-6 special-glow shimmer">
 
                         <div class="relative z-10">
@@ -735,11 +890,13 @@
 
                             </div>
 
+
                             <h5
                                 id="modalHeroTitle"
                                 class="text-3xl md:text-4xl font-serif font-bold text-white leading-tight">
                                 The Night of the Redeemed
                             </h5>
+
 
                             <p
                                 id="modalHeroSeason"
@@ -747,16 +904,20 @@
                                 Season 1
                             </p>
 
+
                             <p
                                 id="modalHeroDate"
                                 class="text-xs text-slate-400 mt-1">
                                 September 2026
                             </p>
 
+
                             <p class="text-sm text-slate-300 leading-relaxed mt-4">
+
                                 A strategic night of prayer, redemption,
                                 spiritual renewal, prophetic ministry and
                                 personal encounter in the presence of God.
+
                             </p>
 
                         </div>
@@ -764,7 +925,6 @@
                     </div>
 
 
-                    <!-- REDEMPTION -->
                     <div class="space-y-2">
 
                         <h5 class="text-sm uppercase tracking-widest text-brand-gold font-bold flex items-center gap-2">
@@ -775,9 +935,13 @@
 
                         </h5>
 
+
                         <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
 
-                            <strong class="text-white">Redemption</strong>
+                            <strong class="text-white">
+                                Redemption
+                            </strong>
+
                             speaks of God's saving work through Jesus Christ,
                             bringing people from bondage into freedom,
                             restoration and new life.
@@ -787,7 +951,6 @@
                     </div>
 
 
-                    <!-- PRAYER -->
                     <div class="space-y-2">
 
                         <h5 class="text-sm uppercase tracking-widest text-brand-gold font-bold flex items-center gap-2">
@@ -797,6 +960,7 @@
                             The Power of Persistent Prayer
 
                         </h5>
+
 
                         <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
 
@@ -813,7 +977,6 @@
                     </div>
 
 
-                    <!-- INFORMATION -->
                     <div class="bg-brand-navy/60 border border-brand-gold/20 rounded-2xl p-4 flex gap-3 items-start">
 
                         <i data-lucide="info" class="w-5 h-5 text-brand-gold shrink-0 mt-0.5"></i>
@@ -836,6 +999,7 @@
 
 
                 <!-- RIGHT -->
+
                 <div class="lg:col-span-6 text-left space-y-4">
 
                     <div>
@@ -847,6 +1011,7 @@
                             Book One-on-One Encounter
 
                         </h5>
+
 
                         <p class="text-xs text-slate-400">
 
@@ -869,6 +1034,7 @@
                                 Your Full Name
                             </label>
 
+
                             <input
                                 type="text"
                                 id="b_name"
@@ -885,6 +1051,7 @@
                                 WhatsApp / Contact Number
                             </label>
 
+
                             <input
                                 type="tel"
                                 id="b_phone"
@@ -900,6 +1067,7 @@
                             <label class="block text-[11px] uppercase tracking-wider text-brand-gold font-semibold mb-1">
                                 Primary Area of Prayer &amp; Counseling
                             </label>
+
 
                             <select
                                 id="b_reason"
@@ -936,6 +1104,7 @@
                                 Brief Description / Prayer Request
                             </label>
 
+
                             <textarea
                                 id="b_notes"
                                 rows="3"
@@ -958,7 +1127,8 @@
                     </form>
 
 
-                    <!-- WHATSAPP PANEL -->
+                    <!-- WHATSAPP -->
+
                     <div
                         id="whatsappDispatchPanel"
                         class="hidden p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl space-y-3 animate-fadeIn">
@@ -972,6 +1142,7 @@
                             </h6>
 
                         </div>
+
 
                         <p class="text-[11px] text-slate-300 leading-relaxed">
 
@@ -1018,12 +1189,14 @@
             </div>
 
         </div>
+
     </div>
 
 
-    <!-- =============================================================
+    <!-- =========================================================
          JAVASCRIPT ENGINE
-    ============================================================= -->
+    ========================================================== -->
+
     <script>
 
         /* =========================================================
@@ -1033,57 +1206,69 @@
         const CHURCH_LOCATION_URL =
             "https://maps.app.goo.gl/t8LcZowDWVmsAiJu8";
 
+
         const CHURCH_NAME =
             "Jesus Christ Redeems Global Ministries";
 
+
         /*
-         * OFFICIAL LAUNCH OF THE NIGHT OF THE REDEEMED
+         * ========================================================
+         * NIGHT OF THE REDEEMED OFFICIAL SEQUENCE
+         * ========================================================
          *
-         * September 2026 = Season 1
+         * SEPTEMBER 2026 = SEASON 1
          *
-         * The numbering continues permanently:
+         * DECEMBER 2026 = SEASON 2
          *
-         * September 2026 = Season 1
-         * December 2026  = Season 2
-         * March 2027     = Season 3
-         * June 2027      = Season 4
-         * September 2027 = Season 5
-         * December 2027  = Season 6
+         * MARCH 2027    = SEASON 3
+         * JUNE 2027     = SEASON 4
+         * SEPTEMBER 2027= SEASON 5
+         * DECEMBER 2027 = SEASON 6
          *
-         * The sequence NEVER resets.
+         * MARCH 2028    = SEASON 7
+         * JUNE 2028     = SEASON 8
+         * SEPTEMBER 2028= SEASON 9
+         * DECEMBER 2028 = SEASON 10
+         *
+         * THE NUMBERING NEVER RESETS.
          */
 
         const NIGHT_REDEEMED_LAUNCH_YEAR = 2026;
 
         const NIGHT_REDEEMED_LAUNCH_MONTH = 8;
-        // JavaScript month 8 = September
-
-        const NIGHT_REDEEMED_QUARTERS = [
-            {
-                monthIndex: 8,
-                sequenceWithinLaunch: 1
-            },
-            {
-                monthIndex: 11,
-                sequenceWithinLaunch: 2
-            }
-        ];
+        // September = JavaScript month 8
 
 
         /* =========================================================
            APPLICATION VARIABLES
         ========================================================== */
 
-        let currentYear = new Date().getFullYear();
-        let currentMonthIndex = new Date().getMonth();
+        const ZAMBIA_TIME_ZONE =
+            "Africa/Lusaka";
 
-        let activeView = "calendar";
 
-        let countdownInterval = null;
+        let currentYear =
+            getZambiaNow().getFullYear();
 
-        let searchFilter = "";
 
-        let selectedNightEvent = null;
+        let currentMonthIndex =
+            getZambiaNow().getMonth();
+
+
+        let activeView =
+            "calendar";
+
+
+        let countdownInterval =
+            null;
+
+
+        let searchFilter =
+            "";
+
+
+        let selectedNightEvent =
+            null;
 
 
         /* =========================================================
@@ -1091,6 +1276,7 @@
         ========================================================== */
 
         const MONTHS = [
+
             "January",
             "February",
             "March",
@@ -1103,20 +1289,86 @@
             "October",
             "November",
             "December"
+
         ];
 
 
         /* =========================================================
-           EASTER CALCULATION
+           ZAMBIAN DATE/TIME
+        ========================================================== */
+
+        function getZambiaNow() {
+
+            const parts =
+                new Intl.DateTimeFormat(
+                    "en-GB",
+                    {
+                        timeZone: ZAMBIA_TIME_ZONE,
+                        year: "numeric",
+                        month: "numeric",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        second: "numeric",
+                        hourCycle: "h23"
+                    }
+                ).formatToParts(
+                    new Date()
+                );
+
+
+            const values = {};
+
+
+            parts.forEach(
+                part => {
+
+                    if (
+                        part.type !== "literal"
+                    ) {
+
+                        values[part.type] =
+                            parseInt(
+                                part.value,
+                                10
+                            );
+
+                    }
+
+                }
+            );
+
+
+            return new Date(
+
+                values.year,
+                values.month - 1,
+                values.day,
+                values.hour,
+                values.minute,
+                values.second
+
+            );
+        }
+
+
+        /* =========================================================
+           EASTER
         ========================================================== */
 
         function calculateEaster(year) {
 
-            const f = Math.floor;
+            const f =
+                Math.floor;
 
-            const G = year % 19;
 
-            const C = f(year / 100);
+            const G =
+                year % 19;
+
+
+            const C =
+                f(year / 100);
+
 
             const H =
                 (
@@ -1127,6 +1379,7 @@
                     15
                 ) % 30;
 
+
             const I =
                 H -
                 f(H / 28) *
@@ -1135,6 +1388,7 @@
                     f(29 / (H + 1)) *
                     f((21 - G) / 11)
                 );
+
 
             const J =
                 (
@@ -1146,18 +1400,27 @@
                     f(C / 4)
                 ) % 7;
 
-            const L = I - J;
+
+            const L =
+                I - J;
+
 
             const month =
                 3 +
                 f((L + 40) / 44);
+
 
             const day =
                 L +
                 28 -
                 31 * f(month / 4);
 
-            return new Date(year, month - 1, day);
+
+            return new Date(
+                year,
+                month - 1,
+                day
+            );
         }
 
 
@@ -1165,47 +1428,93 @@
            DATE HELPERS
         ========================================================== */
 
-        function getSundayOnOrBefore(year, month, targetDay) {
+        function getSundayOnOrBefore(
+            year,
+            month,
+            targetDay
+        ) {
 
             let target =
-                new Date(year, month, targetDay);
+                new Date(
+                    year,
+                    month,
+                    targetDay
+                );
 
-            while (target.getDay() !== 0) {
-                target.setDate(target.getDate() - 1);
+
+            while (
+                target.getDay() !== 0
+            ) {
+
+                target.setDate(
+                    target.getDate() - 1
+                );
+
             }
+
 
             return target;
         }
 
 
-        function getFirstMonday(year, month) {
+        function getFirstMonday(
+            year,
+            month
+        ) {
 
             let d =
-                new Date(year, month, 1);
+                new Date(
+                    year,
+                    month,
+                    1
+                );
 
-            while (d.getDay() !== 1) {
-                d.setDate(d.getDate() + 1);
+
+            while (
+                d.getDay() !== 1
+            ) {
+
+                d.setDate(
+                    d.getDate() + 1
+                );
+
             }
+
 
             return d;
         }
 
 
-        function getLastFridayOfMonth(year, monthIndex) {
+        function getLastFridayOfMonth(
+            year,
+            monthIndex
+        ) {
 
             let d =
-                new Date(year, monthIndex + 1, 0);
+                new Date(
+                    year,
+                    monthIndex + 1,
+                    0
+                );
 
-            while (d.getDay() !== 5) {
-                d.setDate(d.getDate() - 1);
+
+            while (
+                d.getDay() !== 5
+            ) {
+
+                d.setDate(
+                    d.getDate() - 1
+                );
+
             }
+
 
             return d;
         }
 
 
         /* =========================================================
-           NIGHT OF THE REDEEMED SEASON NUMBER ENGINE
+           NIGHT OF THE REDEEMED SEASON ENGINE
         ========================================================== */
 
         function getNightOfRedeemedSeasonNumber(
@@ -1214,103 +1523,106 @@
         ) {
 
             /*
-             * September 2026 is the official beginning.
-             *
-             * Every event after the launch is counted sequentially.
-             *
-             * September 2026 = 1
-             * December 2026  = 2
-             * March 2027     = 3
-             * June 2027      = 4
-             * September 2027 = 5
-             * December 2027  = 6
+             * Before September 2026:
+             * No official season.
              */
 
             if (
                 year < NIGHT_REDEEMED_LAUNCH_YEAR
             ) {
+
                 return null;
             }
-
-
-            if (
-                year === NIGHT_REDEEMED_LAUNCH_YEAR &&
-                monthIndex < NIGHT_REDEEMED_LAUNCH_MONTH
-            ) {
-                return null;
-            }
-
-
-            let season = 0;
 
 
             /*
-             * Count the two launch-year events:
-             * September and December.
+             * 2026:
+             *
+             * September = 1
+             * December  = 2
              */
 
             if (
-                year === NIGHT_REDEEMED_LAUNCH_YEAR
+                year ===
+                NIGHT_REDEEMED_LAUNCH_YEAR
             ) {
 
-                if (monthIndex === 8) {
+                if (
+                    monthIndex === 8
+                ) {
+
                     return 1;
                 }
 
-                if (monthIndex === 11) {
+
+                if (
+                    monthIndex === 11
+                ) {
+
                     return 2;
                 }
+
 
                 return null;
             }
 
 
             /*
-             * Every complete year after 2026
+             * Every year after 2026
              * contains four events.
+             *
+             * 2027:
+             * March     = 3
+             * June      = 4
+             * September = 5
+             * December  = 6
+             *
+             * 2028:
+             * March     = 7
+             * June      = 8
+             * September = 9
+             * December  = 10
              */
 
-            season =
+            const baseSeason =
                 2 +
                 (
-                    (year - NIGHT_REDEEMED_LAUNCH_YEAR - 1)
-                    * 4
+                    (year -
+                        NIGHT_REDEEMED_LAUNCH_YEAR -
+                        1
+                    ) * 4
                 );
 
 
-            /*
-             * March
-             */
+            if (
+                monthIndex === 2
+            ) {
 
-            if (monthIndex === 2) {
-                return season + 1;
+                return baseSeason + 1;
             }
 
 
-            /*
-             * June
-             */
+            if (
+                monthIndex === 5
+            ) {
 
-            if (monthIndex === 5) {
-                return season + 2;
+                return baseSeason + 2;
             }
 
 
-            /*
-             * September
-             */
+            if (
+                monthIndex === 8
+            ) {
 
-            if (monthIndex === 8) {
-                return season + 3;
+                return baseSeason + 3;
             }
 
 
-            /*
-             * December
-             */
+            if (
+                monthIndex === 11
+            ) {
 
-            if (monthIndex === 11) {
-                return season + 4;
+                return baseSeason + 4;
             }
 
 
@@ -1319,7 +1631,7 @@
 
 
         /* =========================================================
-           CREATE NIGHT OF THE REDEEMED EVENT
+           CREATE NIGHT EVENT
         ========================================================== */
 
         function createNightOfRedeemed(
@@ -1327,14 +1639,15 @@
             monthIndex
         ) {
 
-            const seasonNumber =
+            const season =
                 getNightOfRedeemedSeasonNumber(
                     year,
                     monthIndex
                 );
 
 
-            if (!seasonNumber) {
+            if (!season) {
+
                 return null;
             }
 
@@ -1348,125 +1661,92 @@
 
             return {
 
-                holiday:
-                    "-",
-
+                holiday: "-",
 
                 holidayName:
                     "The Night of the Redeemed",
 
-
                 churchDate:
                     date,
 
-
                 churchName:
-                    `The Night of the Redeemed — Season ${seasonNumber}`,
-
+                    `The Night of the Redeemed — Season ${season}`,
 
                 shortName:
                     "The Night of the Redeemed",
 
-
                 season:
-                    seasonNumber,
-
+                    season,
 
                 seasonLabel:
-                    `Season ${seasonNumber}`,
-
+                    `Season ${season}`,
 
                 eventSeries:
                     "The Night of the Redeemed",
 
-
                 time:
                     "19:30 - 05:00 HRS",
-
 
                 venue:
                     "JCRGM CHURCH",
 
-
                 type:
                     "special",
 
-
                 description:
-                    `Quarterly Redemption Convocation • Season ${seasonNumber}`
+                    `Quarterly Redemption Convocation • Season ${season}`
 
             };
         }
 
 
         /* =========================================================
-           GET ALL NIGHT OF THE REDEEMED EVENTS FOR A YEAR
+           NIGHT EVENTS FOR SELECTED YEAR
         ========================================================== */
 
-        function getNightOfRedeemedEvents(year) {
+        function getNightOfRedeemedEvents(
+            year
+        ) {
 
             const events = [];
 
 
-            /*
-             * Before September 2026 there is no
-             * Night of the Redeemed in this official sequence.
-             */
-
             if (
                 year < NIGHT_REDEEMED_LAUNCH_YEAR
             ) {
+
                 return events;
             }
 
 
-            /*
-             * 2026 launch year:
-             *
-             * September
-             * December
-             */
+            let months = [];
+
 
             if (
-                year === NIGHT_REDEEMED_LAUNCH_YEAR
+                year ===
+                NIGHT_REDEEMED_LAUNCH_YEAR
             ) {
 
-                const september =
-                    createNightOfRedeemed(
-                        year,
-                        8
-                    );
+                months = [
+                    8,
+                    11
+                ];
 
-                const december =
-                    createNightOfRedeemed(
-                        year,
-                        11
-                    );
+            }
 
+            else {
 
-                if (september) {
-                    events.push(september);
-                }
+                months = [
+                    2,
+                    5,
+                    8,
+                    11
+                ];
 
-                if (december) {
-                    events.push(december);
-                }
-
-
-                return events;
             }
 
 
-            /*
-             * From 2027 onward:
-             *
-             * March
-             * June
-             * September
-             * December
-             */
-
-            [2, 5, 8, 11].forEach(
+            months.forEach(
                 monthIndex => {
 
                     const event =
@@ -1477,7 +1757,11 @@
 
 
                     if (event) {
-                        events.push(event);
+
+                        events.push(
+                            event
+                        );
+
                     }
 
                 }
@@ -1489,33 +1773,44 @@
 
 
         /* =========================================================
-           MAIN CALENDAR DATA
+           MAIN CALENDAR
         ========================================================== */
 
-        function getLiturgicalCalendar(year) {
+        function getLiturgicalCalendar(
+            year
+        ) {
 
             const easter =
-                calculateEaster(year);
+                calculateEaster(
+                    year
+                );
+
 
             const goodFriday =
                 new Date(easter);
+
 
             goodFriday.setDate(
                 easter.getDate() - 2
             );
 
+
             const holySaturday =
                 new Date(easter);
+
 
             holySaturday.setDate(
                 easter.getDate() - 1
             );
 
+
             const resurrectionSunday =
                 easter;
 
+
             const easterMonday =
                 new Date(easter);
+
 
             easterMonday.setDate(
                 easter.getDate() + 1
@@ -1523,10 +1818,17 @@
 
 
             const heroesDay =
-                getFirstMonday(year, 6);
+                getFirstMonday(
+                    year,
+                    6
+                );
+
 
             const unityDay =
-                new Date(heroesDay);
+                new Date(
+                    heroesDay
+                );
+
 
             unityDay.setDate(
                 heroesDay.getDate() + 1
@@ -1534,7 +1836,10 @@
 
 
             const farmersDay =
-                getFirstMonday(year, 7);
+                getFirstMonday(
+                    year,
+                    7
+                );
 
 
             const womenSunday =
@@ -1552,10 +1857,6 @@
                     13
                 );
 
-
-            /* =====================================================
-               NIGHT OF THE REDEEMED
-            ====================================================== */
 
             const nightEvents =
                 getNightOfRedeemedEvents(
@@ -1575,7 +1876,11 @@
                         "New Year",
 
                     churchDate:
-                        new Date(year, 0, 1),
+                        new Date(
+                            year,
+                            0,
+                            1
+                        ),
 
                     churchName:
                         "Year's Blessings",
@@ -1601,7 +1906,11 @@
                         "-",
 
                     churchDate:
-                        new Date(year, 1, 14),
+                        new Date(
+                            year,
+                            1,
+                            14
+                        ),
 
                     churchName:
                         "JCRGM Support Team",
@@ -1773,7 +2082,7 @@
                 },
 
 
-                /* LABOUR DAY */
+                /* LABOUR */
 
                 {
                     holiday:
@@ -1783,7 +2092,11 @@
                         "Labour Day",
 
                     churchDate:
-                        new Date(year, 4, 1),
+                        new Date(
+                            year,
+                            4,
+                            1
+                        ),
 
                     churchName:
                         "Mountain Prayers",
@@ -1799,7 +2112,7 @@
                 },
 
 
-                /* AFRICA FREEDOM DAY */
+                /* AFRICA FREEDOM */
 
                 {
                     holiday:
@@ -1809,7 +2122,11 @@
                         "Africa Freedom Day",
 
                     churchDate:
-                        new Date(year, 4, 25),
+                        new Date(
+                            year,
+                            4,
+                            25
+                        ),
 
                     churchName:
                         "Mountain Prayers",
@@ -1825,7 +2142,7 @@
                 },
 
 
-                /* HEROES DAY */
+                /* HEROES */
 
                 {
                     holiday:
@@ -1851,7 +2168,7 @@
                 },
 
 
-                /* UNITY DAY */
+                /* UNITY */
 
                 {
                     holiday:
@@ -1877,7 +2194,7 @@
                 },
 
 
-                /* FARMERS DAY */
+                /* FARMERS */
 
                 {
                     holiday:
@@ -1913,7 +2230,11 @@
                         "-",
 
                     churchDate:
-                        new Date(year, 7, 8),
+                        new Date(
+                            year,
+                            7,
+                            8
+                        ),
 
                     churchName:
                         "JCRGM Anniversary",
@@ -1939,7 +2260,11 @@
                         "-",
 
                     churchDate:
-                        new Date(year, 7, 23),
+                        new Date(
+                            year,
+                            7,
+                            23
+                        ),
 
                     churchName:
                         "JCRGM Support Team",
@@ -1955,7 +2280,7 @@
                 },
 
 
-                /* NATIONAL PRAYER DAY */
+                /* NATIONAL PRAYER */
 
                 {
                     holiday:
@@ -1965,7 +2290,11 @@
                         "National Prayer Day",
 
                     churchDate:
-                        new Date(year, 9, 18),
+                        new Date(
+                            year,
+                            9,
+                            18
+                        ),
 
                     churchName:
                         "Zoom Prophetic Service",
@@ -1991,7 +2320,11 @@
                         "Independence Day",
 
                     churchDate:
-                        new Date(year, 9, 24),
+                        new Date(
+                            year,
+                            9,
+                            24
+                        ),
 
                     churchName:
                         "Zoom Prophetic Service",
@@ -2017,7 +2350,11 @@
                         "Christmas Day",
 
                     churchDate:
-                        new Date(year, 11, 25),
+                        new Date(
+                            year,
+                            11,
+                            25
+                        ),
 
                     churchName:
                         "Christmas Celebration",
@@ -2043,7 +2380,11 @@
                         "New Year's Eve",
 
                     churchDate:
-                        new Date(year, 11, 31),
+                        new Date(
+                            year,
+                            11,
+                            31
+                        ),
 
                     churchName:
                         "Crossover Night",
@@ -2059,12 +2400,7 @@
                 },
 
 
-                /*
-                 * NIGHT OF THE REDEEMED EVENTS
-                 *
-                 * They are added after the main calendar data,
-                 * then sorted wherever displayed.
-                 */
+                /* NIGHT OF THE REDEEMED */
 
                 ...nightEvents
 
@@ -2076,7 +2412,9 @@
            DATE FORMATTING
         ========================================================== */
 
-        function formatDate(date) {
+        function formatDate(
+            date
+        ) {
 
             return date.toLocaleDateString(
                 "en-GB",
@@ -2089,10 +2427,13 @@
         }
 
 
-        function formatFullDateOrdinal(date) {
+        function formatFullDateOrdinal(
+            date
+        ) {
 
             const day =
                 date.getDate();
+
 
             const month =
                 date.toLocaleDateString(
@@ -2102,11 +2443,13 @@
                     }
                 );
 
+
             const year =
                 date.getFullYear();
 
 
-            let suffix = "th";
+            let suffix =
+                "th";
 
 
             if (
@@ -2114,21 +2457,29 @@
                 day === 21 ||
                 day === 31
             ) {
-                suffix = "st";
+
+                suffix =
+                    "st";
+
             }
 
             else if (
                 day === 2 ||
                 day === 22
             ) {
-                suffix = "nd";
+
+                suffix =
+                    "nd";
+
             }
 
             else if (
                 day === 3 ||
                 day === 23
             ) {
-                suffix = "rd";
+
+                suffix =
+                    "rd";
             }
 
 
@@ -2137,20 +2488,20 @@
 
 
         /* =========================================================
-           LOCATION LINKS
+           LOCATION
         ========================================================== */
 
         function updateLocationLinks() {
 
-            document
-                .getElementById("directionsLink")
-                .href =
+            document.getElementById(
+                "directionsLink"
+            ).href =
                 CHURCH_LOCATION_URL;
 
 
-            document
-                .getElementById("footerDirectionsLink")
-                .href =
+            document.getElementById(
+                "footerDirectionsLink"
+            ).href =
                 CHURCH_LOCATION_URL;
 
 
@@ -2165,15 +2516,17 @@
 
 
             footerLocation.textContent =
-                CHURCH_LOCATION_URL;
+                "JCRGM Church • Lusaka, Zambia";
         }
 
 
         /* =========================================================
-           VIEW SWITCHING
+           VIEW
         ========================================================== */
 
-        function setView(view) {
+        function setView(
+            view
+        ) {
 
             activeView =
                 view;
@@ -2203,11 +2556,14 @@
                 );
 
 
-            if (view === "calendar") {
+            if (
+                view === "calendar"
+            ) {
 
                 calendarView.classList.remove(
                     "hidden"
                 );
+
 
                 listView.classList.add(
                     "hidden"
@@ -2228,6 +2584,7 @@
                 calendarView.classList.add(
                     "hidden"
                 );
+
 
                 listView.classList.remove(
                     "hidden"
@@ -2251,36 +2608,42 @@
            MONTH NAVIGATION
         ========================================================== */
 
-        function changeMonth(direction) {
+        function changeMonth(
+            direction
+        ) {
 
             currentMonthIndex +=
                 direction;
 
 
-            if (currentMonthIndex < 0) {
+            /*
+             * Moving from December to January
+             * automatically changes the selected year.
+             */
 
-                currentMonthIndex = 11;
+            if (
+                currentMonthIndex < 0
+            ) {
+
+                currentMonthIndex =
+                    11;
 
                 currentYear--;
-            }
 
+            }
 
             else if (
                 currentMonthIndex > 11
             ) {
 
-                currentMonthIndex = 0;
+                currentMonthIndex =
+                    0;
 
                 currentYear++;
             }
 
 
-            document
-                .getElementById(
-                    "currentYearDisplay"
-                )
-                .innerText =
-                currentYear;
+            syncYearDisplay();
 
 
             renderAll();
@@ -2291,21 +2654,49 @@
            YEAR NAVIGATION
         ========================================================== */
 
-        function changeYear(direction) {
+        function changeYear(
+            direction
+        ) {
+
+            /*
+             * Change ONLY the year value.
+             *
+             * The current month remains selected.
+             *
+             * Everything else is regenerated from
+             * the new year.
+             */
 
             currentYear +=
                 direction;
 
 
-            document
-                .getElementById(
-                    "currentYearDisplay"
-                )
-                .innerText =
-                currentYear;
+            syncYearDisplay();
+
+
+            /*
+             * Clear selected event because
+             * it belongs to the previous year.
+             */
+
+            selectedNightEvent =
+                null;
 
 
             renderAll();
+        }
+
+
+        /* =========================================================
+           YEAR DISPLAY
+        ========================================================== */
+
+        function syncYearDisplay() {
+
+            document.getElementById(
+                "currentYearDisplay"
+            ).innerText =
+                currentYear;
         }
 
 
@@ -2316,16 +2707,68 @@
         function handleSearch() {
 
             searchFilter =
-                document
-                    .getElementById(
-                        "searchInput"
-                    )
-                    .value
-                    .toLowerCase()
-                    .trim();
+                document.getElementById(
+                    "searchInput"
+                ).value
+                .toLowerCase()
+                .trim();
 
 
             renderAll();
+        }
+
+
+        /* =========================================================
+           EVENT TIME PARSER
+        ========================================================== */
+
+        function getEventStartTime(
+            event
+        ) {
+
+            const target =
+                new Date(
+                    event.churchDate
+                );
+
+
+            const match =
+                event.time.match(
+                    /(\d{2}):(\d{2})/
+                );
+
+
+            if (
+                match
+            ) {
+
+                target.setHours(
+                    parseInt(
+                        match[1],
+                        10
+                    ),
+                    parseInt(
+                        match[2],
+                        10
+                    ),
+                    0,
+                    0
+                );
+
+            }
+
+            else {
+
+                target.setHours(
+                    0,
+                    0,
+                    0,
+                    0
+                );
+            }
+
+
+            return target;
         }
 
 
@@ -2343,9 +2786,12 @@
             );
 
 
-            let hours = 0;
+            let hours =
+                0;
 
-            let minutes = 0;
+
+            let minutes =
+                0;
 
 
             const match =
@@ -2354,13 +2800,16 @@
                 );
 
 
-            if (match) {
+            if (
+                match
+            ) {
 
                 hours =
                     parseInt(
                         match[1],
                         10
                     );
+
 
                 minutes =
                     parseInt(
@@ -2371,7 +2820,9 @@
 
 
             const targetTime =
-                new Date(targetDate);
+                new Date(
+                    targetDate
+                );
 
 
             targetTime.setHours(
@@ -2384,35 +2835,46 @@
 
             function update() {
 
+                /*
+                 * The countdown uses the actual
+                 * current browser instant.
+                 */
+
                 const now =
-                    new Date().getTime();
+                    new Date();
 
 
                 const diff =
                     targetTime.getTime() -
-                    now;
+                    now.getTime();
 
 
-                if (diff <= 0) {
+                if (
+                    diff <= 0
+                ) {
 
                     document.getElementById(
                         "cd-days"
-                    ).innerText = "00";
+                    ).innerText =
+                        "00";
 
 
                     document.getElementById(
                         "cd-hours"
-                    ).innerText = "00";
+                    ).innerText =
+                        "00";
 
 
                     document.getElementById(
                         "cd-mins"
-                    ).innerText = "00";
+                    ).innerText =
+                        "00";
 
 
                     document.getElementById(
                         "cd-secs"
-                    ).innerText = "00";
+                    ).innerText =
+                        "00";
 
 
                     return;
@@ -2422,7 +2884,12 @@
                 const days =
                     Math.floor(
                         diff /
-                        (1000 * 60 * 60 * 24)
+                        (
+                            1000 *
+                            60 *
+                            60 *
+                            24
+                        )
                     );
 
 
@@ -2430,9 +2897,18 @@
                     Math.floor(
                         (
                             diff %
-                            (1000 * 60 * 60 * 24)
+                            (
+                                1000 *
+                                60 *
+                                60 *
+                                24
+                            )
                         ) /
-                        (1000 * 60 * 60)
+                        (
+                            1000 *
+                            60 *
+                            60
+                        )
                     );
 
 
@@ -2440,9 +2916,16 @@
                     Math.floor(
                         (
                             diff %
-                            (1000 * 60 * 60)
+                            (
+                                1000 *
+                                60 *
+                                60
+                            )
                         ) /
-                        (1000 * 60)
+                        (
+                            1000 *
+                            60
+                        )
                     );
 
 
@@ -2450,7 +2933,10 @@
                     Math.floor(
                         (
                             diff %
-                            (1000 * 60)
+                            (
+                                1000 *
+                                60
+                            )
                         ) /
                         1000
                     );
@@ -2459,25 +2945,45 @@
                 document.getElementById(
                     "cd-days"
                 ).innerText =
-                    String(days).padStart(2, "0");
+                    String(
+                        days
+                    ).padStart(
+                        2,
+                        "0"
+                    );
 
 
                 document.getElementById(
                     "cd-hours"
                 ).innerText =
-                    String(hoursRemaining).padStart(2, "0");
+                    String(
+                        hoursRemaining
+                    ).padStart(
+                        2,
+                        "0"
+                    );
 
 
                 document.getElementById(
                     "cd-mins"
                 ).innerText =
-                    String(mins).padStart(2, "0");
+                    String(
+                        mins
+                    ).padStart(
+                        2,
+                        "0"
+                    );
 
 
                 document.getElementById(
                     "cd-secs"
                 ).innerText =
-                    String(secs).padStart(2, "0");
+                    String(
+                        secs
+                    ).padStart(
+                        2,
+                        "0"
+                    );
             }
 
 
@@ -2493,127 +2999,138 @@
 
 
         /* =========================================================
-           GET NEXT NIGHT OF THE REDEEMED
+           GET EVENTS FOR COUNTDOWN
         ========================================================== */
 
-        function getNextNightOfRedeemed() {
+        function getCountdownEvent() {
 
             const now =
                 new Date();
 
 
-            const currentCalendarYear =
-                now.getFullYear();
-
-
             /*
-             * Search several years ahead so that the
-             * sequence never breaks at the end of December.
+             * If the selected year is the
+             * current year, show the next Night
+             * from the current date.
              */
 
-            const yearsToCheck = [];
-
-
-            for (
-                let year = currentCalendarYear;
-                year <= currentCalendarYear + 2;
-                year++
+            if (
+                currentYear ===
+                getZambiaNow().getFullYear()
             ) {
 
-                yearsToCheck.push(year);
+                const events =
+                    getNightOfRedeemedEvents(
+                        currentYear
+                    );
+
+
+                const upcoming =
+                    events
+                        .map(
+                            event => ({
+                                event,
+                                start:
+                                    getEventStartTime(
+                                        event
+                                    )
+                            })
+                        )
+                        .filter(
+                            item =>
+                                item.start >
+                                now
+                        )
+                        .sort(
+                            (a,b) =>
+                                a.start -
+                                b.start
+                        );
+
+
+                if (
+                    upcoming.length > 0
+                ) {
+
+                    return upcoming[0].event;
+                }
+
+
+                /*
+                 * If all events for current year
+                 * have passed, use next year's
+                 * first event.
+                 */
+
+                const nextYearEvents =
+                    getNightOfRedeemedEvents(
+                        currentYear + 1
+                    );
+
+
+                return nextYearEvents[0] ||
+                    null;
             }
 
 
-            let events = [];
+            /*
+             * Future selected year:
+             * use first Night of the Redeemed
+             * for that selected year.
+             */
 
+            if (
+                currentYear >
+                getZambiaNow().getFullYear()
+            ) {
 
-            yearsToCheck.forEach(
-                year => {
-
-                    const calendar =
-                        getLiturgicalCalendar(
-                            year
-                        );
-
-
-                    calendar
-                        .filter(
-                            event =>
-                                event.type ===
-                                "special"
-                        )
-                        .forEach(
-                            event =>
-                                events.push(event)
-                        );
-                }
-            );
-
-
-            events.sort(
-                (a, b) =>
-                    a.churchDate -
-                    b.churchDate
-            );
-
-
-            return events.find(
-                event => {
-
-                    const eventTime =
-                        new Date(
-                            event.churchDate
-                        );
-
-
-                    const match =
-                        event.time.match(
-                            /(\d{2}):(\d{2})/
-                        );
-
-
-                    if (match) {
-
-                        eventTime.setHours(
-                            parseInt(
-                                match[1],
-                                10
-                            ),
-                            parseInt(
-                                match[2],
-                                10
-                            ),
-                            0,
-                            0
-                        );
-                    }
-
-
-                    return (
-                        eventTime.getTime() >
-                        now.getTime()
+                const futureEvents =
+                    getNightOfRedeemedEvents(
+                        currentYear
                     );
-                }
-            );
+
+
+                return futureEvents[0] ||
+                    null;
+            }
+
+
+            /*
+             * Past selected year:
+             * show the final Night of the Redeemed
+             * in that selected year.
+             */
+
+            const pastEvents =
+                getNightOfRedeemedEvents(
+                    currentYear
+                );
+
+
+            return pastEvents.length
+                ? pastEvents[pastEvents.length - 1]
+                : null;
         }
 
 
         /* =========================================================
-           UPDATE NEXT EVENT
+           UPDATE UPCOMING COUNTDOWN
         ========================================================== */
 
         function updateUpcomingCountdown() {
 
-            const nextEvent =
-                getNextNightOfRedeemed();
+            const event =
+                getCountdownEvent();
 
 
-            if (!nextEvent) {
+            if (
+                !event
+            ) {
 
                 document.getElementById(
                     "nextEventTitle"
                 ).innerText =
-                    "No upcoming event";
+                    "No Night of the Redeemed scheduled";
 
 
                 document.getElementById(
@@ -2634,6 +3151,11 @@
                     "—";
 
 
+                clearInterval(
+                    countdownInterval
+                );
+
+
                 return;
             }
 
@@ -2641,38 +3163,38 @@
             document.getElementById(
                 "nextEventTitle"
             ).innerText =
-                nextEvent.churchName;
+                event.churchName;
 
 
             document.getElementById(
                 "nextEventDate"
             ).innerText =
                 formatFullDateOrdinal(
-                    nextEvent.churchDate
+                    event.churchDate
                 );
 
 
             document.getElementById(
                 "nextEventTime"
             ).innerText =
-                nextEvent.time;
+                event.time;
 
 
             document.getElementById(
                 "nextEventVenue"
             ).innerText =
-                nextEvent.venue;
+                event.venue;
 
 
             startCountdown(
-                nextEvent.churchDate,
-                nextEvent.time
+                event.churchDate,
+                event.time
             );
         }
 
 
         /* =========================================================
-           OPEN NIGHT OF THE REDEEMED PORTAL
+           OPEN NIGHT PORTAL
         ========================================================== */
 
         function openTheologicalModal(
@@ -2685,41 +3207,39 @@
                 );
 
 
-            document
-                .getElementById(
+            const form =
+                document.getElementById(
                     "encounterBookingForm"
-                )
-                .reset();
-
-
-            document
-                .getElementById(
-                    "encounterBookingForm"
-                )
-                .classList.remove(
-                    "hidden"
                 );
 
 
-            document
-                .getElementById(
-                    "whatsappDispatchPanel"
-                )
-                .classList.add(
-                    "hidden"
-                );
+            form.reset();
+
+
+            form.classList.remove(
+                "hidden"
+            );
+
+
+            document.getElementById(
+                "whatsappDispatchPanel"
+            ).classList.add(
+                "hidden"
+            );
 
 
             const event =
                 eventData ||
-                getNextNightOfRedeemed();
+                getCountdownEvent();
 
 
             selectedNightEvent =
                 event;
 
 
-            if (event) {
+            if (
+                event
+            ) {
 
                 const season =
                     event.season;
@@ -2786,13 +3306,16 @@
             );
 
 
-            setTimeout(() => {
+            setTimeout(
+                () => {
 
-                modal.classList.add(
-                    "opacity-100"
-                );
+                    modal.classList.add(
+                        "opacity-100"
+                    );
 
-            }, 50);
+                },
+                50
+            );
 
 
             lucide.createIcons();
@@ -2812,13 +3335,16 @@
             );
 
 
-            setTimeout(() => {
+            setTimeout(
+                () => {
 
-                modal.classList.add(
-                    "hidden"
-                );
+                    modal.classList.add(
+                        "hidden"
+                    );
 
-            }, 300);
+                },
+                300
+            );
         }
 
 
@@ -2826,7 +3352,9 @@
            WHATSAPP BOOKING
         ========================================================== */
 
-        function handleBookingSubmit(event) {
+        function handleBookingSubmit(
+            event
+        ) {
 
             event.preventDefault();
 
@@ -2862,15 +3390,9 @@
                 );
 
 
-            /*
-             * Use the event selected by the user.
-             * If no event was selected, use the next
-             * official Night of the Redeemed.
-             */
-
             const targetEvent =
                 selectedNightEvent ||
-                getNextNightOfRedeemed();
+                getCountdownEvent();
 
 
             const season =
@@ -2905,7 +3427,7 @@
 
             const messageBody =
 
-                `\n\n🔥 *THE NIGHT OF THE REDEEMED — SEASON ${season}*` +
+                `\n\n🔴 *THE NIGHT OF THE REDEEMED — SEASON ${season}*` +
 
                 `\n✨ *Official Event:* ${eventTitle}` +
 
@@ -2976,15 +3498,66 @@
 
 
         /* =========================================================
+           SEARCH MATCH
+        ========================================================== */
+
+        function eventMatchesSearch(
+            event
+        ) {
+
+            if (
+                !searchFilter
+            ) {
+
+                return true;
+            }
+
+
+            const searchText = `
+
+                ${event.holidayName || ""}
+
+                ${event.churchName || ""}
+
+                ${event.shortName || ""}
+
+                ${event.venue || ""}
+
+                ${event.time || ""}
+
+                ${event.season || ""}
+
+                ${event.eventSeries || ""}
+
+                ${event.description || ""}
+
+            `.toLowerCase();
+
+
+            return searchText.includes(
+                searchFilter
+            );
+        }
+
+
+        /* =========================================================
            RENDER EVERYTHING
         ========================================================== */
 
         function renderAll() {
 
+            /*
+             * EVERYTHING is generated again from
+             * currentYear.
+             */
+
             const calendar =
                 getLiturgicalCalendar(
                     currentYear
                 );
+
+
+            syncYearDisplay();
 
 
             document.getElementById(
@@ -3003,31 +3576,12 @@
 
 
             const filteredCalendar =
-                calendar.filter(event => {
-
-                    const searchText = `
-
-                        ${event.holidayName || ""}
-
-                        ${event.churchName || ""}
-
-                        ${event.shortName || ""}
-
-                        ${event.venue || ""}
-
-                        ${event.time || ""}
-
-                        ${event.season || ""}
-
-                        ${event.eventSeries || ""}
-
-                    `.toLowerCase();
-
-
-                    return searchText.includes(
-                        searchFilter
-                    );
-                });
+                calendar.filter(
+                    event =>
+                        eventMatchesSearch(
+                            event
+                        )
+                );
 
 
             renderMonthGrid(
@@ -3055,7 +3609,7 @@
 
 
         /* =========================================================
-           RENDER CALENDAR GRID
+           RENDER MONTH GRID
         ========================================================== */
 
         function renderMonthGrid(
@@ -3088,8 +3642,6 @@
                 ).getDate();
 
 
-            /* EMPTY CELLS */
-
             for (
                 let i = 0;
                 i < firstDay;
@@ -3112,8 +3664,6 @@
             }
 
 
-            /* DAYS */
-
             for (
                 let day = 1;
                 day <= daysInMonth;
@@ -3131,15 +3681,24 @@
                 const dayEvents =
                     calendar.filter(
                         event =>
-                            event.churchDate.toDateString() ===
-                            dateRef.toDateString()
+                            event.churchDate
+                                .toDateString() ===
+                            dateRef
+                                .toDateString()
                     );
 
 
+                const today =
+                    getZambiaNow();
+
+
                 const isToday =
-                    new Date()
-                        .toDateString() ===
-                    dateRef.toDateString();
+                    today.getFullYear() ===
+                        currentYear &&
+                    today.getMonth() ===
+                        monthIndex &&
+                    today.getDate() ===
+                        day;
 
 
                 const specialEvent =
@@ -3160,13 +3719,17 @@
                     "calendar-event-day relative py-3 rounded-xl flex flex-col items-center justify-center transition duration-200 border ";
 
 
-                if (isToday) {
+                if (
+                    isToday
+                ) {
 
                     classes +=
                         "bg-brand-gold/25 border-brand-gold text-white font-bold ring-2 ring-brand-gold/30";
                 }
 
-                else if (specialEvent) {
+                else if (
+                    specialEvent
+                ) {
 
                     classes +=
                         "bg-brand-gold/15 border-brand-gold/50 hover:bg-brand-gold/25 cursor-pointer text-white font-bold special-glow";
@@ -3191,7 +3754,9 @@
                     classes;
 
 
-                if (specialEvent) {
+                if (
+                    specialEvent
+                ) {
 
                     dayButton.onclick =
                         () =>
@@ -3201,7 +3766,8 @@
                 }
 
 
-                let indicators = "";
+                let indicators =
+                    "";
 
 
                 if (
@@ -3210,10 +3776,15 @@
 
                     indicators = `
 
-                        <span class="absolute bottom-1.5 flex gap-1">
+                        <span class="absolute bottom-1.5 flex gap-1 items-center">
 
                             ${dayEvents.map(
                                 event => {
+
+                                    /*
+                                     * NIGHT OF THE REDEEMED
+                                     * gets RED BLINKING DOT.
+                                     */
 
                                     if (
                                         event.type ===
@@ -3221,9 +3792,12 @@
                                     ) {
 
                                         return `
+
                                             <span
-                                                class="w-1.5 h-1.5 rounded-full bg-brand-gold">
+                                                class="night-redeemed-dot"
+                                                aria-label="The Night of the Redeemed">
                                             </span>
+
                                         `;
                                     }
 
@@ -3240,10 +3814,12 @@
                                         </span>
 
                                     `;
+
                                 }
                             ).join("")}
 
                         </span>
+
                     `;
                 }
 
@@ -3254,15 +3830,21 @@
                         ${day}
                     </span>
 
+
                     ${
                         specialEvent
                             ? `
-                                <span class="text-[7px] sm:text-[8px] uppercase tracking-wider text-brand-gold mt-1 font-extrabold">
+
+                                <span class="text-[7px] sm:text-[8px] uppercase tracking-wider text-red-400 mt-1 font-extrabold">
+
                                     S${specialEvent.season}
+
                                 </span>
+
                               `
                             : ""
                     }
+
 
                     ${indicators}
 
@@ -3277,7 +3859,7 @@
 
 
         /* =========================================================
-           MONTH EVENT CARDS
+           MONTH EVENTS
         ========================================================== */
 
         function renderMonthEventsList(
@@ -3302,41 +3884,8 @@
                 );
 
 
-            if (searchFilter) {
-
-                monthlyEvents =
-                    monthlyEvents.filter(
-                        event => {
-
-                            const text = `
-
-                                ${event.holidayName || ""}
-
-                                ${event.churchName || ""}
-
-                                ${event.shortName || ""}
-
-                                ${event.venue || ""}
-
-                                ${event.time || ""}
-
-                                ${event.season || ""}
-
-                                ${event.eventSeries || ""}
-
-                            `.toLowerCase();
-
-
-                            return text.includes(
-                                searchFilter
-                            );
-                        }
-                    );
-            }
-
-
             monthlyEvents.sort(
-                (a, b) =>
+                (a,b) =>
                     a.churchDate -
                     b.churchDate
             );
@@ -3366,6 +3915,7 @@
 
                 lucide.createIcons();
 
+
                 return;
             }
 
@@ -3384,7 +3934,9 @@
                         "special";
 
 
-                    if (isSpecial) {
+                    if (
+                        isSpecial
+                    ) {
 
                         card.className = `
 
@@ -3445,16 +3997,15 @@
                     let tag;
 
 
-                    if (isSpecial) {
+                    if (
+                        isSpecial
+                    ) {
 
                         tag = `
 
-                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider mb-3 bg-brand-gold/15 text-brand-gold border border-brand-gold/30">
+                            <span class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider mb-3 bg-red-500/10 text-red-400 border border-red-500/30">
 
-                                <i
-                                    data-lucide="flame"
-                                    class="w-3.5 h-3.5">
-                                </i>
+                                <span class="night-redeemed-dot"></span>
 
                                 Quarterly Redemption Convocation
 
@@ -3486,14 +4037,13 @@
                     }
 
 
-                    let title =
-                        event.churchName;
+                    let seasonBadge =
+                        "";
 
 
-                    let seasonBadge = "";
-
-
-                    if (isSpecial) {
+                    if (
+                        isSpecial
+                    ) {
 
                         seasonBadge = `
 
@@ -3520,9 +4070,10 @@
 
                                 ${tag}
 
+
                                 <h4 class="text-lg font-bold text-white tracking-wide leading-snug">
 
-                                    ${title}
+                                    ${event.churchName}
 
                                 </h4>
 
@@ -3533,9 +4084,13 @@
                                 ${
                                     event.description
                                         ? `
+
                                             <p class="text-xs text-brand-gold/80 italic mt-2">
+
                                                 ${event.description}
+
                                             </p>
+
                                         `
                                         : ""
                                 }
@@ -3546,9 +4101,14 @@
                                     event.holidayName !==
                                     event.churchName
                                         ? `
+
                                             <p class="text-xs text-slate-400 italic mt-1">
-                                                Observing: ${event.holidayName}
+
+                                                Observing:
+                                                ${event.holidayName}
+
                                             </p>
+
                                         `
                                         : ""
                                 }
@@ -3609,6 +4169,7 @@
                     container.appendChild(
                         card
                     );
+
                 }
             );
 
@@ -3662,17 +4223,21 @@
 
                 lucide.createIcons();
 
+
                 return;
             }
 
 
-            calendar
-                .sort(
-                    (a, b) =>
+            const sorted =
+                [...calendar].sort(
+                    (a,b) =>
                         a.churchDate -
                         b.churchDate
-                )
-                .forEach(event => {
+                );
+
+
+            sorted.forEach(
+                event => {
 
                     const row =
                         document.createElement(
@@ -3689,7 +4254,6 @@
 
                         hover:bg-brand-slate/20
                         transition-colors
-
                         border-b
                         border-slate-800/40
 
@@ -3702,7 +4266,9 @@
                     `;
 
 
-                    if (isSpecial) {
+                    if (
+                        isSpecial
+                    ) {
 
                         row.onclick =
                             () =>
@@ -3715,6 +4281,7 @@
                     const programmeName =
                         isSpecial
                             ? `
+
                                 <div class="flex flex-col gap-2">
 
                                     <span class="font-bold text-white">
@@ -3723,18 +4290,17 @@
 
                                     </span>
 
-                                    <span class="inline-flex items-center gap-1 w-fit px-2 py-1 rounded-md gold-gradient text-brand-navy text-[9px] font-extrabold uppercase tracking-wider">
 
-                                        <i
-                                            data-lucide="flame"
-                                            class="w-3 h-3">
-                                        </i>
+                                    <span class="inline-flex items-center gap-2 w-fit px-2 py-1 rounded-md bg-red-500/10 border border-red-500/30 text-red-400 text-[9px] font-extrabold uppercase tracking-wider">
+
+                                        <span class="night-redeemed-dot"></span>
 
                                         Season ${event.season}
 
                                     </span>
 
                                 </div>
+
                               `
                             :
                               event.churchName;
@@ -3761,7 +4327,7 @@
 
                                         <div class="flex flex-col gap-1">
 
-                                            <span class="text-xs text-brand-gold font-semibold">
+                                            <span class="text-xs text-red-400 font-semibold">
 
                                                 Quarterly Redemption Convocation
 
@@ -3817,7 +4383,9 @@
                     tbody.appendChild(
                         row
                     );
-                });
+
+                }
+            );
 
 
             lucide.createIcons();
@@ -3831,7 +4399,7 @@
         function checkMonthChangeNotification() {
 
             const now =
-                new Date();
+                getZambiaNow();
 
 
             const currentKey =
@@ -3875,7 +4443,7 @@
             document.getElementById(
                 "modalMonthName"
             ).innerText =
-                `Welcome to ${monthName}!`;
+                `Welcome to ${monthName} ${date.getFullYear()}!`;
 
 
             const calendar =
@@ -3892,7 +4460,8 @@
                 );
 
 
-            let html = "";
+            let html =
+                "";
 
 
             if (
@@ -3900,50 +4469,57 @@
             ) {
 
                 monthEvents
-                    .slice(0, 4)
-                    .forEach(event => {
+                    .slice(0,4)
+                    .forEach(
+                        event => {
 
-                        html += `
+                            html += `
 
-                            <div class="flex items-center justify-between gap-3 text-xs py-2 border-b border-slate-700/40 last:border-0">
+                                <div class="flex items-center justify-between gap-3 text-xs py-2 border-b border-slate-700/40 last:border-0">
 
-                                <span class="text-white font-medium">
+                                    <span class="text-white font-medium">
 
-                                    ${
+                                        ${
+                                            event.type === "special"
+                                                ? `The Night of the Redeemed — Season ${event.season}`
+                                                : event.churchName
+                                        }
+
+                                    </span>
+
+
+                                    <span class="${
                                         event.type === "special"
-                                            ? `The Night of the Redeemed — Season ${event.season}`
-                                            : event.churchName
-                                    }
+                                            ? "text-red-400"
+                                            : "text-brand-gold"
+                                    } whitespace-nowrap">
 
-                                </span>
+                                        ${formatDate(
+                                            event.churchDate
+                                        )}
 
-                                <span class="text-brand-gold whitespace-nowrap">
+                                    </span>
 
-                                    ${formatDate(
-                                        event.churchDate
-                                    )}
+                                </div>
 
-                                </span>
+                            `;
 
-                            </div>
-
-                        `;
-                    });
+                        }
+                    );
 
             }
 
             else {
 
-                html =
-                    `
+                html = `
 
-                        <p class="text-xs text-slate-400">
+                    <p class="text-xs text-slate-400">
 
-                            No major scheduled programmes this month.
+                        No major scheduled programmes this month.
 
-                        </p>
+                    </p>
 
-                    `;
+                `;
             }
 
 
@@ -3964,13 +4540,16 @@
             );
 
 
-            setTimeout(() => {
+            setTimeout(
+                () => {
 
-                modal.classList.add(
-                    "opacity-100"
-                );
+                    modal.classList.add(
+                        "opacity-100"
+                    );
 
-            }, 50);
+                },
+                50
+            );
 
 
             lucide.createIcons();
@@ -3990,18 +4569,21 @@
             );
 
 
-            setTimeout(() => {
+            setTimeout(
+                () => {
 
-                modal.classList.add(
-                    "hidden"
-                );
+                    modal.classList.add(
+                        "hidden"
+                    );
 
-            }, 300);
+                },
+                300
+            );
         }
 
 
         /* =========================================================
-           ESC KEY CLOSES MODALS
+           ESC KEY
         ========================================================== */
 
         document.addEventListener(
@@ -4023,21 +4605,18 @@
 
 
         /* =========================================================
-           INITIALIZE APPLICATION
+           INITIALIZE
         ========================================================== */
 
         window.onload =
             function() {
 
+                syncYearDisplay();
+
+
                 setView(
                     "calendar"
                 );
-
-
-                document.getElementById(
-                    "currentYearDisplay"
-                ).innerText =
-                    currentYear;
 
 
                 updateLocationLinks();
