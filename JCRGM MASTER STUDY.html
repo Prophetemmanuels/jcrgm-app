@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#07111f">
+<meta name="description" content="JCRGM Master Study — a focused Bible study, Scripture memory, meditation and sermon preparation workspace.">
+<meta name="application-name" content="JCRGM MASTER STUDY">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="JCRGM Study">
+<link rel="manifest" href="manifest.json">
 <title>JCRGM MASTER STUDY — Advanced</title>
 <style>
 :root{--bg:#07111f;--panel:#0d1b2d;--panel2:#12243a;--gold:#e7bd62;--gold2:#ffe3a0;--text:#edf3f8;--muted:#9fb0c2;--green:#54d69b;--red:#ff8f8f;--line:#203650;--blue:#6fb7ff}
@@ -30,8 +36,63 @@ textarea,input,select{width:100%;background:#081523;border:1px solid var(--line)
 .kbd{border:1px solid var(--line);border-bottom-width:3px;border-radius:6px;padding:1px 6px;font-size:12px;color:var(--muted)}
 
 .sermonBuilder{margin-top:18px;border:1px solid var(--gold);border-radius:16px;padding:18px;background:linear-gradient(145deg,#111f31,#091522);box-shadow:0 10px 30px #0002}.light .sermonBuilder{background:var(--panel)}.sermonBuilderHead{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.sermonTargets{margin-top:14px}.targetCard{border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0;background:#0b1829}.light .targetCard{background:#f7f9fb}.targetNum{display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;background:var(--gold);color:#17120a;font-weight:900;margin-right:8px}.targetTitle{font-weight:900;color:var(--gold2);font-size:17px}.targetText{margin:7px 0}.relatedBox{margin-top:16px;border-top:1px solid var(--line);padding-top:16px}.relatedGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}.relatedItem{border:1px solid var(--line);border-radius:10px;padding:11px;background:#0b1829}.light .relatedItem{background:#f7f9fb}.relatedItem b{color:var(--gold2)}.relatedItem small{display:block;color:var(--muted);margin-top:4px}.sermonOrder{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sermonOrder .targetCard{margin:0}.relatedActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.referencePanel,.fullSermonPanel{margin-top:18px;border:1px solid var(--line);border-radius:16px;padding:18px;background:linear-gradient(145deg,#101f32,#091522)}
+.light .referencePanel,.light .fullSermonPanel{background:var(--panel)}
+.referencePanel{border-color:var(--blue)}
+.sermonOutput{margin-top:16px;background:#081522;border:1px solid var(--line);border-radius:14px;padding:22px}
+.light .sermonOutput{background:#f7f9fb}
+.sermonOutput h2{font-size:28px;margin:0 0 6px;color:var(--gold2)}
+.sermonOutput h3{font-size:20px;margin:24px 0 8px;color:var(--gold2)}
+.sermonOutput p{margin:8px 0}
+.sermonOutput .sermonScripture{font-family:Georgia,serif;font-size:20px;line-height:1.7;padding:14px;border-left:3px solid var(--gold);background:#0b1829;border-radius:8px}
+.light .sermonOutput .sermonScripture{background:#eef3f7}
+.sermonOutput .prayerPoint{border:1px solid var(--line);border-radius:10px;padding:13px;margin:9px 0}
+.sermonOutput .prayerPoint b{color:var(--gold2)}
+
 @media(max-width:900px){.side{position:fixed;left:-295px;transition:.2s}.side.open{left:0}.main{padding:18px}.card,.wide{grid-column:1/-1}.row,.row3,.sermonOrder{grid-template-columns:1fr}.top{align-items:flex-start}.mobile{display:block!important}.menu{display:block!important}}
 .mobile{display:none}
+
+/* WORLD-CLASS UI UPGRADE */
+:root{
+  --radius:18px;--shadow:0 18px 50px rgba(0,0,0,.22);
+  --focus:0 0 0 3px rgba(231,189,98,.22);
+}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+  outline:2px solid var(--gold);outline-offset:2px;box-shadow:var(--focus)
+}
+.card,.scriptureBox,.sermonBuilder{border-radius:var(--radius)}
+.card{box-shadow:var(--shadow)}
+.btn{transition:transform .15s ease,background .15s ease,border-color .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.appShellTop{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.searchBar{display:flex;gap:8px;align-items:center;flex:1;min-width:240px}
+.searchBar input{min-width:0}
+.statusDot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px}
+.kpiGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.kpi{padding:12px;border:1px solid var(--line);border-radius:14px;background:#0b1829}
+.light .kpi{background:#f7f9fb}
+.kpi b{font-size:20px;color:var(--gold2);display:block}
+.kpi small{color:var(--muted)}
+.studyToolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
+.saveState{font-size:12px;color:var(--muted);margin-left:auto;align-self:center}
+.commandPalette{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:flex-start;justify-content:center;padding:8vh 16px;z-index:50}
+.commandPalette.open{display:flex}
+.commandBox{width:min(720px,100%);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 30px 100px #0008}
+.commandResults{max-height:55vh;overflow:auto;margin-top:8px}
+.commandItem{display:block;width:100%;text-align:left;background:transparent;border:0;color:var(--text);padding:12px;border-radius:10px}
+.commandItem:hover{background:var(--panel2)}
+.toast{box-shadow:0 12px 35px #0005}
+.bottomNav{display:none}
+@media(max-width:900px){
+ .kpiGrid{grid-template-columns:1fr 1fr}
+ .bottomNav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:15;background:rgba(7,17,31,.96);border-top:1px solid var(--line);padding:7px;gap:5px}
+ .bottomNav button{flex:1;background:transparent;border:0;color:var(--muted);font-size:11px;padding:6px 2px}
+ .bottomNav button:hover{color:var(--text)}
+ .main{padding-bottom:85px}
+}
+@media(max-width:560px){.kpiGrid{grid-template-columns:1fr 1fr}.title{font-size:31px}.subtitle{font-size:14px}}
+
 </style>
 </head>
 <body>
@@ -69,8 +130,21 @@ textarea,input,select{width:100%;background:#081523;border:1px solid var(--line)
     <button class="btn primary" onclick="showToday()">Today's Study</button>
   </div>
 </div>
+<div class="appShellTop">
+  <div class="searchBar">
+    <input id="globalSearch" aria-label="Search your studies" placeholder="Search studies, memory verses, journal entries…">
+    <button class="btn" onclick="openCommandPalette()">⌘ Search</button>
+  </div>
+  <span class="saveState"><span class="statusDot"></span><span id="saveStatus">Saved locally</span></span>
+</div>
 
 <section id="dashboard" class="section show">
+<div class="kpiGrid">
+  <div class="kpi"><b id="kpiStudies">0</b><small>Saved studies</small></div>
+  <div class="kpi"><b id="kpiJournal">0</b><small>Journal entries</small></div>
+  <div class="kpi"><b id="kpiMeditations">0</b><small>Meditation sessions</small></div>
+  <div class="kpi"><b id="kpiReviews">0</b><small>Memory reviews</small></div>
+</div>
 <div class="grid">
   <div class="card wide"><h2>Today's Mission</h2>
     <p class="muted">Do not merely finish chapters. Seek understanding, obedience, remembrance and transformation.</p>
@@ -150,6 +224,19 @@ textarea,input,select{width:100%;background:#081523;border:1px solid var(--line)
 <h3>T — Theology / Truth</h3><textarea id="theology" placeholder="What does this reveal about God, Christ, the Holy Spirit, salvation, humanity, the Church or God's purposes?"></textarea>
 <h3>A — Application</h3><textarea id="apply" placeholder="What should I believe, stop, start, confess, practice or teach?"></textarea>
 <h3>P — Prayer</h3><textarea id="prayer" placeholder="Turn the truth of this passage into prayer."></textarea>
+<div class="referencePanel">
+  <div class="sermonBuilderHead">
+    <div>
+      <h3>📚 Five Reference Scriptures</h3>
+      <p class="muted">Study five connected passages that confirm, explain, illustrate and strengthen your main Scripture.</p>
+    </div>
+    <button class="btn primary" onclick="generateStudyReferences()">Generate 5 References</button>
+  </div>
+  <div id="studyReferences" class="relatedGrid">
+    <span class="muted">Enter your main Scripture, then generate five reference Scriptures.</span>
+  </div>
+</div>
+
 
 <div class="sermonBuilder">
   <div class="sermonBuilderHead">
@@ -175,6 +262,22 @@ textarea,input,select{width:100%;background:#081523;border:1px solid var(--line)
   <div id="sermonTargets" class="sermonTargets">
     <div class="muted">Complete your study, select the Scripture, then generate your sermon targets.</div>
   </div>
+
+  <div class="fullSermonPanel">
+    <div class="sermonBuilderHead">
+      <div>
+        <h3>🎙 Full Sermon — Ready to Preach</h3>
+        <p class="muted">A complete sermon built from your study, main Scripture, five references and application.</p>
+      </div>
+      <div class="actions">
+        <button class="btn primary" onclick="generateFullSermon()">Generate Full Sermon</button>
+        <button class="btn" onclick="copyFullSermon()">Copy Sermon</button>
+      </div>
+    </div>
+    <div id="fullSermon" class="sermonOutput">
+      <span class="muted">Generate sermon targets first, then create the full sermon.</span>
+    </div>
+  </div>
   <div class="relatedBox">
     <div class="sermonBuilderHead">
       <div><h3>📚 Related Scriptures</h3><p class="muted">Set any Scripture above to receive related passages. Use them to confirm, explain and strengthen the main text.</p></div>
@@ -184,7 +287,14 @@ textarea,input,select{width:100%;background:#081523;border:1px solid var(--line)
   </div>
 </div>
 
-<div class="actions"><button class="btn primary" onclick="saveStudy()">Save Study</button><button class="btn" onclick="clearStudy()">Clear</button><button class="btn" onclick="copyStudy()">Copy Summary</button></div>
+<div class="studyToolbar">
+  <button class="btn primary" onclick="saveStudy()">Save Study</button>
+  <button class="btn" onclick="loadDraftStudy()">Restore Draft</button>
+  <button class="btn" onclick="copyStudy()">Copy Summary</button>
+  <button class="btn" onclick="exportCurrentStudy()">Export Study</button>
+  <button class="btn danger" onclick="clearStudy()">Clear</button>
+  <span class="saveState" id="studyDraftStatus">Draft autosave is ready</span>
+</div>
 </div>
 <div class="card"><h3>Interpretation guardrails</h3>
 <p><b>Meaning before message.</b></p>
@@ -224,7 +334,13 @@ textarea,input,select{width:100%;background:#081523;border:1px solid var(--line)
 </ol>
 <p class="quote">Do not memorize only sounds. Memorize meaning, context and truth.</p>
 </div>
-<div class="card full"><h3>Active Recall</h3><div id="memoryReview" class="flash"><div><div class="big">Press “Start Review”</div><p class="muted">The app will hide the verse and test your recall.</p></div></div><div class="actions" style="margin-top:10px"><button class="btn" onclick="revealMemory()">Reveal</button><button class="btn good" onclick="memoryGrade(true)">I remembered</button><button class="btn danger" onclick="memoryGrade(false)">I need review</button></div></div>
+<div class="card full"><h3>Active Recall</h3><div id="memoryReview" class="flash"><div><div class="big">Press “Start Review”</div><p class="muted">The app will hide the verse and test your recall.</p></div></div><div class="actions" style="margin-top:10px">
+<button class="btn" onclick="revealMemory()">Reveal</button>
+<button class="btn good" onclick="memoryGrade(true)">I remembered</button>
+<button class="btn danger" onclick="memoryGrade(false)">I need review</button>
+<button class="btn" onclick="memoryHint()">Hint</button>
+</div>
+<div class="small muted" id="memoryProgress"></div></div>
 </div>
 </section>
 
@@ -317,8 +433,28 @@ textarea,input,select{width:100%;background:#081523;border:1px solid var(--line)
 </div>
 </section>
 
-<div class="footer">JCRGM MASTER STUDY ADVANCED • Personal Bible-study workspace • Scripture text shown by the built-in reader is KJV/public-domain API output; use licensed translations in Logos or your Bible app.</div>
+<div class="footer">JCRGM MASTER STUDY WORLD CLASS • Personal Bible-study workspace • Scripture text shown by the built-in reader is KJV/public-domain API output; use licensed translations in Logos or your Bible app.</div>
 </main></div>
+
+
+<div id="commandPalette" class="commandPalette" onclick="if(event.target===this)closeCommandPalette()">
+  <div class="commandBox">
+    <div class="row">
+      <input id="commandInput" placeholder="Type a section or action…" autocomplete="off">
+      <button class="btn" onclick="closeCommandPalette()">Close</button>
+    </div>
+    <div id="commandResults" class="commandResults"></div>
+    <p class="small muted">Shortcut: Ctrl/Cmd + K</p>
+  </div>
+</div>
+
+<nav class="bottomNav" aria-label="Quick navigation">
+  <button onclick="go('dashboard')">⌂<br>Home</button>
+  <button onclick="go('scripture')">📖<br>Bible</button>
+  <button onclick="go('study')">🔎<br>Study</button>
+  <button onclick="go('memory')">🧠<br>Memory</button>
+  <button onclick="go('focus')">⏱<br>Focus</button>
+</nav>
 
 <div id="toast" class="toast"></div>
 <input id="file" type="file" accept=".json" class="hidden">
@@ -331,12 +467,116 @@ const TOPICS=['God','Jesus Christ','Holy Spirit','Faith','Grace','Salvation','Pr
 let state=JSON.parse(localStorage.getItem('jcrgmMasterAdvanced')||'{"done":[],"journal":[],"memory":[],"studies":[],"meditations":[],"dark":true,"streak":0}');
 let currentRef='Genesis 1', currentMemory=-1, timer=null, seconds=1500, timerMode='focus', audioCtx=null, audioNode=null;
 
-function save(){localStorage.setItem('jcrgmMasterAdvanced',JSON.stringify(state));update()}
+function save(){
+  state.version=3;
+  state.updatedAt=new Date().toISOString();
+  localStorage.setItem('jcrgmMasterAdvanced',JSON.stringify(state));
+  update();
+  const s=document.getElementById('saveStatus'); if(s){s.textContent='Saved locally';}
+}
+function flashSaveStatus(msg='Saved locally'){
+  const s=document.getElementById('saveStatus'); if(s){s.textContent=msg;clearTimeout(window.__saveStatusTimer);window.__saveStatusTimer=setTimeout(()=>s.textContent='Saved locally',1600);}
+}
+function ensureState(){
+  state=state&&typeof state==='object'?state:{};
+  state.done=Array.isArray(state.done)?state.done:[];
+  state.journal=Array.isArray(state.journal)?state.journal:[];
+  state.memory=Array.isArray(state.memory)?state.memory:[];
+  state.studies=Array.isArray(state.studies)?state.studies:[];
+  state.meditations=Array.isArray(state.meditations)?state.meditations:[];
+  state.streak=Number(state.streak)||0;
+  state.version=3;
+  if(!state.reviewLog)state.reviewLog=[];
+  if(!state.settings)state.settings={};
+}
+ensureState();
+
+function searchEverything(q){
+  q=String(q||'').trim().toLowerCase(); if(!q)return [];
+  const out=[];
+  state.studies.forEach((x,i)=>{const hay=[x.passage,x.obs,x.interp,x.context,x.theology,x.apply,x.prayer].join(' ').toLowerCase();if(hay.includes(q))out.push({type:'Study',title:x.passage||'Untitled study',meta:x.date||'',action:()=>{go('study');loadStudyIndex(i)}})});
+  state.memory.forEach((x,i)=>{if([x.ref,x.text].join(' ').toLowerCase().includes(q))out.push({type:'Memory',title:x.ref,meta:x.text.slice(0,90),action:()=>{go('memory');startMemoryIndex(i)}})});
+  state.journal.forEach((x,i)=>{if([x.title,x.text].join(' ').toLowerCase().includes(q))out.push({type:'Journal',title:x.title||'Journal entry',meta:x.date||'',action:()=>{go('journal')}})});
+  state.meditations.forEach((x,i)=>{if([x.ref,x.focus,x.impression,x.response].join(' ').toLowerCase().includes(q))out.push({type:'Meditation',title:x.ref||'Meditation session',meta:x.date||'',action:()=>{go('meditation')}})});
+  return out.slice(0,30);
+}
+function renderSearchResults(q){
+  const el=document.getElementById('commandResults'); if(!el)return;
+  const results=searchEverything(q);
+  const sections=[
+    ['Dashboard','Open Dashboard','dashboard'],['Bible Journey','Open 66 Books','read'],
+    ['Scripture Reader','Open Scripture Reader','scripture'],['Deep Study Canvas','Open Study Canvas','study'],
+    ['Memory Lab','Open Memory Lab','memory'],['Prophetic Meditation','Open Meditation','meditation'],
+    ['Focus Room','Open Focus Room','focus'],['Journal & Prayer','Open Journal','journal'],
+    ['Topics & Themes','Open Topics','topics'],['Reading Plans','Open Plans','plans'],['Settings & Data','Open Settings','settings']
+  ];
+  let html='';
+  if(q){
+    results.forEach(r=>html+=`<button class="commandItem"><b>${esc(r.type)}</b> — ${esc(r.title)}<small class="muted"> ${esc(r.meta||'')}</small></button>`);
+    if(!results.length)html='<p class="muted">No saved content matched your search.</p>';
+  }else{
+    sections.forEach(s=>html+=`<button class="commandItem" data-go-command="${s[2]}"><b>${esc(s[0])}</b><small class="muted"> — ${esc(s[1])}</small></button>`);
+  }
+  el.innerHTML=html;
+  if(q){
+    [...el.querySelectorAll('.commandItem')].forEach((b,i)=>b.onclick=()=>{results[i].action();closeCommandPalette()});
+  }else{
+    [...el.querySelectorAll('[data-go-command]')].forEach(b=>b.onclick=()=>{go(b.dataset.goCommand);closeCommandPalette()});
+  }
+}
+function openCommandPalette(){
+  const p=document.getElementById('commandPalette');p.classList.add('open');
+  const i=document.getElementById('commandInput');i.value='';renderSearchResults('');setTimeout(()=>i.focus(),30);
+}
+function closeCommandPalette(){document.getElementById('commandPalette').classList.remove('open')}
+function loadStudyIndex(i){
+  const s=state.studies[i];if(!s)return;
+  ['passage','obs','interp','context','theology','apply','prayer'].forEach(k=>{if(document.getElementById(k))document.getElementById(k).value=s[k]||''});
+  if(document.getElementById('genre'))document.getElementById('genre').value=s.genre||'Narrative';
+  renderSermonStudySelect();toast('Study loaded');
+}
+function startMemoryIndex(i){
+  if(!state.memory[i])return;currentMemory=i;const x=state.memory[i];
+  document.getElementById('memoryReview').innerHTML=`<div><div class="big">${esc(x.ref)}</div><p class="muted">Recall the verse before revealing it.</p></div>`;
+  updateMemoryProgress();
+}
+function memoryHint(){
+  if(currentMemory<0||!state.memory[currentMemory])return toast('Start a memory review first');
+  const x=state.memory[currentMemory], words=x.text.trim().split(/\s+/);
+  const n=Math.max(1,Math.ceil(words.length*.2));
+  document.getElementById('memoryReview').innerHTML=`<div><div class="big">${esc(words.slice(0,n).join(' '))}…</div><p class="muted">Hint — now continue from memory.</p></div>`;
+}
+function updateMemoryProgress(){
+  const el=document.getElementById('memoryProgress');if(!el)return;
+  if(currentMemory<0||!state.memory[currentMemory]){el.textContent='';return}
+  const x=state.memory[currentMemory], count=(x.reviews||[]).length;
+  el.textContent=`Review ${count+1} • ${x.reviews?.length?`Last review: ${x.reviews[x.reviews.length-1].date}`:'New memory'}`;
+}
+function exportCurrentStudy(){
+  const s=selectedStudyData();if(!s.passage)return toast('Add a passage first');
+  const blob=new Blob([JSON.stringify(s,null,2)],{type:'application/json'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='jcrgm-study-'+s.passage.replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.json';a.click();
+}
+function saveStudyDraft(){
+  const s={passage:document.getElementById('passage')?.value||'',genre:document.getElementById('genre')?.value||'',
+    obs:document.getElementById('obs')?.value||'',interp:document.getElementById('interp')?.value||'',
+    context:document.getElementById('context')?.value||'',theology:document.getElementById('theology')?.value||'',
+    apply:document.getElementById('apply')?.value||'',prayer:document.getElementById('prayer')?.value||'',savedAt:new Date().toISOString()};
+  localStorage.setItem('jcrgmStudyDraft',JSON.stringify(s));
+  const el=document.getElementById('studyDraftStatus');if(el)el.textContent='Draft autosaved '+new Date().toLocaleTimeString();
+}
+function loadDraftStudy(){
+  const raw=localStorage.getItem('jcrgmStudyDraft');if(!raw)return toast('No draft found');
+  try{const s=JSON.parse(raw);['passage','obs','interp','context','theology','apply','prayer'].forEach(k=>document.getElementById(k).value=s[k]||'');document.getElementById('genre').value=s.genre||'Narrative';toast('Draft restored')}catch{toast('Draft could not be restored')}
+}
+
 function toast(t){let x=document.getElementById('toast');x.textContent=t;x.style.display='block';setTimeout(()=>x.style.display='none',2200)}
 function go(id){document.querySelectorAll('.section').forEach(x=>x.classList.remove('show'));document.getElementById(id).classList.add('show');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===id));if(id==='read')renderBooks();if(id==='journal')renderJournal();if(id==='memory')renderMemory();if(id==='topics')renderTopics();if(id==='study')renderStudies();if(id==='meditation')renderMeditations();if(innerWidth<900)document.getElementById('side').classList.remove('open');scrollTo(0,0)}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.go));
 function toggleSide(){document.getElementById('side').classList.toggle('open')}
-function update(){let ds=[...document.querySelectorAll('.daily')],c=ds.filter(x=>x.checked).length;document.getElementById('daypct').textContent=ds.length?Math.round(c/ds.length*100):0;document.getElementById('daybar').style.width=(ds.length?c/ds.length*100:0)+'%';document.getElementById('booksDone').textContent=state.done.length+' / 66';document.getElementById('bookbar').style.width=(state.done.length/66*100)+'%';document.getElementById('streak').textContent=(state.streak||0)+' days';document.getElementById('memCount').textContent=state.memory.length;let r=document.getElementById('todayReview');r.textContent=state.memory.length?state.memory[0].ref:'Add a memory verse to begin.'}
+function update(){let ds=[...document.querySelectorAll('.daily')],c=ds.filter(x=>x.checked).length;document.getElementById('daypct').textContent=ds.length?Math.round(c/ds.length*100):0;document.getElementById('daybar').style.width=(ds.length?c/ds.length*100:0)+'%';document.getElementById('booksDone').textContent=state.done.length+' / 66';document.getElementById('bookbar').style.width=(state.done.length/66*100)+'%';document.getElementById('streak').textContent=(state.streak||0)+' days';document.getElementById('memCount').textContent=state.memory.length;let r=document.getElementById('todayReview');r.textContent=state.memory.length?state.memory[0].ref:'Add a memory verse to begin.';
+['kpiStudies','kpiJournal','kpiMeditations'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=[state.studies.length,state.journal.length,state.meditations.length][i]});
+const kr=document.getElementById('kpiReviews');if(kr)kr.textContent=state.memory.reduce((n,x)=>n+(x.reviews||[]).length,0)}
 document.querySelectorAll('.daily').forEach(x=>x.addEventListener('change',()=>{localStorage.setItem('jcrgmDailyAdvanced',JSON.stringify([...document.querySelectorAll('.daily')].map(x=>x.checked)));update()}));
 function loadDaily(){let a=JSON.parse(localStorage.getItem('jcrgmDailyAdvanced')||'[]');document.querySelectorAll('.daily').forEach((x,i)=>x.checked=!!a[i]);update()}
 function renderBooks(){let el=document.getElementById('books');el.innerHTML='';BOOKS.forEach((b)=>{let q=document.createElement('button');q.className='book';q.innerHTML='<b>'+b+'</b><small>'+(state.done.includes(b)?'✓ Studied':'Not yet studied')+'</small>';q.onclick=()=>{document.getElementById('sBook').value=b;currentRef=b+' 1';state.done=state.done.includes(b)?state.done.filter(x=>x!==b):[...state.done,b];save();renderBooks();go('scripture');loadScripture()};el.appendChild(q)})}
@@ -427,7 +667,7 @@ function generateSermonTargets(){
   html+='<div class="targetCard"><div class="targetTitle">🧭 Recommended sermon-writing order</div><ol class="muted">'+points.map(p=>'<li><b>'+p[2]+'</b> — '+esc(p[3])+'</li>').join('')+'</ol></div>';
   html+='<div class="sermonOrder">'+points.map(p=>'<div class="targetCard"><div><span class="targetNum">'+p[0]+'</span><span class="targetTitle">'+p[2]+'</span></div><p class="targetText">'+esc(p[3])+'</p></div>').join('')+'</div>';
   html+='<div class="targetCard"><div class="targetTitle">📝 Suggested sermon skeleton</div><p><b>Introduction:</b> Start with the need, question or tension the text answers.</p><p><b>Text:</b> Read the main passage and establish context.</p><p><b>Point 1:</b> What the text says.</p><p><b>Point 2:</b> What the text means.</p><p><b>Point 3:</b> How the truth changes life.</p><p><b>Application:</b> Give specific responses.</p><p><b>Conclusion:</b> Return to the central truth and make the call clear.</p><p><b>Prayer/Ministry:</b> Pray the truth of the passage.</p></div>';
-  document.getElementById('sermonTargets').innerHTML=html;findRelatedScriptures();toast('Sermon targets generated from your study');
+  document.getElementById('sermonTargets').innerHTML=html;findRelatedScriptures();generateStudyReferences();generateFullSermon();toast('Sermon targets, five references and full sermon generated');
 }
 function getRelatedRefs(ref){
   const n=normalizeRef(ref);if(SERMON_CROSSREFS[n])return SERMON_CROSSREFS[n];
@@ -435,14 +675,108 @@ function getRelatedRefs(ref){
   if(found.length)return [...new Set(found)];
   const book=lower.replace(/\s+\d+.*$/,'').trim(),same={genesis:['Genesis 12:1-3','Genesis 50:20'],exodus:['Exodus 14:13-14','Exodus 33:14'],psalms:['Psalm 119:105','Psalm 34:8'],proverbs:['Proverbs 3:5-6','Proverbs 4:23'],isaiah:['Isaiah 40:31','Isaiah 43:2'],matthew:['Matthew 6:33','Matthew 28:18-20'],john:['John 14:6','John 15:4-5'],romans:['Romans 8:1','Romans 12:1-2'],ephesians:['Ephesians 2:8-10','Ephesians 6:10-18'],philippians:['Philippians 4:6-9','Philippians 4:13'],hebrews:['Hebrews 4:12-16','Hebrews 11:1-6'],james:['James 1:5','James 1:22-25']};return same[book]||['Psalm 119:105','2 Timothy 3:16-17','Romans 15:4','Hebrews 4:12'];
 }
+
+function getFiveReferenceScriptures(ref, study){
+  const exact=getRelatedRefs(ref).filter(Boolean);
+  let refs=[...exact];
+  const text=[study.obs,study.interp,study.context,study.theology,study.apply,study.prayer].join(' ').toLowerCase();
+  const themeRefs=[
+    ['faith',['Hebrews 11:6','Romans 10:17','2 Corinthians 5:7','Mark 11:24','James 1:6']],
+    ['prayer',['Matthew 6:6-13','Philippians 4:6-7','1 Thessalonians 5:17','James 5:16','Jeremiah 33:3']],
+    ['holiness',['1 Peter 1:15-16','Hebrews 12:14','2 Corinthians 7:1','1 Thessalonians 4:3','Psalm 24:3-4']],
+    ['grace',['Ephesians 2:8-9','Titus 2:11-12','Romans 3:23-24','2 Corinthians 12:9','Hebrews 4:16']],
+    ['love',['1 Corinthians 13:4-8','John 13:34-35','1 John 4:7-12','Colossians 3:14','Romans 5:8']],
+    ['obedience',['John 14:15','James 1:22-25','1 Samuel 15:22','Deuteronomy 10:12-13','Luke 11:28']],
+    ['hope',['Romans 5:3-5','Romans 15:13','Hebrews 6:19','1 Peter 1:3','Psalm 42:5']],
+    ['wisdom',['Proverbs 2:6','James 1:5','Proverbs 9:10','Colossians 3:16','Ecclesiastes 7:12']],
+    ['presence',['Exodus 33:14','Psalm 16:11','Psalm 27:4','Matthew 28:20','James 4:8']],
+    ['strength',['Isaiah 40:29-31','2 Corinthians 12:9-10','Ephesians 3:16','Philippians 4:13','Psalm 46:1']],
+    ['purpose',['Ephesians 2:10','Jeremiah 1:5','Romans 8:28','Matthew 28:19-20','2 Timothy 1:9']],
+    ['provision',['Matthew 6:31-33','Philippians 4:19','Psalm 23:1','2 Corinthians 9:8','Matthew 7:11']]
+  ];
+  themeRefs.forEach(([k,arr])=>{if(text.includes(k)) refs.push(...arr)});
+  refs.push('Psalm 119:105','2 Timothy 3:16-17','Romans 15:4','Hebrews 4:12','Joshua 1:8');
+  refs=[...new Set(refs.map(normalizeRef).filter(x=>x && normalizeRef(x).toLowerCase()!==normalizeRef(ref).toLowerCase()))];
+  return refs.slice(0,5);
+}
+function referenceReason(i){
+  return ['Confirm the main truth','Explain the biblical principle','Give another biblical witness','Show practical application','Broaden the biblical perspective'][i]||'Strengthen the study';
+}
+function generateStudyReferences(){
+  const s=selectedStudyData();
+  if(!s.passage)return toast('Set a Scripture passage first');
+  const refs=getFiveReferenceScriptures(s.passage,s);
+  const el=document.getElementById('studyReferences');
+  el.innerHTML=refs.map((r,i)=>'<div class="relatedItem"><b>'+esc(r)+'</b><small>'+referenceReason(i)+'</small><div class="relatedActions"><button class="btn small" onclick="openBibleRef('+JSON.stringify(r)+')">Open</button><button class="btn small" onclick="addRelatedToContext('+JSON.stringify(r)+')">Add to study</button></div></div>').join('');
+  toast('Five reference Scriptures generated');
+}
+function sermonParagraph(text,fallback){return (text||fallback||'').trim().replace(/\s+/g,' ')}
+function buildSermonPoints(s, refs){
+  const raw=[s.obs,s.interp,s.theology,s.apply].filter(Boolean).join('. ');
+  const parts=raw.split(/[.!?]+/).map(x=>x.trim()).filter(x=>x.length>25);
+  const fallback=[
+    'Understand what God is saying through the main passage.',
+    'Receive the truth of the passage and allow it to shape your faith.',
+    'Respond to the Word with obedience, prayer and practical action.'
+  ];
+  return (parts.length>=3?parts.slice(0,3):fallback).map((x,i)=>({title:'Point '+(i+1),text:x}));
+}
+function generateFullSermon(){
+  const s=selectedStudyData();
+  if(!s.passage)return toast('Set a Scripture passage first');
+  const dir=document.getElementById('sermonDirection').value.trim();
+  const refs=getFiveReferenceScriptures(s.passage,s);
+  const theme=extractTheme(s);
+  const big=makeBigIdea(s,dir)||'God wants His Word to shape our faith, character and response.';
+  const points=buildSermonPoints(s,refs);
+  const intro=sermonParagraph(s.obs,'Begin by reading the main passage slowly. Ask the congregation to notice what the text reveals about God, people and the response required.');
+  const meaning=sermonParagraph(s.interp,'The passage must first be understood in its context. Its meaning should guide the message before personal application is made.');
+  const truth=sermonParagraph(s.theology,'The central truth is that God speaks through His Word and calls His people to believe, obey and respond to Him.');
+  const application=sermonParagraph(s.apply,'The Word should produce a clear response. Ask what must be believed, changed, practiced, surrendered or obeyed.');
+  const prayerSeed=sermonParagraph(s.prayer,'Lord, help us receive Your Word, understand it clearly and live it faithfully.');
+  const prayers=[
+    'Lord, open our understanding and help us receive the truth of this passage with humble hearts.',
+    'Father, strengthen our faith to believe what You have spoken and trust You in every situation.',
+    'Holy Spirit, show us what must change in our lives and give us grace to obey Your Word.',
+    'Lord, help us apply this truth in our homes, relationships, work, ministry and daily decisions.',
+    'Father, let this Word produce lasting fruit in us and make our lives a testimony of Your grace.'
+  ];
+  let html='<article><h2>'+esc(dir||theme.charAt(0).toUpperCase()+theme.slice(1))+'</h2>';
+  html+='<p><b>Main Scripture:</b> '+esc(s.passage)+'</p>';
+  html+='<div class="sermonScripture"><b>Read:</b> '+esc(s.passage)+' — Read the complete passage before preaching.</div>';
+  html+='<h3>Introduction</h3><p>'+esc(intro)+'</p>';
+  html+='<p>'+esc('Today we are not studying this passage merely to gain information. We are coming before God to hear His Word and respond to it.')+'</p>';
+  html+='<h3>Central Truth</h3><p><b>'+esc(big)+'</b></p>';
+  html+='<h3>Understanding the Text</h3><p>'+esc(meaning)+'</p>';
+  html+='<h3>What the Passage Teaches</h3>';
+  points.forEach(p=>{html+='<p><b>'+esc(p.title)+':</b> '+esc(p.text)+'</p>'});
+  html+='<h3>Biblical Witness — 5 Reference Scriptures</h3><ol>'+refs.map(r=>'<li><b>'+esc(r)+'</b> — '+esc(referenceReason(refs.indexOf(r)))+'</li>').join('')+'</ol>';
+  html+='<h3>The Biblical Truth</h3><p>'+esc(truth)+'</p>';
+  html+='<h3>Practical Application</h3><p>'+esc(application)+'</p>';
+  html+='<p>'+esc('Do not leave the Word in the notebook. Let it become a decision, a practice, a prayer and a changed way of living.')+'</p>';
+  html+='<h3>Conclusion</h3><p>'+esc('Return to the main Scripture and repeat the central truth. The goal is not simply to remember the sermon. The goal is to respond to God through His Word.')+'</p>';
+  html+='<h3>5 Prayer Points — Inline With the Message</h3>';
+  prayers.forEach((p,i)=>{html+='<div class="prayerPoint"><b>Prayer '+(i+1)+':</b> '+esc(p)+'</div>'});
+  html+='<h3>Closing Prayer</h3><p>'+esc(prayerSeed+' Let this Word remain alive in us, guide our steps and produce fruit that brings glory to Jesus Christ. Amen.')+'</p>';
+  html+='</article>';
+  document.getElementById('fullSermon').innerHTML=html;
+  toast('Full sermon generated with five prayer points');
+}
+function copyFullSermon(){
+  const el=document.getElementById('fullSermon');
+  if(!el || !el.innerText.trim())return toast('Generate the full sermon first');
+  navigator.clipboard?.writeText(el.innerText);
+  toast('Full sermon copied');
+}
+
 function findRelatedScriptures(){
   const s=selectedStudyData();if(!s.passage)return toast('Set a Scripture passage first');
-  const refs=getRelatedRefs(s.passage),el=document.getElementById('relatedScriptures');
+  const refs=getFiveReferenceScriptures(s.passage,s).slice(0,5),el=document.getElementById('relatedScriptures');
   el.innerHTML=refs.map((r,i)=>'<div class="relatedItem"><b>'+esc(r)+'</b><small>'+['Confirm the truth','Explain the principle','Show a biblical example','Strengthen the application','Add a wider biblical perspective'][i%5]+'</small><div class="relatedActions"><button class="btn small" onclick="openBibleRef('+JSON.stringify(r)+')">Open</button><button class="btn small" onclick="addRelatedToContext('+JSON.stringify(r)+')">Add to study</button></div></div>').join('');
 }
 function openBibleRef(r){openLink('https://www.bible.com/search?query='+encodeURIComponent(r))}
 function addRelatedToContext(r){const el=document.getElementById('context');el.value+=(el.value.trim()?'\n':'')+r+' — related Scripture';toast(r+' added to Context & Cross-references')}
-function saveStudy(){let s={date:new Date().toLocaleString(),passage:passage.value,genre:genre.value,obs:obs.value,interp:interp.value,context:context.value,theology:theology.value,apply:apply.value,prayer:prayer.value};if(!s.passage.trim())return toast('Add a passage');state.studies.unshift(s);save();renderStudies();renderSermonStudySelect();toast('Study saved')}
+function saveStudy(){let s={date:new Date().toLocaleString(),isoDate:new Date().toISOString(),passage:passage.value.trim(),genre:genre.value,obs:obs.value,interp:interp.value,context:context.value,theology:theology.value,apply:apply.value,prayer:prayer.value};if(!s.passage)return toast('Add a passage');const existing=state.studies.findIndex(x=>normalizeRef(x.passage)===normalizeRef(s.passage));if(existing>=0){state.studies[existing]=s;toast('Study updated')}else{state.studies.unshift(s);toast('Study saved')}save();localStorage.removeItem('jcrgmStudyDraft');renderStudies();renderSermonStudySelect();flashSaveStatus('Study saved')}
 function renderStudies(){let e=document.getElementById('studyList');e.innerHTML=state.studies.length?state.studies.slice(0,8).map((x,i)=>'<div class="listItem"><b>'+esc(x.passage)+'</b><div class="small muted">'+esc(x.date)+' • '+esc(x.genre)+'</div><p>'+esc(x.obs||'No observation saved.').slice(0,180)+'</p></div>').join(''):'<span class="muted">No saved studies.</span>'}
 function clearStudy(){['passage','obs','interp','context','theology','apply','prayer'].forEach(id=>document.getElementById(id).value='')}
 function copyStudy(){let t=`${passage.value}\n\nOBSERVATION\n${obs.value}\n\nINTERPRETATION\n${interp.value}\n\nCONTEXT & CROSS-REFERENCES\n${context.value}\n\nTHEOLOGY / TRUTH\n${theology.value}\n\nAPPLICATION\n${apply.value}\n\nPRAYER\n${prayer.value}`;navigator.clipboard?.writeText(t);toast('Study copied')}
@@ -480,7 +814,7 @@ function openMemoryLogos(){
   let ref=document.getElementById('memRef').value.trim()||currentRef;
   openLink('https://app.logos.com/search?query='+encodeURIComponent(ref));
 }
-function saveMemory(){if(!memRef.value.trim()||!memText.value.trim())return toast('Add a reference and verse');state.memory.unshift({ref:memRef.value,text:memText.value,date:new Date().toLocaleDateString(),reviews:[]});save();memRef.value='';memText.value='';renderMemory();toast('Memory verse saved')}
+function saveMemory(){if(!memRef.value.trim()||!memText.value.trim())return toast('Add a reference and verse');state.memory.unshift({ref:memRef.value.trim(),text:memText.value.trim(),date:new Date().toLocaleDateString(),reviews:[],nextReview:new Date().toISOString()});save();memRef.value='';memText.value='';renderMemory();toast('Memory verse saved')}
 function renderMemory(){document.getElementById('memoryList').innerHTML=state.memory.map((x,i)=>`<div class="listItem"><span class="ref">${esc(x.ref)}</span><p class="verse">${esc(x.text)}</p><div class="small muted">Saved ${esc(x.date)}</div><button class="btn danger" onclick="removeMem(${i})">Remove</button></div>`).join('')||'<p class="muted">No memory verses yet.</p>'}
 function removeMem(i){state.memory.splice(i,1);save();renderMemory()}
 function startMemoryReview(){if(!state.memory.length)return toast('Add a memory verse first');currentMemory=Math.floor(Math.random()*state.memory.length);let x=state.memory[currentMemory];document.getElementById('memoryReview').innerHTML='<div><div class="big">'+esc(x.ref)+'</div><p class="muted">Say the verse aloud from memory before revealing it.</p></div>'}
@@ -502,7 +836,7 @@ function openLink(u){window.open(u,'_blank','noopener,noreferrer')}
 function toggleTheme(){document.body.classList.toggle('light');state.dark=!document.body.classList.contains('light');save()}
 function exportData(){let blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='jcrgm-master-study-backup.json';a.click()}
 function importData(){document.getElementById('file').click()}
-document.getElementById('file').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();renderBooks();renderMemory();renderJournal();toast('Data imported')}catch{toast('Invalid backup file')}};r.readAsText(f)}
+document.getElementById('file').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);ensureState();save();renderBooks();renderMemory();renderJournal();renderStudies();renderMeditations();renderTopics();renderSermonStudySelect();toast('Data imported')}catch{toast('Invalid backup file')}};r.readAsText(f)}
 function resetData(){if(confirm('Delete all local JCRGM study data?')){localStorage.removeItem('jcrgmMasterAdvanced');localStorage.removeItem('jcrgmDailyAdvanced');location.reload()}}
 function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 
@@ -522,8 +856,14 @@ document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','SELECT'].include
 document.getElementById('focusMin').addEventListener('change',resetTimer);
 document.getElementById('defaultFocus').addEventListener('change',e=>{document.getElementById('focusMin').value=e.target.value;resetTimer()});
 
-initBooks();loadDaily();loadTodayScripture();renderBooks();renderMemory();renderJournal();renderStudies();renderMeditations();renderTopics();renderSermonStudySelect();timerDisplay();
+document.getElementById('globalSearch')?.addEventListener('keydown',e=>{if(e.key==='Enter'){openCommandPalette();document.getElementById('commandInput').value=e.target.value;renderSearchResults(e.target.value)}});
+document.getElementById('commandInput')?.addEventListener('input',e=>renderSearchResults(e.target.value));
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openCommandPalette()}if(e.key==='Escape')closeCommandPalette()});
+['passage','obs','interp','context','theology','apply','prayer'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>{clearTimeout(window.__draftTimer);window.__draftTimer=setTimeout(saveStudyDraft,500)}));
+
+initBooks();loadDaily();loadTodayScripture();renderBooks();renderMemory();renderJournal();renderStudies();renderMeditations();renderTopics();renderSermonStudySelect();timerDisplay();updateMemoryProgress();
 if(state.dark===false)document.body.classList.add('light');
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 </script>
 </body>
 </html>
