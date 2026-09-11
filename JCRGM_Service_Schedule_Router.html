@@ -1,13 +1,27 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#111827">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="theme-color"
+    content="#111827"
+>
+
 <title>JCRGM SERVICE SCHEDULE ROUTER</title>
 
 <style>
+
+/* =========================================================
+   ROOT
+========================================================= */
+
 :root{
     --primary:#17365d;
     --secondary:#c9a227;
@@ -18,8 +32,13 @@
     --danger:#b42318;
     --success:#087443;
     --border:#e4e7ec;
-    --shuffle:#6b4f9d;
+    --shuffle:#6b46c1;
 }
+
+
+/* =========================================================
+   GLOBAL
+========================================================= */
 
 *{
     box-sizing:border-box;
@@ -32,8 +51,57 @@ body{
     color:var(--text);
 }
 
+button,
+input,
+select{
+    font:inherit;
+}
+
+button{
+    border:0;
+    border-radius:9px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-weight:700;
+    transition:.2s ease;
+}
+
+button:hover{
+    opacity:.9;
+    transform:translateY(-1px);
+}
+
+button:active{
+    transform:translateY(0);
+}
+
+input,
+select{
+    width:100%;
+    padding:10px;
+    border:1px solid #d0d5dd;
+    border-radius:9px;
+    background:#fff;
+}
+
+input:focus,
+select:focus{
+    outline:none;
+    border-color:var(--primary);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
 header{
-    background:linear-gradient(135deg,#102b4e,#1f4d7a);
+    background:linear-gradient(
+        135deg,
+        #102b4e,
+        #1f4d7a
+    );
+
     color:white;
     padding:28px 20px;
     text-align:center;
@@ -76,6 +144,11 @@ header p{
     color:#cbd5e1;
 }
 
+
+/* =========================================================
+   MAIN
+========================================================= */
+
 .container{
     max-width:1250px;
     margin:24px auto;
@@ -95,6 +168,15 @@ h2{
     margin:0 0 14px;
     color:var(--primary);
 }
+
+h3{
+    color:var(--primary);
+}
+
+
+/* =========================================================
+   SERVICE TIMES
+========================================================= */
 
 .service-times{
     display:grid;
@@ -133,50 +215,27 @@ h2{
     font-weight:800;
 }
 
+
+/* =========================================================
+   TWO COLUMN AREA
+========================================================= */
+
 .main-grid{
     display:grid;
     grid-template-columns:360px 1fr;
     gap:18px;
 }
 
+
+/* =========================================================
+   FORM
+========================================================= */
+
 label{
     display:block;
     font-size:13px;
     font-weight:700;
     margin:11px 0 6px;
-}
-
-input,
-select,
-button{
-    font:inherit;
-}
-
-input,
-select{
-    width:100%;
-    padding:10px;
-    border:1px solid #d0d5dd;
-    border-radius:9px;
-    background:#fff;
-}
-
-input:focus,
-select:focus{
-    outline:none;
-    border-color:var(--primary);
-}
-
-button{
-    border:0;
-    border-radius:9px;
-    padding:10px 14px;
-    cursor:pointer;
-    font-weight:700;
-}
-
-button:hover{
-    opacity:.9;
 }
 
 .primary{
@@ -199,9 +258,9 @@ button:hover{
     color:var(--danger);
 }
 
-.shuffle{
+.shuffle-btn{
     background:var(--shuffle);
-    color:#fff;
+    color:white;
 }
 
 .actions{
@@ -211,10 +270,16 @@ button:hover{
     margin-top:12px;
 }
 
+
+/* =========================================================
+   PEOPLE
+========================================================= */
+
 .person{
     display:flex;
     align-items:center;
     justify-content:space-between;
+    gap:10px;
     background:#f7f9fc;
     border:1px solid var(--border);
     padding:9px 10px;
@@ -222,29 +287,20 @@ button:hover{
     margin:7px 0;
 }
 
+.person-name{
+    min-width:0;
+    word-break:break-word;
+}
+
 .person button{
     padding:5px 8px;
+    flex-shrink:0;
 }
 
-.person-name{
-    display:flex;
-    align-items:center;
-    font-weight:700;
-}
 
-.person-number{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:27px;
-    height:27px;
-    border-radius:50%;
-    background:var(--primary);
-    color:white;
-    font-size:12px;
-    font-weight:800;
-    margin-right:8px;
-}
+/* =========================================================
+   NOTICE
+========================================================= */
 
 .notice{
     padding:11px 12px;
@@ -256,15 +312,10 @@ button:hover{
     line-height:1.5;
 }
 
-.shuffle-notice{
-    padding:11px 12px;
-    border-radius:9px;
-    background:#f3edff;
-    color:#543785;
-    font-size:13px;
-    margin-top:12px;
-    line-height:1.5;
-}
+
+/* =========================================================
+   CURRENT SERVICE
+========================================================= */
 
 .current-service{
     background:#eaf7ef;
@@ -275,6 +326,11 @@ button:hover{
     margin-bottom:18px;
     font-weight:700;
 }
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
 
 .toolbar{
     display:flex;
@@ -291,6 +347,11 @@ button:hover{
 .toolbar button{
     height:40px;
 }
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
 
 .summary{
     display:grid;
@@ -316,6 +377,11 @@ button:hover{
     font-size:12px;
     color:var(--muted);
 }
+
+
+/* =========================================================
+   SCHEDULE
+========================================================= */
 
 .schedule-header{
     display:flex;
@@ -362,9 +428,17 @@ button:hover{
     border-top:1px solid #edf0f4;
 }
 
+.service-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+}
+
 .service-title{
     font-weight:800;
-    margin-bottom:10px;
     color:var(--primary);
 }
 
@@ -378,9 +452,18 @@ button:hover{
     font-size:11px;
 }
 
+.fresh-shuffle{
+    background:var(--shuffle);
+    color:white;
+    font-size:12px;
+    padding:8px 11px;
+    white-space:nowrap;
+}
+
 .assignments{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    grid-template-columns:
+        repeat(auto-fit,minmax(190px,1fr));
     gap:7px;
 }
 
@@ -398,15 +481,20 @@ button:hover{
     margin-bottom:3px;
 }
 
-.service-shuffle-label{
-    display:inline-block;
-    margin-left:7px;
-    background:#f3edff;
-    color:#543785;
-    padding:4px 8px;
-    border-radius:6px;
-    font-size:10px;
+.shuffle-note{
+    background:#f3effc;
+    color:#56319a;
+    border:1px solid #ddd0f4;
+    padding:8px 10px;
+    border-radius:8px;
+    font-size:12px;
+    margin-bottom:10px;
 }
+
+
+/* =========================================================
+   RESPONSIBILITIES
+========================================================= */
 
 .roles{
     max-height:420px;
@@ -430,11 +518,21 @@ button:hover{
     line-height:1.4;
 }
 
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
 .empty{
     text-align:center;
     color:var(--muted);
     padding:35px;
 }
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
 
 footer{
     text-align:center;
@@ -442,6 +540,11 @@ footer{
     font-size:12px;
     padding:20px;
 }
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media(max-width:900px){
 
@@ -456,7 +559,9 @@ footer{
     .summary{
         grid-template-columns:repeat(2,1fr);
     }
+
 }
+
 
 @media(max-width:600px){
 
@@ -491,10 +596,21 @@ footer{
         margin-bottom:8px;
     }
 
-    .actions button{
-        width:100%;
+    .service-top{
+        display:block;
     }
+
+    .fresh-shuffle{
+        width:100%;
+        margin-top:10px;
+    }
+
 }
+
+
+/* =========================================================
+   PRINT
+========================================================= */
 
 @media print{
 
@@ -524,342 +640,429 @@ footer{
         print-color-adjust:exact;
         -webkit-print-color-adjust:exact;
     }
+
+    .fresh-shuffle,
+    .shuffle-note{
+        display:none!important;
+    }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
 <header>
 
-<h1>JCRGM SERVICE SCHEDULE ROUTER</h1>
+    <h1>
+        JCRGM SERVICE SCHEDULE ROUTER
+    </h1>
 
-<p>
-    Monthly • Weekly • Service Responsibilities &
-    Automatic Assignment
-</p>
+    <p>
+        Monthly • Weekly • Service Responsibilities &
+        Automatic Assignment
+    </p>
 
-<div class="zambia-clock">
+    <div class="zambia-clock">
 
-    <div class="time" id="zambiaTime">
-        --:--:--
+        <div
+            class="time"
+            id="zambiaTime"
+        >
+            --:--:--
+        </div>
+
+        <div
+            class="date"
+            id="zambiaDate"
+        >
+            Loading date...
+        </div>
+
+        <div class="zone">
+            Zambia Time • Africa/Lusaka • CAT (UTC+2)
+        </div>
+
     </div>
-
-    <div class="date" id="zambiaDate">
-        Loading date...
-    </div>
-
-    <div class="zone">
-        Zambia Time • Africa/Lusaka • CAT (UTC+2)
-    </div>
-
-</div>
 
 </header>
 
+
 <div class="container">
+
+
+<!-- =====================================================
+     JCRGM SERVICE TIMES
+===================================================== -->
 
 <div class="card">
 
-<h2>JCRGM Service Times</h2>
+    <h2>
+        JCRGM Service Times
+    </h2>
 
-<div class="service-times">
+    <div class="service-times">
 
-<div class="service-time-card">
+        <div class="service-time-card">
 
-    <div class="day">
-        Sunday Morning
-    </div>
+            <div class="day">
+                Sunday Morning
+            </div>
 
-    <div class="name">
-        Main Service
-    </div>
+            <div class="name">
+                Main Service
+            </div>
 
-    <div class="time">
-        09:00 – 12:30
+            <div class="time">
+                09:00 – 12:30
+            </div>
+
+        </div>
+
+
+        <div class="service-time-card">
+
+            <div class="day">
+                Sunday Afternoon
+            </div>
+
+            <div class="name">
+                Prophetic Ministry
+            </div>
+
+            <div class="time">
+                15:00 – 18:00
+            </div>
+
+        </div>
+
+
+        <div class="service-time-card">
+
+            <div class="day">
+                Friday
+            </div>
+
+            <div class="name">
+                Midweek Service
+            </div>
+
+            <div class="time">
+                15:00 – 18:00
+            </div>
+
+        </div>
+
     </div>
 
 </div>
 
-<div class="service-time-card">
 
-    <div class="day">
-        Sunday Afternoon
-    </div>
-
-    <div class="name">
-        Prophetic Ministry
-    </div>
-
-    <div class="time">
-        15:00 – 18:00
-    </div>
-
-</div>
-
-<div class="service-time-card">
-
-    <div class="day">
-        Friday
-    </div>
-
-    <div class="name">
-        Midweek Service
-    </div>
-
-    <div class="time">
-        15:00 – 18:00
-    </div>
-
-</div>
-
-</div>
-
-</div>
+<!-- =====================================================
+     MAIN APPLICATION
+===================================================== -->
 
 <div class="main-grid">
 
+
+<!-- =====================================================
+     LEFT COLUMN
+===================================================== -->
+
 <section>
 
-<div class="card">
 
-<h2>1. Church Leaders / Pastors</h2>
-
-<label for="personName">
-    Enter Name
-</label>
-
-<input
-    id="personName"
-    type="text"
-    placeholder="e.g. Pastor John"
-    autocomplete="off"
->
-
-<div class="actions">
-
-<button
-    class="primary"
-    onclick="addPerson()"
->
-    Add Pastor
-</button>
-
-<button
-    class="shuffle"
-    onclick="shufflePastors()"
->
-    Shuffle Pastors
-</button>
-
-</div>
-
-<div id="people" style="margin-top:12px"></div>
-
-<div class="notice">
-
-    Add all pastors/leaders who may serve.
-
-    <br><br>
-
-    <b>Pastor records are permanent.</b>
-
-    They remain saved even when a schedule is cleared.
-
-    A pastor can only be deleted using that pastor's
-    individual <b>Remove</b> button.
-
-</div>
-
-<div class="shuffle-notice">
-
-    <b>Scheduling rule:</b><br>
-
-    Every new Sunday receives a fresh random minister
-    arrangement. Sunday Morning and Sunday Afternoon
-    are treated as separate services and will not simply
-    repeat the same arrangement.
-
-    <br><br>
-
-    The next Sunday is shuffled again automatically.
-
-</div>
-
-</div>
+<!-- =====================================================
+     PASTORS / LEADERS
+===================================================== -->
 
 <div class="card">
 
-<h2>2. Schedule Controls</h2>
+    <h2>
+        1. Church Leaders / Pastors
+    </h2>
 
-<label for="month">
-    Select Month
-</label>
+    <label for="personName">
+        Enter Name
+    </label>
 
-<input
-    type="month"
-    id="month"
->
+    <input
+        id="personName"
+        type="text"
+        placeholder="e.g. Pastor John"
+        autocomplete="off"
+        onkeydown="handleNameKey(event)"
+    >
 
-<label for="servicePattern">
-    Services to Schedule
-</label>
+    <div class="actions">
 
-<select id="servicePattern">
+        <button
+            class="primary"
+            onclick="addPerson()"
+        >
+            Add Person
+        </button>
 
-<option value="jcrgm">
-    JCRGM Standard Schedule
-</option>
+        <button
+            class="shuffle-btn"
+            onclick="shufflePastors()"
+        >
+            Shuffle Pastors
+        </button>
 
-<option value="sun">
-    Sunday Services Only
-</option>
+    </div>
 
-<option value="fri">
-    Friday Service Only
-</option>
+    <div
+        id="people"
+        style="margin-top:12px"
+    ></div>
 
-<option value="sunfri">
-    Sunday + Friday Services
-</option>
+    <div class="notice">
 
-</select>
+        Add all pastors/leaders who may serve.
 
-<div class="actions">
+        <br><br>
 
-<button
-    class="gold"
-    onclick="generate()"
->
-    Auto Schedule
-</button>
+        <b>Shuffle Pastors</b> changes the main order of
+        the pastors without removing anyone.
 
-<button
-    class="light"
-    onclick="saveData()"
->
-    Save
-</button>
+        <br><br>
 
-<button
-    class="light"
-    onclick="loadData()"
->
-    Load
-</button>
+        <b>Fresh Shuffle</b> on a generated service changes
+        only that particular service.
 
-<button
-    class="danger"
-    onclick="clearSchedule()"
->
-    Clear Schedule
-</button>
+        <br><br>
+
+        <b>Clear</b> clears generated schedules only.
+        Pastor records remain saved.
+
+    </div>
 
 </div>
 
-<div class="notice">
 
-    <b>Clear Schedule</b> clears only the generated
-    schedule. Pastor records remain untouched.
-
-</div>
-
-</div>
+<!-- =====================================================
+     SCHEDULE CONTROLS
+===================================================== -->
 
 <div class="card">
 
-<h2>3. Responsibilities Included</h2>
+    <h2>
+        2. Schedule Controls
+    </h2>
 
-<div
-    class="roles"
-    id="rolesList"
-></div>
+    <label for="month">
+        Select Month
+    </label>
+
+    <input
+        type="month"
+        id="month"
+    >
+
+
+    <label for="servicePattern">
+        Services to Schedule
+    </label>
+
+    <select id="servicePattern">
+
+        <option value="jcrgm">
+            JCRGM Standard Schedule
+        </option>
+
+        <option value="sun">
+            Sunday Services Only
+        </option>
+
+        <option value="fri">
+            Friday Service Only
+        </option>
+
+        <option value="sunfri">
+            Sunday + Friday Services
+        </option>
+
+    </select>
+
+
+    <div class="actions">
+
+        <button
+            class="gold"
+            onclick="generate()"
+        >
+            Auto Schedule
+        </button>
+
+        <button
+            class="light"
+            onclick="saveData()"
+        >
+            Save
+        </button>
+
+        <button
+            class="light"
+            onclick="loadData()"
+        >
+            Load
+        </button>
+
+        <button
+            class="danger"
+            onclick="clearAll()"
+        >
+            Clear
+        </button>
+
+    </div>
 
 </div>
+
+
+<!-- =====================================================
+     RESPONSIBILITIES
+===================================================== -->
+
+<div class="card">
+
+    <h2>
+        3. Responsibilities Included
+    </h2>
+
+    <div
+        class="roles"
+        id="rolesList"
+    ></div>
+
+</div>
+
 
 </section>
 
+
+<!-- =====================================================
+     RIGHT COLUMN
+===================================================== -->
+
 <main>
+
+
+<!-- =====================================================
+     SCHEDULE TOOLS
+===================================================== -->
 
 <div class="card no-print">
 
-<h2>4. Schedule Tools</h2>
+    <h2>
+        4. Schedule Tools
+    </h2>
 
-<div class="toolbar">
+    <div class="toolbar">
 
-<div>
+        <div>
 
-<label>
-    View
-</label>
+            <label>
+                View
+            </label>
 
-<select
-    id="viewMode"
-    onchange="renderSchedule()"
->
+            <select
+                id="viewMode"
+                onchange="renderSchedule()"
+            >
 
-<option value="month">
-    Full Month
-</option>
+                <option value="month">
+                    Full Month
+                </option>
 
-<option value="weekly">
-    Weekly Summary
-</option>
+                <option value="weekly">
+                    Weekly Summary
+                </option>
 
-</select>
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Search
+            </label>
+
+            <input
+                id="search"
+                type="text"
+                placeholder="Search person or responsibility"
+                oninput="renderSchedule()"
+            >
+
+        </div>
+
+
+        <button
+            class="primary"
+            onclick="window.print()"
+        >
+            Print / Save PDF
+        </button>
+
+
+        <button
+            class="light"
+            onclick="exportCSV()"
+        >
+            Export CSV
+        </button>
+
+    </div>
 
 </div>
 
-<div>
 
-<label>
-    Search
-</label>
-
-<input
-    id="search"
-    type="text"
-    placeholder="Search person or responsibility"
-    oninput="renderSchedule()"
->
-
-</div>
-
-<button
-    class="primary"
-    onclick="window.print()"
->
-    Print / Save PDF
-</button>
-
-<button
-    class="light"
-    onclick="exportCSV()"
->
-    Export CSV
-</button>
-
-</div>
-
-</div>
+<!-- =====================================================
+     CURRENT SERVICE
+===================================================== -->
 
 <div id="currentService"></div>
 
-<div id="summary" class="summary"></div>
+
+<!-- =====================================================
+     SUMMARY
+===================================================== -->
+
+<div
+    id="summary"
+    class="summary"
+></div>
+
+
+<!-- =====================================================
+     GENERATED SCHEDULE
+===================================================== -->
 
 <div class="card">
 
-<div class="schedule-header">
+    <div class="schedule-header">
 
-<h2>
-    5. Generated Service Schedule
-</h2>
+        <h2>
+            5. Generated Service Schedule
+        </h2>
+
+    </div>
+
+    <div id="schedule"></div>
 
 </div>
 
-<div id="schedule"></div>
-
-</div>
 
 </main>
 
@@ -867,9 +1070,13 @@ footer{
 
 </div>
 
+
 <footer>
+
     JCRGM Service Schedule Router • Zambia Time
+
 </footer>
+
 
 <script>
 
@@ -962,6 +1169,7 @@ const responsibilities = [
 ========================================================= */
 
 let people = [];
+
 let schedule = [];
 
 
@@ -972,6 +1180,7 @@ let schedule = [];
 function updateZambiaClock(){
 
     const now = new Date();
+
 
     const time =
         new Intl.DateTimeFormat(
@@ -985,6 +1194,7 @@ function updateZambiaClock(){
             }
         ).format(now);
 
+
     const date =
         new Intl.DateTimeFormat(
             "en-GB",
@@ -997,15 +1207,21 @@ function updateZambiaClock(){
             }
         ).format(now);
 
-    document.getElementById("zambiaTime")
-        .textContent =
+
+    document.getElementById(
+        "zambiaTime"
+    ).textContent =
         time + " CAT";
 
-    document.getElementById("zambiaDate")
-        .textContent =
+
+    document.getElementById(
+        "zambiaDate"
+    ).textContent =
         date;
 
+
     updateCurrentService();
+
 }
 
 
@@ -1017,19 +1233,31 @@ function updateCurrentService(){
 
     const now = new Date();
 
+
     const dateParts =
         new Intl.DateTimeFormat(
             "en-US",
             {
                 timeZone:"Africa/Lusaka",
+                year:"numeric",
+                month:"2-digit",
+                day:"2-digit",
                 weekday:"long"
             }
         ).formatToParts(now);
 
-    const weekday =
+
+    const weekdayPart =
         dateParts.find(
             p => p.type === "weekday"
-        ).value;
+        );
+
+
+    const weekday =
+        weekdayPart
+        ? weekdayPart.value
+        : "";
+
 
     const timeParts =
         new Intl.DateTimeFormat(
@@ -1042,25 +1270,42 @@ function updateCurrentService(){
             }
         ).formatToParts(now);
 
+
+    const hourPart =
+        timeParts.find(
+            p => p.type === "hour"
+        );
+
+
+    const minutePart =
+        timeParts.find(
+            p => p.type === "minute"
+        );
+
+
     const hour =
         Number(
-            timeParts.find(
-                p => p.type === "hour"
-            ).value
+            hourPart
+            ? hourPart.value
+            : 0
         );
+
 
     const minute =
         Number(
-            timeParts.find(
-                p => p.type === "minute"
-            ).value
+            minutePart
+            ? minutePart.value
+            : 0
         );
+
 
     const currentMinutes =
         hour * 60 + minute;
 
+
     let message =
         "No JCRGM service is currently in progress.";
+
 
     if(weekday === "Sunday"){
 
@@ -1093,6 +1338,7 @@ function updateCurrentService(){
 
     }
 
+
     else if(weekday === "Friday"){
 
         if(
@@ -1114,9 +1360,16 @@ function updateCurrentService(){
 
     }
 
-    document.getElementById("currentService")
-        .innerHTML =
-        `<div class="current-service">${message}</div>`;
+
+    document.getElementById(
+        "currentService"
+    ).innerHTML =
+        `
+        <div class="current-service">
+            ${escapeHtml(message)}
+        </div>
+        `;
+
 }
 
 
@@ -1128,21 +1381,28 @@ function init(){
 
     const now = new Date();
 
+
     const year =
         now.getFullYear();
+
 
     const month =
         String(
             now.getMonth() + 1
         ).padStart(2,"0");
 
-    document.getElementById("month")
-        .value =
+
+    document.getElementById(
+        "month"
+    ).value =
         `${year}-${month}`;
 
-    document.getElementById("rolesList")
-        .innerHTML =
-        responsibilities.map(
+
+    document.getElementById(
+        "rolesList"
+    ).innerHTML =
+        responsibilities
+        .map(
             r => `
 
                 <div class="role">
@@ -1158,7 +1418,9 @@ function init(){
                 </div>
 
             `
-        ).join("");
+        )
+        .join("");
+
 
     loadData(false);
 
@@ -1168,24 +1430,47 @@ function init(){
 
     updateZambiaClock();
 
+
     setInterval(
         updateZambiaClock,
         1000
     );
+
 }
 
 
 /* =========================================================
-   ADD PASTOR
+   ENTER KEY FOR ADD PERSON
+========================================================= */
+
+function handleNameKey(event){
+
+    if(event.key === "Enter"){
+
+        event.preventDefault();
+
+        addPerson();
+
+    }
+
+}
+
+
+/* =========================================================
+   ADD PERSON
 ========================================================= */
 
 function addPerson(){
 
     const input =
-        document.getElementById("personName");
+        document.getElementById(
+            "personName"
+        );
+
 
     const name =
         input.value.trim();
+
 
     if(!name){
 
@@ -1193,8 +1478,11 @@ function addPerson(){
             "Enter a pastor/leader name."
         );
 
+        input.focus();
+
         return;
     }
+
 
     if(
         people.some(
@@ -1205,60 +1493,124 @@ function addPerson(){
     ){
 
         alert(
-            "That pastor is already on the list."
+            "That person is already on the list."
         );
+
+        input.focus();
 
         return;
     }
+
 
     people.push(name);
 
     input.value = "";
 
-    renderPeople();
 
     saveData(false);
+
+    renderPeople();
+
+
+    input.focus();
+
 }
 
 
 /* =========================================================
-   REMOVE PASTOR
+   REMOVE PERSON
 ========================================================= */
 
 function removePerson(index){
 
-    const person =
-        people[index];
+    if(
+        index < 0 ||
+        index >= people.length
+    ){
 
-    const confirmed =
-        confirm(
-            `Remove "${person}" from the pastor records?`
-        );
-
-    if(!confirmed){
         return;
     }
 
+
+    const name =
+        people[index];
+
+
+    const confirmed =
+        confirm(
+            `Remove ${name} from the pastor list?`
+        );
+
+
+    if(!confirmed){
+
+        return;
+    }
+
+
     people.splice(index,1);
 
+
     /*
-       Removing a pastor invalidates the generated
-       schedule because the available minister pool
-       has changed.
+       The generated schedule is cleared because
+       the available minister pool has changed.
     */
 
     schedule = [];
+
+
+    saveData(false);
 
     renderPeople();
 
     renderSchedule();
 
-    saveData(false);
 }
 
 
 /* =========================================================
-   MANUAL MASTER SHUFFLE
+   SHUFFLE ARRAY
+   Fisher-Yates algorithm
+========================================================= */
+
+function shuffleArray(array){
+
+    const result =
+        [...array];
+
+
+    for(
+        let i = result.length - 1;
+        i > 0;
+        i--
+    ){
+
+        const randomIndex =
+            Math.floor(
+                Math.random() *
+                (i + 1)
+            );
+
+
+        [
+            result[i],
+            result[randomIndex]
+        ] =
+        [
+            result[randomIndex],
+            result[i]
+        ];
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =========================================================
+   SHUFFLE MASTER PASTOR LIST
 ========================================================= */
 
 function shufflePastors(){
@@ -1266,70 +1618,45 @@ function shufflePastors(){
     if(people.length < 2){
 
         alert(
-            "Please add at least 2 pastors before shuffling."
+            "Please add at least 2 pastors/leaders before shuffling."
         );
 
         return;
     }
+
 
     const confirmed =
         confirm(
-            "Shuffle the pastor list into a new random order?"
+            "Shuffle the pastor order? This will clear the current generated schedule, but no pastor will be removed."
         );
 
+
     if(!confirmed){
+
         return;
     }
 
-    fisherYatesShuffle(people);
 
-    /*
-       The old schedule is cleared because the pastor
-       pool/order has been changed.
-    */
+    people =
+        shuffleArray(
+            people
+        );
+
 
     schedule = [];
+
+
+    saveData(false);
 
     renderPeople();
 
     renderSchedule();
 
-    saveData(false);
 
     alert(
-        "Pastors have been shuffled successfully. Generate the monthly schedule when ready."
+        "Pastors have been freshly shuffled. Generate the schedule again."
     );
-}
 
-
-/* =========================================================
-   TRUE RANDOM SHUFFLE
-========================================================= */
-
-function fisherYatesShuffle(array){
-
-    for(
-        let i = array.length - 1;
-        i > 0;
-        i--
-    ){
-
-        const randomIndex =
-            Math.floor(
-                Math.random() * (i + 1)
-            );
-
-        [
-            array[i],
-            array[randomIndex]
-        ] =
-        [
-            array[randomIndex],
-            array[i]
-        ];
-    }
-
-    return array;
 }
 
 
@@ -1340,28 +1667,34 @@ function fisherYatesShuffle(array){
 function renderPeople(){
 
     const box =
-        document.getElementById("people");
+        document.getElementById(
+            "people"
+        );
+
 
     if(!people.length){
 
         box.innerHTML =
-            "<div class='empty'>No pastors/leaders added yet.</div>";
+            `
+            <div class="empty">
+                No pastors/leaders added yet.
+            </div>
+            `;
 
         return;
     }
 
+
     box.innerHTML =
-        people.map(
+        people
+        .map(
             (person,index) => `
 
                 <div class="person">
 
                     <span class="person-name">
 
-                        <span class="person-number">
-                            ${index + 1}
-                        </span>
-
+                        ${index + 1}.
                         ${escapeHtml(person)}
 
                     </span>
@@ -1376,7 +1709,9 @@ function renderPeople(){
                 </div>
 
             `
-        ).join("");
+        )
+        .join("");
+
 }
 
 
@@ -1402,6 +1737,7 @@ function getServices(pattern){
 
     ];
 
+
     const fridayService = {
 
         day:5,
@@ -1410,129 +1746,212 @@ function getServices(pattern){
 
     };
 
+
     if(pattern === "sun"){
+
         return sundayServices;
+
     }
+
 
     if(pattern === "fri"){
+
         return [fridayService];
+
     }
 
+
     if(pattern === "sunfri"){
+
         return [
             ...sundayServices,
             fridayService
         ];
+
     }
+
 
     return [
         ...sundayServices,
         fridayService
     ];
+
 }
 
 
 /* =========================================================
-   CREATE SERVICE ASSIGNMENT
+   CREATE ASSIGNMENTS
 ========================================================= */
 
 /*
-   This is the important new scheduling engine.
+   avoidLists contains assignments from services that we
+   want the new service to differ from.
 
-   Every SERVICE gets a new shuffled order.
-
-   For Sunday Afternoon, the algorithm compares
-   the morning assignments and tries to ensure that
-   the same person does NOT receive the same role.
-
-   For subsequent Sundays, the previous Sunday is
-   also considered, preventing unnecessary repetition
-   of the same person in the same responsibility.
+   The algorithm tests many fresh random arrangements and
+   selects the one with the fewest same-role repetitions.
 */
 
-function createAssignmentOrder(
-    previousAssignments = null,
-    sameDayPreviousAssignments = null
+function createAssignments(
+    avoidLists = []
 ){
 
-    const shuffled =
-        [...people];
+    if(!people.length){
 
-    fisherYatesShuffle(shuffled);
+        return [];
 
-    const result = [];
+    }
+
+
+    let bestAssignments = null;
+
+    let bestScore = Infinity;
+
+
+    const attempts =
+        Math.max(
+            80,
+            people.length * 30
+        );
+
 
     for(
-        let roleIndex = 0;
-        roleIndex < responsibilities.length;
-        roleIndex++
+        let attempt = 0;
+        attempt < attempts;
+        attempt++
     ){
 
-        let preferredCandidates =
-            [...shuffled];
+        const shuffled =
+            shuffleArray(
+                people
+            );
+
+
+        const candidate = [];
+
+
+        responsibilities.forEach(
+            (responsibility,index) => {
+
+                candidate.push({
+
+                    role:
+                        responsibility[0],
+
+                    person:
+                        shuffled[
+                            index %
+                            shuffled.length
+                        ]
+
+                });
+
+            }
+        );
+
+
+        let score = 0;
+
 
         /*
-           Try to avoid the minister who performed
-           this same responsibility in the previous
-           service/day.
+           Strong penalty for assigning the same person
+           to the same responsibility as an earlier service.
         */
 
-        if(previousAssignments){
+        avoidLists.forEach(
+            (avoidList,avoidIndex) => {
 
-            const previousPerson =
-                previousAssignments[roleIndex];
+                if(!Array.isArray(avoidList)){
 
-            preferredCandidates =
-                preferredCandidates.filter(
-                    person =>
-                        person !== previousPerson
+                    return;
+                }
+
+
+                avoidList.forEach(
+                    (previous,index) => {
+
+                        if(
+                            candidate[index] &&
+                            previous &&
+                            candidate[index].person ===
+                            previous.person
+                        ){
+
+                            /*
+                               The first avoid list is the most
+                               important one.
+                            */
+
+                            if(avoidIndex === 0){
+
+                                score += 100;
+
+                            }
+                            else{
+
+                                score += 50;
+
+                            }
+
+                        }
+
+                    }
                 );
 
-        }
+            }
+        );
+
 
         /*
-           For Sunday afternoon, also avoid the
-           person who handled the same responsibility
-           during Sunday morning.
+           Small penalty for consecutive duplicate
+           assignments where the same person would receive
+           the same role repeatedly.
         */
 
-        if(sameDayPreviousAssignments){
+        for(
+            let i = 1;
+            i < candidate.length;
+            i++
+        ){
 
-            const morningPerson =
-                sameDayPreviousAssignments[roleIndex];
+            if(
+                candidate[i].person ===
+                candidate[i - 1].person
+            ){
 
-            const filtered =
-                preferredCandidates.filter(
-                    person =>
-                        person !== morningPerson
-                );
+                score += 2;
 
-            /*
-               Only apply this filter if at least
-               one alternative exists.
-            */
-
-            if(filtered.length){
-                preferredCandidates = filtered;
             }
 
         }
 
+
+        if(score < bestScore){
+
+            bestScore =
+                score;
+
+            bestAssignments =
+                candidate;
+
+        }
+
+
         /*
-           Choose randomly from the remaining
-           preferred candidates.
+           Perfect result when no same-role repetitions
+           exist against all relevant services.
         */
 
-        const chosen =
-            preferredCandidates[
-                roleIndex %
-                preferredCandidates.length
-            ];
+        if(bestScore === 0){
 
-        result.push(chosen);
+            break;
+
+        }
+
     }
 
-    return result;
+
+    return bestAssignments || [];
+
 }
 
 
@@ -1551,8 +1970,12 @@ function generate(){
         return;
     }
 
+
     const month =
-        document.getElementById("month").value;
+        document.getElementById(
+            "month"
+        ).value;
+
 
     if(!month){
 
@@ -1563,17 +1986,26 @@ function generate(){
         return;
     }
 
+
     const pattern =
-        document.getElementById("servicePattern").value;
+        document.getElementById(
+            "servicePattern"
+        ).value;
+
 
     const parts =
-        month.split("-").map(Number);
+        month
+        .split("-")
+        .map(Number);
+
 
     const year =
         parts[0];
 
+
     const monthNumber =
         parts[1];
+
 
     const days =
         new Date(
@@ -1582,22 +2014,35 @@ function generate(){
             0
         ).getDate();
 
+
     const services =
-        getServices(pattern);
+        getServices(
+            pattern
+        );
+
 
     schedule = [];
 
-    /*
-       Tracks the previous assignment order for
-       each service/day.
 
-       This prevents the same pastor from repeatedly
-       occupying the same responsibility.
+    /*
+       Keeps track of the last generated service.
     */
 
-    let previousSundayMorning = null;
-    let previousSundayAfternoon = null;
-    let previousFriday = null;
+    let previousServiceAssignments =
+        null;
+
+
+    /*
+       Specifically tracks the previous Sunday's
+       afternoon assignments.
+
+       The next Sunday's morning service tries not
+       to repeat those same-role ministers.
+    */
+
+    let previousSundayAfternoon =
+        null;
+
 
     for(
         let dayNumber = 1;
@@ -1615,8 +2060,10 @@ function generate(){
                 0
             );
 
+
         const dayOfWeek =
             date.getDay();
+
 
         const matchingServices =
             services.filter(
@@ -1624,88 +2071,117 @@ function generate(){
                 service.day === dayOfWeek
             );
 
+
         if(!matchingServices.length){
+
             continue;
         }
 
-        let morningAssignments = null;
+
+        let currentSundayMorning =
+            null;
+
+
+        let currentSundayAfternoon =
+            null;
+
 
         matchingServices.forEach(
-            service => {
+            (service,serviceIndex) => {
 
-                let previousAssignments = null;
-                let sameDayPreviousAssignments = null;
+                let avoidLists = [];
+
 
                 /*
-                   SUNDAY
+                   SUNDAY MORNING
                 */
 
-                if(service.day === 0){
+                if(
+                    service.day === 0 &&
+                    serviceIndex === 0
+                ){
 
-                    if(
-                        service.name ===
-                        "Sunday Morning Service"
-                    ){
+                    if(previousSundayAfternoon){
 
-                        previousAssignments =
-                            previousSundayMorning;
+                        avoidLists.push(
+                            previousSundayAfternoon
+                        );
 
                     }
 
-                    else if(
-                        service.name ===
-                        "Sunday Afternoon Prophetic Ministry"
-                    ){
 
-                        previousAssignments =
-                            previousSundayAfternoon;
+                    if(previousServiceAssignments){
 
-                        sameDayPreviousAssignments =
-                            morningAssignments;
+                        avoidLists.push(
+                            previousServiceAssignments
+                        );
 
                     }
 
                 }
+
+
+                /*
+                   SUNDAY AFTERNOON
+                */
+
+                else if(
+                    service.day === 0 &&
+                    serviceIndex === 1
+                ){
+
+                    /*
+                       Morning of the same Sunday is
+                       the strongest thing to avoid.
+                    */
+
+                    if(currentSundayMorning){
+
+                        avoidLists.push(
+                            currentSundayMorning
+                        );
+
+                    }
+
+
+                    /*
+                       Also avoid the previous Sunday.
+                    */
+
+                    if(previousSundayAfternoon){
+
+                        avoidLists.push(
+                            previousSundayAfternoon
+                        );
+
+                    }
+
+                }
+
 
                 /*
                    FRIDAY
                 */
 
-                if(service.day === 5){
+                else if(previousServiceAssignments){
 
-                    previousAssignments =
-                        previousFriday;
+                    avoidLists.push(
+                        previousServiceAssignments
+                    );
 
                 }
 
+
                 /*
-                   Create a completely fresh order
-                   for this service.
+                   Every service gets a completely fresh
+                   random minister arrangement.
                 */
 
-                const assignedPeople =
-                    createAssignmentOrder(
-                        previousAssignments,
-                        sameDayPreviousAssignments
+                const assignments =
+                    createAssignments(
+                        avoidLists
                     );
 
-                const assignments = [];
-
-                responsibilities.forEach(
-                    (responsibility,index) => {
-
-                        assignments.push({
-
-                            role:
-                                responsibility[0],
-
-                            person:
-                                assignedPeople[index]
-
-                        });
-
-                    }
-                );
 
                 const localDate =
                     year +
@@ -1718,6 +2194,7 @@ function generate(){
                         dayNumber
                     ).padStart(2,"0");
 
+
                 const dayName =
                     date.toLocaleDateString(
                         "en-US",
@@ -1726,7 +2203,14 @@ function generate(){
                         }
                     );
 
-                schedule.push({
+
+                const serviceRecord = {
+
+                    id:
+                        createServiceId(
+                            localDate,
+                            service.name
+                        ),
 
                     date:
                         localDate,
@@ -1743,63 +2227,301 @@ function generate(){
                     assignments:
                         assignments,
 
-                    shuffleNumber:
-                        Math.random()
-                        .toString(36)
-                        .substring(2,8)
+                    shuffleCount:
+                        0
 
-                });
+                };
 
-                /*
-                   Remember this service's assignment
-                   for the next occurrence.
-                */
+
+                schedule.push(
+                    serviceRecord
+                );
+
+
+                previousServiceAssignments =
+                    assignments;
+
 
                 if(
-                    service.name ===
-                    "Sunday Morning Service"
+                    service.day === 0 &&
+                    serviceIndex === 0
                 ){
 
-                    previousSundayMorning =
-                        assignedPeople;
-
-                    morningAssignments =
-                        assignedPeople;
+                    currentSundayMorning =
+                        assignments;
 
                 }
 
-                else if(
-                    service.name ===
-                    "Sunday Afternoon Prophetic Ministry"
+
+                if(
+                    service.day === 0 &&
+                    serviceIndex === 1
                 ){
 
-                    previousSundayAfternoon =
-                        assignedPeople;
-
-                }
-
-                else if(
-                    service.name ===
-                    "Friday Midweek Service"
-                ){
-
-                    previousFriday =
-                        assignedPeople;
+                    currentSundayAfternoon =
+                        assignments;
 
                 }
 
             }
         );
 
+
+        if(currentSundayAfternoon){
+
+            previousSundayAfternoon =
+                currentSundayAfternoon;
+
+        }
+
     }
+
 
     saveData(false);
 
     renderSchedule();
 
-    alert(
-        "Monthly schedule generated successfully. Each Sunday has received a fresh minister arrangement."
+
+    if(schedule.length){
+
+        alert(
+            "JCRGM schedule generated successfully. Each service received a fresh minister shuffle."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CREATE SERVICE ID
+========================================================= */
+
+function createServiceId(
+    date,
+    serviceName
+){
+
+    return (
+        date +
+        "_" +
+        serviceName
+        .replace(
+            /[^a-zA-Z0-9]+/g,
+            "_"
+        )
     );
+
+}
+
+
+/* =========================================================
+   FRESH SHUFFLE FOR ONE SPECIFIC SERVICE
+========================================================= */
+
+function freshShuffle(serviceIndex){
+
+    if(
+        serviceIndex < 0 ||
+        serviceIndex >= schedule.length
+    ){
+
+        return;
+    }
+
+
+    if(people.length < 2){
+
+        alert(
+            "At least 2 pastors/leaders are required for Fresh Shuffle."
+        );
+
+        return;
+    }
+
+
+    const service =
+        schedule[serviceIndex];
+
+
+    /*
+       Find the previous and next relevant services.
+
+       This allows the Fresh Shuffle to avoid creating
+       unnecessary same-role repetitions.
+    */
+
+    const previous =
+        serviceIndex > 0
+        ? schedule[serviceIndex - 1]
+        : null;
+
+
+    const next =
+        serviceIndex <
+        schedule.length - 1
+        ? schedule[serviceIndex + 1]
+        : null;
+
+
+    const avoidLists = [];
+
+
+    /*
+       Previous service is the strongest comparison.
+    */
+
+    if(previous){
+
+        avoidLists.push(
+            previous.assignments
+        );
+
+    }
+
+
+    /*
+       For Sunday afternoon, also avoid Sunday morning.
+    */
+
+    if(
+        service.service ===
+        "Sunday Afternoon Prophetic Ministry"
+    ){
+
+        const sameDayMorning =
+            schedule.find(
+                item =>
+                    item.date === service.date &&
+                    item.service ===
+                    "Sunday Morning Service"
+            );
+
+
+        if(
+            sameDayMorning &&
+            sameDayMorning.assignments !==
+            service.assignments
+        ){
+
+            avoidLists.push(
+                sameDayMorning.assignments
+            );
+
+        }
+
+    }
+
+
+    /*
+       For Sunday morning, previous Sunday afternoon
+       may be the previous relevant Sunday assignment.
+    */
+
+    if(
+        service.service ===
+        "Sunday Morning Service"
+    ){
+
+        const previousSundayAfternoon =
+            findPreviousSundayAfternoon(
+                service.date
+            );
+
+
+        if(
+            previousSundayAfternoon
+        ){
+
+            avoidLists.push(
+                previousSundayAfternoon.assignments
+            );
+
+        }
+
+    }
+
+
+    /*
+       Also consider the next service so that a fresh
+       shuffle does not create an obvious repetition
+       immediately afterwards.
+    */
+
+    if(next){
+
+        avoidLists.push(
+            next.assignments
+        );
+
+    }
+
+
+    const confirmed =
+        confirm(
+            `Fresh Shuffle only ${service.service} on ${formatDate(service.date)}? Other services will remain unchanged.`
+        );
+
+
+    if(!confirmed){
+
+        return;
+    }
+
+
+    service.assignments =
+        createAssignments(
+            avoidLists
+        );
+
+
+    service.shuffleCount =
+        Number(
+            service.shuffleCount || 0
+        ) + 1;
+
+
+    saveData(false);
+
+    renderSchedule();
+
+
+    alert(
+        `${service.service} has been freshly shuffled.`
+    );
+
+}
+
+
+/* =========================================================
+   FIND PREVIOUS SUNDAY AFTERNOON
+========================================================= */
+
+function findPreviousSundayAfternoon(
+    currentDate
+){
+
+    const previousSundays =
+        schedule
+        .filter(
+            item =>
+                item.service ===
+                "Sunday Afternoon Prophetic Ministry" &&
+                item.date <
+                currentDate
+        )
+        .sort(
+            (a,b) =>
+                b.date.localeCompare(
+                    a.date
+                )
+        );
+
+
+    return previousSundays.length
+        ? previousSundays[0]
+        : null;
+
 }
 
 
@@ -1810,36 +2532,50 @@ function generate(){
 function renderSchedule(){
 
     const box =
-        document.getElementById("schedule");
+        document.getElementById(
+            "schedule"
+        );
+
 
     const search =
         (
-            document.getElementById("search").value ||
+            document.getElementById(
+                "search"
+            ).value ||
             ""
-        ).toLowerCase();
+        ).trim().toLowerCase();
+
 
     if(!schedule.length){
 
-        document.getElementById("summary")
-            .innerHTML = "";
+        document.getElementById(
+            "summary"
+        ).innerHTML = "";
 
-        box.innerHTML = `
+
+        box.innerHTML =
+            `
 
             <div class="empty">
 
-                No schedule generated.
+                Enter your pastors/leaders and click
+                <b>Auto Schedule</b>
+                to generate the monthly roster.
 
                 <br><br>
 
-                Add your pastors, then click
-                <b>Auto Schedule</b>.
+                You can then use
+                <b>Fresh Shuffle</b>
+                on any individual service without
+                changing the rest of the schedule.
 
             </div>
 
-        `;
+            `;
 
         return;
     }
+
 
     let filtered =
         schedule
@@ -1863,7 +2599,10 @@ function renderSchedule(){
                                     service.date
                                 ).toLowerCase();
 
-                            return text.includes(search);
+
+                            return text.includes(
+                                search
+                            );
 
                         }
                     )
@@ -1876,8 +2615,10 @@ function renderSchedule(){
                 !search
         );
 
+
     const totalServices =
         schedule.length;
+
 
     const uniquePeople =
         new Set(
@@ -1890,147 +2631,232 @@ function renderSchedule(){
             )
         ).size;
 
+
     const totalAssignments =
         totalServices *
         responsibilities.length;
 
-    document.getElementById("summary")
-        .innerHTML = `
 
-            <div class="stat">
+    document.getElementById(
+        "summary"
+    ).innerHTML =
+        `
 
-                <b>
-                    ${totalServices}
-                </b>
+        <div class="stat">
 
-                <span>
-                    Services
-                </span>
+            <b>
+                ${totalServices}
+            </b>
 
-            </div>
+            <span>
+                Services
+            </span>
 
-            <div class="stat">
+        </div>
 
-                <b>
-                    ${uniquePeople}
-                </b>
 
-                <span>
-                    People Scheduled
-                </span>
+        <div class="stat">
 
-            </div>
+            <b>
+                ${uniquePeople}
+            </b>
 
-            <div class="stat">
+            <span>
+                People Scheduled
+            </span>
 
-                <b>
-                    ${responsibilities.length}
-                </b>
+        </div>
 
-                <span>
-                    Responsibilities
-                </span>
 
-            </div>
+        <div class="stat">
 
-            <div class="stat">
+            <b>
+                ${responsibilities.length}
+            </b>
 
-                <b>
-                    ${totalAssignments}
-                </b>
+            <span>
+                Responsibilities
+            </span>
 
-                <span>
-                    Total Assignments
-                </span>
+        </div>
 
-            </div>
+
+        <div class="stat">
+
+            <b>
+                ${totalAssignments}
+            </b>
+
+            <span>
+                Total Assignments
+            </span>
+
+        </div>
 
         `;
+
 
     if(!filtered.length){
 
         box.innerHTML =
-            "<div class='empty'>No matching assignments.</div>";
+            `
+            <div class="empty">
+                No matching assignments.
+            </div>
+            `;
 
         return;
     }
 
+
     box.innerHTML =
-        filtered.map(
-            service => `
+        filtered
+        .map(
+            service => {
 
-                <div class="week">
+                /*
+                   Find the actual index in the main
+                   schedule array so Fresh Shuffle works
+                   correctly after filtering.
+                */
 
-                    <div class="week-title">
+                const actualIndex =
+                    schedule.findIndex(
+                        item =>
+                            item.id ===
+                            service.id
+                    );
 
-                        <span class="date-main">
 
-                            ${formatDate(service.date)}
+                const shuffleCount =
+                    Number(
+                        schedule[
+                            actualIndex
+                        ].shuffleCount || 0
+                    );
 
-                        </span>
 
-                        <span class="date-day">
+                return `
 
-                            ${escapeHtml(service.day)}
+                    <div class="week">
 
-                        </span>
+                        <div class="week-title">
 
-                    </div>
+                            <span class="date-main">
 
-                    <div class="service">
-
-                        <div class="service-title">
-
-                            ${escapeHtml(service.service)}
-
-                            <span class="service-time-badge">
-
-                                ${escapeHtml(service.time)}
+                                ${formatDate(
+                                    service.date
+                                )}
 
                             </span>
 
-                            <span class="service-shuffle-label">
 
-                                Fresh Shuffle
+                            <span class="date-day">
+
+                                ${escapeHtml(
+                                    service.day
+                                )}
 
                             </span>
 
                         </div>
 
-                        <div class="assignments">
+
+                        <div class="service">
+
+                            <div class="service-top">
+
+                                <div class="service-title">
+
+                                    ${escapeHtml(
+                                        service.service
+                                    )}
+
+                                    <span
+                                        class="service-time-badge"
+                                    >
+
+                                        ${escapeHtml(
+                                            service.time
+                                        )}
+
+                                    </span>
+
+                                </div>
+
+
+                                <button
+                                    class="fresh-shuffle"
+                                    onclick="freshShuffle(${actualIndex})"
+                                >
+
+                                    Fresh Shuffle
+
+                                </button>
+
+                            </div>
+
 
                             ${
-                                service.assignments
-                                .map(
-                                    assignment => `
+                                shuffleCount > 0
+                                ?
+                                `
+                                <div class="shuffle-note">
 
-                                        <div class="assignment">
+                                    Freshly shuffled
+                                    ${shuffleCount}
+                                    time${shuffleCount === 1 ? "" : "s"}
+                                    for this service.
 
-                                            <b>
-                                                ${escapeHtml(
-                                                    assignment.role
-                                                )}
-                                            </b>
-
-                                            ${escapeHtml(
-                                                assignment.person
-                                            )}
-
-                                        </div>
-
-                                    `
-                                )
-                                .join("")
+                                </div>
+                                `
+                                :
+                                ""
                             }
+
+
+                            <div class="assignments">
+
+                                ${
+                                    service.assignments
+                                    .map(
+                                        assignment => `
+
+                                            <div
+                                                class="assignment"
+                                            >
+
+                                                <b>
+
+                                                    ${escapeHtml(
+                                                        assignment.role
+                                                    )}
+
+                                                </b>
+
+                                                ${escapeHtml(
+                                                    assignment.person
+                                                )}
+
+                                            </div>
+
+                                        `
+                                    )
+                                    .join("")
+                                }
+
+                            </div>
 
                         </div>
 
                     </div>
 
-                </div>
+                `;
 
-            `
-        ).join("");
+            }
+        )
+        .join("");
+
 }
 
 
@@ -2038,13 +2864,16 @@ function renderSchedule(){
    FORMAT DATE
 ========================================================= */
 
-function formatDate(dateString){
+function formatDate(
+    dateString
+){
 
     const date =
         new Date(
             dateString +
             "T12:00:00"
         );
+
 
     return date.toLocaleDateString(
         "en-US",
@@ -2055,6 +2884,7 @@ function formatDate(dateString){
             year:"numeric"
         }
     );
+
 }
 
 
@@ -2073,6 +2903,7 @@ function exportCSV(){
         return;
     }
 
+
     const rows = [
 
         [
@@ -2085,6 +2916,7 @@ function exportCSV(){
         ]
 
     ];
+
 
     schedule.forEach(
         service => {
@@ -2114,19 +2946,24 @@ function exportCSV(){
         }
     );
 
+
     const csv =
         rows
         .map(
             row =>
-            row
-            .map(
-                value =>
-                `"${String(value)
-                    .replaceAll('"','""')}"`
-            )
-            .join(",")
+                row
+                .map(
+                    value =>
+                        `"${String(value)
+                            .replaceAll(
+                                '"',
+                                '""'
+                            )}"`
+                )
+                .join(",")
         )
         .join("\n");
+
 
     const blob =
         new Blob(
@@ -2137,24 +2974,44 @@ function exportCSV(){
             }
         );
 
+
     const url =
-        URL.createObjectURL(blob);
+        URL.createObjectURL(
+            blob
+        );
+
 
     const link =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
 
-    link.href = url;
+
+    link.href =
+        url;
+
 
     link.download =
         "JCRGM_Service_Schedule.csv";
 
-    document.body.appendChild(link);
+
+    document.body.appendChild(
+        link
+    );
+
 
     link.click();
 
-    document.body.removeChild(link);
 
-    URL.revokeObjectURL(url);
+    document.body.removeChild(
+        link
+    );
+
+
+    URL.revokeObjectURL(
+        url
+    );
+
 }
 
 
@@ -2162,7 +3019,9 @@ function exportCSV(){
    SAVE DATA
 ========================================================= */
 
-function saveData(show=true){
+function saveData(
+    show = true
+){
 
     const data = {
 
@@ -2184,18 +3043,21 @@ function saveData(show=true){
 
     };
 
+
     localStorage.setItem(
         "jcrgm_schedule_data",
         JSON.stringify(data)
     );
 
+
     if(show){
 
         alert(
-            "JCRGM pastor records and schedule saved on this device."
+            "JCRGM schedule and pastor records saved on this device."
         );
 
     }
+
 }
 
 
@@ -2203,7 +3065,9 @@ function saveData(show=true){
    LOAD DATA
 ========================================================= */
 
-function loadData(show=true){
+function loadData(
+    show = true
+){
 
     try{
 
@@ -2212,30 +3076,76 @@ function loadData(show=true){
                 "jcrgm_schedule_data"
             );
 
+
         if(!saved){
+
+            renderPeople();
+
+            renderSchedule();
+
             return;
+
         }
 
+
         const data =
-            JSON.parse(saved);
+            JSON.parse(
+                saved
+            );
+
 
         people =
-            Array.isArray(data.people)
+            Array.isArray(
+                data.people
+            )
             ? data.people
             : [];
 
+
         schedule =
-            Array.isArray(data.schedule)
+            Array.isArray(
+                data.schedule
+            )
             ? data.schedule
             : [];
 
+
+        /*
+           Compatibility with older schedules that did
+           not contain service IDs or shuffleCount.
+        */
+
+        schedule =
+            schedule.map(
+                item => ({
+
+                    ...item,
+
+                    id:
+                        item.id ||
+                        createServiceId(
+                            item.date,
+                            item.service
+                        ),
+
+                    shuffleCount:
+                        Number(
+                            item.shuffleCount || 0
+                        )
+
+                })
+            );
+
+
         if(data.month){
 
-            document.getElementById("month")
-                .value =
+            document.getElementById(
+                "month"
+            ).value =
                 data.month;
 
         }
+
 
         if(data.pattern){
 
@@ -2246,14 +3156,16 @@ function loadData(show=true){
 
         }
 
+
         renderPeople();
 
         renderSchedule();
 
+
         if(show){
 
             alert(
-                "Saved JCRGM pastor records and schedule loaded."
+                "Saved JCRGM schedule and pastor records loaded."
             );
 
         }
@@ -2261,86 +3173,83 @@ function loadData(show=true){
     }
     catch(error){
 
+        console.error(
+            error
+        );
+
+
         alert(
             "Unable to load saved data."
         );
 
     }
+
 }
 
 
 /* =========================================================
-   CLEAR SCHEDULE ONLY
+   CLEAR GENERATED SCHEDULE ONLY
 ========================================================= */
 
-function clearSchedule(){
-
-    if(!schedule.length){
-
-        alert(
-            "There is no generated schedule to clear. Pastor records have not been changed."
-        );
-
-        return;
-    }
-
-    const confirmed =
-        confirm(
-            "Clear the generated schedule only?\n\nYour pastor records will remain saved."
-        );
-
-    if(!confirmed){
-        return;
-    }
+function clearAll(){
 
     /*
        IMPORTANT:
-       people[] remains completely untouched.
+       This function intentionally DOES NOT modify
+       the people array.
+
+       Pastors are removed only through removePerson().
     */
+
+    const confirmed =
+        confirm(
+            "Clear the generated schedule only? All pastor/leader records will remain saved."
+        );
+
+
+    if(!confirmed){
+
+        return;
+    }
+
 
     schedule = [];
 
+
+    document.getElementById(
+        "search"
+    ).value = "";
+
+
+    /*
+       Keep the selected month and service pattern.
+       Keep all pastor records.
+    */
+
     saveData(false);
 
-    document.getElementById("search")
-        .value = "";
 
     renderPeople();
 
     renderSchedule();
 
+    updateCurrentService();
+
+
     alert(
-        "Schedule cleared. All pastor records have been preserved."
+        "Generated schedule cleared. Pastor/leader records remain محفوظ."
     );
+
 }
-
-
-/* =========================================================
-   ENTER KEY
-========================================================= */
-
-document.getElementById("personName")
-    .addEventListener(
-        "keydown",
-        function(event){
-
-            if(event.key === "Enter"){
-
-                event.preventDefault();
-
-                addPerson();
-
-            }
-
-        }
-    );
 
 
 /* =========================================================
    ESCAPE HTML
 ========================================================= */
 
-function escapeHtml(value){
+function escapeHtml(
+    value
+){
 
     return String(value)
         .replace(
@@ -2354,6 +3263,7 @@ function escapeHtml(value){
                 "'":"&#039;"
             }[character])
         );
+
 }
 
 
@@ -2367,4 +3277,3 @@ init();
 
 </body>
 </html>
-```
