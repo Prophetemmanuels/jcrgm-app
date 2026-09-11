@@ -35,7 +35,7 @@ textarea,input,select{width:100%;background:#081523;border:1px solid var(--line)
 .meditation{min-height:220px}.range{accent-color:var(--gold);width:100%}.soundRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.sessionMode{border:1px solid var(--gold);box-shadow:0 0 0 2px #e7bd6233 inset}
 .kbd{border:1px solid var(--line);border-bottom-width:3px;border-radius:6px;padding:1px 6px;font-size:12px;color:var(--muted)}
 
-.sermonBuilder{margin-top:18px;border:1px solid var(--gold);border-radius:16px;padding:18px;background:linear-gradient(145deg,#111f31,#091522);box-shadow:0 10px 30px #0002}.light .sermonBuilder{background:var(--panel)}.sermonBuilderHead{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.sermonTargets{margin-top:14px}.targetCard{border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0;background:#0b1829}.light .targetCard{background:#f7f9fb}.targetNum{display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;background:var(--gold);color:#17120a;font-weight:900;margin-right:8px}.targetTitle{font-weight:900;color:var(--gold2);font-size:17px}.targetText{margin:7px 0}.relatedBox{margin-top:16px;border-top:1px solid var(--line);padding-top:16px}.relatedGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}.relatedItem{border:1px solid var(--line);border-radius:10px;padding:11px;background:#0b1829}.light .relatedItem{background:#f7f9fb}.relatedItem b{color:var(--gold2)}.relatedItem small{display:block;color:var(--muted);margin-top:4px}.sermonOrder{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sermonOrder .targetCard{margin:0}.relatedActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.sermonBuilder{margin-top:18px;border:1px solid var(--gold);border-radius:16px;padding:18px;background:linear-gradient(145deg,#111f31,#091522);box-shadow:0 10px 30px #0002}.light .sermonBuilder{background:var(--panel)}.sermonBuilderHead{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.sermonTargets{margin-top:14px}.targetCard{border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0;background:#0b1829}.light .targetCard{background:#f7f9fb}.targetNum{display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;background:var(--gold);color:#17120a;font-weight:900;margin-right:8px}.targetTitle{font-weight:900;color:var(--gold2);font-size:17px}.targetText{margin:7px 0}.relatedBox{margin-top:16px;border-top:1px solid var(--line);padding-top:16px}.relatedGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}.relatedItem{border:1px solid var(--line);border-radius:10px;padding:11px;background:#0b1829}.light .relatedItem{background:#f7f9fb}.relatedItem b{color:var(--gold2)}.relatedItem small{display:block;color:var(--muted);margin-top:4px}.sermonOrder{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sermonOrder .targetCard{margin:0}.relatedActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.relatedActions a.btn{ text-decoration:none !important; } .relatedActions a.btn:hover{ text-decoration:none !important; }
 .referencePanel,.fullSermonPanel{margin-top:18px;border:1px solid var(--line);border-radius:16px;padding:18px;background:linear-gradient(145deg,#101f32,#091522)}
 .light .referencePanel,.light .fullSermonPanel{background:var(--panel)}
 .referencePanel{border-color:var(--blue)}
@@ -718,12 +718,34 @@ function getTwentyReferenceScriptures(ref, study){
 function referenceReason(i){
   return ['Confirm the main truth','Explain the biblical principle','Give another biblical witness','Show practical application','Broaden the biblical perspective'][i]||'Strengthen the study';
 }
+function bibleBookCode(book){
+  const m={Genesis:'GEN',Exodus:'EXO',Leviticus:'LEV',Numbers:'NUM',Deuteronomy:'DEU',Joshua:'JOS',Judges:'JDG',Ruth:'RUT','1 Samuel':'1SA','2 Samuel':'2SA','1 Kings':'1KI','2 Kings':'2KI','1 Chronicles':'1CH','2 Chronicles':'2CH',Ezra:'EZR',Nehemiah:'NEH',Esther:'EST',Job:'JOB',Psalm:'PSA',Psalms:'PSA',Proverbs:'PRO',Ecclesiastes:'ECC','Song of Solomon':'SNG',Isaiah:'ISA',Jeremiah:'JER',Lamentations:'LAM',Ezekiel:'EZK',Daniel:'DAN',Hosea:'HOS',Joel:'JOL',Amos:'AMO',Obadiah:'OBA',Jonah:'JON',Micah:'MIC',Nahum:'NAM',Habakkuk:'HAB',Zephaniah:'ZEP',Haggai:'HAG',Zechariah:'ZEC',Malachi:'MAL',Matthew:'MAT',Mark:'MRK',Luke:'LUK',John:'JHN',Acts:'ACT',Romans:'ROM','1 Corinthians':'1CO','2 Corinthians':'2CO',Galatians:'GAL',Ephesians:'EPH',Philippians:'PHP',Colossians:'COL','1 Thessalonians':'1TH','2 Thessalonians':'2TH','1 Timothy':'1TI','2 Timothy':'2TI',Titus:'TIT',Philemon:'PHM',Hebrews:'HEB',James:'JAS','1 Peter':'1PE','2 Peter':'2PE','1 John':'1JN','2 John':'2JN','3 John':'3JN',Jude:'JUD',Revelation:'REV'};
+  return m[book]||'';
+}
+function youVersionUrl(ref){
+  const clean=normalizeRef(ref||'');
+  const m=clean.match(/^(.+?)\s+(\d+)(?::(.+))?$/);
+  if(!m)return 'https://www.bible.com/search?query='+encodeURIComponent(clean);
+  const code=bibleBookCode(m[1].trim());
+  if(!code)return 'https://www.bible.com/search?query='+encodeURIComponent(clean);
+  return 'https://www.bible.com/bible/1/'+code+'.'+m[2]+(m[3]?'.'+encodeURIComponent(m[3]):'');
+}
+function logosUrl(ref){
+  const clean=normalizeRef(ref||'');
+  const m=clean.match(/^(.+?)\s+(\d+)(?::(.+))?$/);
+  if(!m)return 'https://ref.ly/'+encodeURIComponent(clean);
+  const aliases={Genesis:'Ge',Exodus:'Ex',Leviticus:'Le',Numbers:'Nu',Deuteronomy:'De',Joshua:'Jos',Judges:'Jdg',Ruth:'Ru','1 Samuel':'1Sa','2 Samuel':'2Sa','1 Kings':'1Ki','2 Kings':'2Ki','1 Chronicles':'1Ch','2 Chronicles':'2Ch',Ezra:'Ezr',Nehemiah:'Ne',Esther:'Es',Job:'Job',Psalm:'Ps',Psalms:'Ps',Proverbs:'Pr',Ecclesiastes:'Ec', 'Song of Solomon':'So',Isaiah:'Is',Jeremiah:'Je',Lamentations:'La',Ezekiel:'Eze',Daniel:'Da',Hosea:'Ho',Joel:'Joe',Amos:'Am',Obadiah:'Ob',Jonah:'Jon',Micah:'Mic',Nahum:'Na',Habakkuk:'Hab',Zephaniah:'Zep',Haggai:'Hag',Zechariah:'Zec',Malachi:'Mal',Matthew:'Mt',Mark:'Mk',Luke:'Lk',John:'Jn',Acts:'Ac',Romans:'Ro','1 Corinthians':'1Co','2 Corinthians':'2Co',Galatians:'Ga',Ephesians:'Eph',Philippians:'Php',Colossians:'Col','1 Thessalonians':'1Th','2 Thessalonians':'2Th','1 Timothy':'1Ti','2 Timothy':'2Ti',Titus:'Tit',Philemon:'Phm',Hebrews:'Heb',James:'Jas','1 Peter':'1Pe','2 Peter':'2Pe','1 John':'1Jn','2 John':'2Jn','3 John':'3Jn',Jude:'Jude',Revelation:'Re'};
+  const code=aliases[m[1].trim()];
+  if(!code)return 'https://ref.ly/'+encodeURIComponent(clean);
+  return 'https://ref.ly/'+code+m[2]+(m[3]?'.'+encodeURIComponent(m[3]):'');
+}
+function openExternal(url){window.open(url,'_blank');return false;}
 function generateStudyReferences(){
   const s=selectedStudyData();
   if(!s.passage)return toast('Set a Scripture passage first');
   const refs=getTwentyReferenceScriptures(s.passage,s);
   const el=document.getElementById('studyReferences');
-  el.innerHTML=refs.map((r,i)=>'<div class="relatedItem"><b>'+esc(r)+'</b><small>'+referenceReason(i)+'</small><div class="relatedActions"><button class="btn small" onclick="openBibleRef('+JSON.stringify(r)+')">Open</button><button class="btn small" onclick="addRelatedToContext('+JSON.stringify(r)+')">Add to study</button></div></div>').join('');
+  el.innerHTML=refs.map((r,i)=>`<div class="relatedItem"><b>${esc(r)}</b><small>${referenceReason(i)}</small><div class="relatedActions"><a class="btn small" target="_blank" rel="noopener noreferrer" href="${youVersionUrl(r)}">Open in YouVersion</a><a class="btn small" target="_blank" rel="noopener noreferrer" href="${logosUrl(r)}">Open in Logos</a><button type="button" class="btn small" onclick="addRelatedToContext(${JSON.stringify(r)})">Add to study</button></div></div>`).join('');
   toast('20 backing Scriptures generated');
 }
 function sermonParagraph(text,fallback){return (text||fallback||'').trim().replace(/\s+/g,' ')}
@@ -788,24 +810,10 @@ function copyFullSermon(){
 function findRelatedScriptures(){
   const s=selectedStudyData();if(!s.passage)return toast('Set a Scripture passage first');
   const refs=getTwentyReferenceScriptures(s.passage,s).slice(0,20),el=document.getElementById('relatedScriptures');
-  el.innerHTML=refs.map((r,i)=>'<div class="relatedItem"><b>'+esc(r)+'</b><small>'+['Confirm the truth','Explain the principle','Show a biblical example','Strengthen the application','Add a wider biblical perspective'][i%5]+'</small><div class="relatedActions"><button class="btn small" onclick="openBibleRef('+JSON.stringify(r)+')">Open</button><button class="btn small" onclick="addRelatedToContext('+JSON.stringify(r)+')">Add to study</button></div></div>').join('');
+  el.innerHTML=refs.map((r,i)=>`<div class="relatedItem"><b>${esc(r)}</b><small>${['Confirm the truth','Explain the principle','Show a biblical example','Strengthen the application','Add a wider biblical perspective'][i%5]}</small><div class="relatedActions"><a class="btn small" target="_blank" rel="noopener noreferrer" href="${youVersionUrl(r)}">Open in YouVersion</a><a class="btn small" target="_blank" rel="noopener noreferrer" href="${logosUrl(r)}">Open in Logos</a><button type="button" class="btn small" onclick="addRelatedToContext(${JSON.stringify(r)})">Add to study</button></div></div>`).join('');
 }
-function openBibleRef(r){openBible(r)}
-function openBible(ref=currentRef){
-  const clean=normalizeRef(ref||'Genesis 1');
-  const parts=clean.match(/^(.+?)\s+(\d+)(?::(.+))?$/);
-  let url='https://www.bible.com/bible';
-  if(parts){
-    const book=encodeURIComponent(parts[1].replace(/\s+/g,'-').toLowerCase());
-    const chapter=parts[2];
-    const verse=parts[3]?'-'+encodeURIComponent(parts[3]):'';
-    url='https://www.bible.com/bible/1/'+book+'.'+chapter+(verse?'.'+verse:'');
-  } else {
-    url='https://www.bible.com/search?query='+encodeURIComponent(clean);
-  }
-  openLink(url);
-  toast('Opening Bible');
-}
+function openBibleRef(r){return openExternal(youVersionUrl(r));}
+function openBible(ref=currentRef){return openExternal(youVersionUrl(ref));}
 function addRelatedToContext(r){const el=document.getElementById('context');el.value+=(el.value.trim()?'\n':'')+r+' — related Scripture';toast(r+' added to Context & Cross-references')}
 function saveStudy(){let s={date:new Date().toLocaleString(),isoDate:new Date().toISOString(),passage:passage.value.trim(),genre:genre.value,obs:obs.value,interp:interp.value,context:context.value,theology:theology.value,apply:apply.value,prayer:prayer.value};if(!s.passage)return toast('Add a passage');const existing=state.studies.findIndex(x=>normalizeRef(x.passage)===normalizeRef(s.passage));if(existing>=0){state.studies[existing]=s;toast('Study updated')}else{state.studies.unshift(s);toast('Study saved')}save();localStorage.removeItem('jcrgmStudyDraft');renderStudies();renderSermonStudySelect();flashSaveStatus('Study saved')}
 function renderStudies(){let e=document.getElementById('studyList');e.innerHTML=state.studies.length?state.studies.slice(0,8).map((x,i)=>'<div class="listItem"><b>'+esc(x.passage)+'</b><div class="small muted">'+esc(x.date)+' • '+esc(x.genre)+'</div><p>'+esc(x.obs||'No observation saved.').slice(0,180)+'</p></div>').join(''):'<span class="muted">No saved studies.</span>'}
