@@ -1,12 +1,15 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#5b2c83">
+
 <title>JCRGM Prophet's Daily Order of Prayer</title>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -20,34 +23,119 @@ body{
     line-height:1.6;
 }
 
+/* HEADER */
+
 header{
     background:linear-gradient(135deg,#32134d,#6d2b8c,#b47b26);
     color:white;
-    padding:45px 20px;
+    padding:40px 20px;
     text-align:center;
 }
 
 header h1{
-    font-size:2.2rem;
-    margin-bottom:10px;
+    font-size:2.1rem;
+    margin-bottom:8px;
 }
 
 header p{
-    opacity:.9;
+    opacity:.92;
 }
 
+.datetime{
+    margin-top:15px;
+    background:rgba(255,255,255,.12);
+    padding:10px;
+    border-radius:10px;
+    display:inline-block;
+}
+
+/* CONTAINER */
+
 .container{
-    width:min(1000px,92%);
+    width:min(1050px,94%);
     margin:auto;
     padding:25px 0 60px;
 }
+
+/* STATUS */
+
+.status-box{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+    margin-bottom:20px;
+}
+
+.status-title{
+    font-size:1.15rem;
+    font-weight:bold;
+    color:#5b2c83;
+}
+
+.status-message{
+    margin-top:7px;
+    color:#555;
+}
+
+/* TABS */
+
+.tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:20px;
+}
+
+.tab-button{
+    flex:1;
+    min-width:150px;
+    border:none;
+    background:#ddd;
+    color:#333;
+    padding:14px 12px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    margin:0;
+}
+
+.tab-button:hover{
+    background:#cfcfcf;
+}
+
+.tab-button.active{
+    background:#6d2b8c;
+    color:white;
+}
+
+.tab-button.sunday{
+    background:#b47b26;
+    color:white;
+}
+
+.tab-button.active.sunday{
+    background:#32134d;
+}
+
+/* TAB CONTENT */
+
+.tab-content{
+    display:none;
+}
+
+.tab-content.active{
+    display:block;
+}
+
+/* PROGRESS */
 
 .progress-box{
     background:white;
     padding:20px;
     border-radius:15px;
     box-shadow:0 5px 20px rgba(0,0,0,.08);
-    margin-bottom:25px;
+    margin-bottom:20px;
 }
 
 .progress-bar{
@@ -66,6 +154,8 @@ header p{
     transition:.4s;
 }
 
+/* PRAYER CARD */
+
 .prayer-card{
     background:white;
     margin:15px 0;
@@ -73,6 +163,10 @@ header p{
     overflow:hidden;
     box-shadow:0 4px 15px rgba(0,0,0,.08);
     border-left:6px solid #6d2b8c;
+}
+
+.sunday-card{
+    border-left-color:#b47b26;
 }
 
 .prayer-title{
@@ -83,6 +177,7 @@ header p{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    gap:10px;
 }
 
 .prayer-title:hover{
@@ -98,6 +193,8 @@ header p{
     display:block;
 }
 
+/* SCRIPTURE */
+
 .scripture{
     background:#f4eafa;
     border-left:4px solid #8b3bb2;
@@ -106,6 +203,12 @@ header p{
     border-radius:8px;
 }
 
+.scripture strong{
+    color:#5b2c83;
+}
+
+/* PRAYER */
+
 .prayer{
     background:#fff8e8;
     border-left:4px solid #c78a18;
@@ -113,6 +216,12 @@ header p{
     margin:15px 0;
     border-radius:8px;
 }
+
+.prayer strong{
+    color:#9b6810;
+}
+
+/* CHECKBOX */
 
 .checkbox{
     display:flex;
@@ -127,11 +236,63 @@ input[type="checkbox"]{
     height:20px;
 }
 
+/* BUTTONS */
+
+.controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:15px;
+}
+
+button{
+    background:#6d2b8c;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:.95rem;
+    margin:0;
+}
+
+button:hover{
+    background:#4b1c63;
+}
+
+button.secondary{
+    background:#555;
+}
+
+button.gold{
+    background:#b47b26;
+}
+
+button.gold:hover{
+    background:#8f641e;
+}
+
+/* SUNDAY NOTICE */
+
+.sunday-notice{
+    background:linear-gradient(135deg,#32134d,#6d2b8c);
+    color:white;
+    padding:22px;
+    border-radius:15px;
+    margin-bottom:20px;
+}
+
+.sunday-notice h2{
+    margin-bottom:7px;
+}
+
+/* SERVICE SCHEDULE */
+
 .schedule{
     background:white;
     padding:25px;
     border-radius:15px;
-    margin-top:30px;
+    margin-top:10px;
     box-shadow:0 4px 15px rgba(0,0,0,.08);
 }
 
@@ -148,6 +309,8 @@ input[type="checkbox"]{
 .schedule-item:last-child{
     border:none;
 }
+
+/* DECLARATIONS */
 
 .declarations{
     background:#32134d;
@@ -168,20 +331,7 @@ input[type="checkbox"]{
     margin:8px 0;
 }
 
-button{
-    background:#6d2b8c;
-    color:white;
-    border:none;
-    padding:13px 20px;
-    border-radius:8px;
-    cursor:pointer;
-    margin-top:15px;
-    font-size:1rem;
-}
-
-button:hover{
-    background:#4b1c63;
-}
+/* FOOTER */
 
 footer{
     text-align:center;
@@ -190,254 +340,1830 @@ footer{
     color:white;
 }
 
+/* MOBILE */
+
 @media(max-width:600px){
-    header h1{
-        font-size:1.7rem;
+
+    header{
+        padding:30px 15px;
     }
+
+    header h1{
+        font-size:1.55rem;
+    }
+
+    .container{
+        width:94%;
+    }
+
+    .tab-button{
+        min-width:100%;
+    }
+
+    .prayer-title{
+        font-size:.98rem;
+    }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
 <header>
-    <h1>🔥 JCRGM PROPHET'S DAILY ORDER OF PRAYER</h1>
-    <p>A Daily Prayer Pattern for the Presence, Voice and Power of God</p>
+
+```
+<h1>🔥 JCRGM PROPHET'S DAILY ORDER OF PRAYER</h1>
+
+<p>
+    A Daily Prayer Pattern for the Presence, Voice and Power of God
+</p>
+
+<div class="datetime" id="zambiaDateTime">
+    Loading Zambia time...
+</div>
+```
+
 </header>
 
 <div class="container">
 
-<div class="progress-box">
-    <strong>Daily Prayer Progress: <span id="percent">0%</span></strong>
-    <div class="progress-bar">
-        <div class="progress" id="progress"></div>
+```
+<div class="status-box">
+
+    <div class="status-title" id="todayTitle">
+        Today's Prayer Targets
     </div>
-    <button onclick="resetPrayer()">Reset Daily Prayer</button>
+
+    <div class="status-message" id="todayMessage">
+        Generating today's prayer targets...
+    </div>
+
+    <div class="controls">
+
+        <button onclick="generateFreshPrayers()">
+            🔄 Refresh Today's Prayers
+        </button>
+
+        <button class="secondary" onclick="resetCurrentTab()">
+            ♻️ Reset Current Tab
+        </button>
+
+    </div>
+
 </div>
 
-<div id="prayerSections"></div>
+
+<!-- TABS -->
+
+<div class="tabs">
+
+    <button
+        class="tab-button active"
+        id="dailyTabButton"
+        onclick="openTab('daily')">
+        🙏 Daily Prayer
+    </button>
+
+    <button
+        class="tab-button"
+        id="intercessionTabButton"
+        onclick="openTab('intercession')">
+        🔥 Sunday Intercession
+    </button>
+
+    <button
+        class="tab-button"
+        id="propheticTabButton"
+        onclick="openTab('prophetic')">
+        🕊️ Sunday 15:00 Prophetic
+    </button>
+
+    <button
+        class="tab-button"
+        id="servicesTabButton"
+        onclick="openTab('services')">
+        ⛪ Sunday Services
+    </button>
+
+</div>
+
+
+<!-- DAILY TAB -->
+
+<div
+    id="daily"
+    class="tab-content active">
+
+    <div class="progress-box">
+
+        <strong>
+            Daily Prayer Progress:
+            <span id="dailyPercent">0%</span>
+        </strong>
+
+        <div class="progress-bar">
+            <div
+                class="progress"
+                id="dailyProgress">
+            </div>
+        </div>
+
+    </div>
+
+    <div id="dailyPrayerSections"></div>
+
+</div>
+
+
+<!-- SUNDAY INTERCESSION -->
+
+<div
+    id="intercession"
+    class="tab-content">
+
+    <div class="sunday-notice">
+
+        <h2>🔥 Sunday Congregational Intercession</h2>
+
+        <p>
+            These prayer targets are automatically generated for
+            Sunday intercession and are designed to help lead the
+            congregation into focused corporate prayer.
+        </p>
+
+    </div>
+
+    <div class="progress-box">
+
+        <strong>
+            Sunday Intercession Progress:
+            <span id="intercessionPercent">0%</span>
+        </strong>
+
+        <div class="progress-bar">
+            <div
+                class="progress"
+                id="intercessionProgress">
+            </div>
+        </div>
+
+    </div>
+
+    <div id="intercessionPrayerSections"></div>
+
+</div>
+
+
+<!-- PROPHETIC TAB -->
+
+<div
+    id="prophetic"
+    class="tab-content">
+
+    <div class="sunday-notice">
+
+        <h2>🕊️ Sunday 15:00 Prophetic Service</h2>
+
+        <p>
+            Prayer targets designed specifically for the prophetic
+            atmosphere of the 15:00 Sunday service.
+        </p>
+
+    </div>
+
+    <div class="progress-box">
+
+        <strong>
+            Prophetic Service Progress:
+            <span id="propheticPercent">0%</span>
+        </strong>
+
+        <div class="progress-bar">
+            <div
+                class="progress"
+                id="propheticProgress">
+            </div>
+        </div>
+
+    </div>
+
+    <div id="propheticPrayerSections"></div>
+
+</div>
+
+
+<!-- SUNDAY SERVICES -->
+
+<div
+    id="services"
+    class="tab-content">
+
+    <div class="sunday-notice">
+
+        <h2>⛪ Sunday Service Prayer Preparation</h2>
+
+        <p>
+            Use these targets to spiritually prepare the church,
+            ministers, worship, preaching, altar ministry and
+            congregation for Sunday services.
+        </p>
+
+    </div>
+
+    <div class="progress-box">
+
+        <strong>
+            Sunday Services Progress:
+            <span id="servicesPercent">0%</span>
+        </strong>
+
+        <div class="progress-bar">
+            <div
+                class="progress"
+                id="servicesProgress">
+            </div>
+        </div>
+
+    </div>
+
+    <div id="servicesPrayerSections"></div>
+
+
+    <div class="schedule">
+
+        <h2>⏰ JCRGM Sunday Service Pattern</h2>
+
+        <div class="schedule-item">
+            <strong>🌅 09:00–12:20 — Main Church Service</strong><br>
+            Worship, Word, prayer, salvation, healing and spiritual
+            strengthening.
+        </div>
+
+        <div class="schedule-item">
+            <strong>🙏 14:00–14:30 — Parents in the Lord Counseling & Prayer</strong><br>
+            Spiritual counsel, prayer and preparation for the afternoon
+            service.
+        </div>
+
+        <div class="schedule-item">
+            <strong>🔥 15:00–18:00 — Afternoon / Prophetic Service</strong><br>
+            Prophetic ministry, prayer, Word, impartation and altar ministry.
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- DECLARATIONS -->
 
 <div class="declarations">
+
     <h2>📖 DAILY PROPHETIC DECLARATIONS</h2>
+
     <p>🔥 I am led by the Spirit of God.</p>
+
     <p>🔥 My spiritual ears are open to hear the voice of God.</p>
+
     <p>🔥 The presence of God goes with me.</p>
+
     <p>🔥 I walk in holiness, wisdom and obedience.</p>
+
     <p>🔥 I will fulfill the purpose of God for my life.</p>
+
     <p>🔥 No weapon formed against me shall prosper.</p>
+
     <p>🔥 The Holy Spirit orders my steps.</p>
+
     <p>🔥 The Word of God is alive and powerful in me.</p>
+
 </div>
-
-<div class="schedule">
-    <h2>⏰ Suggested Daily Prayer Schedule</h2>
-
-    <div class="schedule-item">
-        <strong>🌅 Morning:</strong><br>
-        Thanksgiving, Worship, Consecration, Holy Spirit and Hearing God.
-    </div>
-
-    <div class="schedule-item">
-        <strong>☀️ Midday:</strong><br>
-        Word Meditation, Personal Spiritual Strength and Direction.
-    </div>
-
-    <div class="schedule-item">
-        <strong>🌇 Afternoon:</strong><br>
-        Family, Church, Ministry and Intercession.
-    </div>
-
-    <div class="schedule-item">
-        <strong>🌙 Evening:</strong><br>
-        Nation, Prophetic Intercession and Spiritual Warfare.
-    </div>
-
-    <div class="schedule-item">
-        <strong>🌌 Night:</strong><br>
-        Thanksgiving, Reflection, Surrender and Waiting on God.
-    </div>
-</div>
+```
 
 </div>
 
 <footer>
-    <h3>JCRGM — Jesus Christ Redeems Global Ministries</h3>
-    <p>Prophetic Prayer • Word • Presence • Power</p>
+
+```
+<h3>
+    JCRGM — Jesus Christ Redeems Global Ministries
+</h3>
+
+<p>
+    Prophetic Prayer • Word • Presence • Power
+</p>
+```
+
 </footer>
 
 <script>
 
-const prayers = [
+/* =========================================================
+   JCRGM PROPHET'S DAILY PRAYER ENGINE
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   DATE
+--------------------------------------------------------- */
+
+function getZambiaDate(){
+
+    const formatter =
+        new Intl.DateTimeFormat(
+            "en-CA",
+            {
+                timeZone:"Africa/Lusaka",
+                year:"numeric",
+                month:"2-digit",
+                day:"2-digit"
+            }
+        );
+
+    return formatter.format(
+        new Date()
+    );
+
+}
+
+
+/* ---------------------------------------------------------
+   ZAMBIA DATE/TIME
+--------------------------------------------------------- */
+
+function updateZambiaClock(){
+
+    const now = new Date();
+
+    const formatted =
+        new Intl.DateTimeFormat(
+            "en-GB",
+            {
+                timeZone:"Africa/Lusaka",
+                weekday:"long",
+                year:"numeric",
+                month:"long",
+                day:"numeric",
+                hour:"2-digit",
+                minute:"2-digit",
+                second:"2-digit",
+                hour12:false
+            }
+        ).format(now);
+
+    document.getElementById(
+        "zambiaDateTime"
+    ).innerText =
+        "🇿🇲 Zambia Time: " + formatted;
+
+}
+
+updateZambiaClock();
+
+setInterval(
+    updateZambiaClock,
+    1000
+);
+
+
+/* ---------------------------------------------------------
+   CHECK SUNDAY
+--------------------------------------------------------- */
+
+function isSunday(){
+
+    const parts =
+        new Intl.DateTimeFormat(
+            "en-US",
+            {
+                timeZone:"Africa/Lusaka",
+                weekday:"short"
+            }
+        ).formatToParts(new Date());
+
+    const weekday =
+        parts.find(
+            p => p.type === "weekday"
+        ).value;
+
+    return weekday === "Sun";
+
+}
+
+
+/* ---------------------------------------------------------
+   DATE SEED
+--------------------------------------------------------- */
+
+function getDateSeed(){
+
+    const date =
+        getZambiaDate();
+
+    let seed = 0;
+
+    for(let i=0;i<date.length;i++){
+
+        seed =
+            ((seed << 5) - seed) +
+            date.charCodeAt(i);
+
+        seed |= 0;
+
+    }
+
+    return Math.abs(seed);
+
+}
+
+
+/* ---------------------------------------------------------
+   SEEDED RANDOM
+--------------------------------------------------------- */
+
+function seededRandom(seed){
+
+    let x =
+        Math.sin(seed++) *
+        10000;
+
+    return x -
+        Math.floor(x);
+
+}
+
+
+/* ---------------------------------------------------------
+   SHUFFLE
+--------------------------------------------------------- */
+
+function seededShuffle(array,seed){
+
+    const result =
+        [...array];
+
+    let currentSeed =
+        seed;
+
+    for(
+        let i=result.length-1;
+        i>0;
+        i--
+    ){
+
+        const random =
+            seededRandom(currentSeed++);
+
+        const j =
+            Math.floor(
+                random *
+                (i+1)
+            );
+
+        [
+            result[i],
+            result[j]
+        ] =
+        [
+            result[j],
+            result[i]
+        ];
+
+    }
+
+    return result;
+
+}
+
+
+/* =========================================================
+   DAILY PRAYER LIBRARY
+========================================================= */
+
+const dailyPrayerLibrary = [
 
 {
-title:"1. ENTER HIS PRESENCE WITH THANKSGIVING",
-scripture:"Psalm 100:4 — Enter into his gates with thanksgiving, and into his courts with praise.",
-prayer:"Father, I thank You for the gift of life. Thank You for preserving me through the night. Thank You for Your mercy, grace, protection and faithfulness. I enter Your presence with thanksgiving and praise."
+title:"Enter God's Presence",
+scriptures:[
+"Psalm 100:4",
+"Psalm 95:6",
+"Psalm 16:11"
+],
+prayer:
+"Father, I enter Your presence with thanksgiving and praise. Let my heart become still before You. Remove every distraction and help me begin this day conscious of Your presence."
 },
 
 {
-title:"2. WORSHIP AND EXALT GOD",
-scripture:"Psalm 95:6 | John 4:23–24 | Revelation 4:8–11",
-prayer:"Lord, You are holy, mighty, glorious and worthy of all praise. I worship You because of who You are. Let my heart be completely focused upon You."
+title:"Fresh Consecration",
+scriptures:[
+"Romans 12:1",
+"Psalm 139:23–24",
+"1 John 1:9"
+],
+prayer:
+"Lord Jesus, I surrender my spirit, soul, body, plans and desires to You. Search my heart, cleanse me and separate me for Your purpose. Let my life bring glory to Your name."
 },
 
 {
-title:"3. CONSECRATION AND SURRENDER",
-scripture:"Romans 12:1 | Psalm 139:23–24 | 1 John 1:9",
-prayer:"Lord Jesus, I surrender my spirit, soul, body, family, ministry and plans to You. Search me and cleanse me from everything that displeases You. Let my life be a living sacrifice."
+title:"Fresh Filling of the Holy Spirit",
+scriptures:[
+"Ephesians 5:18",
+"Acts 1:8",
+"Jude 1:20"
+],
+prayer:
+"Holy Spirit, fill me afresh. Give me spiritual strength, wisdom, sensitivity and boldness. Let me walk under Your influence and respond to Your leading throughout this day."
 },
 
 {
-title:"4. BE FILLED WITH THE HOLY SPIRIT",
-scripture:"Ephesians 5:18 | Acts 1:8 | Jude 1:20",
-prayer:"Holy Spirit, fill me afresh today. Fill me with Your power, fire, wisdom and sensitivity. Let me pray in the Spirit and be led by You throughout this day."
+title:"Hearing God's Voice",
+scriptures:[
+"John 10:27",
+"1 Samuel 3:10",
+"Isaiah 30:21"
+],
+prayer:
+"Father, open my spiritual ears. Teach me to recognize Your voice above every other voice. Give me clarity concerning the decisions, relationships and assignments before me."
 },
 
 {
-title:"5. WAIT UPON GOD",
-scripture:"Isaiah 40:31 | Psalm 27:14 | Lamentations 3:25–26",
-prayer:"Lord, I wait before You. Quiet every distraction. Let Your presence fill this place. Renew my strength and let my heart become sensitive to Your Spirit."
+title:"Divine Direction",
+scriptures:[
+"Proverbs 3:5–6",
+"Psalm 32:8",
+"Isaiah 48:17"
+],
+prayer:
+"Lord, direct my steps today. Keep me from wrong decisions and unnecessary distractions. Lead me into the paths You have prepared for me."
 },
 
 {
-title:"6. ASK GOD TO SPEAK",
-scripture:"1 Samuel 3:10 | John 10:27 | Habakkuk 2:1–2",
-prayer:"Speak, Lord, for Your servant is listening. Open my spiritual ears. Give me understanding, direction and revelation according to Your will. Let me recognize Your voice and obey You."
+title:"Spiritual Strength",
+scriptures:[
+"Ephesians 3:16",
+"Isaiah 40:31",
+"Psalm 138:3"
+],
+prayer:
+"Father, strengthen me in my inner man. Renew my spiritual strength and give me endurance to complete every assignment You have given me."
 },
 
 {
-title:"7. PERSONAL SPIRITUAL STRENGTH",
-scripture:"Ephesians 3:16 | Colossians 1:9–11 | 2 Timothy 1:7",
-prayer:"Father, strengthen me with might by Your Spirit in my inner man. Give me wisdom, discernment, boldness, discipline and spiritual understanding."
+title:"Wisdom and Discernment",
+scriptures:[
+"James 1:5",
+"Philippians 1:9–10",
+"Hebrews 5:14"
+],
+prayer:
+"Lord, give me wisdom and discernment. Help me distinguish what is from You and what is not. Let every decision I make agree with Your Word and Your purposes."
 },
 
 {
-title:"8. HOLINESS AND CHARACTER",
-scripture:"1 Peter 1:15–16 | Galatians 5:22–23 | 2 Timothy 2:21",
-prayer:"Lord, separate me for Your purpose. Guard my heart, eyes, mouth and thoughts. Produce the fruit of the Spirit in me and let my private life honor You."
+title:"Holiness and Character",
+scriptures:[
+"1 Peter 1:15–16",
+"Galatians 5:22–23",
+"2 Timothy 2:21"
+],
+prayer:
+"Lord, produce Your character in me. Guard my thoughts, words, motives and actions. Let holiness become evident in my private and public life."
 },
 
 {
-title:"9. FAMILY AND HOUSEHOLD",
-scripture:"Joshua 24:15 | Isaiah 54:13 | Job 1:5",
-prayer:"Father, cover my family with Your mercy and protection. Let salvation, peace, holiness and the fear of God rest upon my household."
+title:"Family Covering",
+scriptures:[
+"Joshua 24:15",
+"Isaiah 54:13",
+"Psalm 91:1–2"
+],
+prayer:
+"Father, I commit my household into Your hands. Let Your peace, salvation, protection and wisdom rest upon every member of my family."
 },
 
 {
-title:"10. CHURCH AND MINISTRY",
-scripture:"Ephesians 6:18 | Acts 4:29–31 | Colossians 4:3",
-prayer:"Lord, strengthen Your Church and let Your presence rest upon JCRGM. Raise faithful leaders, save souls, heal the sick and establish Your kingdom through this ministry."
+title:"Church and Ministry",
+scriptures:[
+"Matthew 16:18",
+"Acts 4:29–31",
+"Ephesians 6:18"
+],
+prayer:
+"Lord, strengthen Your Church. Let JCRGM walk in truth, holiness, love, power and spiritual authority. Raise faithful servants and let souls be brought into the kingdom."
 },
 
 {
-title:"11. PRAY FOR THE NATION",
-scripture:"1 Timothy 2:1–2",
-prayer:"Father, I pray for the leaders of my nation. Give them wisdom and guide them according to Your purposes. Let righteousness, justice and peace prevail in Zambia."
+title:"Divine Connections",
+scriptures:[
+"Proverbs 18:16",
+"Psalm 37:23",
+"Ruth 2:3"
+],
+prayer:
+"Father, order my relationships and connections. Bring the right people into my path and remove relationships that would distract me from Your purpose."
 },
 
 {
-title:"12. PROPHETIC INTERCESSION",
-scripture:"Ezekiel 22:30 | Isaiah 62:6–7 | 1 Samuel 12:23",
-prayer:"Lord, what is on Your heart today? Show me who and what You want me to pray for. Make me faithful in standing in the gap."
+title:"Open Doors",
+scriptures:[
+"Revelation 3:8",
+"Isaiah 22:22",
+"1 Corinthians 16:9"
+],
+prayer:
+"Lord, open the doors that agree with Your purpose for my life. Give me courage to walk through the doors You open and wisdom to recognize them."
 },
 
 {
-title:"13. SPIRITUAL WARFARE",
-scripture:"Ephesians 6:10–18 | 2 Corinthians 10:3–5 | Luke 10:19",
-prayer:"In the name of Jesus Christ, I put on the whole armor of God. Every plan of darkness assigned against my life, family, calling and ministry shall not prevail. I stand firmly in the victory of Christ."
+title:"Provision and Grace",
+scriptures:[
+"Philippians 4:19",
+"2 Corinthians 9:8",
+"Psalm 23:1"
+],
+prayer:
+"Father, You are my source. Provide what is necessary for every assignment You have given me. Give me grace to steward every provision faithfully."
 },
 
 {
-title:"14. PROPHETIC DECLARATION",
-scripture:"Job 22:28 | Isaiah 55:11 | Hebrews 4:12",
-prayer:"I declare that this is the day the Lord has made. I am led by the Spirit of God. The presence of God goes with me. My steps are ordered by the Lord."
+title:"Protection",
+scriptures:[
+"Psalm 91",
+"Isaiah 54:17",
+"2 Thessalonians 3:3"
+],
+prayer:
+"Father, preserve my life, family and assignments. Let Your protection surround me and keep me from dangers known and unknown."
 },
 
 {
-title:"15. COMMIT THE DAY TO GOD",
-scripture:"Proverbs 3:5–6 | Psalm 90:17 | Proverbs 16:3",
-prayer:"Father, I commit this day and every assignment into Your hands. Order my steps, connect me with the right people and establish the work of my hands."
+title:"Prophetic Sensitivity",
+scriptures:[
+"Amos 3:7",
+"1 Corinthians 14:1",
+"Habakkuk 2:1–2"
+],
+prayer:
+"Lord, sharpen my spiritual sensitivity. Help me understand what You are saying and give me grace to speak only what agrees with Your Word and Your heart."
 },
 
 {
-title:"16. THANKSGIVING AND CLOSING",
-scripture:"Philippians 4:6 | 1 Thessalonians 5:18 | Mark 11:24",
-prayer:"Father, thank You because You have heard me. I receive Your peace, direction and strength. Let Your will be established in my life, family, ministry and nation. In Jesus' name, Amen."
+title:"Spiritual Warfare",
+scriptures:[
+"Ephesians 6:10–18",
+"2 Corinthians 10:3–5",
+"Luke 10:19"
+],
+prayer:
+"In the name of Jesus Christ, I stand in the victory of Christ. Every scheme of darkness against my calling, family and assignment shall not prevail."
+},
+
+{
+title:"Grace for Today's Assignment",
+scriptures:[
+"2 Corinthians 12:9",
+"Hebrews 4:16",
+"Philippians 4:13"
+],
+prayer:
+"Father, give me sufficient grace for everything I must accomplish today. Let Your strength operate through my weakness and let me complete my assignments with excellence."
+},
+
+{
+title:"Kingdom Impact",
+scriptures:[
+"Matthew 5:14–16",
+"Daniel 12:3",
+"Matthew 28:19–20"
+],
+prayer:
+"Lord, make my life useful for Your kingdom. Let my words, work, ministry and relationships point people toward Jesus Christ."
+},
+
+{
+title:"Thanksgiving",
+scriptures:[
+"1 Thessalonians 5:18",
+"Philippians 4:6",
+"Psalm 103:1–5"
+],
+prayer:
+"Father, I thank You for Your mercy, protection and faithfulness. I refuse to overlook Your goodness. Let thanksgiving remain in my heart throughout this day."
 }
 
 ];
 
-const container = document.getElementById("prayerSections");
 
-prayers.forEach((item,index)=>{
+/* =========================================================
+   SUNDAY INTERCESSION LIBRARY
+========================================================= */
 
-const card=document.createElement("div");
-card.className="prayer-card";
+const intercessionLibrary = [
 
-card.innerHTML=`
-<div class="prayer-title" onclick="togglePrayer(${index})">
-<span>${item.title}</span>
-<span>➕</span>
-</div>
+{
+title:"Pray for the Presence of God",
+scriptures:[
+"Exodus 33:14",
+"Psalm 16:11",
+"2 Chronicles 5:13–14"
+],
+prayer:
+"Father, let Your presence fill the gathering. Let every heart become aware of Jesus Christ and let every distraction lose its influence."
+},
 
-<div class="content" id="content${index}">
+{
+title:"Pray for Souls and Salvation",
+scriptures:[
+"1 Timothy 2:3–4",
+"Romans 10:1",
+"Acts 2:47"
+],
+prayer:
+"Lord, draw people to Jesus Christ. Save the lost, restore the backslider and let those who need salvation encounter the transforming power of the Gospel."
+},
 
-<div class="scripture">
-<strong>📖 Scripture:</strong><br>
-${item.scripture}
-</div>
+{
+title:"Pray for the Word",
+scriptures:[
+"Isaiah 55:11",
+"Hebrews 4:12",
+"2 Timothy 3:16–17"
+],
+prayer:
+"Father, let Your Word come with power and clarity. Let it correct, heal, strengthen, teach and transform everyone who hears it."
+},
 
-<div class="prayer">
-<strong>🙏 Prayer:</strong><br>
-${item.prayer}
-</div>
+{
+title:"Pray for Healing",
+scriptures:[
+"Isaiah 53:5",
+"Psalm 103:2–3",
+"James 5:14–16"
+],
+prayer:
+"Lord Jesus, stretch out Your hand to those who are sick and afflicted. Let healing, restoration and strength be released according to Your mercy and purpose."
+},
 
-<label class="checkbox">
-<input type="checkbox" onchange="updateProgress()">
-I have completed this prayer section.
-</label>
+{
+title:"Pray for Families",
+scriptures:[
+"Joshua 24:15",
+"Acts 16:31",
+"Isaiah 54:13"
+],
+prayer:
+"Father, visit families represented in this congregation. Restore marriages, bring salvation to households and establish peace and godly order in homes."
+},
 
-</div>
-`;
+{
+title:"Pray for the Youth",
+scriptures:[
+"1 Timothy 4:12",
+"Ecclesiastes 12:1",
+"Psalm 119:9"
+],
+prayer:
+"Lord, preserve the young generation. Give them wisdom, purity, purpose and courage to follow Jesus Christ."
+},
 
-container.appendChild(card);
+{
+title:"Pray for the Church Leaders",
+scriptures:[
+"1 Timothy 2:1–2",
+"Hebrews 13:17",
+"Colossians 4:3–4"
+],
+prayer:
+"Father, strengthen the leaders and ministers of Your Church. Give them wisdom, holiness, courage and grace to serve Your people faithfully."
+},
 
-});
+{
+title:"Pray for Spiritual Revival",
+scriptures:[
+"Habakkuk 3:2",
+"Psalm 85:6",
+"Acts 2:17"
+],
+prayer:
+"Lord, revive Your Church. Awaken hunger for Your Word, prayer, holiness and the presence of the Holy Spirit."
+},
 
-function togglePrayer(index){
+{
+title:"Pray for Zambia",
+scriptures:[
+"1 Timothy 2:1–2",
+"Proverbs 14:34",
+"2 Chronicles 7:14"
+],
+prayer:
+"Father, have mercy upon Zambia. Let righteousness, justice, wisdom and peace prevail. Guide those in authority and let the nation honor God."
+},
 
-const content=document.getElementById("content"+index);
+{
+title:"Pray for the Altar",
+scriptures:[
+"1 Kings 18:38",
+"Romans 12:1",
+"Psalm 51:17"
+],
+prayer:
+"Lord, let the altar of prayer and surrender burn strongly. Let hearts be yielded to You and let genuine repentance and transformation take place."
+}
 
-content.classList.toggle("active");
+];
+
+
+/* =========================================================
+   SUNDAY 15:00 PROPHETIC LIBRARY
+========================================================= */
+
+const propheticLibrary = [
+
+{
+title:"Prepare the Atmosphere for the Holy Spirit",
+scriptures:[
+"Zechariah 4:6",
+"Acts 2:1–4",
+"John 14:16–17"
+],
+prayer:
+"Holy Spirit, take complete control of this service. Let the atmosphere be governed by the presence of God and let every ministry assignment flow under Your direction."
+},
+
+{
+title:"Pray for Revelation",
+scriptures:[
+"Ephesians 1:17–18",
+"Jeremiah 33:3",
+"1 Corinthians 2:9–13"
+],
+prayer:
+"Father, release revelation according to Your Word. Open understanding and let people receive what You are communicating for their lives."
+},
+
+{
+title:"Pray for Prophetic Accuracy",
+scriptures:[
+"1 Corinthians 14:3",
+"1 Thessalonians 5:19–21",
+"Amos 3:7"
+],
+prayer:
+"Lord, let every prophetic ministry remain submitted to Your Word. Give ministers discernment, humility and accuracy. Let everything spoken build, encourage and strengthen Your people."
+},
+
+{
+title:"Pray for Impartation and Transformation",
+scriptures:[
+"2 Timothy 1:6",
+"Romans 12:2",
+"2 Corinthians 3:18"
+],
+prayer:
+"Father, let this service produce genuine transformation. Stir spiritual gifts, renew minds and strengthen people to walk in the purpose You have placed before them."
+},
+
+{
+title:"Pray for the Altar and Encounters",
+scriptures:[
+"Exodus 33:14",
+"Mark 5:25–34",
+"Luke 5:17"
+],
+prayer:
+"Lord Jesus, let people encounter You. Let burdens be lifted, chains be broken, faith be restored and lives be changed by the power and presence of God."
+},
+
+{
+title:"Pray for Prophetic Direction",
+scriptures:[
+"Proverbs 3:5–6",
+"Psalm 32:8",
+"Isaiah 30:21"
+],
+prayer:
+"Father, give Your people clear direction. Let confusion give way to wisdom and let every instruction received agree with Your Word and Your purposes."
+},
+
+{
+title:"Pray Against Distraction",
+scriptures:[
+"Luke 10:38–42",
+"Hebrews 12:1–2",
+"Philippians 3:13–14"
+],
+prayer:
+"Lord, remove distractions from the service. Turn every heart toward Jesus and help the congregation remain focused on Your presence and Your Word."
+},
+
+{
+title:"Pray for Faith",
+scriptures:[
+"Hebrews 11:6",
+"Romans 10:17",
+"Mark 9:23"
+],
+prayer:
+"Father, increase faith in Your people. Let faith arise to receive Your Word and respond to You with obedience."
+},
+
+{
+title:"Pray for Deliverance",
+scriptures:[
+"Luke 4:18",
+"Colossians 1:13",
+"Psalm 34:17"
+],
+prayer:
+"Lord Jesus, bring freedom to those who are oppressed, bound or discouraged. Let Your truth expose darkness and let people walk in the freedom Christ provides."
+},
+
+{
+title:"Pray for the Word to Be Confirmed",
+scriptures:[
+"Mark 16:20",
+"Hebrews 2:4",
+"Isaiah 55:11"
+],
+prayer:
+"Father, let Your Word accomplish its purpose. Confirm Your Word through changed lives, faith, obedience, healing and transformed hearts."
+}
+
+];
+
+
+/* =========================================================
+   SUNDAY SERVICE LIBRARY
+========================================================= */
+
+const servicesLibrary = [
+
+{
+title:"Cover the Entire Sunday in Prayer",
+scriptures:[
+"Psalm 121:8",
+"Psalm 91:1–2",
+"Proverbs 3:5–6"
+],
+prayer:
+"Father, we commit every Sunday activity into Your hands. Cover the ministers, congregation, transport, facilities and every assignment with Your grace."
+},
+
+{
+title:"Pray for Ministers and Servants",
+scriptures:[
+"2 Timothy 2:15",
+"1 Peter 4:10–11",
+"Colossians 3:23"
+],
+prayer:
+"Lord, strengthen every minister and servant. Let everyone serve with humility, excellence, love and spiritual sensitivity."
+},
+
+{
+title:"Pray for Worship and Praise",
+scriptures:[
+"Psalm 22:3",
+"John 4:23–24",
+"Psalm 150"
+],
+prayer:
+"Father, receive our worship. Let praise rise from sincere hearts and let worship lead the congregation into deeper awareness of Your presence."
+},
+
+{
+title:"Pray for the Preaching and Teaching",
+scriptures:[
+"2 Timothy 4:2",
+"1 Corinthians 2:4–5",
+"Romans 10:17"
+],
+prayer:
+"Lord, anoint the preaching and teaching of Your Word. Give the minister clarity, boldness and wisdom. Let the Word produce lasting fruit."
+},
+
+{
+title:"Pray for the Altar Ministry",
+scriptures:[
+"James 5:16",
+"Mark 16:15–18",
+"Luke 4:18"
+],
+prayer:
+"Father, let the altar become a place of genuine encounter. Let people receive salvation, healing, restoration, deliverance and renewed commitment to Christ."
+},
+
+{
+title:"Pray for Children",
+scriptures:[
+"Mark 10:14",
+"Matthew 19:14",
+"Proverbs 22:6"
+],
+prayer:
+"Lord, bless and preserve the children. Let them grow in wisdom, faith and the knowledge of Jesus Christ."
+},
+
+{
+title:"Pray for Visitors",
+scriptures:[
+"Matthew 25:35",
+"Romans 12:13",
+"Hebrews 13:2"
+],
+prayer:
+"Father, let every visitor feel welcomed and loved. Let their visit become an encounter with Jesus Christ and connect them to the right spiritual community."
+},
+
+{
+title:"Pray for Order and Peace",
+scriptures:[
+"1 Corinthians 14:40",
+"1 Corinthians 14:33",
+"Colossians 3:15"
+],
+prayer:
+"Lord, let everything be done decently and in order. Give every department unity, wisdom and cooperation throughout the services."
+},
+
+{
+title:"Pray for the Afternoon Service",
+scriptures:[
+"Isaiah 43:19",
+"Jeremiah 33:3",
+"Acts 4:31"
+],
+prayer:
+"Father, prepare the 15:00 service. Let there be fresh grace, prophetic sensitivity, bold preaching, prayer and genuine encounters with You."
+},
+
+{
+title:"Commit the Sunday to Jesus Christ",
+scriptures:[
+"Colossians 1:16–18",
+"Psalm 115:1",
+"John 3:30"
+],
+prayer:
+"Lord Jesus, let everything point to You. May no person take the glory that belongs to You. Be exalted throughout every service and every ministry assignment."
+}
+
+];
+
+
+/* =========================================================
+   CREATE FIVE UNIQUE PRAYERS
+========================================================= */
+
+function createFivePrayers(
+    library,
+    seed
+){
+
+    const shuffled =
+        seededShuffle(
+            library,
+            seed
+        );
+
+    return shuffled.slice(
+        0,
+        5
+    );
 
 }
 
-function updateProgress(){
 
-const checks=document.querySelectorAll('input[type="checkbox"]');
-const checked=document.querySelectorAll('input[type="checkbox"]:checked');
+/* =========================================================
+   RENDER PRAYERS
+========================================================= */
 
-const percent=Math.round((checked.length/checks.length)*100);
+function renderPrayers(
+    prayers,
+    containerId,
+    storageKey,
+    percentId,
+    progressId,
+    cardClass=""
+){
 
-document.getElementById("percent").innerText=percent+"%";
-document.getElementById("progress").style.width=percent+"%";
+    const container =
+        document.getElementById(
+            containerId
+        );
 
-localStorage.setItem("prayerProgress",percent);
+    container.innerHTML="";
+
+    prayers.forEach(
+        (item,index)=>{
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "prayer-card " +
+                cardClass;
+
+            card.innerHTML = `
+
+                <div
+                    class="prayer-title"
+                    onclick="togglePrayer('${storageKey}',${index})"
+                >
+
+                    <span>
+                        ${index+1}. ${item.title}
+                    </span>
+
+                    <span id="${storageKey}-icon-${index}">
+                        ➕
+                    </span>
+
+                </div>
+
+                <div
+                    class="content"
+                    id="${storageKey}-content-${index}"
+                >
+
+                    <div class="scripture">
+
+                        <strong>
+                            📖 Scripture Backings:
+                        </strong>
+
+                        <br><br>
+
+                        ${item.scriptures
+                            .map(
+                                scripture =>
+                                "• " + scripture
+                            )
+                            .join("<br>")}
+
+                    </div>
+
+                    <div class="prayer">
+
+                        <strong>
+                            🙏 Prayer Target:
+                        </strong>
+
+                        <br><br>
+
+                        ${item.prayer}
+
+                    </div>
+
+                    <label class="checkbox">
+
+                        <input
+                            type="checkbox"
+                            id="${storageKey}-check-${index}"
+                            onchange="updateProgress('${storageKey}','${percentId}','${progressId}')"
+                        >
+
+                        I have completed this prayer point.
+
+                    </label>
+
+                </div>
+
+            `;
+
+            container.appendChild(card);
+
+        }
+    );
+
+    restoreProgress(
+        storageKey,
+        percentId,
+        progressId
+    );
 
 }
 
-function resetPrayer(){
 
-document.querySelectorAll('input[type="checkbox"]').forEach(check=>{
-check.checked=false;
-});
+/* =========================================================
+   TAB SYSTEM
+========================================================= */
 
-document.getElementById("percent").innerText="0%";
-document.getElementById("progress").style.width="0%";
+function openTab(tabName){
 
-localStorage.removeItem("prayerProgress");
+    document
+        .querySelectorAll(".tab-content")
+        .forEach(
+            tab =>
+            tab.classList.remove("active")
+        );
+
+    document
+        .querySelectorAll(".tab-button")
+        .forEach(
+            button =>
+            button.classList.remove("active")
+        );
+
+    document
+        .getElementById(tabName)
+        .classList.add("active");
+
+    const button =
+        document.querySelector(
+            `[onclick="openTab('${tabName}')"]`
+        );
+
+    if(button){
+        button.classList.add("active");
+    }
+
+    localStorage.setItem(
+        "jcrgmActivePrayerTab",
+        tabName
+    );
 
 }
+
+
+/* =========================================================
+   OPEN/CLOSE PRAYER
+========================================================= */
+
+function togglePrayer(
+    storageKey,
+    index
+){
+
+    const content =
+        document.getElementById(
+            `${storageKey}-content-${index}`
+        );
+
+    const icon =
+        document.getElementById(
+            `${storageKey}-icon-${index}`
+        );
+
+    if(
+        content.classList.contains("active")
+    ){
+
+        content.classList.remove("active");
+
+        icon.innerText="➕";
+
+    }else{
+
+        content.classList.add("active");
+
+        icon.innerText="➖";
+
+    }
+
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+function updateProgress(
+    storageKey,
+    percentId,
+    progressId
+){
+
+    const checks =
+        document.querySelectorAll(
+            `input[id^="${storageKey}-check-"]`
+        );
+
+    let completed=0;
+
+    checks.forEach(
+        check=>{
+            if(check.checked){
+                completed++;
+            }
+        }
+    );
+
+    const percent =
+        Math.round(
+            (completed/checks.length)*100
+        );
+
+    document.getElementById(
+        percentId
+    ).innerText =
+        percent + "%";
+
+    document.getElementById(
+        progressId
+    ).style.width =
+        percent + "%";
+
+    localStorage.setItem(
+        getProgressStorageKey(storageKey),
+        JSON.stringify(
+            Array.from(checks)
+                .map(
+                    check =>
+                    check.checked
+                )
+        )
+    );
+
+}
+
+
+/* =========================================================
+   PROGRESS STORAGE KEY
+========================================================= */
+
+function getProgressStorageKey(
+    storageKey
+){
+
+    return (
+        "JCRGM_PRAYER_PROGRESS_" +
+        getZambiaDate() +
+        "_" +
+        storageKey
+    );
+
+}
+
+
+/* =========================================================
+   RESTORE PROGRESS
+========================================================= */
+
+function restoreProgress(
+    storageKey,
+    percentId,
+    progressId
+){
+
+    const saved =
+        localStorage.getItem(
+            getProgressStorageKey(
+                storageKey
+            )
+        );
+
+    if(!saved){
+
+        updateProgress(
+            storageKey,
+            percentId,
+            progressId
+        );
+
+        return;
+
+    }
+
+    try{
+
+        const states =
+            JSON.parse(saved);
+
+        states.forEach(
+            (state,index)=>{
+
+                const checkbox =
+                    document.getElementById(
+                        `${storageKey}-check-${index}`
+                    );
+
+                if(checkbox){
+                    checkbox.checked =
+                        state;
+                }
+
+            }
+        );
+
+    }catch(error){
+
+        console.log(
+            "Progress restore error:",
+            error
+        );
+
+    }
+
+    updateProgress(
+        storageKey,
+        percentId,
+        progressId
+    );
+
+}
+
+
+/* =========================================================
+   RESET CURRENT TAB
+========================================================= */
+
+function resetCurrentTab(){
+
+    const activeTab =
+        document.querySelector(
+            ".tab-content.active"
+        );
+
+    if(!activeTab){
+        return;
+    }
+
+    const checks =
+        activeTab.querySelectorAll(
+            'input[type="checkbox"]'
+        );
+
+    checks.forEach(
+        check =>
+        check.checked=false
+    );
+
+    const tabId =
+        activeTab.id;
+
+    const mapping = {
+
+        daily:[
+            "dailyPercent",
+            "dailyProgress"
+        ],
+
+        intercession:[
+            "intercessionPercent",
+            "intercessionProgress"
+        ],
+
+        prophetic:[
+            "propheticPercent",
+            "propheticProgress"
+        ],
+
+        services:[
+            "servicesPercent",
+            "servicesProgress"
+        ]
+
+    };
+
+    if(mapping[tabId]){
+
+        document.getElementById(
+            mapping[tabId][0]
+        ).innerText="0%";
+
+        document.getElementById(
+            mapping[tabId][1]
+        ).style.width="0%";
+
+    }
+
+    localStorage.removeItem(
+        getProgressStorageKey(
+            getStorageKey(tabId)
+        )
+    );
+
+}
+
+
+/* =========================================================
+   STORAGE KEY MAPPING
+========================================================= */
+
+function getStorageKey(tab){
+
+    const mapping={
+
+        daily:"daily",
+
+        intercession:"intercession",
+
+        prophetic:"prophetic",
+
+        services:"services"
+
+    };
+
+    return mapping[tab] || "daily";
+
+}
+
+
+/* =========================================================
+   GENERATE TODAY'S PRAYERS
+========================================================= */
+
+function generatePrayerSystem(){
+
+    const seed =
+        getDateSeed();
+
+    const daily =
+        createFivePrayers(
+            dailyPrayerLibrary,
+            seed
+        );
+
+    const intercession =
+        createFivePrayers(
+            intercessionLibrary,
+            seed + 101
+        );
+
+    const prophetic =
+        createFivePrayers(
+            propheticLibrary,
+            seed + 202
+        );
+
+    const services =
+        createFivePrayers(
+            servicesLibrary,
+            seed + 303
+        );
+
+
+    renderPrayers(
+        daily,
+        "dailyPrayerSections",
+        "daily",
+        "dailyPercent",
+        "dailyProgress"
+    );
+
+
+    renderPrayers(
+        intercession,
+        "intercessionPrayerSections",
+        "intercession",
+        "intercessionPercent",
+        "intercessionProgress",
+        "sunday-card"
+    );
+
+
+    renderPrayers(
+        prophetic,
+        "propheticPrayerSections",
+        "prophetic",
+        "propheticPercent",
+        "propheticProgress",
+        "sunday-card"
+    );
+
+
+    renderPrayers(
+        services,
+        "servicesPrayerSections",
+        "services",
+        "servicesPercent",
+        "servicesProgress",
+        "sunday-card"
+    );
+
+
+    updateTodayMessage();
+
+}
+
+
+/* =========================================================
+   TODAY MESSAGE
+========================================================= */
+
+function updateTodayMessage(){
+
+    const sunday =
+        isSunday();
+
+    const date =
+        new Intl.DateTimeFormat(
+            "en-GB",
+            {
+                timeZone:"Africa/Lusaka",
+                weekday:"long",
+                day:"numeric",
+                month:"long",
+                year:"numeric"
+            }
+        ).format(
+            new Date()
+        );
+
+    document.getElementById(
+        "todayTitle"
+    ).innerText =
+        sunday
+        ? "🔥 Sunday Prayer Targets"
+        : "🙏 Today's Prayer Targets";
+
+    document.getElementById(
+        "todayMessage"
+    ).innerHTML =
+        sunday
+
+        ?
+
+        `Today is <strong>${date}</strong>.
+        Five fresh daily prayer targets have been generated,
+        together with five Sunday intercession targets,
+        five prophetic-service targets and five Sunday-service
+        preparation targets.`
+
+        :
+
+        `Today is <strong>${date}</strong>.
+        Five fresh prayer targets and scripture backings have
+        been automatically generated for today's prayer journey.`;
+
+}
+
+
+/* =========================================================
+   REFRESH PRAYERS
+========================================================= */
+
+function generateFreshPrayers(){
+
+    /*
+        The prayers are date-based.
+        Therefore "refresh" regenerates the same
+        day's set rather than producing uncontrolled
+        random changes every time the page opens.
+    */
+
+    generatePrayerSystem();
+
+}
+
+
+/* =========================================================
+   SUNDAY UI
+========================================================= */
+
+function configureSundayInterface(){
+
+    const sunday =
+        isSunday();
+
+    const intercessionButton =
+        document.getElementById(
+            "intercessionTabButton"
+        );
+
+    const propheticButton =
+        document.getElementById(
+            "propheticTabButton"
+        );
+
+    const servicesButton =
+        document.getElementById(
+            "servicesTabButton"
+        );
+
+    if(sunday){
+
+        intercessionButton
+            .classList.add("sunday");
+
+        propheticButton
+            .classList.add("sunday");
+
+        servicesButton
+            .classList.add("sunday");
+
+    }else{
+
+        intercessionButton
+            .classList.remove("sunday");
+
+        propheticButton
+            .classList.remove("sunday");
+
+        servicesButton
+            .classList.remove("sunday");
+
+    }
+
+}
+
+
+/* =========================================================
+   AUTOMATIC TAB SELECTION
+========================================================= */
+
+function selectInitialTab(){
+
+    const saved =
+        localStorage.getItem(
+            "jcrgmActivePrayerTab"
+        );
+
+    if(
+        saved &&
+        document.getElementById(saved)
+    ){
+
+        openTab(saved);
+
+        return;
+
+    }
+
+    if(isSunday()){
+
+        openTab(
+            "intercession"
+        );
+
+    }else{
+
+        openTab(
+            "daily"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   AUTOMATIC DATE CHANGE DETECTION
+========================================================= */
+
+let currentPrayerDate =
+    getZambiaDate();
+
+
+setInterval(
+    ()=>{
+
+        const newDate =
+            getZambiaDate();
+
+        if(
+            newDate !==
+            currentPrayerDate
+        ){
+
+            currentPrayerDate =
+                newDate;
+
+            generatePrayerSystem();
+
+            configureSundayInterface();
+
+            /*
+                Automatically switch to Sunday
+                prayer when Sunday begins.
+            */
+
+            if(isSunday()){
+
+                openTab(
+                    "intercession"
+                );
+
+            }else{
+
+                openTab(
+                    "daily"
+                );
+
+            }
+
+        }
+
+    },
+    30000
+);
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+generatePrayerSystem();
+
+configureSundayInterface();
+
+selectInitialTab();
 
 </script>
 
