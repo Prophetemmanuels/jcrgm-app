@@ -93,6 +93,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 }
 @media(max-width:560px){.kpiGrid{grid-template-columns:1fr 1fr}.title{font-size:31px}.subtitle{font-size:14px}}
 
+@media print{.side,.top,.appShellTop,.bottomNav,.actions,.studyToolbar,.toast,.commandPalette{display:none!important}.main{padding:0;max-width:none}.section{display:none!important}.section.show{display:block!important}.card{box-shadow:none;border:0;background:white;color:#111}.sermonOutput,.scriptureBox{background:white!important;color:#111}}
 </style>
 </head>
 <body>
@@ -190,7 +191,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <div class="actions">
 <button class="btn primary" onclick="loadScripture()">Show Scripture</button>
 <button class="btn" onclick="openCurrentLogos()">Open in Logos</button>
-<button class="btn" onclick="openCurrentBible()">Open in Bible.com</button>
+<button class="btn" onclick="openBible(currentRef)">Open in Bible.com</button>
 </div>
 <div id="scriptureResult" class="scriptureBox">
   <div class="muted">Choose a passage and select “Show Scripture”.</div>
@@ -227,13 +228,13 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <div class="referencePanel">
   <div class="sermonBuilderHead">
     <div>
-      <h3>📚 Five Reference Scriptures</h3>
-      <p class="muted">Study five connected passages that confirm, explain, illustrate and strengthen your main Scripture.</p>
+      <h3>📚 20 Backing Scriptures</h3>
+      <p class="muted">Study 20 connected passages that confirm, explain, illustrate and strengthen your main Scripture.</p>
     </div>
-    <button class="btn primary" onclick="generateStudyReferences()">Generate 5 References</button>
+    <button class="btn primary" onclick="generateStudyReferences()">Generate 20 References</button>
   </div>
   <div id="studyReferences" class="relatedGrid">
-    <span class="muted">Enter your main Scripture, then generate five reference Scriptures.</span>
+    <span class="muted">Enter your main Scripture, then generate 20 backing Scriptures.</span>
   </div>
 </div>
 
@@ -267,7 +268,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
     <div class="sermonBuilderHead">
       <div>
         <h3>🎙 Full Sermon — Ready to Preach</h3>
-        <p class="muted">A complete sermon built from your study, main Scripture, five references and application.</p>
+        <p class="muted">A complete sermon built from your study, main Scripture, 20 backing Scriptures and application.</p>
       </div>
       <div class="actions">
         <button class="btn primary" onclick="generateFullSermon()">Generate Full Sermon</button>
@@ -280,7 +281,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
   </div>
   <div class="relatedBox">
     <div class="sermonBuilderHead">
-      <div><h3>📚 Related Scriptures</h3><p class="muted">Set any Scripture above to receive related passages. Use them to confirm, explain and strengthen the main text.</p></div>
+      <div><h3>📚 Related Scriptures</h3><p class="muted">Set any Scripture above to receive 20 backing passages. Use them to confirm, explain and strengthen the main text.</p></div>
       <button class="btn" onclick="findRelatedScriptures()">Find Related Scriptures</button>
     </div>
     <div id="relatedScriptures" class="relatedGrid"><span class="muted">No related Scriptures generated yet.</span></div>
@@ -291,7 +292,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
   <button class="btn primary" onclick="saveStudy()">Save Study</button>
   <button class="btn" onclick="loadDraftStudy()">Restore Draft</button>
   <button class="btn" onclick="copyStudy()">Copy Summary</button>
-  <button class="btn" onclick="exportCurrentStudy()">Export Study</button>
+  <button class="btn" onclick="exportCurrentStudy()">Export JSON</button><button class="btn primary" onclick="exportCurrentStudyPDF()">Save as PDF</button>
   <button class="btn danger" onclick="clearStudy()">Clear</button>
   <span class="saveState" id="studyDraftStatus">Draft autosave is ready</span>
 </div>
@@ -557,6 +558,18 @@ function exportCurrentStudy(){
   const blob=new Blob([JSON.stringify(s,null,2)],{type:'application/json'}),a=document.createElement('a');
   a.href=URL.createObjectURL(blob);a.download='jcrgm-study-'+s.passage.replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.json';a.click();
 }
+function exportCurrentStudyPDF(){
+  const s=selectedStudyData();
+  if(!s.passage)return toast('Add a passage first');
+  const refs=getTwentyReferenceScriptures(s.passage,s).slice(0,20);
+  const title='JCRGM MASTER STUDY — '+s.passage;
+  const w=window.open('','_blank');
+  if(!w)return toast('Please allow pop-ups to save the PDF');
+  const esc2=esc;
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc2(title)}</title><style>body{font-family:Arial,sans-serif;color:#172235;line-height:1.6;padding:35px;max-width:900px;margin:auto}h1,h2{color:#7a5a12}h1{font-size:28px;border-bottom:2px solid #d5b45c;padding-bottom:10px}h2{margin-top:24px}pre{white-space:pre-wrap;font-family:Arial}.ref{font-weight:700;color:#7a5a12}.box{border-left:4px solid #d5b45c;padding:10px 14px;background:#f7f3e8;margin:10px 0}li{margin:6px 0}@media print{body{padding:0}button{display:none}}</style></head><body><h1>${esc2(title)}</h1><p><b>Genre:</b> ${esc2(s.genre)}</p><h2>Observation</h2><pre>${esc2(s.obs)}</pre><h2>Interpretation</h2><pre>${esc2(s.interp)}</pre><h2>Context & Cross-references</h2><pre>${esc2(s.context)}</pre><h2>Theology / Truth</h2><pre>${esc2(s.theology)}</pre><h2>Application</h2><pre>${esc2(s.apply)}</pre><h2>Prayer</h2><pre>${esc2(s.prayer)}</pre><h2>20 Backing Scriptures</h2><ol>${refs.map((r,i)=>'<li><b>'+esc2(r)+'</b> — '+esc2(referenceReason(i))+'</li>').join('')}</ol><p style="margin-top:35px;color:#667085">JCRGM MASTER STUDY • Generated ${esc2(new Date().toLocaleString())}</p><script>window.onload=()=>setTimeout(()=>window.print(),350)<\/script></body></html>`);
+  w.document.close();
+}
+
 function saveStudyDraft(){
   const s={passage:document.getElementById('passage')?.value||'',genre:document.getElementById('genre')?.value||'',
     obs:document.getElementById('obs')?.value||'',interp:document.getElementById('interp')?.value||'',
@@ -667,7 +680,7 @@ function generateSermonTargets(){
   html+='<div class="targetCard"><div class="targetTitle">🧭 Recommended sermon-writing order</div><ol class="muted">'+points.map(p=>'<li><b>'+p[2]+'</b> — '+esc(p[3])+'</li>').join('')+'</ol></div>';
   html+='<div class="sermonOrder">'+points.map(p=>'<div class="targetCard"><div><span class="targetNum">'+p[0]+'</span><span class="targetTitle">'+p[2]+'</span></div><p class="targetText">'+esc(p[3])+'</p></div>').join('')+'</div>';
   html+='<div class="targetCard"><div class="targetTitle">📝 Suggested sermon skeleton</div><p><b>Introduction:</b> Start with the need, question or tension the text answers.</p><p><b>Text:</b> Read the main passage and establish context.</p><p><b>Point 1:</b> What the text says.</p><p><b>Point 2:</b> What the text means.</p><p><b>Point 3:</b> How the truth changes life.</p><p><b>Application:</b> Give specific responses.</p><p><b>Conclusion:</b> Return to the central truth and make the call clear.</p><p><b>Prayer/Ministry:</b> Pray the truth of the passage.</p></div>';
-  document.getElementById('sermonTargets').innerHTML=html;findRelatedScriptures();generateStudyReferences();generateFullSermon();toast('Sermon targets, five references and full sermon generated');
+  document.getElementById('sermonTargets').innerHTML=html;findRelatedScriptures();generateStudyReferences();generateFullSermon();toast('Sermon targets, 20 backing Scriptures and full sermon generated');
 }
 function getRelatedRefs(ref){
   const n=normalizeRef(ref);if(SERMON_CROSSREFS[n])return SERMON_CROSSREFS[n];
@@ -676,7 +689,7 @@ function getRelatedRefs(ref){
   const book=lower.replace(/\s+\d+.*$/,'').trim(),same={genesis:['Genesis 12:1-3','Genesis 50:20'],exodus:['Exodus 14:13-14','Exodus 33:14'],psalms:['Psalm 119:105','Psalm 34:8'],proverbs:['Proverbs 3:5-6','Proverbs 4:23'],isaiah:['Isaiah 40:31','Isaiah 43:2'],matthew:['Matthew 6:33','Matthew 28:18-20'],john:['John 14:6','John 15:4-5'],romans:['Romans 8:1','Romans 12:1-2'],ephesians:['Ephesians 2:8-10','Ephesians 6:10-18'],philippians:['Philippians 4:6-9','Philippians 4:13'],hebrews:['Hebrews 4:12-16','Hebrews 11:1-6'],james:['James 1:5','James 1:22-25']};return same[book]||['Psalm 119:105','2 Timothy 3:16-17','Romans 15:4','Hebrews 4:12'];
 }
 
-function getFiveReferenceScriptures(ref, study){
+function getTwentyReferenceScriptures(ref, study){
   const exact=getRelatedRefs(ref).filter(Boolean);
   let refs=[...exact];
   const text=[study.obs,study.interp,study.context,study.theology,study.apply,study.prayer].join(' ').toLowerCase();
@@ -697,7 +710,10 @@ function getFiveReferenceScriptures(ref, study){
   themeRefs.forEach(([k,arr])=>{if(text.includes(k)) refs.push(...arr)});
   refs.push('Psalm 119:105','2 Timothy 3:16-17','Romans 15:4','Hebrews 4:12','Joshua 1:8');
   refs=[...new Set(refs.map(normalizeRef).filter(x=>x && normalizeRef(x).toLowerCase()!==normalizeRef(ref).toLowerCase()))];
-  return refs.slice(0,5);
+  const extended=['Genesis 1:1','Deuteronomy 6:4-9','Psalm 1:1-3','Psalm 119:9-16','Isaiah 55:10-11','Matthew 4:4','Matthew 7:24-27','John 8:31-32','John 14:26','Acts 17:11','Romans 15:4','1 Corinthians 2:12-13','2 Timothy 3:16-17','Hebrews 4:12','James 1:22-25','1 Peter 1:23-25','2 Peter 1:20-21','Jude 1:3','Revelation 1:3','Colossians 3:16'];
+  refs.push(...extended);
+  refs=[...new Set(refs.map(normalizeRef).filter(x=>x && normalizeRef(x).toLowerCase()!==normalizeRef(ref).toLowerCase()))];
+  return refs.slice(0,20);
 }
 function referenceReason(i){
   return ['Confirm the main truth','Explain the biblical principle','Give another biblical witness','Show practical application','Broaden the biblical perspective'][i]||'Strengthen the study';
@@ -705,10 +721,10 @@ function referenceReason(i){
 function generateStudyReferences(){
   const s=selectedStudyData();
   if(!s.passage)return toast('Set a Scripture passage first');
-  const refs=getFiveReferenceScriptures(s.passage,s);
+  const refs=getTwentyReferenceScriptures(s.passage,s);
   const el=document.getElementById('studyReferences');
   el.innerHTML=refs.map((r,i)=>'<div class="relatedItem"><b>'+esc(r)+'</b><small>'+referenceReason(i)+'</small><div class="relatedActions"><button class="btn small" onclick="openBibleRef('+JSON.stringify(r)+')">Open</button><button class="btn small" onclick="addRelatedToContext('+JSON.stringify(r)+')">Add to study</button></div></div>').join('');
-  toast('Five reference Scriptures generated');
+  toast('20 backing Scriptures generated');
 }
 function sermonParagraph(text,fallback){return (text||fallback||'').trim().replace(/\s+/g,' ')}
 function buildSermonPoints(s, refs){
@@ -725,7 +741,7 @@ function generateFullSermon(){
   const s=selectedStudyData();
   if(!s.passage)return toast('Set a Scripture passage first');
   const dir=document.getElementById('sermonDirection').value.trim();
-  const refs=getFiveReferenceScriptures(s.passage,s);
+  const refs=getTwentyReferenceScriptures(s.passage,s);
   const theme=extractTheme(s);
   const big=makeBigIdea(s,dir)||'God wants His Word to shape our faith, character and response.';
   const points=buildSermonPoints(s,refs);
@@ -750,7 +766,7 @@ function generateFullSermon(){
   html+='<h3>Understanding the Text</h3><p>'+esc(meaning)+'</p>';
   html+='<h3>What the Passage Teaches</h3>';
   points.forEach(p=>{html+='<p><b>'+esc(p.title)+':</b> '+esc(p.text)+'</p>'});
-  html+='<h3>Biblical Witness — 5 Reference Scriptures</h3><ol>'+refs.map(r=>'<li><b>'+esc(r)+'</b> — '+esc(referenceReason(refs.indexOf(r)))+'</li>').join('')+'</ol>';
+  html+='<h3>Biblical Witness — 20 Backing Scriptures</h3><ol>'+refs.map(r=>'<li><b>'+esc(r)+'</b> — '+esc(referenceReason(refs.indexOf(r)))+'</li>').join('')+'</ol>';
   html+='<h3>The Biblical Truth</h3><p>'+esc(truth)+'</p>';
   html+='<h3>Practical Application</h3><p>'+esc(application)+'</p>';
   html+='<p>'+esc('Do not leave the Word in the notebook. Let it become a decision, a practice, a prayer and a changed way of living.')+'</p>';
@@ -760,7 +776,7 @@ function generateFullSermon(){
   html+='<h3>Closing Prayer</h3><p>'+esc(prayerSeed+' Let this Word remain alive in us, guide our steps and produce fruit that brings glory to Jesus Christ. Amen.')+'</p>';
   html+='</article>';
   document.getElementById('fullSermon').innerHTML=html;
-  toast('Full sermon generated with five prayer points');
+  toast('Full sermon generated with 20 backing Scriptures and five prayer points');
 }
 function copyFullSermon(){
   const el=document.getElementById('fullSermon');
@@ -771,10 +787,25 @@ function copyFullSermon(){
 
 function findRelatedScriptures(){
   const s=selectedStudyData();if(!s.passage)return toast('Set a Scripture passage first');
-  const refs=getFiveReferenceScriptures(s.passage,s).slice(0,5),el=document.getElementById('relatedScriptures');
+  const refs=getTwentyReferenceScriptures(s.passage,s).slice(0,20),el=document.getElementById('relatedScriptures');
   el.innerHTML=refs.map((r,i)=>'<div class="relatedItem"><b>'+esc(r)+'</b><small>'+['Confirm the truth','Explain the principle','Show a biblical example','Strengthen the application','Add a wider biblical perspective'][i%5]+'</small><div class="relatedActions"><button class="btn small" onclick="openBibleRef('+JSON.stringify(r)+')">Open</button><button class="btn small" onclick="addRelatedToContext('+JSON.stringify(r)+')">Add to study</button></div></div>').join('');
 }
-function openBibleRef(r){openLink('https://www.bible.com/search?query='+encodeURIComponent(r))}
+function openBibleRef(r){openBible(r)}
+function openBible(ref=currentRef){
+  const clean=normalizeRef(ref||'Genesis 1');
+  const parts=clean.match(/^(.+?)\s+(\d+)(?::(.+))?$/);
+  let url='https://www.bible.com/bible';
+  if(parts){
+    const book=encodeURIComponent(parts[1].replace(/\s+/g,'-').toLowerCase());
+    const chapter=parts[2];
+    const verse=parts[3]?'-'+encodeURIComponent(parts[3]):'';
+    url='https://www.bible.com/bible/1/'+book+'.'+chapter+(verse?'.'+verse:'');
+  } else {
+    url='https://www.bible.com/search?query='+encodeURIComponent(clean);
+  }
+  openLink(url);
+  toast('Opening Bible');
+}
 function addRelatedToContext(r){const el=document.getElementById('context');el.value+=(el.value.trim()?'\n':'')+r+' — related Scripture';toast(r+' added to Context & Cross-references')}
 function saveStudy(){let s={date:new Date().toLocaleString(),isoDate:new Date().toISOString(),passage:passage.value.trim(),genre:genre.value,obs:obs.value,interp:interp.value,context:context.value,theology:theology.value,apply:apply.value,prayer:prayer.value};if(!s.passage)return toast('Add a passage');const existing=state.studies.findIndex(x=>normalizeRef(x.passage)===normalizeRef(s.passage));if(existing>=0){state.studies[existing]=s;toast('Study updated')}else{state.studies.unshift(s);toast('Study saved')}save();localStorage.removeItem('jcrgmStudyDraft');renderStudies();renderSermonStudySelect();flashSaveStatus('Study saved')}
 function renderStudies(){let e=document.getElementById('studyList');e.innerHTML=state.studies.length?state.studies.slice(0,8).map((x,i)=>'<div class="listItem"><b>'+esc(x.passage)+'</b><div class="small muted">'+esc(x.date)+' • '+esc(x.genre)+'</div><p>'+esc(x.obs||'No observation saved.').slice(0,180)+'</p></div>').join(''):'<span class="muted">No saved studies.</span>'}
