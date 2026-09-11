@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +18,7 @@
     --danger:#b42318;
     --success:#087443;
     --border:#e4e7ec;
+    --shuffle:#6b4f9d;
 }
 
 *{
@@ -91,10 +93,6 @@ header p{
 h2{
     font-size:19px;
     margin:0 0 14px;
-    color:var(--primary);
-}
-
-h3{
     color:var(--primary);
 }
 
@@ -202,7 +200,7 @@ button:hover{
 }
 
 .shuffle{
-    background:#6b4f9d;
+    background:var(--shuffle);
     color:#fff;
 }
 
@@ -228,6 +226,12 @@ button:hover{
     padding:5px 8px;
 }
 
+.person-name{
+    display:flex;
+    align-items:center;
+    font-weight:700;
+}
+
 .person-number{
     display:inline-flex;
     align-items:center;
@@ -240,12 +244,6 @@ button:hover{
     font-size:12px;
     font-weight:800;
     margin-right:8px;
-}
-
-.person-name{
-    display:flex;
-    align-items:center;
-    font-weight:700;
 }
 
 .notice{
@@ -400,6 +398,16 @@ button:hover{
     margin-bottom:3px;
 }
 
+.service-shuffle-label{
+    display:inline-block;
+    margin-left:7px;
+    background:#f3edff;
+    color:#543785;
+    padding:4px 8px;
+    border-radius:6px;
+    font-size:10px;
+}
+
 .roles{
     max-height:420px;
     overflow:auto;
@@ -533,17 +541,11 @@ footer{
 
 <div class="zambia-clock">
 
-    <div
-        class="time"
-        id="zambiaTime"
-    >
+    <div class="time" id="zambiaTime">
         --:--:--
     </div>
 
-    <div
-        class="date"
-        id="zambiaDate"
-    >
+    <div class="date" id="zambiaDate">
         Loading date...
     </div>
 
@@ -652,10 +654,7 @@ footer{
 
 </div>
 
-<div
-    id="people"
-    style="margin-top:12px"
-></div>
+<div id="people" style="margin-top:12px"></div>
 
 <div class="notice">
 
@@ -663,19 +662,27 @@ footer{
 
     <br><br>
 
-    <b>Important:</b>
-    Pastors are never removed when the schedule is cleared.
-    A pastor can only be removed by pressing that pastor's
+    <b>Pastor records are permanent.</b>
+
+    They remain saved even when a schedule is cleared.
+
+    A pastor can only be deleted using that pastor's
     individual <b>Remove</b> button.
 
 </div>
 
 <div class="shuffle-notice">
 
-    <b>Monthly Shuffle:</b>
-    Use <b>Shuffle Pastors</b> at the beginning of each month
-    to randomly change the order of the pastors. Then press
-    <b>Auto Schedule</b> to create the new monthly roster.
+    <b>Scheduling rule:</b><br>
+
+    Every new Sunday receives a fresh random minister
+    arrangement. Sunday Morning and Sunday Afternoon
+    are treated as separate services and will not simply
+    repeat the same arrangement.
+
+    <br><br>
+
+    The next Sunday is shuffled again automatically.
 
 </div>
 
@@ -752,8 +759,8 @@ footer{
 
 <div class="notice">
 
-    <b>Clear Schedule</b> removes only the generated
-    monthly schedule. Your pastor records remain saved.
+    <b>Clear Schedule</b> clears only the generated
+    schedule. Pastor records remain untouched.
 
 </div>
 
@@ -1015,9 +1022,6 @@ function updateCurrentService(){
             "en-US",
             {
                 timeZone:"Africa/Lusaka",
-                year:"numeric",
-                month:"2-digit",
-                day:"2-digit",
                 weekday:"long"
             }
         ).formatToParts(now);
@@ -1219,7 +1223,6 @@ function addPerson(){
 
 /* =========================================================
    REMOVE PASTOR
-   THIS IS THE ONLY WAY A PASTOR IS REMOVED
 ========================================================= */
 
 function removePerson(index){
@@ -1238,25 +1241,24 @@ function removePerson(index){
 
     people.splice(index,1);
 
-    renderPeople();
-
     /*
-       Removing a pastor invalidates the existing
-       schedule, so the generated schedule is cleared.
-       The remaining pastor records are preserved.
+       Removing a pastor invalidates the generated
+       schedule because the available minister pool
+       has changed.
     */
 
     schedule = [];
 
-    saveData(false);
+    renderPeople();
 
     renderSchedule();
+
+    saveData(false);
 }
 
 
 /* =========================================================
-   SHUFFLE PASTORS
-   RANDOMLY CHANGES THEIR POSITION
+   MANUAL MASTER SHUFFLE
 ========================================================= */
 
 function shufflePastors(){
@@ -1272,43 +1274,18 @@ function shufflePastors(){
 
     const confirmed =
         confirm(
-            "Shuffle the pastors into a new random order for this month?"
+            "Shuffle the pastor list into a new random order?"
         );
 
     if(!confirmed){
         return;
     }
 
-    /*
-       Fisher-Yates shuffle
-       This gives every pastor a fair random position.
-    */
-
-    for(
-        let i = people.length - 1;
-        i > 0;
-        i--
-    ){
-
-        const randomIndex =
-            Math.floor(
-                Math.random() * (i + 1)
-            );
-
-        [
-            people[i],
-            people[randomIndex]
-        ] =
-        [
-            people[randomIndex],
-            people[i]
-        ];
-
-    }
+    fisherYatesShuffle(people);
 
     /*
-       The old schedule is cleared because the
-       pastor order has changed.
+       The old schedule is cleared because the pastor
+       pool/order has been changed.
     */
 
     schedule = [];
@@ -1320,8 +1297,39 @@ function shufflePastors(){
     saveData(false);
 
     alert(
-        "Pastors have been shuffled successfully. You can now press Auto Schedule to create the new monthly schedule."
+        "Pastors have been shuffled successfully. Generate the monthly schedule when ready."
     );
+}
+
+
+/* =========================================================
+   TRUE RANDOM SHUFFLE
+========================================================= */
+
+function fisherYatesShuffle(array){
+
+    for(
+        let i = array.length - 1;
+        i > 0;
+        i--
+    ){
+
+        const randomIndex =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
+
+        [
+            array[i],
+            array[randomIndex]
+        ] =
+        [
+            array[randomIndex],
+            array[i]
+        ];
+    }
+
+    return array;
 }
 
 
@@ -1403,30 +1411,128 @@ function getServices(pattern){
     };
 
     if(pattern === "sun"){
-
         return sundayServices;
-
     }
 
     if(pattern === "fri"){
-
         return [fridayService];
-
     }
 
     if(pattern === "sunfri"){
-
         return [
             ...sundayServices,
             fridayService
         ];
-
     }
 
     return [
         ...sundayServices,
         fridayService
     ];
+}
+
+
+/* =========================================================
+   CREATE SERVICE ASSIGNMENT
+========================================================= */
+
+/*
+   This is the important new scheduling engine.
+
+   Every SERVICE gets a new shuffled order.
+
+   For Sunday Afternoon, the algorithm compares
+   the morning assignments and tries to ensure that
+   the same person does NOT receive the same role.
+
+   For subsequent Sundays, the previous Sunday is
+   also considered, preventing unnecessary repetition
+   of the same person in the same responsibility.
+*/
+
+function createAssignmentOrder(
+    previousAssignments = null,
+    sameDayPreviousAssignments = null
+){
+
+    const shuffled =
+        [...people];
+
+    fisherYatesShuffle(shuffled);
+
+    const result = [];
+
+    for(
+        let roleIndex = 0;
+        roleIndex < responsibilities.length;
+        roleIndex++
+    ){
+
+        let preferredCandidates =
+            [...shuffled];
+
+        /*
+           Try to avoid the minister who performed
+           this same responsibility in the previous
+           service/day.
+        */
+
+        if(previousAssignments){
+
+            const previousPerson =
+                previousAssignments[roleIndex];
+
+            preferredCandidates =
+                preferredCandidates.filter(
+                    person =>
+                        person !== previousPerson
+                );
+
+        }
+
+        /*
+           For Sunday afternoon, also avoid the
+           person who handled the same responsibility
+           during Sunday morning.
+        */
+
+        if(sameDayPreviousAssignments){
+
+            const morningPerson =
+                sameDayPreviousAssignments[roleIndex];
+
+            const filtered =
+                preferredCandidates.filter(
+                    person =>
+                        person !== morningPerson
+                );
+
+            /*
+               Only apply this filter if at least
+               one alternative exists.
+            */
+
+            if(filtered.length){
+                preferredCandidates = filtered;
+            }
+
+        }
+
+        /*
+           Choose randomly from the remaining
+           preferred candidates.
+        */
+
+        const chosen =
+            preferredCandidates[
+                roleIndex %
+                preferredCandidates.length
+            ];
+
+        result.push(chosen);
+    }
+
+    return result;
 }
 
 
@@ -1481,7 +1587,17 @@ function generate(){
 
     schedule = [];
 
-    let rotation = 0;
+    /*
+       Tracks the previous assignment order for
+       each service/day.
+
+       This prevents the same pastor from repeatedly
+       occupying the same responsibility.
+    */
+
+    let previousSundayMorning = null;
+    let previousSundayAfternoon = null;
+    let previousFriday = null;
 
     for(
         let dayNumber = 1;
@@ -1512,22 +1628,71 @@ function generate(){
             continue;
         }
 
+        let morningAssignments = null;
+
         matchingServices.forEach(
             service => {
+
+                let previousAssignments = null;
+                let sameDayPreviousAssignments = null;
+
+                /*
+                   SUNDAY
+                */
+
+                if(service.day === 0){
+
+                    if(
+                        service.name ===
+                        "Sunday Morning Service"
+                    ){
+
+                        previousAssignments =
+                            previousSundayMorning;
+
+                    }
+
+                    else if(
+                        service.name ===
+                        "Sunday Afternoon Prophetic Ministry"
+                    ){
+
+                        previousAssignments =
+                            previousSundayAfternoon;
+
+                        sameDayPreviousAssignments =
+                            morningAssignments;
+
+                    }
+
+                }
+
+                /*
+                   FRIDAY
+                */
+
+                if(service.day === 5){
+
+                    previousAssignments =
+                        previousFriday;
+
+                }
+
+                /*
+                   Create a completely fresh order
+                   for this service.
+                */
+
+                const assignedPeople =
+                    createAssignmentOrder(
+                        previousAssignments,
+                        sameDayPreviousAssignments
+                    );
 
                 const assignments = [];
 
                 responsibilities.forEach(
                     (responsibility,index) => {
-
-                        const person =
-                            people[
-                                (
-                                    rotation +
-                                    index
-                                ) %
-                                people.length
-                            ];
 
                         assignments.push({
 
@@ -1535,7 +1700,7 @@ function generate(){
                                 responsibility[0],
 
                             person:
-                                person
+                                assignedPeople[index]
 
                         });
 
@@ -1576,22 +1741,52 @@ function generate(){
                         service.time,
 
                     assignments:
-                        assignments
+                        assignments,
+
+                    shuffleNumber:
+                        Math.random()
+                        .toString(36)
+                        .substring(2,8)
 
                 });
 
-                rotation =
-                    (
-                        rotation +
-                        Math.max(
-                            1,
-                            Math.floor(
-                                responsibilities.length /
-                                3
-                            )
-                        )
-                    ) %
-                    people.length;
+                /*
+                   Remember this service's assignment
+                   for the next occurrence.
+                */
+
+                if(
+                    service.name ===
+                    "Sunday Morning Service"
+                ){
+
+                    previousSundayMorning =
+                        assignedPeople;
+
+                    morningAssignments =
+                        assignedPeople;
+
+                }
+
+                else if(
+                    service.name ===
+                    "Sunday Afternoon Prophetic Ministry"
+                ){
+
+                    previousSundayAfternoon =
+                        assignedPeople;
+
+                }
+
+                else if(
+                    service.name ===
+                    "Friday Midweek Service"
+                ){
+
+                    previousFriday =
+                        assignedPeople;
+
+                }
 
             }
         );
@@ -1603,7 +1798,7 @@ function generate(){
     renderSchedule();
 
     alert(
-        "Monthly schedule generated successfully."
+        "Monthly schedule generated successfully. Each Sunday has received a fresh minister arrangement."
     );
 }
 
@@ -1636,8 +1831,8 @@ function renderSchedule(){
 
                 <br><br>
 
-                Add your pastors, optionally shuffle them,
-                then click <b>Auto Schedule</b>.
+                Add your pastors, then click
+                <b>Auto Schedule</b>.
 
             </div>
 
@@ -1791,6 +1986,12 @@ function renderSchedule(){
                             <span class="service-time-badge">
 
                                 ${escapeHtml(service.time)}
+
+                            </span>
+
+                            <span class="service-shuffle-label">
+
+                                Fresh Shuffle
 
                             </span>
 
@@ -2018,11 +2219,6 @@ function loadData(show=true){
         const data =
             JSON.parse(saved);
 
-        /*
-           Pastor records are loaded independently
-           from the schedule.
-        */
-
         people =
             Array.isArray(data.people)
             ? data.people
@@ -2075,7 +2271,6 @@ function loadData(show=true){
 
 /* =========================================================
    CLEAR SCHEDULE ONLY
-   PASTOR RECORDS ARE NEVER DELETED HERE
 ========================================================= */
 
 function clearSchedule(){
@@ -2100,16 +2295,10 @@ function clearSchedule(){
 
     /*
        IMPORTANT:
-       Only schedule is cleared.
-       people[] is NOT touched.
+       people[] remains completely untouched.
     */
 
     schedule = [];
-
-    /*
-       Save the remaining pastor records
-       while storing an empty schedule.
-    */
 
     saveData(false);
 
@@ -2124,6 +2313,27 @@ function clearSchedule(){
         "Schedule cleared. All pastor records have been preserved."
     );
 }
+
+
+/* =========================================================
+   ENTER KEY
+========================================================= */
+
+document.getElementById("personName")
+    .addEventListener(
+        "keydown",
+        function(event){
+
+            if(event.key === "Enter"){
+
+                event.preventDefault();
+
+                addPerson();
+
+            }
+
+        }
+    );
 
 
 /* =========================================================
@@ -2148,28 +2358,7 @@ function escapeHtml(value){
 
 
 /* =========================================================
-   ENTER KEY FOR ADDING PASTOR
-========================================================= */
-
-document.getElementById("personName")
-    .addEventListener(
-        "keydown",
-        function(event){
-
-            if(event.key === "Enter"){
-
-                event.preventDefault();
-
-                addPerson();
-
-            }
-
-        }
-    );
-
-
-/* =========================================================
-   START APP
+   START APPLICATION
 ========================================================= */
 
 init();
@@ -2178,3 +2367,4 @@ init();
 
 </body>
 </html>
+```
