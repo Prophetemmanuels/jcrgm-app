@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -30,8 +29,6 @@ body{
     background:var(--bg);
     color:var(--text);
 }
-
-/* ================= HEADER ================= */
 
 header{
     background:linear-gradient(135deg,#102b4e,#1f4d7a);
@@ -77,8 +74,6 @@ header p{
     color:#cbd5e1;
 }
 
-/* ================= MAIN ================= */
-
 .container{
     max-width:1250px;
     margin:24px auto;
@@ -102,8 +97,6 @@ h2{
 h3{
     color:var(--primary);
 }
-
-/* ================= SERVICE TIMES ================= */
 
 .service-times{
     display:grid;
@@ -142,15 +135,11 @@ h3{
     font-weight:800;
 }
 
-/* ================= TWO COLUMN AREA ================= */
-
 .main-grid{
     display:grid;
     grid-template-columns:360px 1fr;
     gap:18px;
 }
-
-/* ================= FORM ================= */
 
 label{
     display:block;
@@ -212,14 +201,17 @@ button:hover{
     color:var(--danger);
 }
 
+.shuffle{
+    background:#6b4f9d;
+    color:#fff;
+}
+
 .actions{
     display:flex;
     gap:8px;
     flex-wrap:wrap;
     margin-top:12px;
 }
-
-/* ================= PEOPLE ================= */
 
 .person{
     display:flex;
@@ -236,7 +228,25 @@ button:hover{
     padding:5px 8px;
 }
 
-/* ================= NOTICE ================= */
+.person-number{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:27px;
+    height:27px;
+    border-radius:50%;
+    background:var(--primary);
+    color:white;
+    font-size:12px;
+    font-weight:800;
+    margin-right:8px;
+}
+
+.person-name{
+    display:flex;
+    align-items:center;
+    font-weight:700;
+}
 
 .notice{
     padding:11px 12px;
@@ -248,7 +258,15 @@ button:hover{
     line-height:1.5;
 }
 
-/* ================= CURRENT SERVICE ================= */
+.shuffle-notice{
+    padding:11px 12px;
+    border-radius:9px;
+    background:#f3edff;
+    color:#543785;
+    font-size:13px;
+    margin-top:12px;
+    line-height:1.5;
+}
 
 .current-service{
     background:#eaf7ef;
@@ -259,8 +277,6 @@ button:hover{
     margin-bottom:18px;
     font-weight:700;
 }
-
-/* ================= TOOLBAR ================= */
 
 .toolbar{
     display:flex;
@@ -277,8 +293,6 @@ button:hover{
 .toolbar button{
     height:40px;
 }
-
-/* ================= SUMMARY ================= */
 
 .summary{
     display:grid;
@@ -304,8 +318,6 @@ button:hover{
     font-size:12px;
     color:var(--muted);
 }
-
-/* ================= SCHEDULE ================= */
 
 .schedule-header{
     display:flex;
@@ -388,8 +400,6 @@ button:hover{
     margin-bottom:3px;
 }
 
-/* ================= RESPONSIBILITIES ================= */
-
 .roles{
     max-height:420px;
     overflow:auto;
@@ -412,15 +422,11 @@ button:hover{
     line-height:1.4;
 }
 
-/* ================= EMPTY ================= */
-
 .empty{
     text-align:center;
     color:var(--muted);
     padding:35px;
 }
-
-/* ================= FOOTER ================= */
 
 footer{
     text-align:center;
@@ -428,8 +434,6 @@ footer{
     font-size:12px;
     padding:20px;
 }
-
-/* ================= MOBILE ================= */
 
 @media(max-width:900px){
 
@@ -478,9 +482,11 @@ footer{
         width:100%;
         margin-bottom:8px;
     }
-}
 
-/* ================= PRINT ================= */
+    .actions button{
+        width:100%;
+    }
+}
 
 @media print{
 
@@ -512,14 +518,9 @@ footer{
     }
 }
 </style>
-
 </head>
 
 <body>
-
-<!-- =====================================================
-     1. HEADER + ZAMBIA CURRENT TIME
-===================================================== -->
 
 <header>
 
@@ -532,25 +533,23 @@ footer{
 
 <div class="zambia-clock">
 
-```
-<div
-    class="time"
-    id="zambiaTime"
->
-    --:--:--
-</div>
+    <div
+        class="time"
+        id="zambiaTime"
+    >
+        --:--:--
+    </div>
 
-<div
-    class="date"
-    id="zambiaDate"
->
-    Loading date...
-</div>
+    <div
+        class="date"
+        id="zambiaDate"
+    >
+        Loading date...
+    </div>
 
-<div class="zone">
-    Zambia Time • Africa/Lusaka • CAT (UTC+2)
-</div>
-```
+    <div class="zone">
+        Zambia Time • Africa/Lusaka • CAT (UTC+2)
+    </div>
 
 </div>
 
@@ -558,17 +557,12 @@ footer{
 
 <div class="container">
 
-<!-- =====================================================
-     2. JCRGM SERVICE TIMES
-===================================================== -->
-
 <div class="card">
 
 <h2>JCRGM Service Times</h2>
 
 <div class="service-times">
 
-```
 <div class="service-time-card">
 
     <div class="day">
@@ -584,7 +578,6 @@ footer{
     </div>
 
 </div>
-
 
 <div class="service-time-card">
 
@@ -602,7 +595,6 @@ footer{
 
 </div>
 
-
 <div class="service-time-card">
 
     <div class="day">
@@ -618,27 +610,14 @@ footer{
     </div>
 
 </div>
-```
 
 </div>
 
 </div>
-
-<!-- =====================================================
-     3. MAIN APPLICATION
-===================================================== -->
 
 <div class="main-grid">
 
-<!-- =====================================================
-     LEFT COLUMN
-===================================================== -->
-
 <section>
-
-<!-- =====================================================
-     3A. PASTORS / LEADERS
-===================================================== -->
 
 <div class="card">
 
@@ -649,23 +628,27 @@ footer{
 </label>
 
 <input
-id="personName"
-type="text"
-placeholder="e.g. Pastor John"
-autocomplete="off"
-
+    id="personName"
+    type="text"
+    placeholder="e.g. Pastor John"
+    autocomplete="off"
 >
 
 <div class="actions">
 
-```
 <button
     class="primary"
     onclick="addPerson()"
 >
-    Add Person
+    Add Pastor
 </button>
-```
+
+<button
+    class="shuffle"
+    onclick="shufflePastors()"
+>
+    Shuffle Pastors
+</button>
 
 </div>
 
@@ -676,20 +659,27 @@ autocomplete="off"
 
 <div class="notice">
 
-```
-Add all pastors/leaders who may serve.
+    Add all pastors/leaders who may serve.
 
-The router automatically rotates assignments
-across the team.
-```
+    <br><br>
+
+    <b>Important:</b>
+    Pastors are never removed when the schedule is cleared.
+    A pastor can only be removed by pressing that pastor's
+    individual <b>Remove</b> button.
+
+</div>
+
+<div class="shuffle-notice">
+
+    <b>Monthly Shuffle:</b>
+    Use <b>Shuffle Pastors</b> at the beginning of each month
+    to randomly change the order of the pastors. Then press
+    <b>Auto Schedule</b> to create the new monthly roster.
 
 </div>
 
 </div>
-
-<!-- =====================================================
-     3B. MONTH / SCHEDULE CONTROLS
-===================================================== -->
 
 <div class="card">
 
@@ -700,9 +690,8 @@ across the team.
 </label>
 
 <input
-type="month"
-id="month"
-
+    type="month"
+    id="month"
 >
 
 <label for="servicePattern">
@@ -711,7 +700,6 @@ id="month"
 
 <select id="servicePattern">
 
-```
 <option value="jcrgm">
     JCRGM Standard Schedule
 </option>
@@ -727,13 +715,11 @@ id="month"
 <option value="sunfri">
     Sunday + Friday Services
 </option>
-```
 
 </select>
 
 <div class="actions">
 
-```
 <button
     class="gold"
     onclick="generate()"
@@ -757,19 +743,21 @@ id="month"
 
 <button
     class="danger"
-    onclick="clearAll()"
+    onclick="clearSchedule()"
 >
-    Clear
+    Clear Schedule
 </button>
-```
+
+</div>
+
+<div class="notice">
+
+    <b>Clear Schedule</b> removes only the generated
+    monthly schedule. Your pastor records remain saved.
 
 </div>
 
 </div>
-
-<!-- =====================================================
-     3C. RESPONSIBILITIES
-===================================================== -->
 
 <div class="card">
 
@@ -784,15 +772,7 @@ id="month"
 
 </section>
 
-<!-- =====================================================
-     RIGHT COLUMN
-===================================================== -->
-
 <main>
-
-<!-- =====================================================
-     4. SEARCH / VIEW / EXPORT
-===================================================== -->
 
 <div class="card no-print">
 
@@ -800,46 +780,43 @@ id="month"
 
 <div class="toolbar">
 
-```
 <div>
 
-    <label>
-        View
-    </label>
+<label>
+    View
+</label>
 
-    <select
-        id="viewMode"
-        onchange="renderSchedule()"
-    >
+<select
+    id="viewMode"
+    onchange="renderSchedule()"
+>
 
-        <option value="month">
-            Full Month
-        </option>
+<option value="month">
+    Full Month
+</option>
 
-        <option value="weekly">
-            Weekly Summary
-        </option>
+<option value="weekly">
+    Weekly Summary
+</option>
 
-    </select>
+</select>
 
 </div>
 
-
 <div>
 
-    <label>
-        Search
-    </label>
+<label>
+    Search
+</label>
 
-    <input
-        id="search"
-        type="text"
-        placeholder="Search person or responsibility"
-        oninput="renderSchedule()"
-    >
+<input
+    id="search"
+    type="text"
+    placeholder="Search person or responsibility"
+    oninput="renderSchedule()"
+>
 
 </div>
-
 
 <button
     class="primary"
@@ -848,44 +825,28 @@ id="month"
     Print / Save PDF
 </button>
 
-
 <button
     class="light"
     onclick="exportCSV()"
 >
     Export CSV
 </button>
-```
 
 </div>
 
 </div>
-
-<!-- =====================================================
-     5. CURRENT SERVICE STATUS
-===================================================== -->
 
 <div id="currentService"></div>
 
-<!-- =====================================================
-     6. SUMMARY
-===================================================== -->
-
 <div id="summary" class="summary"></div>
-
-<!-- =====================================================
-     7. GENERATED SCHEDULE
-===================================================== -->
 
 <div class="card">
 
 <div class="schedule-header">
 
-```
 <h2>
     5. Generated Service Schedule
 </h2>
-```
 
 </div>
 
@@ -907,12 +868,6 @@ id="month"
 
 /* =========================================================
    RESPONSIBILITIES
-   REMOVED:
-   - Worship Leader
-   - Praise Team / Choir
-   - Announcements
-   - Altar / Ministry
-   - Media / IT
 ========================================================= */
 
 const responsibilities = [
@@ -1000,7 +955,6 @@ const responsibilities = [
 ========================================================= */
 
 let people = [];
-
 let schedule = [];
 
 
@@ -1045,7 +999,6 @@ function updateZambiaClock(){
         date;
 
     updateCurrentService();
-
 }
 
 
@@ -1105,9 +1058,6 @@ function updateCurrentService(){
     let message =
         "No JCRGM service is currently in progress.";
 
-
-    /* Sunday */
-
     if(weekday === "Sunday"){
 
         if(
@@ -1116,7 +1066,7 @@ function updateCurrentService(){
         ){
 
             message =
-                "🟢 Sunday Morning Service is currently in progress • 09:00–12:30";
+                "Sunday Morning Service is currently in progress • 09:00–12:30";
 
         }
 
@@ -1126,21 +1076,18 @@ function updateCurrentService(){
         ){
 
             message =
-                "🟢 Sunday Afternoon Prophetic Ministry is currently in progress • 15:00–18:00";
+                "Sunday Afternoon Prophetic Ministry is currently in progress • 15:00–18:00";
 
         }
 
         else{
 
             message =
-                "🔵 Sunday • JCRGM Services: 09:00–12:30 and 15:00–18:00";
+                "Sunday • JCRGM Services: 09:00–12:30 and 15:00–18:00";
 
         }
 
     }
-
-
-    /* Friday */
 
     else if(weekday === "Friday"){
 
@@ -1150,24 +1097,22 @@ function updateCurrentService(){
         ){
 
             message =
-                "🟢 Friday Midweek Service is currently in progress • 15:00–18:00";
+                "Friday Midweek Service is currently in progress • 15:00–18:00";
 
         }
 
         else{
 
             message =
-                "🔵 Friday • JCRGM Midweek Service: 15:00–18:00";
+                "Friday • JCRGM Midweek Service: 15:00–18:00";
 
         }
 
     }
 
-
     document.getElementById("currentService")
         .innerHTML =
         `<div class="current-service">${message}</div>`;
-
 }
 
 
@@ -1191,7 +1136,6 @@ function init(){
         .value =
         `${year}-${month}`;
 
-
     document.getElementById("rolesList")
         .innerHTML =
         responsibilities.map(
@@ -1212,7 +1156,6 @@ function init(){
             `
         ).join("");
 
-
     loadData(false);
 
     renderPeople();
@@ -1225,12 +1168,11 @@ function init(){
         updateZambiaClock,
         1000
     );
-
 }
 
 
 /* =========================================================
-   ADD PERSON
+   ADD PASTOR
 ========================================================= */
 
 function addPerson(){
@@ -1259,7 +1201,7 @@ function addPerson(){
     ){
 
         alert(
-            "That person is already on the list."
+            "That pastor is already on the list."
         );
 
         return;
@@ -1271,23 +1213,115 @@ function addPerson(){
 
     renderPeople();
 
+    saveData(false);
 }
 
 
 /* =========================================================
-   REMOVE PERSON
+   REMOVE PASTOR
+   THIS IS THE ONLY WAY A PASTOR IS REMOVED
 ========================================================= */
 
 function removePerson(index){
+
+    const person =
+        people[index];
+
+    const confirmed =
+        confirm(
+            `Remove "${person}" from the pastor records?`
+        );
+
+    if(!confirmed){
+        return;
+    }
 
     people.splice(index,1);
 
     renderPeople();
 
+    /*
+       Removing a pastor invalidates the existing
+       schedule, so the generated schedule is cleared.
+       The remaining pastor records are preserved.
+    */
+
     schedule = [];
+
+    saveData(false);
+
+    renderSchedule();
+}
+
+
+/* =========================================================
+   SHUFFLE PASTORS
+   RANDOMLY CHANGES THEIR POSITION
+========================================================= */
+
+function shufflePastors(){
+
+    if(people.length < 2){
+
+        alert(
+            "Please add at least 2 pastors before shuffling."
+        );
+
+        return;
+    }
+
+    const confirmed =
+        confirm(
+            "Shuffle the pastors into a new random order for this month?"
+        );
+
+    if(!confirmed){
+        return;
+    }
+
+    /*
+       Fisher-Yates shuffle
+       This gives every pastor a fair random position.
+    */
+
+    for(
+        let i = people.length - 1;
+        i > 0;
+        i--
+    ){
+
+        const randomIndex =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
+
+        [
+            people[i],
+            people[randomIndex]
+        ] =
+        [
+            people[randomIndex],
+            people[i]
+        ];
+
+    }
+
+    /*
+       The old schedule is cleared because the
+       pastor order has changed.
+    */
+
+    schedule = [];
+
+    renderPeople();
 
     renderSchedule();
 
+    saveData(false);
+
+    alert(
+        "Pastors have been shuffled successfully. You can now press Auto Schedule to create the new monthly schedule."
+    );
 }
 
 
@@ -1314,9 +1348,14 @@ function renderPeople(){
 
                 <div class="person">
 
-                    <span>
-                        ${index + 1}.
+                    <span class="person-name">
+
+                        <span class="person-number">
+                            ${index + 1}
+                        </span>
+
                         ${escapeHtml(person)}
+
                     </span>
 
                     <button
@@ -1330,7 +1369,6 @@ function renderPeople(){
 
             `
         ).join("");
-
 }
 
 
@@ -1339,16 +1377,6 @@ function renderPeople(){
 ========================================================= */
 
 function getServices(pattern){
-
-    /*
-       Sunday = 0
-       Friday = 5
-
-       Current JCRGM times:
-       Sunday Morning: 09:00–12:30
-       Sunday Afternoon: 15:00–18:00
-       Friday: 15:00–18:00
-    */
 
     const sundayServices = [
 
@@ -1366,7 +1394,6 @@ function getServices(pattern){
 
     ];
 
-
     const fridayService = {
 
         day:5,
@@ -1375,20 +1402,17 @@ function getServices(pattern){
 
     };
 
-
     if(pattern === "sun"){
 
         return sundayServices;
 
     }
 
-
     if(pattern === "fri"){
 
         return [fridayService];
 
     }
-
 
     if(pattern === "sunfri"){
 
@@ -1399,12 +1423,10 @@ function getServices(pattern){
 
     }
 
-
     return [
         ...sundayServices,
         fridayService
     ];
-
 }
 
 
@@ -1423,10 +1445,8 @@ function generate(){
         return;
     }
 
-
     const month =
         document.getElementById("month").value;
-
 
     if(!month){
 
@@ -1437,22 +1457,17 @@ function generate(){
         return;
     }
 
-
     const pattern =
         document.getElementById("servicePattern").value;
-
 
     const parts =
         month.split("-").map(Number);
 
-
     const year =
         parts[0];
 
-
     const monthNumber =
         parts[1];
-
 
     const days =
         new Date(
@@ -1461,16 +1476,12 @@ function generate(){
             0
         ).getDate();
 
-
     const services =
         getServices(pattern);
 
-
     schedule = [];
 
-
     let rotation = 0;
-
 
     for(
         let dayNumber = 1;
@@ -1488,10 +1499,8 @@ function generate(){
                 0
             );
 
-
         const dayOfWeek =
             date.getDay();
-
 
         const matchingServices =
             services.filter(
@@ -1499,18 +1508,14 @@ function generate(){
                 service.day === dayOfWeek
             );
 
-
         if(!matchingServices.length){
-
             continue;
         }
-
 
         matchingServices.forEach(
             service => {
 
                 const assignments = [];
-
 
                 responsibilities.forEach(
                     (responsibility,index) => {
@@ -1523,7 +1528,6 @@ function generate(){
                                 ) %
                                 people.length
                             ];
-
 
                         assignments.push({
 
@@ -1538,7 +1542,6 @@ function generate(){
                     }
                 );
 
-
                 const localDate =
                     year +
                     "-" +
@@ -1550,7 +1553,6 @@ function generate(){
                         dayNumber
                     ).padStart(2,"0");
 
-
                 const dayName =
                     date.toLocaleDateString(
                         "en-US",
@@ -1558,7 +1560,6 @@ function generate(){
                             weekday:"long"
                         }
                     );
-
 
                 schedule.push({
 
@@ -1579,7 +1580,6 @@ function generate(){
 
                 });
 
-
                 rotation =
                     (
                         rotation +
@@ -1598,11 +1598,13 @@ function generate(){
 
     }
 
-
     saveData(false);
 
     renderSchedule();
 
+    alert(
+        "Monthly schedule generated successfully."
+    );
 }
 
 
@@ -1615,27 +1617,27 @@ function renderSchedule(){
     const box =
         document.getElementById("schedule");
 
-
     const search =
         (
             document.getElementById("search").value ||
             ""
         ).toLowerCase();
 
-
     if(!schedule.length){
 
         document.getElementById("summary")
             .innerHTML = "";
 
-
         box.innerHTML = `
 
             <div class="empty">
 
-                Enter your pastors/leaders and click
-                <b>Auto Schedule</b>
-                to generate the monthly roster.
+                No schedule generated.
+
+                <br><br>
+
+                Add your pastors, optionally shuffle them,
+                then click <b>Auto Schedule</b>.
 
             </div>
 
@@ -1643,7 +1645,6 @@ function renderSchedule(){
 
         return;
     }
-
 
     let filtered =
         schedule
@@ -1667,7 +1668,6 @@ function renderSchedule(){
                                     service.date
                                 ).toLowerCase();
 
-
                             return text.includes(search);
 
                         }
@@ -1681,10 +1681,8 @@ function renderSchedule(){
                 !search
         );
 
-
     const totalServices =
         schedule.length;
-
 
     const uniquePeople =
         new Set(
@@ -1697,11 +1695,9 @@ function renderSchedule(){
             )
         ).size;
 
-
     const totalAssignments =
         totalServices *
         responsibilities.length;
-
 
     document.getElementById("summary")
         .innerHTML = `
@@ -1718,7 +1714,6 @@ function renderSchedule(){
 
             </div>
 
-
             <div class="stat">
 
                 <b>
@@ -1731,7 +1726,6 @@ function renderSchedule(){
 
             </div>
 
-
             <div class="stat">
 
                 <b>
@@ -1743,7 +1737,6 @@ function renderSchedule(){
                 </span>
 
             </div>
-
 
             <div class="stat">
 
@@ -1759,7 +1752,6 @@ function renderSchedule(){
 
         `;
 
-
     if(!filtered.length){
 
         box.innerHTML =
@@ -1767,7 +1759,6 @@ function renderSchedule(){
 
         return;
     }
-
 
     box.innerHTML =
         filtered.map(
@@ -1783,7 +1774,6 @@ function renderSchedule(){
 
                         </span>
 
-
                         <span class="date-day">
 
                             ${escapeHtml(service.day)}
@@ -1791,7 +1781,6 @@ function renderSchedule(){
                         </span>
 
                     </div>
-
 
                     <div class="service">
 
@@ -1806,7 +1795,6 @@ function renderSchedule(){
                             </span>
 
                         </div>
-
 
                         <div class="assignments">
 
@@ -1842,7 +1830,6 @@ function renderSchedule(){
 
             `
         ).join("");
-
 }
 
 
@@ -1858,7 +1845,6 @@ function formatDate(dateString){
             "T12:00:00"
         );
 
-
     return date.toLocaleDateString(
         "en-US",
         {
@@ -1868,7 +1854,6 @@ function formatDate(dateString){
             year:"numeric"
         }
     );
-
 }
 
 
@@ -1887,7 +1872,6 @@ function exportCSV(){
         return;
     }
 
-
     const rows = [
 
         [
@@ -1900,7 +1884,6 @@ function exportCSV(){
         ]
 
     ];
-
 
     schedule.forEach(
         service => {
@@ -1930,7 +1913,6 @@ function exportCSV(){
         }
     );
 
-
     const csv =
         rows
         .map(
@@ -1945,7 +1927,6 @@ function exportCSV(){
         )
         .join("\n");
 
-
     const blob =
         new Blob(
             [csv],
@@ -1955,20 +1936,16 @@ function exportCSV(){
             }
         );
 
-
     const url =
         URL.createObjectURL(blob);
 
-
     const link =
         document.createElement("a");
-
 
     link.href = url;
 
     link.download =
         "JCRGM_Service_Schedule.csv";
-
 
     document.body.appendChild(link);
 
@@ -1976,9 +1953,7 @@ function exportCSV(){
 
     document.body.removeChild(link);
 
-
     URL.revokeObjectURL(url);
-
 }
 
 
@@ -2008,21 +1983,18 @@ function saveData(show=true){
 
     };
 
-
     localStorage.setItem(
         "jcrgm_schedule_data",
         JSON.stringify(data)
     );
 
-
     if(show){
 
         alert(
-            "JCRGM schedule saved on this device."
+            "JCRGM pastor records and schedule saved on this device."
         );
 
     }
-
 }
 
 
@@ -2039,28 +2011,27 @@ function loadData(show=true){
                 "jcrgm_schedule_data"
             );
 
-
         if(!saved){
-
             return;
         }
-
 
         const data =
             JSON.parse(saved);
 
+        /*
+           Pastor records are loaded independently
+           from the schedule.
+        */
 
         people =
             Array.isArray(data.people)
             ? data.people
             : [];
 
-
         schedule =
             Array.isArray(data.schedule)
             ? data.schedule
             : [];
-
 
         if(data.month){
 
@@ -2069,7 +2040,6 @@ function loadData(show=true){
                 data.month;
 
         }
-
 
         if(data.pattern){
 
@@ -2080,16 +2050,14 @@ function loadData(show=true){
 
         }
 
-
         renderPeople();
 
         renderSchedule();
 
-
         if(show){
 
             alert(
-                "Saved JCRGM schedule loaded."
+                "Saved JCRGM pastor records and schedule loaded."
             );
 
         }
@@ -2102,74 +2070,59 @@ function loadData(show=true){
         );
 
     }
-
 }
 
 
 /* =========================================================
-   CLEAR EVERYTHING
+   CLEAR SCHEDULE ONLY
+   PASTOR RECORDS ARE NEVER DELETED HERE
 ========================================================= */
 
-function clearAll(){
+function clearSchedule(){
 
-    const confirmed =
-        confirm(
-            "Clear all pastors and schedules?"
+    if(!schedule.length){
+
+        alert(
+            "There is no generated schedule to clear. Pastor records have not been changed."
         );
-
-
-    if(!confirmed){
 
         return;
     }
 
+    const confirmed =
+        confirm(
+            "Clear the generated schedule only?\n\nYour pastor records will remain saved."
+        );
 
-    people = [];
+    if(!confirmed){
+        return;
+    }
+
+    /*
+       IMPORTANT:
+       Only schedule is cleared.
+       people[] is NOT touched.
+    */
 
     schedule = [];
 
+    /*
+       Save the remaining pastor records
+       while storing an empty schedule.
+    */
 
-    localStorage.removeItem(
-        "jcrgm_schedule_data"
-    );
+    saveData(false);
 
-
-    document.getElementById(
-        "search"
-    ).value = "";
-
-
-    document.getElementById(
-        "servicePattern"
-    ).value = "jcrgm";
-
-
-    const now =
-        new Date();
-
-
-    const year =
-        now.getFullYear();
-
-
-    const month =
-        String(
-            now.getMonth() + 1
-        ).padStart(2,"0");
-
-
-    document.getElementById(
-        "month"
-    ).value =
-        `${year}-${month}`;
-
+    document.getElementById("search")
+        .value = "";
 
     renderPeople();
 
     renderSchedule();
 
-    updateCurrentService();
-
+    alert(
+        "Schedule cleared. All pastor records have been preserved."
+    );
 }
 
 
@@ -2191,8 +2144,28 @@ function escapeHtml(value){
                 "'":"&#039;"
             }[character])
         );
-
 }
+
+
+/* =========================================================
+   ENTER KEY FOR ADDING PASTOR
+========================================================= */
+
+document.getElementById("personName")
+    .addEventListener(
+        "keydown",
+        function(event){
+
+            if(event.key === "Enter"){
+
+                event.preventDefault();
+
+                addPerson();
+
+            }
+
+        }
+    );
 
 
 /* =========================================================
