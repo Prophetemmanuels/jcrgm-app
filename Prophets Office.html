@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -466,63 +467,8 @@ footer a{word-break:break-word}
   *{animation:none!important;transition-duration:.01ms!important}
   .rv{opacity:1;transform:none}
 }
-
-/* ==========================================================
-   MOBILE FORM / WHATSAPP FIX
-   - Send button remains reachable while keyboard is open
-   - Large touch targets and forgiving tap areas
-   - Keyboard-aware fixed action bar
-   ========================================================== */
-html{scroll-behavior:smooth}
-#booking{scroll-margin-top:82px}
-.f,.f>*{touch-action:manipulation}
-label.lb{cursor:pointer}
-.inp,.chip,.mode,.slot,.actions .btn{min-height:48px}
-textarea.inp{min-height:120px}
-
-.mobile-sendbar{
-  display:none;
-  position:fixed;
-  left:0;right:0;bottom:0;
-  z-index:390;
-  padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-  background:rgba(4,6,13,.96);
-  border-top:1px solid rgba(220,185,85,.28);
-  box-shadow:0 -14px 35px rgba(0,0,0,.42);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-}
-.mobile-sendbar .mobile-send{
-  width:100%;min-height:54px;border:0;border-radius:16px;
-  display:flex;align-items:center;justify-content:center;gap:9px;
-  background:var(--wa);color:#04140a;font-weight:900;font-size:15px;
-  box-shadow:0 10px 28px -10px rgba(37,211,102,.9);
-  cursor:pointer;touch-action:manipulation;
-}
-.mobile-sendbar .mobile-send:active{transform:scale(.985)}
-.mobile-sendbar .mobile-send[disabled]{opacity:.65}
-.mobile-sendbar .mobile-hint{
-  text-align:center;font-size:10px;color:var(--dim);margin-top:5px;
-}
-body.has-mobile-send{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
-
-@media(max-width:700px){
-  .mobile-sendbar{display:block}
-  .actions{padding-bottom:4px}
-  .actions .btn:first-child{display:none}
-  .preview{margin-bottom:8px}
-}
-@media(min-width:701px){.mobile-sendbar{display:none!important}}
-
-@media(max-width:560px){
-  .form-shell{padding-bottom:18px}
-  .inp{font-size:16px!important}
-  .chip,.mode,.slot{min-height:50px}
-  .agree{min-height:60px;align-items:flex-start}
-  .agree input{width:22px;height:22px}
-}
-
 </style>
+
 </head>
 <body>
 
@@ -549,19 +495,20 @@ body.has-mobile-send{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
       </span>
     </a>
 
-    <nav class="menu">
-      <a href="#about">The Office</a>
-      <a href="#services">Ministry Desks</a>
-      <a href="#process">How It Works</a>
-      <a href="#booking">Book</a>
-      <a href="#hours">Hours</a>
-      <a href="#faq">FAQ</a>
-    </nav>
+<nav class="menu">
+  <a href="#about">The Office</a>
+  <a href="#services">Ministry Desks</a>
+  <a href="#process">How It Works</a>
+  <a href="#booking">Book</a>
+  <a href="#hours">Hours</a>
+  <a href="#faq">FAQ</a>
+</nav>
 
-    <div class="nav-cta">
-      <a class="btn btn-wa btn-sm" data-wa="book"><span class="i-wa"></span>0979 554 970</a>
-      <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-    </div>
+<div class="nav-cta">
+  <a class="btn btn-wa btn-sm" data-wa="book"><span class="i-wa"></span>0979 554 970</a>
+  <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</div>
+
   </div>
 </header>
 
@@ -599,36 +546,37 @@ body.has-mobile-send{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
       <h1 class="rv">Book your seat before <span class="gold">the man of God</span></h1>
       <p class="sub rv">Prophetic consultation, prayer, deliverance and counsel with <b style="color:var(--gold-200)">Bishop Emmanuel Sakala</b> — arranged properly, attended to privately, and confirmed on WhatsApp. No queues at the gate, no waiting all day. One message and your appointment is opened.</p>
 
-      <div class="hero-btns rv">
-        <a href="#booking" class="btn btn-gold btn-lg">&#128197; Book an appointment</a>
-        <a class="btn btn-wa btn-lg" data-wa="book"><span class="i-wa"></span>WhatsApp 0979 554 970</a>
-      </div>
+  <div class="hero-btns rv">
+    <a href="#booking" class="btn btn-gold btn-lg">&#128197; Book an appointment</a>
+    <a class="btn btn-wa btn-lg" data-wa="book"><span class="i-wa"></span>WhatsApp 0979 554 970</a>
+  </div>
 
-      <div class="trust rv">
-        <span style="color:var(--wa)">&#9679; Desk open now</span><span>&#128274; Strictly confidential</span>
-        <span>&#128330;&#65039; No consultation fee</span><span>&#128205; Meanwood Ndeke Phase 2</span>
-      </div>
+  <div class="trust rv">
+    <span style="color:var(--wa)">&#9679; Desk open now</span><span>&#128274; Strictly confidential</span>
+    <span>&#128330;&#65039; No consultation fee</span><span>&#128205; Meanwood Ndeke Phase 2</span>
+  </div>
 
-      <div class="stats rv">
-        <div><b>12+</b><span>Years of ministry</span></div>
-        <div><b>9,400+</b><span>Appointments served</span></div>
-        <div><b>&lt;2 hrs</b><span>WhatsApp reply</span></div>
-        <div><b>100%</b><span>Confidential</span></div>
-      </div>
-    </div>
+  <div class="stats rv">
+    <div><b>12+</b><span>Years of ministry</span></div>
+    <div><b>9,400+</b><span>Appointments served</span></div>
+    <div><b>&lt;2 hrs</b><span>WhatsApp reply</span></div>
+    <div><b>100%</b><span>Confidential</span></div>
+  </div>
+</div>
 
-    <div class="hero-card glass rv">
-      <span class="kicker">Fastest way in</span>
-      <h2>Three taps and you are on the diary</h2>
-      <div class="mini"><i>1</i><div><b>Tell us who you are</b><p>Name, phone and the desk you need.</p></div></div>
-      <div class="mini"><i>2</i><div><b>Pick a day &amp; time</b><p>Live slots from the office calendar.</p></div></div>
-      <div class="mini"><i>3</i><div><b>Send on WhatsApp</b><p>We reply with your confirmation.</p></div></div>
-      <a href="#booking" class="btn btn-gold btn-block" style="margin-top:20px">Start my booking &rarr;</a>
-      <div class="verse">
-        <q>Surely the Sovereign LORD does nothing without revealing his plan to his servants the prophets.</q>
-        <span>Amos 3:7</span>
-      </div>
-    </div>
+<div class="hero-card glass rv">
+  <span class="kicker">Fastest way in</span>
+  <h2>Three taps and you are on the diary</h2>
+  <div class="mini"><i>1</i><div><b>Tell us who you are</b><p>Name, phone and the desk you need.</p></div></div>
+  <div class="mini"><i>2</i><div><b>Pick a day &amp; time</b><p>Live slots from the office calendar.</p></div></div>
+  <div class="mini"><i>3</i><div><b>Send on WhatsApp</b><p>We reply with your confirmation.</p></div></div>
+  <a href="#booking" class="btn btn-gold btn-block" style="margin-top:20px">Start my booking &rarr;</a>
+  <div class="verse">
+    <q>Surely the Sovereign LORD does nothing without revealing his plan to his servants the prophets.</q>
+    <span>Amos 3:7</span>
+  </div>
+</div>
+
   </div>
 
   <div class="marquee"><div class="marquee-in" id="marquee"></div></div>
@@ -649,19 +597,20 @@ body.has-mobile-send{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
       </div>
     </div>
 
-    <div>
-      <span class="eyebrow rv">Inside the office</span>
-      <h2 class="rv">A place of order, reverence and <span class="gold">honest counsel</span></h2>
-      <div class="body rv">
-        <p>The Prophets Office is the appointment desk of <b style="color:var(--gold-200)">JCRGM</b>, and it exists so that no one who genuinely needs a word, a prayer or sound counsel has to fight through a crowd to receive it. Under the leadership of <b style="color:var(--gold-200)">Bishop Emmanuel Sakala</b>, the office runs a proper appointment diary, a trained intercessory team and a follow-up desk.</p>
-        <p>Every request that comes through WhatsApp is logged, prayed over and answered by a real person. You will always know your date, your time, who will attend to you and what to bring — before you leave your house.</p>
-      </div>
-      <div class="mini-cards rv" id="pillars"></div>
-      <div class="hero-btns rv" style="margin-top:26px">
-        <a href="#booking" class="btn btn-gold">Request an appointment</a>
-        <a href="#process" class="btn btn-out">See how a session runs</a>
-      </div>
-    </div>
+<div>
+  <span class="eyebrow rv">Inside the office</span>
+  <h2 class="rv">A place of order, reverence and <span class="gold">honest counsel</span></h2>
+  <div class="body rv">
+    <p>The Prophets Office is the appointment desk of <b style="color:var(--gold-200)">JCRGM</b>, and it exists so that no one who genuinely needs a word, a prayer or sound counsel has to fight through a crowd to receive it. Under the leadership of <b style="color:var(--gold-200)">Bishop Emmanuel Sakala</b>, the office runs a proper appointment diary, a trained intercessory team and a follow-up desk.</p>
+    <p>Every request that comes through WhatsApp is logged, prayed over and answered by a real person. You will always know your date, your time, who will attend to you and what to bring — before you leave your house.</p>
+  </div>
+  <div class="mini-cards rv" id="pillars"></div>
+  <div class="hero-btns rv" style="margin-top:26px">
+    <a href="#booking" class="btn btn-gold">Request an appointment</a>
+    <a href="#process" class="btn btn-out">See how a session runs</a>
+  </div>
+</div>
+
   </div>
 </section>
 
@@ -689,27 +638,28 @@ body.has-mobile-send{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
       <div class="hair"></div>
     </div>
 
-    <div class="steps rv" style="margin-top:44px" id="steps"></div>
+<div class="steps rv" style="margin-top:44px" id="steps"></div>
 
-    <div class="two">
-      <div class="glass rv" style="border-radius:24px;padding:26px">
-        <h3 style="font-size:24px;color:#fff">What to bring &amp; office protocol</h3>
-        <p style="font-size:13.5px;color:var(--muted);margin-top:7px">Small things that keep the diary running and the atmosphere reverent.</p>
-        <ul class="bring" id="bring"></ul>
-      </div>
+<div class="two">
+  <div class="glass rv" style="border-radius:24px;padding:26px">
+    <h3 style="font-size:24px;color:#fff">What to bring &amp; office protocol</h3>
+    <p style="font-size:13.5px;color:var(--muted);margin-top:7px">Small things that keep the diary running and the atmosphere reverent.</p>
+    <ul class="bring" id="bring"></ul>
+  </div>
 
-      <div class="urgent rv">
-        <span class="kicker">Emergency line</span>
-        <h3>Hospital, bereavement or crisis?</h3>
-        <p style="font-size:14px;color:#bfc9e0;margin-top:11px">Do not wait for the diary. Send the word <b style="color:var(--gold-200)">URGENT</b> as the first word of your WhatsApp message and the on-call minister is alerted immediately — day or night.</p>
-        <ul>
-          <li>Same-day hospital and home visits</li>
-          <li>Night prayer line for emergencies</li>
-          <li>Bereavement and funeral ministry support</li>
-        </ul>
-        <a class="btn btn-wa" style="margin-top:20px" data-wa="urgent"><span class="i-wa"></span>Send an urgent message</a>
-      </div>
-    </div>
+  <div class="urgent rv">
+    <span class="kicker">Emergency line</span>
+    <h3>Hospital, bereavement or crisis?</h3>
+    <p style="font-size:14px;color:#bfc9e0;margin-top:11px">Do not wait for the diary. Send the word <b style="color:var(--gold-200)">URGENT</b> as the first word of your WhatsApp message and the on-call minister is alerted immediately — day or night.</p>
+    <ul>
+      <li>Same-day hospital and home visits</li>
+      <li>Night prayer line for emergencies</li>
+      <li>Bereavement and funeral ministry support</li>
+    </ul>
+    <a class="btn btn-wa" style="margin-top:20px" data-wa="urgent"><span class="i-wa"></span>Send an urgent message</a>
+  </div>
+</div>
+
   </div>
 </section>
 
@@ -722,120 +672,121 @@ body.has-mobile-send{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
       <div class="hair"></div>
     </div>
 
-    <div class="book-grid">
-      <div class="form-shell glass rv">
-        <form id="bookForm" novalidate>
-          <div class="fs-head"><i>1</i><h3>Who is this appointment for?</h3><span class="hair"></span></div>
-          <div class="row">
-            <div class="f"><label class="lb" for="f_name">Full name</label>
-              <input class="inp" id="f_name" type="text" placeholder="e.g. Mary Banda" autocomplete="name"><p class="err" id="e_name"></p></div>
-            <div class="f"><label class="lb" for="f_phone">WhatsApp number</label>
-              <input class="inp" id="f_phone" type="tel" placeholder="e.g. 0977 000 000" inputmode="tel" autocomplete="tel"><p class="err" id="e_phone"></p></div>
-          </div>
-          <div class="row">
-            <div class="f"><label class="lb" for="f_email">Email (optional)</label>
-              <input class="inp" id="f_email" type="email" placeholder="you@email.com" inputmode="email" autocomplete="email"><p class="err" id="e_email"></p></div>
-            <div class="f"><label class="lb" for="f_loc">City / Country</label>
-              <input class="inp" id="f_loc" type="text" value="Lusaka, Zambia"></div>
-          </div>
-          <div class="row">
-            <div class="f"><label class="lb">I am booking for</label>
-              <div class="chips" data-group="forWho">
-                <button type="button" class="chip on" data-val="self">Myself</button>
-                <button type="button" class="chip" data-val="other">Someone else</button>
-              </div></div>
-            <div class="f" id="wrapFirst"><label class="lb">Been here before?</label>
-              <div class="chips" data-group="firstTime">
-                <button type="button" class="chip on" data-val="yes">First time</button>
-                <button type="button" class="chip" data-val="no">Returning</button>
-              </div></div>
-            <div class="f" id="wrapOther" style="display:none"><label class="lb" for="f_other">Their name &amp; relationship</label>
-              <input class="inp" id="f_other" type="text" placeholder="e.g. John Phiri — my brother"><p class="err" id="e_other"></p></div>
-          </div>
-
-          <div class="fs-head"><i>2</i><h3>Which ministry desk?</h3><span class="hair"></span></div>
-          <div class="f"><label class="lb" for="f_service">Ministry desk</label>
-            <div class="selwrap"><select class="inp" id="f_service"><option value="">— Select a desk —</option></select></div>
-            <p class="err" id="e_service"></p></div>
-          <div class="f"><label class="lb">How would you like to be attended to?</label>
-            <div class="modes" data-group="mode" id="modes"></div></div>
-
-          <div class="fs-head"><i>3</i><h3>When suits you?</h3><span class="hair"></span></div>
-          <div class="row">
-            <div class="f"><label class="lb" for="f_date">Preferred date</label>
-              <input class="inp" type="date" id="f_date" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}"><p class="err" id="e_date"></p>
-              <p id="dayNote" style="margin-top:6px;font-size:11.5px;color:var(--dim)"></p></div>
-            <div class="f"><label class="lb">Priority</label>
-              <div class="chips" data-group="urgency">
-                <button type="button" class="chip on" data-val="normal">Normal</button>
-                <button type="button" class="chip" data-val="urgent">&#128680; Urgent</button>
-              </div></div>
-          </div>
-          <div id="closedNote"></div>
-          <div class="f"><label class="lb">Available time slots</label>
-            <div id="slots"><p class="empty">Choose a date above to see the open slots.</p></div>
-            <p class="err" id="e_time"></p></div>
-
-          <div class="fs-head"><i>4</i><h3>Tell the office briefly</h3><span class="hair"></span></div>
-          <div class="f"><label class="lb" for="f_details">What would you like to be ministered to about?</label>
-            <textarea class="inp" id="f_details" placeholder="A few sentences are enough — e.g. I need direction concerning a job offer in another town and prayer over my family. Everything you write is confidential."></textarea>
-            <p style="text-align:right;margin-top:6px;font-size:11px;color:#4e5878"><span id="count">0</span> characters</p>
-            <p class="err" id="e_details"></p></div>
-
-          <label class="agree" for="f_agree">
-            <input type="checkbox" id="f_agree">
-            <span>I understand that appointments are free, that offerings are voluntary, and I agree to keep the confirmed time or notify the office at least 6 hours in advance.</span>
-          </label>
-          <p class="err" id="e_agree"></p>
-
-          <div class="actions">
-            <button type="submit" class="btn btn-wa btn-lg"><span class="i-wa"></span>Send to 0979 554 970</button>
-            <button type="button" class="btn btn-ghost btn-lg" id="clearBtn">Clear form</button>
-          </div>
-          <p class="privacy">&#128274; Nothing is stored on this website. Your details go directly into your own WhatsApp chat with the office.</p>
-        </form>
-
-        <div class="done" id="done">
-          <div class="tick">&#9989;</div>
-          <h3>Your request is ready</h3>
-          <p>WhatsApp should have opened with your appointment details. Press <b style="color:var(--wa)">send</b> in WhatsApp to deliver it to the office — you will receive a written confirmation shortly.</p>
-          <div class="receipt">
-            <div class="rt"><small>Reference</small><b id="r_ref">&mdash;</b></div>
-            <dl>
-              <div><dt>Desk</dt><dd id="r_desk">&mdash;</dd></div>
-              <div><dt>Date</dt><dd id="r_date">&mdash;</dd></div>
-              <div><dt>Time</dt><dd id="r_time">&mdash;</dd></div>
-              <div><dt>Mode</dt><dd id="r_mode">&mdash;</dd></div>
-            </dl>
-          </div>
-          <div class="actions" style="justify-content:center">
-            <a class="btn btn-wa" id="reopen" href="#" rel="noopener"><span class="i-wa"></span>Open WhatsApp again</a>
-            <button class="btn btn-out" type="button" id="copyBtn2">Copy the message</button>
-            <button class="btn btn-ghost" type="button" id="againBtn">Make another booking</button>
-          </div>
-        </div>
+<div class="book-grid">
+  <div class="form-shell glass rv">
+    <form id="bookForm" novalidate>
+      <div class="fs-head"><i>1</i><h3>Who is this appointment for?</h3><span class="hair"></span></div>
+      <div class="row">
+        <div class="f"><label class="lb" for="f_name">Full name</label>
+          <input class="inp" id="f_name" type="text" placeholder="e.g. Mary Banda" autocomplete="name"><p class="err" id="e_name"></p></div>
+        <div class="f"><label class="lb" for="f_phone">WhatsApp number</label>
+          <input class="inp" id="f_phone" type="tel" placeholder="e.g. 0977 000 000" inputmode="tel" autocomplete="tel"><p class="err" id="e_phone"></p></div>
+      </div>
+      <div class="row">
+        <div class="f"><label class="lb" for="f_email">Email (optional)</label>
+          <input class="inp" id="f_email" type="email" placeholder="you@email.com" inputmode="email" autocomplete="email"><p class="err" id="e_email"></p></div>
+        <div class="f"><label class="lb" for="f_loc">City / Country</label>
+          <input class="inp" id="f_loc" type="text" value="Lusaka, Zambia"></div>
+      </div>
+      <div class="row">
+        <div class="f"><label class="lb">I am booking for</label>
+          <div class="chips" data-group="forWho">
+            <button type="button" class="chip on" data-val="self">Myself</button>
+            <button type="button" class="chip" data-val="other">Someone else</button>
+          </div></div>
+        <div class="f" id="wrapFirst"><label class="lb">Been here before?</label>
+          <div class="chips" data-group="firstTime">
+            <button type="button" class="chip on" data-val="yes">First time</button>
+            <button type="button" class="chip" data-val="no">Returning</button>
+          </div></div>
+        <div class="f" id="wrapOther" style="display:none"><label class="lb" for="f_other">Their name &amp; relationship</label>
+          <input class="inp" id="f_other" type="text" placeholder="e.g. John Phiri — my brother"><p class="err" id="e_other"></p></div>
       </div>
 
-      <aside class="preview rv">
-        <div class="chat">
-          <div class="chat-top">
-            <span class="chat-av"><span class="i-wa"></span></span>
-            <div><b>Appointment Desk</b><small>+260 979 554 970 · online</small></div>
-          </div>
-          <div class="chat-body"><div class="bubble" id="bubble"></div><small>Preview · not sent yet</small></div>
-          <div class="chat-foot">
-            <span class="kicker" style="color:var(--dim);letter-spacing:.18em">Live preview</span>
-            <p>This is exactly what will land in the office inbox. Edit the form and watch it update.</p>
-            <button class="copybtn" type="button" id="copyBtn">Copy message text</button>
-          </div>
-        </div>
-        <div class="aside-box">
-          <b>Prefer to just chat?</b>
-          <p>Skip the form and message the desk directly. Someone is always on the other side.</p>
-          <a class="btn btn-out btn-sm btn-block" style="margin-top:14px" data-wa="talk"><span class="i-wa"></span>Chat 0979 554 970</a>
-        </div>
-      </aside>
+      <div class="fs-head"><i>2</i><h3>Which ministry desk?</h3><span class="hair"></span></div>
+      <div class="f"><label class="lb" for="f_service">Ministry desk</label>
+        <div class="selwrap"><select class="inp" id="f_service"><option value="">— Select a desk —</option></select></div>
+        <p class="err" id="e_service"></p></div>
+      <div class="f"><label class="lb">How would you like to be attended to?</label>
+        <div class="modes" data-group="mode" id="modes"></div></div>
+
+      <div class="fs-head"><i>3</i><h3>When suits you?</h3><span class="hair"></span></div>
+      <div class="row">
+        <div class="f"><label class="lb" for="f_date">Preferred date</label>
+          <input class="inp" type="date" id="f_date" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}"><p class="err" id="e_date"></p>
+          <p id="dayNote" style="margin-top:6px;font-size:11.5px;color:var(--dim)"></p></div>
+        <div class="f"><label class="lb">Priority</label>
+          <div class="chips" data-group="urgency">
+            <button type="button" class="chip on" data-val="normal">Normal</button>
+            <button type="button" class="chip" data-val="urgent">&#128680; Urgent</button>
+          </div></div>
+      </div>
+      <div id="closedNote"></div>
+      <div class="f"><label class="lb">Available time slots</label>
+        <div id="slots"><p class="empty">Choose a date above to see the open slots.</p></div>
+        <p class="err" id="e_time"></p></div>
+
+      <div class="fs-head"><i>4</i><h3>Tell the office briefly</h3><span class="hair"></span></div>
+      <div class="f"><label class="lb" for="f_details">What would you like to be ministered to about?</label>
+        <textarea class="inp" id="f_details" placeholder="A few sentences are enough — e.g. I need direction concerning a job offer in another town and prayer over my family. Everything you write is confidential."></textarea>
+        <p style="text-align:right;margin-top:6px;font-size:11px;color:#4e5878"><span id="count">0</span> characters</p>
+        <p class="err" id="e_details"></p></div>
+
+      <label class="agree" for="f_agree">
+        <input type="checkbox" id="f_agree">
+        <span>I understand that appointments are free, that offerings are voluntary, and I agree to keep the confirmed time or notify the office at least 6 hours in advance.</span>
+      </label>
+      <p class="err" id="e_agree"></p>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-wa btn-lg"><span class="i-wa"></span>Send to 0979 554 970</button>
+        <button type="button" class="btn btn-ghost btn-lg" id="clearBtn">Clear form</button>
+      </div>
+      <p class="privacy">&#128274; Nothing is stored on this website. Your details go directly into your own WhatsApp chat with the office.</p>
+    </form>
+
+    <div class="done" id="done">
+      <div class="tick">&#9989;</div>
+      <h3>Your request is ready</h3>
+      <p>WhatsApp should have opened with your appointment details. Press <b style="color:var(--wa)">send</b> in WhatsApp to deliver it to the office — you will receive a written confirmation shortly.</p>
+      <div class="receipt">
+        <div class="rt"><small>Reference</small><b id="r_ref">&mdash;</b></div>
+        <dl>
+          <div><dt>Desk</dt><dd id="r_desk">&mdash;</dd></div>
+          <div><dt>Date</dt><dd id="r_date">&mdash;</dd></div>
+          <div><dt>Time</dt><dd id="r_time">&mdash;</dd></div>
+          <div><dt>Mode</dt><dd id="r_mode">&mdash;</dd></div>
+        </dl>
+      </div>
+      <div class="actions" style="justify-content:center">
+        <a class="btn btn-wa" id="reopen" href="#" rel="noopener"><span class="i-wa"></span>Open WhatsApp again</a>
+        <button class="btn btn-out" type="button" id="copyBtn2">Copy the message</button>
+        <button class="btn btn-ghost" type="button" id="againBtn">Make another booking</button>
+      </div>
     </div>
+  </div>
+
+  <aside class="preview rv">
+    <div class="chat">
+      <div class="chat-top">
+        <span class="chat-av"><span class="i-wa"></span></span>
+        <div><b>Appointment Desk</b><small>+260 979 554 970 · online</small></div>
+      </div>
+      <div class="chat-body"><div class="bubble" id="bubble"></div><small>Preview · not sent yet</small></div>
+      <div class="chat-foot">
+        <span class="kicker" style="color:var(--dim);letter-spacing:.18em">Live preview</span>
+        <p>This is exactly what will land in the office inbox. Edit the form and watch it update.</p>
+        <button class="copybtn" type="button" id="copyBtn">Copy message text</button>
+      </div>
+    </div>
+    <div class="aside-box">
+      <b>Prefer to just chat?</b>
+      <p>Skip the form and message the desk directly. Someone is always on the other side.</p>
+      <a class="btn btn-out btn-sm btn-block" style="margin-top:14px" data-wa="talk"><span class="i-wa"></span>Chat 0979 554 970</a>
+    </div>
+  </aside>
+</div>
+
   </div>
 </section>
 
@@ -848,36 +799,37 @@ body.has-mobile-send{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
       <div class="hair"></div>
     </div>
 
-    <div class="hours-grid">
-      <div class="diary rv">
-        <div class="diary-h"><h3>Weekly diary</h3><span class="badge">Today · <span id="todayName"></span></span></div>
-        <ul id="diary"></ul>
-        <div class="foot">Public holidays follow the Sunday schedule. Emergency and hospital visits are attended to outside these hours — send <b style="color:var(--gold-300)">URGENT</b> on WhatsApp.</div>
-      </div>
+<div class="hours-grid">
+  <div class="diary rv">
+    <div class="diary-h"><h3>Weekly diary</h3><span class="badge">Today · <span id="todayName"></span></span></div>
+    <ul id="diary"></ul>
+    <div class="foot">Public holidays follow the Sunday schedule. Emergency and hospital visits are attended to outside these hours — send <b style="color:var(--gold-300)">URGENT</b> on WhatsApp.</div>
+  </div>
 
-      <div class="rv">
-        <div class="info glass">
-          <h3>Visit the office</h3>
-          <div class="irow"><span class="ii">&#128205;</span><div><small>Address</small><p>Prophets Office &mdash; Pedahzur Ministries<br>Meanwood Ndeke Phase 2, Lusaka, Zambia</p></div></div>
-          <div class="irow"><span class="ii">&#128663;</span><div><small>Parking &amp; access</small><p>Secure parking within the yard · step-free entrance at the main gate</p></div></div>
-          <div class="irow"><span class="ii">&#128652;</span><div><small>Getting here</small><p> Call for +260979554970 or +260978548813</p></div></div>
-          <div class="irow"><span class="ii">&#128336;</span><div><small>Arrival</small><p>Arrive 15 minutes early and report to reception with your reference number</p></div></div>
-          <div class="hero-btns" style="margin-top:20px">
-            <a class="btn btn-wa btn-sm" data-wa="pin"><span class="i-wa"></span>Request location pin</a>
-            <a class="btn btn-out btn-sm" href="tel:0979554970">&#9742;&#65039; Call 0979 554 970</a>
-          </div>
-        </div>
-
-        <div class="svc-times">
-          <span class="kicker">Weekly gatherings</span>
-          <ul>
-            <li><span><b>Tuesday</b><small> Online Prophetic prayer &amp; teaching</small></span><span class="t">20:00</span></li>
-            <li><span><b>Friday</b><small>All-night intercession (1st Friday)</small></span><span class="t">19:00</span></li>
-            <li><span><b>Sunday</b><small>Main services</small></span><span class="t">09:00 &amp; 15:00</span></li>
-          </ul>
-        </div>
+  <div class="rv">
+    <div class="info glass">
+      <h3>Visit the office</h3>
+      <div class="irow"><span class="ii">&#128205;</span><div><small>Address</small><p>Prophets Office &mdash; Pedahzur Ministries<br>Meanwood Ndeke Phase 2, Lusaka, Zambia</p></div></div>
+      <div class="irow"><span class="ii">&#128663;</span><div><small>Parking &amp; access</small><p>Secure parking within the yard · step-free entrance at the main gate</p></div></div>
+      <div class="irow"><span class="ii">&#128652;</span><div><small>Getting here</small><p> Call for +260979554970 or +260978548813</p></div></div>
+      <div class="irow"><span class="ii">&#128336;</span><div><small>Arrival</small><p>Arrive 15 minutes early and report to reception with your reference number</p></div></div>
+      <div class="hero-btns" style="margin-top:20px">
+        <a class="btn btn-wa btn-sm" data-wa="pin"><span class="i-wa"></span>Request location pin</a>
+        <a class="btn btn-out btn-sm" href="tel:0979554970">&#9742;&#65039; Call 0979 554 970</a>
       </div>
     </div>
+
+    <div class="svc-times">
+      <span class="kicker">Weekly gatherings</span>
+      <ul>
+        <li><span><b>Tuesday</b><small> Online Prophetic prayer &amp; teaching</small></span><span class="t">20:00</span></li>
+        <li><span><b>Friday</b><small>All-night intercession (1st Friday)</small></span><span class="t">19:00</span></li>
+        <li><span><b>Sunday</b><small>Main services</small></span><span class="t">09:00 &amp; 15:00</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
   </div>
 </section>
 
@@ -930,54 +882,55 @@ body.has-mobile-send{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
         <h2 class="rv">You don&rsquo;t need an appointment <span class="gold">to be prayed for</span></h2>
         <p class="rv" style="margin-top:16px;max-width:520px;font-size:15px;color:#b3bfd8">Write your request below and it goes straight to the intercessory team on WhatsApp. Requests are prayed over every morning at 05:00 and every evening at 21:00.</p>
 
-        <div class="glass rv" style="border-radius:24px;padding:24px;margin-top:24px">
-          <label class="lb" for="p_name">Your name (optional)</label>
-          <input class="inp" id="p_name" type="text" placeholder="You may also remain anonymous">
-          <label class="lb" for="p_req" style="margin-top:16px">Your prayer request</label>
-          <textarea class="inp" id="p_req" style="min-height:104px" placeholder="e.g. Please pray for my mother who is admitted at the hospital, and for favour in my job search."></textarea>
-          <p class="err" id="e_pray"></p>
-          <button class="btn btn-wa btn-block" type="button" style="margin-top:16px" id="prayBtn"><span class="i-wa"></span>Send prayer request</button>
-          <p class="center" style="margin-top:11px;font-size:11.5px;color:var(--dim)">Delivered privately to 0979 554 970</p>
-        </div>
-      </div>
-
-      <div class="rv">
-        <div class="chan">
-          <span class="ico">&#128172;</span>
-          <div class="cc"><small>WhatsApp desk</small><b>0979 554 970</b><p>Bookings, questions, prayer — fastest</p></div>
-          <a class="btn btn-out btn-sm" data-wa="talk">Open chat</a>
-        </div>
-        <div class="chan">
-          <span class="ico">&#9742;&#65039;</span>
-          <div class="cc"><small>Call the office</small><b>+260 979 554 970</b><p>Tue – Fri 09:00 – 17:00</p></div>
-          <a class="btn btn-out btn-sm" href="tel:+260979554970">Call now</a>
-        </div>
-        <div class="chan">
-          <span class="ico">&#9993;&#65039;</span>
-          <div class="cc"><small>Email</small><b style="font-size:15.5px">pedahzurministries@gmail.com</b><p>Invitations, partnerships &amp; enquiries</p></div>
-          <a class="btn btn-out btn-sm" href="mailto:pedahzurministries@gmail.com?subject=Enquiry%20-%20Prophets%20Office">Send email</a>
-        </div>
-        <div class="chan">
-          <span class="ico">&#128205;</span>
-          <div class="cc"><small>Office</small><b style="font-size:17px">Meanwood Ndeke Phase 2</b><p>Lusaka, Zambia · Pedahzur Ministries</p></div>
-          <a class="btn btn-out btn-sm" data-wa="pin">Get directions</a>
-        </div>
-
-        <div class="scripture">
-          <q>Call to me and I will answer you, and show you great and mighty things which you do not know.</q>
-          <span>Jeremiah 33:3</span>
-          <a href="#booking" class="btn btn-gold" style="margin-top:18px">&#128197; Book your appointment</a>
-        </div>
-
-        <div class="saveband">
-          <div class="tx">
-            <h4>&#128241; Keep this page on your phone</h4>
-            <p>Save it once and every button — booking, prayer line, WhatsApp — keeps working even with no internet. It saves as <b style="color:var(--gold-200)">Prophets Office.html</b>.</p>
-          </div>
-          <button class="btn btn-gold" type="button" data-save>&#128190; Save to my phone</button>
-        </div>
-      </div>
+    <div class="glass rv" style="border-radius:24px;padding:24px;margin-top:24px">
+      <label class="lb" for="p_name">Your name (optional)</label>
+      <input class="inp" id="p_name" type="text" placeholder="You may also remain anonymous">
+      <label class="lb" for="p_req" style="margin-top:16px">Your prayer request</label>
+      <textarea class="inp" id="p_req" style="min-height:104px" placeholder="e.g. Please pray for my mother who is admitted at the hospital, and for favour in my job search."></textarea>
+      <p class="err" id="e_pray"></p>
+      <button class="btn btn-wa btn-block" type="button" style="margin-top:16px" id="prayBtn"><span class="i-wa"></span>Send prayer request</button>
+      <p class="center" style="margin-top:11px;font-size:11.5px;color:var(--dim)">Delivered privately to 0979 554 970</p>
     </div>
+  </div>
+
+  <div class="rv">
+    <div class="chan">
+      <span class="ico">&#128172;</span>
+      <div class="cc"><small>WhatsApp desk</small><b>0979 554 970</b><p>Bookings, questions, prayer — fastest</p></div>
+      <a class="btn btn-out btn-sm" data-wa="talk">Open chat</a>
+    </div>
+    <div class="chan">
+      <span class="ico">&#9742;&#65039;</span>
+      <div class="cc"><small>Call the office</small><b>+260 979 554 970</b><p>Tue – Fri 09:00 – 17:00</p></div>
+      <a class="btn btn-out btn-sm" href="tel:+260979554970">Call now</a>
+    </div>
+    <div class="chan">
+      <span class="ico">&#9993;&#65039;</span>
+      <div class="cc"><small>Email</small><b style="font-size:15.5px">pedahzurministries@gmail.com</b><p>Invitations, partnerships &amp; enquiries</p></div>
+      <a class="btn btn-out btn-sm" href="mailto:pedahzurministries@gmail.com?subject=Enquiry%20-%20Prophets%20Office">Send email</a>
+    </div>
+    <div class="chan">
+      <span class="ico">&#128205;</span>
+      <div class="cc"><small>Office</small><b style="font-size:17px">Meanwood Ndeke Phase 2</b><p>Lusaka, Zambia · Pedahzur Ministries</p></div>
+      <a class="btn btn-out btn-sm" data-wa="pin">Get directions</a>
+    </div>
+
+    <div class="scripture">
+      <q>Call to me and I will answer you, and show you great and mighty things which you do not know.</q>
+      <span>Jeremiah 33:3</span>
+      <a href="#booking" class="btn btn-gold" style="margin-top:18px">&#128197; Book your appointment</a>
+    </div>
+
+    <div class="saveband">
+      <div class="tx">
+        <h4>&#128241; Keep this page on your phone</h4>
+        <p>Save it once and every button — booking, prayer line, WhatsApp — keeps working even with no internet. It saves as <b style="color:var(--gold-200)">Prophets Office.html</b>.</p>
+      </div>
+      <button class="btn btn-gold" type="button" data-save>&#128190; Save to my phone</button>
+    </div>
+  </div>
+</div>
+
   </div>
 </section>
 
@@ -1164,7 +1117,7 @@ var IS_SMALL=window.matchMedia?window.matchMedia("(max-width:920px)").matches:(s
 function waURL(m){return "https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(m)}
 function goWA(m){
   var url=waURL(m);
-  if(IS_TOUCH||IS_SMALL){ window.location.assign(url); return; }
+  if(IS_TOUCH||IS_SMALL){ window.location.href=url; return; }
   var w=null; try{ w=window.open(url,"_blank","noopener"); }catch(e){}
   if(!w) window.location.href=url;
 }
@@ -1630,76 +1583,7 @@ updatePreview();
 paintIcons(document);
 
 })();
-
-
-/* ================= MOBILE SEND / KEYBOARD FIX ================= */
-(function(){
-  var mobileBtn=document.getElementById("mobileSendBtn");
-  var mobileBar=document.getElementById("mobileSendBar");
-  var form=document.getElementById("bookForm");
-  if(!mobileBtn||!form)return;
-
-  document.body.classList.add("has-mobile-send");
-
-  /* The fixed bar follows the visible viewport when the phone keyboard opens. */
-  function syncKeyboardBar(){
-    if(!window.visualViewport||!mobileBar)return;
-    var vv=window.visualViewport;
-    var keyboardGap=Math.max(0,window.innerHeight-vv.height-vv.offsetTop);
-    mobileBar.style.bottom=keyboardGap+"px";
-  }
-  if(window.visualViewport){
-    window.visualViewport.addEventListener("resize",syncKeyboardBar,false);
-    window.visualViewport.addEventListener("scroll",syncKeyboardBar,false);
-  }
-  syncKeyboardBar();
-
-  /* One-tap submit from anywhere while filling the form. */
-  mobileBtn.addEventListener("click",function(){
-    mobileBtn.disabled=true;
-    try{
-      if(typeof form.requestSubmit==="function") form.requestSubmit();
-      else form.dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}));
-    }catch(e){
-      form.dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}));
-    }
-    setTimeout(function(){mobileBtn.disabled=false},500);
-  },false);
-
-  /* Make labels reliably focus their controls on touch devices. */
-  document.querySelectorAll("label.lb").forEach(function(label){
-    label.addEventListener("click",function(){
-      var id=label.getAttribute("for"),el=id&&document.getElementById(id);
-      if(el){setTimeout(function(){try{el.focus({preventScroll:false})}catch(e){el.focus()}},0)}
-    },false);
-  });
-
-  /* Keep the active field visible above the keyboard without forcing a large manual scroll. */
-  document.querySelectorAll("#bookForm input,#bookForm select,#bookForm textarea").forEach(function(el){
-    el.addEventListener("focus",function(){
-      setTimeout(function(){
-        var r=el.getBoundingClientRect();
-        var vv=window.visualViewport;
-        var visibleBottom=vv?(vv.height+vv.offsetTop-92):window.innerHeight-92;
-        if(r.bottom>visibleBottom||r.top<78){
-          el.scrollIntoView({behavior:"smooth",block:"center",inline:"nearest"});
-        }
-        syncKeyboardBar();
-      },180);
-    },false);
-  });
-})();
-
 </script>
-
-
-<!-- Always-available mobile submit control. It submits the same form, so validation and the WhatsApp message remain identical. -->
-<div class="mobile-sendbar" id="mobileSendBar" aria-label="Quick WhatsApp send">
-  <button class="mobile-send" id="mobileSendBtn" type="button">
-    <span class="i-wa"></span><span>Send appointment to WhatsApp</span>
-  </button>
-  <div class="mobile-hint">No need to scroll back to the bottom.</div>
-</div>
 
 </body>
 </html>
