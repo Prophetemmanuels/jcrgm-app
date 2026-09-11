@@ -466,6 +466,62 @@ footer a{word-break:break-word}
   *{animation:none!important;transition-duration:.01ms!important}
   .rv{opacity:1;transform:none}
 }
+
+/* ==========================================================
+   MOBILE FORM / WHATSAPP FIX
+   - Send button remains reachable while keyboard is open
+   - Large touch targets and forgiving tap areas
+   - Keyboard-aware fixed action bar
+   ========================================================== */
+html{scroll-behavior:smooth}
+#booking{scroll-margin-top:82px}
+.f,.f>*{touch-action:manipulation}
+label.lb{cursor:pointer}
+.inp,.chip,.mode,.slot,.actions .btn{min-height:48px}
+textarea.inp{min-height:120px}
+
+.mobile-sendbar{
+  display:none;
+  position:fixed;
+  left:0;right:0;bottom:0;
+  z-index:390;
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+  background:rgba(4,6,13,.96);
+  border-top:1px solid rgba(220,185,85,.28);
+  box-shadow:0 -14px 35px rgba(0,0,0,.42);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+.mobile-sendbar .mobile-send{
+  width:100%;min-height:54px;border:0;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  background:var(--wa);color:#04140a;font-weight:900;font-size:15px;
+  box-shadow:0 10px 28px -10px rgba(37,211,102,.9);
+  cursor:pointer;touch-action:manipulation;
+}
+.mobile-sendbar .mobile-send:active{transform:scale(.985)}
+.mobile-sendbar .mobile-send[disabled]{opacity:.65}
+.mobile-sendbar .mobile-hint{
+  text-align:center;font-size:10px;color:var(--dim);margin-top:5px;
+}
+body.has-mobile-send{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+
+@media(max-width:700px){
+  .mobile-sendbar{display:block}
+  .actions{padding-bottom:4px}
+  .actions .btn:first-child{display:none}
+  .preview{margin-bottom:8px}
+}
+@media(min-width:701px){.mobile-sendbar{display:none!important}}
+
+@media(max-width:560px){
+  .form-shell{padding-bottom:18px}
+  .inp{font-size:16px!important}
+  .chip,.mode,.slot{min-height:50px}
+  .agree{min-height:60px;align-items:flex-start}
+  .agree input{width:22px;height:22px}
+}
+
 </style>
 </head>
 <body>
@@ -1108,7 +1164,7 @@ var IS_SMALL=window.matchMedia?window.matchMedia("(max-width:920px)").matches:(s
 function waURL(m){return "https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(m)}
 function goWA(m){
   var url=waURL(m);
-  if(IS_TOUCH||IS_SMALL){ window.location.href=url; return; }
+  if(IS_TOUCH||IS_SMALL){ window.location.assign(url); return; }
   var w=null; try{ w=window.open(url,"_blank","noopener"); }catch(e){}
   if(!w) window.location.href=url;
 }
@@ -1574,6 +1630,76 @@ updatePreview();
 paintIcons(document);
 
 })();
+
+
+/* ================= MOBILE SEND / KEYBOARD FIX ================= */
+(function(){
+  var mobileBtn=document.getElementById("mobileSendBtn");
+  var mobileBar=document.getElementById("mobileSendBar");
+  var form=document.getElementById("bookForm");
+  if(!mobileBtn||!form)return;
+
+  document.body.classList.add("has-mobile-send");
+
+  /* The fixed bar follows the visible viewport when the phone keyboard opens. */
+  function syncKeyboardBar(){
+    if(!window.visualViewport||!mobileBar)return;
+    var vv=window.visualViewport;
+    var keyboardGap=Math.max(0,window.innerHeight-vv.height-vv.offsetTop);
+    mobileBar.style.bottom=keyboardGap+"px";
+  }
+  if(window.visualViewport){
+    window.visualViewport.addEventListener("resize",syncKeyboardBar,false);
+    window.visualViewport.addEventListener("scroll",syncKeyboardBar,false);
+  }
+  syncKeyboardBar();
+
+  /* One-tap submit from anywhere while filling the form. */
+  mobileBtn.addEventListener("click",function(){
+    mobileBtn.disabled=true;
+    try{
+      if(typeof form.requestSubmit==="function") form.requestSubmit();
+      else form.dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}));
+    }catch(e){
+      form.dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}));
+    }
+    setTimeout(function(){mobileBtn.disabled=false},500);
+  },false);
+
+  /* Make labels reliably focus their controls on touch devices. */
+  document.querySelectorAll("label.lb").forEach(function(label){
+    label.addEventListener("click",function(){
+      var id=label.getAttribute("for"),el=id&&document.getElementById(id);
+      if(el){setTimeout(function(){try{el.focus({preventScroll:false})}catch(e){el.focus()}},0)}
+    },false);
+  });
+
+  /* Keep the active field visible above the keyboard without forcing a large manual scroll. */
+  document.querySelectorAll("#bookForm input,#bookForm select,#bookForm textarea").forEach(function(el){
+    el.addEventListener("focus",function(){
+      setTimeout(function(){
+        var r=el.getBoundingClientRect();
+        var vv=window.visualViewport;
+        var visibleBottom=vv?(vv.height+vv.offsetTop-92):window.innerHeight-92;
+        if(r.bottom>visibleBottom||r.top<78){
+          el.scrollIntoView({behavior:"smooth",block:"center",inline:"nearest"});
+        }
+        syncKeyboardBar();
+      },180);
+    },false);
+  });
+})();
+
 </script>
+
+
+<!-- Always-available mobile submit control. It submits the same form, so validation and the WhatsApp message remain identical. -->
+<div class="mobile-sendbar" id="mobileSendBar" aria-label="Quick WhatsApp send">
+  <button class="mobile-send" id="mobileSendBtn" type="button">
+    <span class="i-wa"></span><span>Send appointment to WhatsApp</span>
+  </button>
+  <div class="mobile-hint">No need to scroll back to the bottom.</div>
+</div>
+
 </body>
 </html>
