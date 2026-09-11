@@ -7,7 +7,83 @@
 
     <title>JCRGM | The Night of the Redeemed</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+/* =========================================================
+   AUTOMATIC MONTHLY BIBLICAL THEME ENGINE
+========================================================= */
+const MONTHLY_BIBLICAL_THEMES = {
+0:{title:"The Month of New Beginnings",scripture:"“Behold, I will do a new thing; now it shall spring forth; shall ye not know it?”",reference:"Isaiah 43:19",focus:"A month of fresh starts, renewed vision, consecration and confidence in the new things God is doing."},
+1:{title:"The Month of Divine Love",scripture:"“And above all these things put on charity, which is the bond of perfectness.”",reference:"Colossians 3:14",focus:"A month to walk in God's love, strengthen relationships, forgive, serve and demonstrate Christ through love."},
+2:{title:"The Month of Spiritual Awakening",scripture:"“Awake thou that sleepest, and arise from the dead, and Christ shall give thee light.”",reference:"Ephesians 5:14",focus:"A month of spiritual alertness, prayer, deeper fellowship with God and renewed sensitivity to the Holy Spirit."},
+3:{title:"The Month of Fruitfulness",scripture:"“And God blessed them, and God said unto them, Be fruitful, and multiply.”",reference:"Genesis 1:28",focus:"A month of bearing lasting fruit in character, ministry, family, work and every area entrusted to you by God."},
+4:{title:"The Month of Grace",scripture:"“My grace is sufficient for thee: for my strength is made perfect in weakness.”",reference:"2 Corinthians 12:9",focus:"A month of relying on God's grace, receiving strength for every assignment and growing through His sufficient power."},
+5:{title:"The Month of Divine Direction",scripture:"“In all thy ways acknowledge him, and he shall direct thy paths.”",reference:"Proverbs 3:6",focus:"A month of seeking God's counsel, walking in wisdom and allowing the Lord to order every step."},
+6:{title:"The Month of Victory",scripture:"“Nay, in all these things we are more than conquerors through him that loved us.”",reference:"Romans 8:37",focus:"A month of faith, courage and victory through Christ over opposition, fear and every resisting force."},
+7:{title:"The Month of Harvest",scripture:"“And let us not be weary in well doing: for in due season we shall reap, if we faint not.”",reference:"Galatians 6:9",focus:"A month of perseverance, thanksgiving and expecting the fruit of faithful labour in God's appointed season."},
+8:{title:"The Month of Overflow",scripture:"“And my God shall supply all your need according to his riches in glory by Christ Jesus.”",reference:"Philippians 4:19",focus:"A month of trusting God for provision, grace, fruitfulness and abundance according to His Word."},
+9:{title:"The Month of Prayer",scripture:"“Pray without ceasing.”",reference:"1 Thessalonians 5:17",focus:"A month of persistent prayer, intercession, spiritual discipline and deeper communion with God."},
+10:{title:"The Month of Thanksgiving",scripture:"“O give thanks unto the LORD; for he is good: for his mercy endureth for ever.”",reference:"Psalm 107:1",focus:"A month of remembering God's faithfulness, celebrating His goodness and cultivating a lifestyle of gratitude."},
+11:{title:"The Month of Divine Completion",scripture:"“Being confident of this very thing, that he which hath begun a good work in you will perform it.”",reference:"Philippians 1:6",focus:"A month of completion, reflection, gratitude and confidence that God is faithful to finish what He has begun."}
+};
+
+function getMonthlyBiblicalTheme(year,monthIndex){
+ const b=MONTHLY_BIBLICAL_THEMES[monthIndex]||MONTHLY_BIBLICAL_THEMES[0];
+ return {...b,month:MONTHS[monthIndex],year,church:CHURCH_NAME};
+}
+function renderMonthlyBiblicalTheme(year,monthIndex){
+ const t=getMonthlyBiblicalTheme(year,monthIndex);
+ document.getElementById("themeChurchName").textContent=t.church;
+ document.getElementById("themeMonth").textContent=`${t.month} ${t.year}`;
+ document.getElementById("themeTitle").textContent=t.title;
+ document.getElementById("themeScripture").textContent=t.scripture;
+ document.getElementById("themeReference").textContent=t.reference;
+ document.getElementById("themeFocus").textContent=t.focus;
+}
+function makeThemeCanvas(t){
+ const c=document.createElement("canvas"); c.width=1080;c.height=1350;
+ const x=c.getContext("2d");
+ const g=x.createLinearGradient(0,0,1080,1350);g.addColorStop(0,"#081321");g.addColorStop(.55,"#0B1E36");g.addColorStop(1,"#111827");x.fillStyle=g;x.fillRect(0,0,1080,1350);
+ const glow=x.createRadialGradient(850,140,10,850,140,500);glow.addColorStop(0,"rgba(212,175,55,.25)");glow.addColorStop(1,"rgba(212,175,55,0)");x.fillStyle=glow;x.fillRect(0,0,1080,1350);
+ x.strokeStyle="rgba(212,175,55,.55)";x.lineWidth=4;x.strokeRect(42,42,996,1266);
+ function center(s,y,font,fill){x.textAlign="center";x.font=font;x.fillStyle=fill;x.fillText(s,540,y)}
+ function wrap(s,w,lh,y,font,fill){x.font=font;x.fillStyle=fill;x.textAlign="center";let words=s.split(/\s+/),line="",lines=[];for(const word of words){let test=line?line+" "+word:word;if(x.measureText(test).width>w&&line){lines.push(line);line=word}else line=test}if(line)lines.push(line);lines.forEach((v,i)=>x.fillText(v,540,y+i*lh));return y+lines.length*lh}
+ center(t.church.toUpperCase(),150,"800 27px Arial","#D4AF37");
+ center(`${t.month.toUpperCase()} ${t.year}`,202,"700 24px Arial","#F3E5AB");
+ center("MONTHLY BIBLICAL THEME",310,"700 20px Arial","#CBD5E1");
+ wrap(t.title,850,72,405,"700 58px Georgia","#FFFFFF");
+ x.fillStyle="#D4AF37";x.fillRect(390,565,300,5);
+ let y=660;y=wrap(t.scripture,820,42,y,"italic 30px Georgia","#F3E5AB");
+ center("— "+t.reference+" —",y+35,"800 24px Arial","#D4AF37");
+ wrap(t.focus,800,34,930,"500 21px Arial","#CBD5E1");
+ center("EMPOWERED FOR GREATER WORKS",1185,"800 18px Arial","#D4AF37");
+ center(t.church,1230,"600 17px Arial","#94A3B8");
+ return c;
+}
+function downloadMonthlyThemeJPG(){
+ const t=getMonthlyBiblicalTheme(currentYear,currentMonthIndex),c=makeThemeCanvas(t),a=document.createElement("a");
+ a.download=`JCRGM-${t.month}-${t.year}-Monthly-Biblical-Theme.jpg`;a.href=c.toDataURL("image/jpeg",.95);a.click();
+ document.getElementById("themeStatus").textContent="JPG generated successfully.";
+}
+async function shareMonthlyTheme(){
+ const t=getMonthlyBiblicalTheme(currentYear,currentMonthIndex),c=makeThemeCanvas(t);
+ try{
+  const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.95));
+  if(navigator.share&&blob){
+   const f=new File([blob],`JCRGM-${t.month}-${t.year}-Theme.jpg`,{type:"image/jpeg"});
+   if(!navigator.canShare||navigator.canShare({files:[f]})){await navigator.share({title:`${t.month} ${t.year} — ${t.title}`,text:`${t.church}\n${t.title}\n${t.reference}`,files:[f]});return}
+  }
+ }catch(e){}
+ const msg=`*${t.church}*\n\n*${t.month} ${t.year} — ${t.title}*\n\n${t.scripture}\n— ${t.reference}\n\n${t.focus}`;
+ window.open("https://wa.me/?text="+encodeURIComponent(msg),"_blank");
+ document.getElementById("themeStatus").textContent="WhatsApp opened with the theme text.";
+}
+async function copyMonthlyTheme(){
+ const t=getMonthlyBiblicalTheme(currentYear,currentMonthIndex),msg=`${t.church}\n${t.month} ${t.year}\n${t.title}\n\n${t.scripture}\n— ${t.reference}\n\nFocus: ${t.focus}`;
+ try{await navigator.clipboard.writeText(msg)}catch(e){const ta=document.createElement("textarea");ta.value=msg;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}
+ document.getElementById("themeStatus").textContent="Theme text copied.";
+}
+
+</script>
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
 
@@ -230,6 +306,22 @@
                 min-height: 48px;
             }
         }
+    
+/* MONTHLY BIBLICAL THEME */
+.month-theme-card{position:relative;overflow:hidden;border:1px solid rgba(212,175,55,.28);border-radius:28px;background:radial-gradient(circle at 85% 15%,rgba(212,175,55,.20),transparent 30%),radial-gradient(circle at 10% 90%,rgba(59,130,246,.12),transparent 32%),linear-gradient(135deg,#0f172a,#081321);box-shadow:0 18px 55px rgba(0,0,0,.35)}
+.month-theme-content{position:relative;z-index:2}
+.theme-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;background:rgba(212,175,55,.10);border:1px solid rgba(212,175,55,.25);color:#f3e5ab;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.theme-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.8rem);line-height:1.05;font-weight:700;margin:14px 0 8px;color:#fff}
+.theme-scripture{color:#f3e5ab;font-size:15px;line-height:1.65;max-width:760px;margin:0 auto}
+.theme-reference{color:#d4af37;font-weight:800;letter-spacing:.08em;margin-top:10px}
+.theme-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:22px}
+.theme-actions button{min-height:46px;border-radius:13px;padding:10px 16px;font-weight:800;font-size:12px;cursor:pointer}
+.theme-download{background:linear-gradient(135deg,#d4af37,#aa7c11);color:#0b1e36;border:0}
+.theme-share{background:#25D366;color:#06150b;border:0}
+.theme-secondary{background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.14)}
+.month-theme-mini{margin-top:22px;padding:18px;border-radius:20px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08)}
+@media(max-width:640px){.month-theme-card{border-radius:22px}.theme-scripture{font-size:13px}.theme-actions button{width:100%}}
+
     </style>
 </head>
 
@@ -439,6 +531,31 @@
 
         </section>
 
+
+
+        <!-- MONTHLY BIBLICAL THEME -->
+        <section id="monthlyThemeSection" class="mb-12">
+            <div class="month-theme-card p-6 md:p-10 text-center">
+                <div class="month-theme-content">
+                    <span class="theme-badge"><i data-lucide="book-open" class="w-3.5 h-3.5"></i> Monthly Biblical Theme</span>
+                    <p id="themeChurchName" class="mt-5 text-[10px] sm:text-xs uppercase tracking-[0.25em] text-slate-400 font-bold">Jesus Christ Redeems Global Ministries</p>
+                    <h2 id="themeMonth" class="mt-2 text-sm uppercase tracking-[0.22em] text-brand-gold font-bold">September 2026</h2>
+                    <h3 id="themeTitle" class="theme-title">The Month of Overflow</h3>
+                    <p id="themeScripture" class="theme-scripture">“And my God shall supply all your need according to His riches in glory by Christ Jesus.”</p>
+                    <p id="themeReference" class="theme-reference">Philippians 4:19</p>
+                    <div class="month-theme-mini max-w-3xl mx-auto">
+                        <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-2">Monthly Focus</p>
+                        <p id="themeFocus" class="text-sm text-slate-300 leading-relaxed">A month of trusting God for provision, grace, fruitfulness and abundance according to His Word.</p>
+                    </div>
+                    <div class="theme-actions">
+                        <button type="button" class="theme-download" onclick="downloadMonthlyThemeJPG()">⬇ Download Theme JPG</button>
+                        <button type="button" class="theme-share" onclick="shareMonthlyTheme()">◉ Share to WhatsApp</button>
+                        <button type="button" class="theme-secondary" onclick="copyMonthlyTheme()">Copy Theme Text</button>
+                    </div>
+                    <p id="themeStatus" class="text-[10px] text-slate-500 mt-4 min-h-[15px]"></p>
+                </div>
+            </div>
+        </section>
 
         <!-- VIEW CONTROLS -->
 
@@ -4633,6 +4750,24 @@
             };
 
     </script>
+
+
+<script>
+(function(){
+ function syncTheme(){
+  try{
+   if(typeof getZambiaNow==="function"&&typeof renderMonthlyBiblicalTheme==="function"){
+    const z=getZambiaNow();renderMonthlyBiblicalTheme(z.getFullYear(),z.getMonth());
+   }else if(typeof renderMonthlyBiblicalTheme==="function"){
+    renderMonthlyBiblicalTheme(currentYear,currentMonthIndex);
+   }
+  }catch(e){}
+ }
+ document.addEventListener("DOMContentLoaded",syncTheme);
+ setTimeout(syncTheme,300);
+ setInterval(syncTheme,60000);
+})();
+</script>
 
 </body>
 </html>
