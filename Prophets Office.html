@@ -1016,8 +1016,8 @@ footer a{word-break:break-word}
     </div>
     <div class="chan">
       <span class="ico">&#9993;&#65039;</span>
-      <div class="cc"><small>Email</small><b style="font-size:15.5px"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="76061312171e0c03041b1f181f0502041f130536111b171f1a5815191b">[email&#160;protected]</a></b><p>Invitations, partnerships &amp; enquiries</p></div>
-      <a class="btn btn-out btn-sm" href="/cdn-cgi/l/email-protection#e8988d8c8980929d9a858186819b9c9a818d9ba88f85898184c68b8785d79b9d8a828d8b9cd5ad86999d819a91cddad8c5cddad8b89a8798808d9c9bcddad8a78e8e818b8d">Send email</a>
+      <div class="cc"><small>Email</small><b style="font-size:15.5px"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="78081d1c1910020d0a151116110b0c0a111d0b381f15191114561b1715">[email&#160;protected]</a></b><p>Invitations, partnerships &amp; enquiries</p></div>
+      <a class="btn btn-out btn-sm" href="/cdn-cgi/l/email-protection#a2d2c7c6c3cad8d7d0cfcbcccbd1d6d0cbc7d1e2c5cfc3cbce8cc1cdcf9dd1d7c0c8c7c1d69fe7ccd3d7cbd0db8790928f879092f2d0cdd2cac7d6d1879092edc4c4cbc1c7">Send email</a>
     </div>
     <div class="chan">
       <span class="ico">&#128205;</span>
@@ -1068,7 +1068,7 @@ footer a{word-break:break-word}
         <h4>Reach the desk</h4>
         <ul>
           <li><span class="lbl">WhatsApp / Phone</span><a href="tel:0979554970" style="color:var(--gold-200)">0979 554 970 · +260 979 554 970</a></li>
-          <li><span class="lbl">Email</span><a href="/cdn-cgi/l/email-protection#ccbca9a8ada4b6b9bea1a5a2a5bfb8bea5a9bf8caba1ada5a0e2afa3a1"><span class="__cf_email__" data-cfemail="ff8f9a9b9e97858a8d929691968c8b8d969a8cbf98929e9693d19c9092">[email&#160;protected]</span></a></li>
+          <li><span class="lbl">Email</span><a href="/cdn-cgi/l/email-protection#8dfde8e9ece5f7f8ffe0e4e3e4fef9ffe4e8fecdeae0ece4e1a3eee2e0"><span class="__cf_email__" data-cfemail="5d2d38393c3527282f303433342e292f34382e1d3a303c3431733e3230">[email&#160;protected]</span></a></li>
           <li><span class="lbl">Office</span>Meanwood Ndeke Phase 2, Lusaka, Zambia</li>
           <li><span class="lbl">Hours</span>Tue – Fri 09:00 – 17:00 · Sat 09:00 – 13:00 · Sun 13:30 – 15:00</li>
         </ul>
@@ -1598,7 +1598,7 @@ function val(id){var e=$(id);return e?String(e.value).replace(/^\s+|\s+$/g,""):"
 
 function buildMessage(ref){
   var L=[];
-  L.push("*NEW APPOINTMENT REQUEST*");
+  L.push(state.intl==="yes"?"*NEW APPOINTMENT REQUEST* \u2708 INTERNATIONAL":"*NEW APPOINTMENT REQUEST*");
   L.push("_Prophets Office \u00B7 Jesus Christ Redeems Global Ministries_");
   L.push("_Bishop Emmanuel Sakala \u00B7 Meanwood Ndeke Phase 2_");
   L.push("Ref: "+(ref||"\u2014"));
@@ -1613,22 +1613,22 @@ function buildMessage(ref){
   L.push("*Preferred time:* "+(state.time||"\u2014"));
   L.push("*Priority:* "+(state.urgency==="urgent"?"\uD83D\uDEA8 URGENT":"Normal"));
   if(state.forWho==="self")L.push("*First time at the office:* "+(state.firstTime==="yes"?"Yes":"No"));
-  L.push("*City / Country:* "+(val("#f_loc")||"\u2014"));
+  if(state.intl==="yes"){L.push("*Country:* "+(val("#f_country")||"\u2014"))}else{L.push("*City / Country:* "+(val("#f_loc")||"\u2014"))}
   if(state.intl==="yes"){
-    L.push("*International visitor:* Yes \u2708");
-    L.push("*Country of residence:* "+(val("#f_country")||"\u2014"));
-    if(val("#f_passport"))L.push("*Passport name:* "+val("#f_passport"));
-    L.push("*Passport / ID number:* "+(val("#f_passno")||"\u2014"));
-    L.push("*Arrival in Zambia:* "+prettyDate($("#f_arrival").value));
-    if($("#f_depart").value)L.push("*Departure:* "+prettyDate($("#f_depart").value));
-    if(val("#f_flight"))L.push("*Flight:* "+val("#f_flight"));
-    L.push("*Airport pickup:* "+(state.pickup==="yes"?"Yes, from KKIA":"No"));
-    L.push("*Visa invitation letter:* "+(state.visa==="yes"?"Yes, needed":"No"));
-    L.push("*Interpreter:* "+(state.interp==="yes"?("Yes \u2014 "+(val("#f_lang")||"language to confirm")):"No"));
-    if(state.lodge==="yes"){L.push("*Lodging:* Yes \u2014 "+val("#f_lodgetype")+", "+val("#f_guests")+" guest(s), "+prettyDate($("#f_checkin").value)+" to "+prettyDate($("#f_checkout").value)+(val("#f_lodgenotes")?(" ("+val("#f_lodgenotes")+")"):""))}
-    else{L.push("*Lodging:* No, already arranged")}
-    if(state.lodge==="yes"){var pamt=parseFloat(String(val("#f_payamount")||"").replace(/,/g,""));var pcur=$("#f_paycurrency")?$("#f_paycurrency").value:"USD";if(pamt>0){var zk=toZMW(pamt,pcur);L.push("*Lodging payment:* "+pamt+" "+pcur+(zk?(" (\u2248 K"+fmtNum(zk)+")"):"")+" via Western Union");if(val("#f_payplace"))L.push("*Payment for:* "+val("#f_payplace"));if(val("#f_mtcn"))L.push("*MTCN:* "+val("#f_mtcn"))}}
-    L.push("*Emergency contact:* "+(val("#f_emergency")||"\u2014"));
+    var tv=["Arriving "+prettyDate($("#f_arrival").value)];
+    if($("#f_depart").value)tv.push("Departs "+prettyDate($("#f_depart").value));
+    if(val("#f_flight"))tv.push("Flight "+val("#f_flight"));
+    tv.push("Pickup: "+(state.pickup==="yes"?"Yes":"No"));
+    L.push("*Travel:* "+tv.join(" \u00B7 "));
+    var doc=val("#f_passno")||"\u2014";
+    if(val("#f_passport"))doc+=" ("+val("#f_passport")+")";
+    L.push("*Passport / ID:* "+doc);
+    L.push("*Visa letter:* "+(state.visa==="yes"?"Needed":"Not needed"));
+    L.push("*Interpreter:* "+(state.interp==="yes"?(val("#f_lang")||"Yes"):"No"));
+    if(state.lodge==="yes"){L.push("*Lodging:* "+val("#f_lodgetype")+", "+val("#f_guests")+" guest(s), "+prettyDate($("#f_checkin").value)+" to "+prettyDate($("#f_checkout").value)+(val("#f_lodgenotes")?(" ("+val("#f_lodgenotes")+")"):""))}
+    else{L.push("*Lodging:* Already arranged")}
+    if(state.lodge==="yes"){var pamt=parseFloat(String(val("#f_payamount")||"").replace(/,/g,""));var pcur=$("#f_paycurrency")?$("#f_paycurrency").value:"USD";if(pamt>0){var zk=toZMW(pamt,pcur);var payline="*Payment:* "+pamt+" "+pcur+(zk?(" (\u2248 K"+fmtNum(zk)+")"):"")+" via Western Union";if(val("#f_payplace"))payline+=" \u00B7 For: "+val("#f_payplace");if(val("#f_mtcn"))payline+=" \u00B7 MTCN: "+val("#f_mtcn");L.push(payline)}}
+    L.push("*Emergency:* "+(val("#f_emergency")||"\u2014"));
   }
   L.push("");
   L.push("*Brief description of the matter:*");
@@ -1826,27 +1826,25 @@ function fillPrintSheet(ref){
   rows.push(["Preferred time",state.time||"—"]);
   rows.push(["Priority",state.urgency==="urgent"?"URGENT":"Normal"]);
   if(state.forWho==="self")rows.push(["First time at the office",state.firstTime==="yes"?"Yes":"No"]);
-  rows.push(["City / Country",val("#f_loc")||"—"]);
+  if(state.intl==="yes"){rows.push(["Country",val("#f_country")||"—"])}else{rows.push(["City / Country",val("#f_loc")||"—"])}
   if(state.intl==="yes"){
-    rows.push(["International visitor","Yes ✈"]);
-    rows.push(["Country of residence",val("#f_country")||"—"]);
-    if(val("#f_passport"))rows.push(["Passport name",val("#f_passport")]);
-    rows.push(["Passport / ID number",val("#f_passno")||"—"]);
-    rows.push(["Arrival in Zambia",prettyDate($("#f_arrival").value)]);
-    if($("#f_depart").value)rows.push(["Departure",prettyDate($("#f_depart").value)]);
-    if(val("#f_flight"))rows.push(["Flight",val("#f_flight")]);
-    rows.push(["Airport pickup",state.pickup==="yes"?"Yes, from KKIA":"No"]);
-    rows.push(["Visa invitation letter",state.visa==="yes"?"Yes, needed":"No"]);
-    rows.push(["Interpreter",state.interp==="yes"?("Yes — "+(val("#f_lang")||"to confirm")):"No"]);
+    var tv=["Arriving "+prettyDate($("#f_arrival").value)];
+    if($("#f_depart").value)tv.push("Departs "+prettyDate($("#f_depart").value));
+    if(val("#f_flight"))tv.push("Flight "+val("#f_flight"));
+    tv.push("Pickup: "+(state.pickup==="yes"?"Yes":"No"));
+    rows.push(["Travel",tv.join(" · ")]);
+    var doc=val("#f_passno")||"—";
+    if(val("#f_passport"))doc+=" ("+val("#f_passport")+")";
+    rows.push(["Passport / ID",doc]);
+    rows.push(["Visa letter",state.visa==="yes"?"Needed":"Not needed"]);
+    rows.push(["Interpreter",state.interp==="yes"?(val("#f_lang")||"Yes"):"No"]);
     if(state.lodge==="yes"){
-      rows.push(["Lodging",val("#f_lodgetype")+", "+val("#f_guests")+" guest(s)"]);
-      rows.push(["Lodging dates",prettyDate($("#f_checkin").value)+" to "+prettyDate($("#f_checkout").value)]);
-      if(val("#f_lodgenotes"))rows.push(["Lodging needs",val("#f_lodgenotes")]);
+      rows.push(["Lodging",val("#f_lodgetype")+", "+val("#f_guests")+" guest(s), "+prettyDate($("#f_checkin").value)+" to "+prettyDate($("#f_checkout").value)+(val("#f_lodgenotes")?(" ("+val("#f_lodgenotes")+")"):"")]);
       var pamt=parseFloat(String(val("#f_payamount")||"").replace(/,/g,""));
       var pcur=$("#f_paycurrency")?$("#f_paycurrency").value:"USD";
-      if(pamt>0){var zk=null;try{zk=toZMW(pamt,pcur)}catch(e){}rows.push(["Lodging payment",pamt+" "+pcur+(zk?(" (≈ K"+fmtNum(zk)+")"):"")+" via Western Union"]);if(val("#f_payplace"))rows.push(["Payment for",val("#f_payplace")]);if(val("#f_mtcn"))rows.push(["MTCN",val("#f_mtcn")])}
-    }else{rows.push(["Lodging","No, already arranged"])}
-    rows.push(["Emergency contact",val("#f_emergency")||"—"]);
+      if(pamt>0){var zk=null;try{zk=toZMW(pamt,pcur)}catch(e){}var pr=pamt+" "+pcur+(zk?(" (≈ K"+fmtNum(zk)+")"):"")+" via Western Union";if(val("#f_payplace"))pr+=" · For: "+val("#f_payplace");if(val("#f_mtcn"))pr+=" · MTCN: "+val("#f_mtcn");rows.push(["Payment",pr])}
+    }else{rows.push(["Lodging","Already arranged"])}
+    rows.push(["Emergency",val("#f_emergency")||"—"]);
   }
   $("#ps_table").innerHTML=rows.map(function(x){return "<tr><th>"+esc(x[0])+"</th><td>"+esc(x[1])+"</td>"}).join("");
   $("#ps_details").textContent=val("#f_details")||"—";
@@ -1861,5 +1859,5 @@ paintIcons(document);
 })();
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39c1f14ee91b56c',t:'MTc4OTE4Njg0NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39c372ffcbab56c',t:'MTc4OTE4NzgzMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
