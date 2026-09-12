@@ -48,6 +48,33 @@ textarea,input,select{width:100%;background:#081523;border:1px solid var(--line)
 .light .sermonOutput .sermonScripture{background:#eef3f7}
 .sermonOutput .prayerPoint{border:1px solid var(--line);border-radius:10px;padding:13px;margin:9px 0}
 .sermonOutput .prayerPoint b{color:var(--gold2)}
+.highlightNote{background:linear-gradient(145deg,#3a2c10,#221a08);border:1px solid var(--gold);border-radius:10px;padding:12px 14px;margin:10px 0;border-left:4px solid var(--gold)}
+.light .highlightNote{background:#fff6df;border-color:#d5b45c;color:#3a2f12}
+.highlightNote b.noteLabel{color:var(--gold2);display:block;margin-bottom:4px;font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+.light .highlightNote b.noteLabel{color:#7a5a12}
+.backingVerse{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:8px 0;background:#0b1829}
+.light .backingVerse{background:#ffffff;color:#172235}
+.backingVerse .bref{color:var(--gold);font-weight:800;font-size:16px}
+.light .backingVerse .bref{color:#7a5a12}
+.backingVerse .btext{font-family:Georgia,serif;font-size:17px;line-height:1.65;margin:6px 0;color:#fff8e7}
+.light .backingVerse .btext{color:#172235}
+.backingVerse .bwhy{font-size:13px;color:var(--muted)}
+.keyHL{background:linear-gradient(180deg,#ffe3a0,#e7bd62);color:#221a08;font-weight:700;padding:0 4px;border-radius:4px}
+.keyPills{margin:8px 0 2px;display:flex;flex-wrap:wrap;gap:6px}
+.keyPill{display:inline-block;padding:3px 10px;border-radius:999px;background:#18304a;border:1px solid var(--gold);color:var(--gold2);font-size:12px;font-weight:700}
+.light .keyPill{background:#fff3d6;color:#7a5a12;border-color:#d5b45c}
+.keyPoint{border-left:3px solid var(--green);padding:8px 12px;margin:8px 0;background:#0d241c;border-radius:0 8px 8px 0;font-size:15px}
+.light .keyPoint{background:#e9f7ef;color:#172235}
+.keyPoint b{color:var(--green)}
+.chatgptPanel{margin-top:18px;border:1px solid #10a37f;border-radius:16px;padding:18px;background:linear-gradient(145deg,#0e2a24,#081522)}
+.light .chatgptPanel{background:#eef7f4}
+.chatgptPanel h3{margin:0 0 6px}
+.promptPreview{background:#081523;border:1px solid var(--line);border-radius:10px;padding:12px;max-height:240px;overflow:auto;white-space:pre-wrap;font-size:13px;margin-top:10px}
+.light .promptPreview{background:#fff;color:#172235}
+.purposeBox{border:1px solid var(--gold);border-radius:12px;padding:14px;margin:12px 0;background:#141f31}
+.light .purposeBox{background:#fff8e6}
+.studyOrderBox{border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0;background:#0b1829}
+.light .studyOrderBox{background:#eef3f7}
 
 @media(max-width:900px){.side{position:fixed;left:-295px;transition:.2s}.side.open{left:0}.main{padding:18px}.card,.wide{grid-column:1/-1}.row,.row3,.sermonOrder{grid-template-columns:1fr}.top{align-items:flex-start}.mobile{display:block!important}.menu{display:block!important}}
 .mobile{display:none}
@@ -264,14 +291,33 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
     <div class="muted">Complete your study, select the Scripture, then generate your sermon targets.</div>
   </div>
 
+  <div class="chatgptPanel">
+    <div class="sermonBuilderHead">
+      <div>
+        <h3>💬 Send Study to ChatGPT — Full Preaching</h3>
+        <p class="muted">Takes ALL study details (passage, genre, O-I-C-T-A-P, direction &amp; 20 backing Scriptures) into ChatGPT. ChatGPT will arrange the study in order, highlight your notes, quote what each backing Scripture says, and write a full preaching aligned with the intended purpose.</p>
+      </div>
+      <div class="actions">
+        <button class="btn" style="background:#10a37f;border-color:#10a37f;color:#fff;font-weight:800" onclick="openChatGPTWithStudy()">🚀 Open ChatGPT with Study</button>
+        <button class="btn" onclick="copyChatGPTPrompt()">📋 Copy ChatGPT Prompt</button>
+      </div>
+    </div>
+    <div class="small muted" style="margin-top:8px">How it works: 1) Complete your study &amp; sermon direction above → 2) Click “Open ChatGPT with Study” → 3) The full prompt is auto-copied → 4) Paste (Ctrl+V) in ChatGPT and press Enter → 5) ChatGPT writes the complete sermon.</div>
+    <div class="actions" style="margin-top:10px">
+      <button class="btn small" onclick="previewChatGPTPrompt()">👁 Preview Prompt</button>
+    </div>
+    <div id="chatgptPromptPreview" class="promptPreview hidden"></div>
+  </div>
+
   <div class="fullSermonPanel">
     <div class="sermonBuilderHead">
       <div>
         <h3>🎙 Full Sermon — Ready to Preach</h3>
-        <p class="muted">A complete sermon built from your study, main Scripture, 20 backing Scriptures and application.</p>
+        <p class="muted">A complete sermon built from your study — study arranged in order, your notes highlighted, 20 backing Scriptures quoted with what they say, all aligned with the intended purpose.</p>
       </div>
       <div class="actions">
         <button class="btn primary" onclick="generateFullSermon()">Generate Full Sermon</button>
+        <button class="btn" style="background:#10a37f;border-color:#10a37f;color:#fff;font-weight:800" onclick="openChatGPTWithStudy()">💬 Send to ChatGPT</button>
         <button class="btn" onclick="copyFullSermon()">Copy Sermon</button>
       </div>
     </div>
@@ -562,11 +608,12 @@ function exportCurrentStudyPDF(){
   const s=selectedStudyData();
   if(!s.passage)return toast('Add a passage first');
   const refs=getTwentyReferenceScriptures(s.passage,s).slice(0,20);
+  const pdfTheme=extractTheme(s),pdfPurpose=((document.getElementById('sermonDirection')||{}).value||'').trim()||s.theology||s.apply||('the truth of '+s.passage);
   const title='JCRGM MASTER STUDY — '+s.passage;
   const w=window.open('','_blank');
   if(!w)return toast('Please allow pop-ups to save the PDF');
   const esc2=esc;
-  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc2(title)}</title><style>body{font-family:Arial,sans-serif;color:#172235;line-height:1.6;padding:35px;max-width:900px;margin:auto}h1,h2{color:#7a5a12}h1{font-size:28px;border-bottom:2px solid #d5b45c;padding-bottom:10px}h2{margin-top:24px}pre{white-space:pre-wrap;font-family:Arial}.ref{font-weight:700;color:#7a5a12}.box{border-left:4px solid #d5b45c;padding:10px 14px;background:#f7f3e8;margin:10px 0}li{margin:6px 0}@media print{body{padding:0}button{display:none}}</style></head><body><h1>${esc2(title)}</h1><p><b>Genre:</b> ${esc2(s.genre)}</p><h2>Observation</h2><pre>${esc2(s.obs)}</pre><h2>Interpretation</h2><pre>${esc2(s.interp)}</pre><h2>Context & Cross-references</h2><pre>${esc2(s.context)}</pre><h2>Theology / Truth</h2><pre>${esc2(s.theology)}</pre><h2>Application</h2><pre>${esc2(s.apply)}</pre><h2>Prayer</h2><pre>${esc2(s.prayer)}</pre><h2>20 Backing Scriptures</h2><ol>${refs.map((r,i)=>'<li><b>'+esc2(r)+'</b> — '+esc2(referenceReason(i))+'</li>').join('')}</ol><p style="margin-top:35px;color:#667085">JCRGM MASTER STUDY • Generated ${esc2(new Date().toLocaleString())}</p><script>window.onload=()=>setTimeout(()=>window.print(),350)<\/script></body></html>`);
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc2(title)}</title><style>body{font-family:Arial,sans-serif;color:#172235;line-height:1.6;padding:35px;max-width:900px;margin:auto}h1,h2{color:#7a5a12}h1{font-size:28px;border-bottom:2px solid #d5b45c;padding-bottom:10px}h2{margin-top:24px}pre{white-space:pre-wrap;font-family:Arial}.ref{font-weight:700;color:#7a5a12}.box{border-left:4px solid #d5b45c;padding:10px 14px;background:#f7f3e8;margin:10px 0}li{margin:6px 0}@media print{body{padding:0}button{display:none}}</style></head><body><h1>${esc2(title)}</h1><p><b>Genre:</b> ${esc2(s.genre)}</p><h2>Observation</h2><pre>${esc2(s.obs)}</pre><h2>Interpretation</h2><pre>${esc2(s.interp)}</pre><h2>Context & Cross-references</h2><pre>${esc2(s.context)}</pre><h2>Theology / Truth</h2><pre>${esc2(s.theology)}</pre><h2>Application</h2><pre>${esc2(s.apply)}</pre><h2>Prayer</h2><pre>${esc2(s.prayer)}</pre><h2>20 Backing Scriptures</h2><ol>${refs.map((r,i)=>'<li><b>'+esc2(r)+'</b> — '+esc2(verseFocus(r,i,pdfPurpose,pdfTheme,s.passage))+'</li>').join('')}</ol><p style="margin-top:35px;color:#667085">JCRGM MASTER STUDY • Generated ${esc2(new Date().toLocaleString())}</p><script>window.onload=()=>setTimeout(()=>window.print(),350)<\/script></body></html>`);
   w.document.close();
 }
 
@@ -716,7 +763,7 @@ function getTwentyReferenceScriptures(ref, study){
   return refs.slice(0,20);
 }
 function referenceReason(i){
-  return ['Confirm the main truth','Explain the biblical principle','Give another biblical witness','Show practical application','Broaden the biblical perspective'][i]||'Strengthen the study';
+  return ['Confirm the main truth','Explain the biblical principle','Give another biblical witness','Show practical application','Broaden the biblical perspective'][i%5];
 }
 function bibleBookCode(book){
   const m={Genesis:'GEN',Exodus:'EXO',Leviticus:'LEV',Numbers:'NUM',Deuteronomy:'DEU',Joshua:'JOS',Judges:'JDG',Ruth:'RUT','1 Samuel':'1SA','2 Samuel':'2SA','1 Kings':'1KI','2 Kings':'2KI','1 Chronicles':'1CH','2 Chronicles':'2CH',Ezra:'EZR',Nehemiah:'NEH',Esther:'EST',Job:'JOB',Psalm:'PSA',Psalms:'PSA',Proverbs:'PRO',Ecclesiastes:'ECC','Song of Solomon':'SNG',Isaiah:'ISA',Jeremiah:'JER',Lamentations:'LAM',Ezekiel:'EZK',Daniel:'DAN',Hosea:'HOS',Joel:'JOL',Amos:'AMO',Obadiah:'OBA',Jonah:'JON',Micah:'MIC',Nahum:'NAM',Habakkuk:'HAB',Zephaniah:'ZEP',Haggai:'HAG',Zechariah:'ZEC',Malachi:'MAL',Matthew:'MAT',Mark:'MRK',Luke:'LUK',John:'JHN',Acts:'ACT',Romans:'ROM','1 Corinthians':'1CO','2 Corinthians':'2CO',Galatians:'GAL',Ephesians:'EPH',Philippians:'PHP',Colossians:'COL','1 Thessalonians':'1TH','2 Thessalonians':'2TH','1 Timothy':'1TI','2 Timothy':'2TI',Titus:'TIT',Philemon:'PHM',Hebrews:'HEB',James:'JAS','1 Peter':'1PE','2 Peter':'2PE','1 John':'1JN','2 John':'2JN','3 John':'3JN',Jude:'JUD',Revelation:'REV'};
@@ -744,8 +791,10 @@ function generateStudyReferences(){
   const s=selectedStudyData();
   if(!s.passage)return toast('Set a Scripture passage first');
   const refs=getTwentyReferenceScriptures(s.passage,s);
+  const dirS=((document.getElementById('sermonDirection')||{}).value||'').trim();
+  const themeS=extractTheme(s),purposeS=dirS||s.theology||s.apply||('the truth of '+s.passage);
   const el=document.getElementById('studyReferences');
-  el.innerHTML=refs.map((r,i)=>`<div class="relatedItem"><b>${esc(r)}</b><small>${referenceReason(i)}</small><div class="relatedActions"><a class="btn small" target="_blank" rel="noopener noreferrer" href="${youVersionUrl(r)}">Open in YouVersion</a><a class="btn small" target="_blank" rel="noopener noreferrer" href="${logosUrl(r)}">Open in Logos</a><button type="button" class="btn small" onclick="addRelatedToContext(${JSON.stringify(r)})">Add to study</button></div></div>`).join('');
+  el.innerHTML=refs.map((r,i)=>`<div class="relatedItem"><b>${esc(r)}</b><small>${esc(verseFocus(r,i,purposeS,themeS,s.passage))}</small><small>🔑 Key connected to ${esc(s.passage)}: ${esc(shortKeyPoint(i,s.passage,extractTheme(s)))}</small><div class="relatedActions"><a class="btn small" target="_blank" rel="noopener noreferrer" href="${youVersionUrl(r)}">Open in YouVersion</a><a class="btn small" target="_blank" rel="noopener noreferrer" href="${logosUrl(r)}">Open in Logos</a><button type="button" class="btn small" onclick="addRelatedToContext(${JSON.stringify(r)})">Add to study</button></div></div>`).join('');
   toast('20 backing Scriptures generated');
 }
 function sermonParagraph(text,fallback){return (text||fallback||'').trim().replace(/\s+/g,' ')}
@@ -759,46 +808,365 @@ function buildSermonPoints(s, refs){
   ];
   return (parts.length>=3?parts.slice(0,3):fallback).map((x,i)=>({title:'Point '+(i+1),text:x}));
 }
-function generateFullSermon(){
+function buildChatGPTSermonPrompt(){
   const s=selectedStudyData();
-  if(!s.passage)return toast('Set a Scripture passage first');
-  const dir=document.getElementById('sermonDirection').value.trim();
+  if(!s.passage)return '';
+  const dir=(document.getElementById('sermonDirection')?.value||'').trim();
   const refs=getTwentyReferenceScriptures(s.passage,s);
   const theme=extractTheme(s);
+  const purpose=dir||s.theology||s.apply||'Teach and apply the truth of '+s.passage+' faithfully.';
+  const L=[];
+  L.push('YOU ARE AN ANOINTED EXPOSITORY PREACHER AND BIBLE TEACHER.');
+  L.push('');
+  L.push('TASK: Using the STUDY DETAILS below, (1) arrange the study in order, (2) write a FULL PREACHING MANUSCRIPT with the study notes HIGHLIGHTED, (3) include all 20 BACKING SCRIPTURES with WHAT EACH ONE SAYS quoted, and (4) make the WHOLE SERMON align with the INTENDED PURPOSE.');
+  L.push('');
+  L.push('================ STUDY DETAILS ================');
+  L.push('MAIN SCRIPTURE: '+(s.passage||''));
+  L.push('GENRE: '+(s.genre||''));
+  L.push('THEME: '+theme);
+  L.push('INTENDED PURPOSE / SERMON DIRECTION (the sermon must align with this): '+purpose);
+  L.push('');
+  L.push('--- O: OBSERVATION (what the text says) ---');
+  L.push(s.obs||'(No observation notes — derive carefully from the text.)');
+  L.push('');
+  L.push('--- I: INTERPRETATION (what it meant) ---');
+  L.push(s.interp||'(No interpretation notes — interpret faithfully in context.)');
+  L.push('');
+  L.push('--- C: CONTEXT & CROSS-REFERENCES ---');
+  L.push(s.context||'(No context notes.)');
+  L.push('');
+  L.push('--- T: THEOLOGY / TRUTH ---');
+  L.push(s.theology||'(No theology notes.)');
+  L.push('');
+  L.push('--- A: APPLICATION ---');
+  L.push(s.apply||'(No application notes.)');
+  L.push('');
+  L.push('--- P: PRAYER SEED ---');
+  L.push(s.prayer||'(No prayer notes.)');
+  L.push('');
+  L.push('--- 20 BACKING SCRIPTURES (quote what each says) ---');
+  refs.forEach((r,i)=>L.push((i+1)+'. '+r));
+  L.push('===============================================');
+  L.push('');
+  L.push('STRICT INSTRUCTIONS:');
+  L.push('1) ARRANGE THE STUDY IN ORDER first, under headings: 01 THE TEXT (observation) > 02 THE MEANING (interpretation) > 03 THE CONTEXT > 04 THE TRUTH (theology, one memorable sentence) > 05 THE MOVEMENT (3-4 preaching points arising from the text) > 06 THE RESPONSE (application) > 07 THE SUPPORT (backing Scriptures) > 08 THE APPEAL (call to respond).');
+  L.push('2) THEN WRITE THE FULL PREACHING MANUSCRIPT (2,500-3,500 words, ready to preach verbatim): Title, Main Text (tell reader to stand & read), Opening Prayer, Introduction (hook, need, tension the text answers), Central Truth (bold, repeated), Body (3-4 points; EACH point = Explanation of text + Illustration/story + Application + 2-3 backing Scriptures woven in), Conclusion (return to Central Truth), Altar Call / Appeal, 5 Prayer Points inline with the message, Closing Prayer, and a one-line Preacher Summary.');
+  L.push('3) HIGHLIGHT THE STUDY NOTES: whenever you use the author\'s own wording from Observation/Interpretation/Theology/Application above, set it apart as: "> STUDY NOTE: [their exact words]" so the preacher sees their notes highlighted inside the sermon. Do NOT contradict or discard those notes — expand and preach them faithfully.');
+  L.push('4) 20 BACKING SCRIPTURES WITH WHAT THEY SAY + HIGHLIGHTED KEY POINTS: in a dedicated section, list ALL 20 references above IN ORDER. For EACH one: (a) write the reference in bold, (b) QUOTE what it says (1-3 key verses, KJV wording), (c) HIGHLIGHT the key points of that passage connected to the KEY (main) Scripture — put the key phrases in **bold** inside the quote AND list them as "KEY POINTS: phrase 1 | phrase 2 | phrase 3", (d) add one line: "KEY POINT CONNECTED TO [main Scripture]: ..." (1-2 sentences showing exactly how this backing passage confirms/explains/illustrates/strengthens the main text and drives the intended purpose). Also add (e) a FOCUS line telling the preacher exactly what to concentrate on when reading that verse (never generic filler). Every one of the 20 must appear with its quoted text, highlighted key points and FOCUS line.');
+  L.push('5) ALIGNMENT WITH INTENDED PURPOSE: the Title, Central Truth, every point, every illustration, the appeal and all 5 prayer points must drive toward this purpose: "'+purpose+'". Repeat the purpose language deliberately. If any material drifts from it, cut it.');
+  L.push('6) FAITHFULNESS: Christ-centered, Scripture-tested preaching. Distinguish clear teaching from illustration. Never present inference as direct quote. Keep tone warm, urgent, pastoral and authoritative.');
+  L.push('7) FORMATTING: Use clear headings, short paragraphs, bold key truths. End with: "PREACHER\'S ONE-LINE SUMMARY: ..."');
+  L.push('');
+  L.push('Begin now: first the ORDERED STUDY, then the FULL SERMON.');
+  return L.join('\n');
+}
+function previewChatGPTPrompt(){
+  const p=buildChatGPTSermonPrompt();
+  if(!p)return toast('Set a Scripture passage first');
+  const el=document.getElementById('chatgptPromptPreview');
+  el.textContent=p;el.classList.remove('hidden');
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  toast('Prompt preview ready');
+}
+async function copyChatGPTPrompt(){
+  const p=buildChatGPTSermonPrompt();
+  if(!p)return toast('Set a Scripture passage first');
+  try{await navigator.clipboard.writeText(p);toast('ChatGPT prompt copied — paste it in ChatGPT')}catch(e){
+    const ta=document.createElement('textarea');ta.value=p;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('ChatGPT prompt copied')}catch(_){toast('Copy failed — use Preview and copy manually')}ta.remove();
+  }
+}
+async function openChatGPTWithStudy(){
+  const s=selectedStudyData();
+  if(!s||!s.passage)return toast('Set a Scripture passage first');
+  const p=buildChatGPTSermonPrompt();
+  if(!p)return toast('Set a Scripture passage first');
+  try{await navigator.clipboard.writeText(p)}catch(e){
+    const ta=document.createElement('textarea');ta.value=p;document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(_){}ta.remove();
+  }
+  toast('Study copied — opening ChatGPT. Paste (Ctrl+V) and press Enter.');
+  let url='https://chatgpt.com/';
+  try{
+    if(p.length<6500){url='https://chatgpt.com/?q='+encodeURIComponent(p);}
+  }catch(e){url='https://chatgpt.com/'}
+  const w=window.open(url,'_blank','noopener,noreferrer');
+  if(!w)toast('Pop-up blocked — open chatgpt.com and paste the copied prompt');
+}
+async function fetchScriptureText(ref){
+  try{
+    const r=await fetch('https://bible-api.com/'+encodeURIComponent(ref)+'?translation=kjv');
+    if(!r.ok)return '';
+    const d=await r.json();
+    const txt=(d.verses||[]).map(x=>x.text).join(' ').replace(/\s+/g,' ').trim();
+    return txt||'';
+  }catch(e){return ''}
+}
+function escHtml(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+const VERSE_FOCUS={
+'Psalm 119:105':"FOCUS: God's Word as lamp and light — focus on how Scripture gives your next step, not just information.",
+'2 Timothy 3:16-17':"FOCUS: All Scripture is God-breathed and equips — focus on teaching, correction and readiness for good works.",
+'Romans 15:4':"FOCUS: Scripture written for our hope — focus on endurance and encouragement drawn from what was written before.",
+'Hebrews 4:12':"FOCUS: The Word is living and piercing — focus on letting it discern your thoughts and intents.",
+'Joshua 1:8':"FOCUS: Meditate day and night and obey — focus on the link between the Book, meditation and success.",
+'Joshua 1:9':"FOCUS: Be strong and courageous — focus on God's presence with you wherever you go.",
+'Hebrews 11:1':"FOCUS: Faith defined — substance and evidence; focus on present confidence in unseen promises.",
+'Hebrews 11:6':"FOCUS: Without faith it is impossible to please God — focus on believing He exists and rewards seekers.",
+'Romans 10:17':"FOCUS: Faith comes by hearing the Word — focus on feeding your faith through what you hear.",
+'2 Corinthians 5:7':"FOCUS: Walk by faith, not by sight — focus on decisions driven by God's Word over visible circumstances.",
+'Mark 11:24':"FOCUS: Believe you receive when you pray — focus on confident, believing prayer.",
+'James 1:6':"FOCUS: Ask in faith without doubting — focus on settled, unwavering trust.",
+'Matthew 6:6-13':"FOCUS: The pattern of prayer — secret place, Father's name, Kingdom, daily bread, forgiveness; focus on each line.",
+'Philippians 4:6-7':"FOCUS: Pray instead of worrying — focus on thanksgiving that releases God's peace.",
+'1 Thessalonians 5:17':"FOCUS: Pray without ceasing — focus on unbroken communion, not occasional visits.",
+'James 5:16':"FOCUS: Fervent, righteous prayer avails much — focus on confession and earnest intercession.",
+'Jeremiah 33:3':"FOCUS: Call and God answers with great things — focus on asking expectantly.",
+'1 Peter 1:15-16':"FOCUS: Be holy as God is holy — focus on conduct that mirrors His character.",
+'Hebrews 12:14':"FOCUS: Pursue holiness; without it no one sees the Lord — focus on peace plus purity.",
+'2 Corinthians 7:1':"FOCUS: Cleanse from all filthiness — focus on perfecting holiness in God's fear.",
+'1 Thessalonians 4:3':"FOCUS: God's will is your sanctification — focus on abstaining from sexual sin.",
+'Psalm 24:3-4':"FOCUS: Clean hands and pure heart ascend — focus on inner purity before outward ministry.",
+'Ephesians 2:8-9':"FOCUS: Saved by grace through faith, not works — focus on boasting only in Christ.",
+'Titus 2:11-12':"FOCUS: Grace teaches holy living — focus on grace that trains you, not excuses sin.",
+'Romans 3:23-24':"FOCUS: All sinned, justified freely by grace — focus on redemption through Christ Jesus.",
+'2 Corinthians 12:9':"FOCUS: Grace is sufficient in weakness — focus on Christ's strength in your limitation.",
+'Hebrews 4:16':"FOCUS: Come boldly for mercy and grace — focus on help in the exact time of need.",
+'1 Corinthians 13:4-8':"FOCUS: Love's character checklist — patience, kindness, no envy; focus on the trait you lack most.",
+'John 13:34-35':"FOCUS: Love as Christ loved — the mark of disciples; focus on visible, sacrificial love.",
+'1 John 4:7-12':"FOCUS: Love's source is God — focus on loving because He first loved us.",
+'Colossians 3:14':"FOCUS: Love as the bond of perfection — focus on love holding every virtue together.",
+'Romans 5:8':"FOCUS: God's love proved at the cross — focus on Christ dying for us while still sinners.",
+'John 14:15':"FOCUS: Love proves itself by obedience — focus on keeping His commands as devotion.",
+'James 1:22-25':"FOCUS: Be doers, not hearers only — focus on one act of obedience from what you heard.",
+'1 Samuel 15:22':"FOCUS: Obedience beats sacrifice — focus on heeding God's voice over religious performance.",
+'Deuteronomy 10:12-13':"FOCUS: What God requires — fear, walk, love, serve, keep; focus on whole-hearted response.",
+'Luke 11:28':"FOCUS: Blessed are hearers who keep the Word — focus on guarding and practicing it.",
+'Romans 5:3-5':"FOCUS: Suffering produces proven hope — focus on the chain: tribulation to patience to hope.",
+'Romans 15:13':"FOCUS: The God of hope fills with joy and peace — focus on abounding by the Spirit's power.",
+'Hebrews 6:19':"FOCUS: Hope as the soul's anchor — focus on steadfastness inside the veil.",
+'1 Peter 1:3':"FOCUS: New birth into living hope — focus on resurrection-grounded expectation.",
+'Psalm 42:5':"FOCUS: Preach hope to your own soul — focus on commanding despair to hope in God.",
+'Proverbs 2:6':"FOCUS: Wisdom comes from the Lord's mouth — focus on seeking His knowledge and understanding.",
+'James 1:5':"FOCUS: Ask God for wisdom generously — focus on requesting without reproach.",
+'Proverbs 9:10':"FOCUS: Fear of the Lord is wisdom's beginning — focus on reverence before insight.",
+'Colossians 3:16':"FOCUS: Let Christ's Word dwell richly — focus on teaching, singing and heart-gratitude.",
+'Ecclesiastes 7:12':"FOCUS: Wisdom preserves life — focus on wisdom as defense and direction.",
+'Exodus 33:14':"FOCUS: His presence goes with you and gives rest — focus on refusing to move without Him.",
+'Psalm 16:11':"FOCUS: Fullness of joy in His presence — focus on pleasures at His right hand.",
+'Psalm 27:4':"FOCUS: One thing — dwell and behold — focus on seeking His face above His gifts.",
+'Matthew 28:20':"FOCUS: Christ with you always — focus on His nearness as you obey the mission.",
+'James 4:8':"FOCUS: Draw near and He draws near — focus on cleansing hands and purifying heart first.",
+'Isaiah 40:29-31':"FOCUS: Strength renewed in waiting — focus on mounting up and running without weariness.",
+'2 Corinthians 12:9-10':"FOCUS: Strength perfected in weakness — focus on glad boasting that hosts Christ's power.",
+'Ephesians 3:16':"FOCUS: Strengthened in the inner man — focus on the Spirit's might within you.",
+'Philippians 4:13':"FOCUS: All things through Christ who strengthens — focus on His supply for your assignment.",
+'Psalm 46:1':"FOCUS: God our refuge and present help — focus on running to Him first in trouble.",
+'Ephesians 2:10':"FOCUS: Created for prepared good works — focus on walking in your God-crafted assignment.",
+'Jeremiah 1:5':"FOCUS: Known and ordained before birth — focus on purpose older than your past.",
+'Romans 8:28':"FOCUS: All things work for good to the called — focus on His purpose over your pain.",
+'Matthew 28:19-20':"FOCUS: Go, disciple, baptize, teach — focus on your part in the Great Commission.",
+'2 Timothy 1:9':"FOCUS: Called with a holy calling by grace — focus on purpose given before time.",
+'Matthew 6:31-33':"FOCUS: Seek first the Kingdom — focus on the priority that triggers provision.",
+'Philippians 4:19':"FOCUS: God supplies every need — focus on His riches in glory through Christ.",
+'Psalm 23:1':"FOCUS: The Lord my Shepherd — focus on confessing 'I shall not want.'",
+'2 Corinthians 9:8':"FOCUS: Grace abounding for every good work — focus on sufficiency that overflows into giving.",
+'Matthew 7:11':"FOCUS: The Father gives good gifts — focus on asking a good Father confidently.",
+'Genesis 1:1':"FOCUS: God first, before everything — focus on His eternal power as Creator.",
+'Deuteronomy 6:4-9':"FOCUS: One Lord, whole-hearted love, taught diligently — focus on home discipleship.",
+'Psalm 1:1-3':"FOCUS: The blessed person's diet and stability — focus on delighting in the Law day and night.",
+'Psalm 119:9-16':"FOCUS: Purity by the Word — focus on hiding it in your heart against sin.",
+'Isaiah 55:10-11':"FOCUS: God's Word never returns void — focus on speaking what He sends.",
+'Matthew 4:4':"FOCUS: Live by every word from God's mouth — focus on Scripture as daily bread.",
+'Matthew 7:24-27':"FOCUS: Hearers who do stand in storms — focus on building on rock-obedience.",
+'John 8:31-32':"FOCUS: Continue in the Word and know truth — focus on freedom through abiding.",
+'John 14:26':"FOCUS: The Spirit teaches and reminds — focus on learning from the Helper.",
+'Acts 17:11':"FOCUS: Noble searching of the Scriptures daily — focus on verifying every message.",
+'1 Corinthians 2:12-13':"FOCUS: The Spirit reveals God's deep things — focus on Spirit-taught discernment.",
+'1 Peter 1:23-25':"FOCUS: Born again by incorruptible seed — focus on the Word that lives forever.",
+'2 Peter 1:20-21':"FOCUS: Scripture is Spirit-moved, not private — focus on submitting to its authority.",
+'Jude 1:3':"FOCUS: Contend for the faith — focus on guarding the once-delivered gospel.",
+'Revelation 1:3':"FOCUS: Blessed readers, hearers and keepers — focus on keeping these words.",
+'Jeremiah 29:11':"FOCUS: God's thoughts toward you — peace, future, hope; focus on His good plans.",
+'Proverbs 3:5-6':"FOCUS: Trust fully, lean not, acknowledge Him — focus on surrendered direction.",
+'Isaiah 41:10':"FOCUS: Fear not — God strengthens, helps, upholds; focus on His righteous right hand.",
+'Romans 8:1':"FOCUS: No condemnation in Christ Jesus — focus on freedom for those in the Spirit.",
+'John 3:16':"FOCUS: God so loved — He gave His Son for believers; focus on everlasting life.",
+'Psalm 37:4':"FOCUS: Delight in the Lord and receive desires — focus on delight before desires.",
+'1 Peter 5:7':"FOCUS: Cast all your care on Him — focus on His personal care for you.",
+'Matthew 11:28':"FOCUS: Come to Christ for rest — focus on His invitation to the weary.",
+'Isaiah 43:2':"FOCUS: Through waters, rivers and fire — focus on His with-ness in every trial.",
+'Psalm 27:1':"FOCUS: The Lord my light and salvation — focus on fearlessness rooted in Him.",
+'Galatians 5:22-23':"FOCUS: The Spirit's fruit checklist — focus on the fruit your life must now bear.",
+'Ephesians 6:10-18':"FOCUS: Be strong; put on the whole armor — focus on the piece you have neglected.",
+'Acts 1:8':"FOCUS: Power to witness — focus on the Spirit's enabling, from your Jerusalem outward.",
+'Malachi 3:10':"FOCUS: Bring the tithe and test God — focus on opened windows and the rebuked devourer.",
+'2 Timothy 1:7':"FOCUS: Power, love, sound mind — not fear; focus on the Spirit God actually gave you.",
+'Matthew 6:33':"FOCUS: Kingdom first, all things added — focus on reordering your priorities today.",
+'Matthew 28:18-20':"FOCUS: All authority, therefore go — focus on disciple-making backed by His presence.",
+'John 14:27':"FOCUS: Christ's peace, not the world's — focus on a heart untroubled and unafraid.",
+'Psalm 55:22':"FOCUS: Cast your burden on the Lord — focus on His sustaining of the righteous.",
+'Romans 8:32':"FOCUS: He gave His Son — He will give all things; focus on confident asking.",
+'Jeremiah 17:7-8':"FOCUS: Blessed is the one who trusts — focus on roots by the water in drought.",
+'Romans 5:1':"FOCUS: Justified by faith, at peace with God — focus on standing in grace.",
+'John 8:36':"FOCUS: Whom the Son sets free is free indeed — focus on real, lasting liberty.",
+'Galatians 5:1':"FOCUS: Stand fast in liberty — focus on refusing every yoke of bondage again.",
+'2 Corinthians 5:17':"FOCUS: New creation in Christ — old gone, all new; focus on your new identity.",
+'Genesis 50:20':"FOCUS: Evil meant, God meant for good — focus on His saving purpose in betrayal.",
+'Psalm 84:11':"FOCUS: No good withheld from the upright — focus on walking rightly before asking.",
+'Romans 8:18':"FOCUS: Present sufferings vs coming glory — focus on the weight of eternity.",
+'James 1:2-4':"FOCUS: Count trials as joy — focus on patience completing its perfect work.",
+'Ephesians 4:22-24':"FOCUS: Put off the old, put on the new — focus on renewed-mind transformation.",
+'1 Peter 1:14-16':"FOCUS: Obedient children, holy conduct — focus on leaving former lusts behind.",
+'John 3:3':"FOCUS: You must be born again — focus on the new birth that opens the Kingdom.",
+'Romans 6:4':"FOCUS: Raised to walk in newness of life — focus on resurrection-powered conduct.",
+'Galatians 2:20':"FOCUS: Crucified with Christ, yet living by faith — focus on His life through you.",
+'Psalm 34:9-10':"FOCUS: Those who seek lack no good thing — focus on fearing the Lord first.",
+'Psalm 37:5':"FOCUS: Commit your way and trust — focus on Him bringing it to pass.",
+'Isaiah 26:3-4':"FOCUS: Perfect peace for the stayed mind — focus on trusting the everlasting Rock.",
+'Psalm 27:14':"FOCUS: Wait on the Lord; be of good courage — focus on strengthened-heart waiting.",
+'Lamentations 3:22-26':"FOCUS: New mercies every morning — focus on hope while quietly waiting.",
+'2 Corinthians 4:16-18':"FOCUS: Inward renewal; unseen eternal things — focus on what affliction cannot touch.",
+'Galatians 6:9':"FOCUS: Do not grow weary in well-doing — focus on reaping in due season.",
+'Psalm 23:4':"FOCUS: Fear no evil in the valley — focus on His rod, staff and with-ness.",
+'Daniel 3:16-18':"FOCUS: Our God is able — but if not, still no compromise; focus on resolved allegiance.",
+'Deuteronomy 31:6':"FOCUS: Strong and courageous — He never leaves; focus on fearless obedience.",
+'Romans 8:15':"FOCUS: Spirit of adoption, crying Abba — focus on sonship over slavery and fear.",
+'1 John 4:18':"FOCUS: Perfect love casts out fear — focus on being perfected in His love.",
+'James 4:7':"FOCUS: Submit to God, resist the devil — focus on the order: surrender first, then warfare.",
+'Romans 13:12':"FOCUS: Cast off darkness, put on light's armor — focus on clean, watchful living.",
+'John 15:4-5':"FOCUS: Abide in the Vine or bear nothing — focus on remaining connected to Christ.",
+'Colossians 3:12-17':"FOCUS: Put on compassion, kindness, love — focus on letting Christ's peace rule.",
+'2 Peter 1:5-8':"FOCUS: Add to faith virtue, knowledge, self-control — focus on the next virtue to grow.",
+'Proverbs 3:9-10':"FOCUS: Honor the Lord with firstfruits — focus on barns filled through first-place giving.",
+'Deuteronomy 8:18':"FOCUS: God gives power to get wealth — focus on remembering Him in prosperity.",
+'Luke 6:38':"FOCUS: Give and it is measured back — focus on the measure you choose to use.",
+'Matthew 11:28-30':"FOCUS: Christ's easy yoke and light burden — focus on learning rest from Him.",
+'Philippians 4:6-9':"FOCUS: Worry about nothing; think on what is pure — focus on the God of peace with you.",
+'Hebrews 4:12-16':"FOCUS: A discerning Word and a sympathetic High Priest — focus on bold, mercy-finding approach.",
+'Hebrews 11:1-6':"FOCUS: Faith's nature and necessity — focus on pleasing God by believing pursuit.",
+'James 1:5-6':"FOCUS: Ask for wisdom in unwavering faith — focus on stable, double-minded-free trust.",
+'James 1:22-25':"FOCUS: Doers blessed in doing — focus on the perfect law of liberty lived out."
+};
+function verseFocus(ref,i,purpose,theme,mainRef,foundKeys){
+  const n=normalizeRef(ref||'');
+  if(VERSE_FOCUS[n])return VERSE_FOCUS[n];
+  const keys=(foundKeys&&foundKeys.length)?foundKeys.slice(0,3).join(', '):(theme||'the main truth');
+  const shorts=(purpose||'').length>90?String(purpose).slice(0,87)+'…':(purpose||theme||'this truth');
+  const frames=[
+    'FOCUS: Read '+n+' watching for ('+keys+') — note the exact phrase that echoes '+mainRef+'.',
+    'FOCUS: In '+n+', lock onto ('+keys+') — see how it pushes toward: '+shorts+'.',
+    'FOCUS: Study '+n+' for ('+keys+') — underline what confirms '+mainRef+'.',
+    'FOCUS: When you open '+n+', hunt for ('+keys+') — preach the line that strengthens '+mainRef+'.',
+    'FOCUS: Meditate '+n+' around ('+keys+') — let it sharpen your response to '+mainRef+'.'
+  ];
+  return frames[i%frames.length];
+}
+const SERMON_STOPWORDS=['the','and','for','that','this','with','from','have','will','shall','unto','upon','them','they','their','there','were','which','when','what','your','ours','about','into','through','over','under','then','than','also','such','each','every','both','just','like','even','much','many','more','most','only','very','can','may','might','must','should','would','could','does','did','are','was','been','being','has','had','not','but','our','out','who','whom','whose','how','why','where','while','because','therefore','wherefore','among','between','those','these','its','his','her','him','she','you','yours','thee','thou','thy','ye','hath','doth','saith','art','wilt','shalt','lord'];
+function extractSermonKeywords(s,purpose,theme){
+  const src=[purpose||'',theme||'',s.theology||'',s.interp||'',(s.obs||'').slice(0,600),s.apply||''].join(' ').toLowerCase().replace(/[^a-z\s]/g,' ');
+  const seen={},out=[];
+  src.split(/\s+/).forEach(w=>{w=w.trim();if(w.length>3&&SERMON_STOPWORDS.indexOf(w)<0&&!seen[w]){seen[w]=1;out.push(w)}});
+  ['faith','believe','trust','pray','prayer','holy','holiness','pure','purity','grace','mercy','favor','love','obey','obedience','command','hope','promise','future','wisdom','understanding','strength','strong','power','provision','supply','provide','purpose','calling','mission','presence','forgive','forgiveness','save','salvation','saved','god','christ','jesus','spirit','word','truth','life','heart'].forEach(w=>{if(!seen[w]){seen[w]=1;out.push(w)}});
+  return out.slice(0,60);
+}
+function highlightBackingText(escapedText,keywords){
+  let html=escapedText;const found=[];
+  const sorted=[...keywords].sort((a,b)=>b.length-a.length);
+  sorted.forEach(k=>{
+    if(!k||k.length<4)return;
+    const re=new RegExp('(\\b'+k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\w*)','gi');
+    const before=html;html=html.replace(re,'<span class="keyHL">$1</span>');
+    if(html!==before)found.push(k);
+  });
+  return {html:html,found:[...new Set(found)].slice(0,8)};
+}
+function backingKeyPointSentence(i,ref,mainRef,purpose,theme,foundKeys){
+  const verbs=['confirms the same truth as','explains the principle behind','adds a second witness to','shows how to live out','unlocks the promise of','guards the meaning of','fuels faith for'];
+  const v=verbs[i%verbs.length];
+  const keys=(foundKeys&&foundKeys.length)?foundKeys.slice(0,4).join(', '):theme;
+  return 'Key Point connected to '+mainRef+': this passage '+v+' '+mainRef+' — through the keys ('+keys+') it drives the purpose: “'+purpose+'”.';
+}
+function shortKeyPoint(i,mainRef,theme){
+  const frames=['Confirms '+mainRef+' on '+theme,'Explains the '+theme+' behind '+mainRef,'Second witness to '+mainRef,'Living out '+mainRef+' ('+theme+')','Promise behind '+mainRef];
+  return frames[i%frames.length];
+}
+async function generateFullSermon(){
+  const s=selectedStudyData();
+  if(!s.passage)return toast('Set a Scripture passage first');
+  const box=document.getElementById('fullSermon');
+  const dir=(document.getElementById('sermonDirection')?.value||'').trim();
+  const refs=getTwentyReferenceScriptures(s.passage,s);
+  const theme=extractTheme(s);
+  const purpose=dir||s.theology||s.apply||'To hear, believe and obey the Word of God from '+s.passage+'.';
   const big=makeBigIdea(s,dir)||'God wants His Word to shape our faith, character and response.';
   const points=buildSermonPoints(s,refs);
+  box.innerHTML='<div class="muted">Building full sermon: arranging study in order, highlighting your notes, and fetching what each of the 20 backing Scriptures says…</div><div class="progress"><div class="bar" style="width:45%"></div></div>';
+  const texts=await Promise.all(refs.map(r=>fetchScriptureText(r)));
   const intro=sermonParagraph(s.obs,'Begin by reading the main passage slowly. Ask the congregation to notice what the text reveals about God, people and the response required.');
   const meaning=sermonParagraph(s.interp,'The passage must first be understood in its context. Its meaning should guide the message before personal application is made.');
   const truth=sermonParagraph(s.theology,'The central truth is that God speaks through His Word and calls His people to believe, obey and respond to Him.');
   const application=sermonParagraph(s.apply,'The Word should produce a clear response. Ask what must be believed, changed, practiced, surrendered or obeyed.');
   const prayerSeed=sermonParagraph(s.prayer,'Lord, help us receive Your Word, understand it clearly and live it faithfully.');
   const prayers=[
-    'Lord, open our understanding and help us receive the truth of this passage with humble hearts.',
-    'Father, strengthen our faith to believe what You have spoken and trust You in every situation.',
-    'Holy Spirit, show us what must change in our lives and give us grace to obey Your Word.',
-    'Lord, help us apply this truth in our homes, relationships, work, ministry and daily decisions.',
-    'Father, let this Word produce lasting fruit in us and make our lives a testimony of Your grace.'
+    'Lord, open our understanding and help us receive the truth of '+s.passage+' with humble hearts, in line with Your purpose: '+purpose,
+    'Father, strengthen our faith to believe what You have spoken in this passage and to trust You in every situation.',
+    'Holy Spirit, show us exactly what must change in our lives and give us grace to obey Your Word without delay.',
+    'Lord, help us apply this truth in our homes, relationships, work, ministry and daily decisions this very week.',
+    'Father, let this Word produce lasting fruit in us and make our lives a testimony of Your grace to others.'
   ];
-  let html='<article><h2>'+esc(dir||theme.charAt(0).toUpperCase()+theme.slice(1))+'</h2>';
-  html+='<p><b>Main Scripture:</b> '+esc(s.passage)+'</p>';
-  html+='<div class="sermonScripture"><b>Read:</b> '+esc(s.passage)+' — Read the complete passage before preaching.</div>';
-  html+='<h3>Introduction</h3><p>'+esc(intro)+'</p>';
-  html+='<p>'+esc('Today we are not studying this passage merely to gain information. We are coming before God to hear His Word and respond to it.')+'</p>';
-  html+='<h3>Central Truth</h3><p><b>'+esc(big)+'</b></p>';
-  html+='<h3>Understanding the Text</h3><p>'+esc(meaning)+'</p>';
-  html+='<h3>What the Passage Teaches</h3>';
-  points.forEach(p=>{html+='<p><b>'+esc(p.title)+':</b> '+esc(p.text)+'</p>'});
-  html+='<h3>Biblical Witness — 20 Backing Scriptures</h3><ol>'+refs.map(r=>'<li><b>'+esc(r)+'</b> — '+esc(referenceReason(refs.indexOf(r)))+'</li>').join('')+'</ol>';
-  html+='<h3>The Biblical Truth</h3><p>'+esc(truth)+'</p>';
-  html+='<h3>Practical Application</h3><p>'+esc(application)+'</p>';
-  html+='<p>'+esc('Do not leave the Word in the notebook. Let it become a decision, a practice, a prayer and a changed way of living.')+'</p>';
-  html+='<h3>Conclusion</h3><p>'+esc('Return to the main Scripture and repeat the central truth. The goal is not simply to remember the sermon. The goal is to respond to God through His Word.')+'</p>';
+  function noteBlock(label,val,fallback){
+    const v=(val||'').trim()||fallback;
+    return '<div class="highlightNote"><b class="noteLabel">📝 '+label+' — Your Study Note (highlighted)</b><div>'+escHtml(v)+'</div></div>';
+  }
+  let html='<article>';
+  html+='<h2>'+escHtml(dir||(theme.charAt(0).toUpperCase()+theme.slice(1)))+'</h2>';
+  html+='<p><b>Main Scripture:</b> '+escHtml(s.passage)+' &nbsp; <span class="pill">'+escHtml(s.genre||'')+'</span> &nbsp; <span class="pill">'+escHtml(theme)+'</span></p>';
+  html+='<div class="purposeBox"><b>🎯 Intended Purpose (the whole sermon aligns with this):</b><div style="margin-top:6px">'+escHtml(purpose)+'</div></div>';
+  html+='<div class="sermonScripture"><b>Read:</b> '+escHtml(s.passage)+' — Stand and read the complete passage before preaching.</div>';
+  html+='<h3>📑 The Study Arranged In Order</h3><div class="studyOrderBox"><ol>'
+    +'<li><b>01 THE TEXT</b> — what it says</li>'
+    +'<li><b>02 THE MEANING</b> — what it meant</li>'
+    +'<li><b>03 THE CONTEXT</b> — setting & cross-references</li>'
+    +'<li><b>04 THE TRUTH</b> — central theology in one sentence</li>'
+    +'<li><b>05 THE MOVEMENT</b> — 3 preaching points from the text</li>'
+    +'<li><b>06 THE RESPONSE</b> — what hearers must do</li>'
+    +'<li><b>07 THE SUPPORT</b> — 20 backing Scriptures with what they say</li>'
+    +'<li><b>08 THE APPEAL</b> — call to respond</li></ol></div>';
+  html+=noteBlock('O — Observation',s.obs,'Record what the text actually says.');
+  html+=noteBlock('I — Interpretation',s.interp,'State the author\'s meaning and purpose.');
+  html+=noteBlock('C — Context',s.context,'Place the passage in its book, historical and biblical setting.');
+  html+=noteBlock('T — Theology / Truth',s.theology,'State what the passage reveals about God and His work.');
+  html+=noteBlock('A — Application',s.apply,'Give the clear, practical response to the Word.');
+  html+=noteBlock('P — Prayer Seed',s.prayer,prayerSeed);
+  html+='<h3>Introduction — The Need This Text Answers</h3><p>'+escHtml(intro)+'</p>';
+  html+='<p>Today we are not studying '+escHtml(s.passage)+' merely to gain information. We are coming before God to hear His Word and respond to it — and His purpose for us in this message is clear: <b>'+escHtml(purpose)+'</b></p>';
+  html+='<h3>Central Truth</h3><p><b>'+escHtml(big)+'</b></p>';
+  html+='<h3>Understanding the Text</h3><p>'+escHtml(meaning)+'</p>';
+  html+='<h3>The Preaching Movement — 3 Points From the Text</h3>';
+  points.forEach((p,i)=>{
+    const sub=refs.slice(i*2,i*2+2).join(' • ');
+    html+='<div class="targetCard"><div><span class="targetNum">0'+(i+1)+'</span><span class="targetTitle">'+escHtml(p.title)+' — aligned with the purpose</span></div><p class="targetText">'+escHtml(p.text)+'</p><p class="small muted"><b>Explain:</b> unfold this from '+escHtml(s.passage)+'. <b>Illustrate:</b> give a real-life story or biblical example. <b>Apply:</b> drive it toward — '+escHtml(purpose)+'</p><p class="small muted"><b>Woven Scriptures:</b> '+escHtml(sub)+'</p></div>';
+  });
+  html+='<h3>Biblical Witness — 20 Backing Scriptures With What They Say</h3><p class="muted">Each backing Scripture below is quoted so you can hear what it says. <span class="keyHL">Gold-highlighted words</span> are the key points connected to the key Scripture ('+escHtml(s.passage)+'), and each passage closes with its Key Point.</p>';
+  const sermonKeys=extractSermonKeywords(s,purpose,theme);
+  refs.forEach((r,i)=>{
+    const raw=texts[i]||'';
+    const t=raw||'(Text could not be fetched — open in YouVersion/Logos to read it.)';
+    const hl=raw?highlightBackingText(escHtml(t),sermonKeys):{html:escHtml(t),found:[]};
+    const kp=backingKeyPointSentence(i,r,s.passage,purpose,theme,hl.found);
+    const pills=hl.found.length?'<div class="keyPills">'+hl.found.map(k=>'<span class="keyPill">🔑 '+escHtml(k)+'</span>').join('')+'</div>':'';
+    html+='<div class="backingVerse"><div class="bref">'+(i+1)+'. '+escHtml(r)+'</div><div class="btext">“'+hl.html+'”</div>'+pills+'<div class="keyPoint"><b>🔑 Key Point:</b> '+escHtml(kp)+'</div><div class="bwhy"><b>'+escHtml(verseFocus(r,i,purpose,theme,s.passage,hl.found))+'</b><br>🎯 Aligns with “'+escHtml(purpose)+'” — <a style="color:var(--blue)" target="_blank" rel="noopener noreferrer" href="'+youVersionUrl(r)+'">Read in YouVersion</a> • <a style="color:var(--blue)" target="_blank" rel="noopener noreferrer" href="'+logosUrl(r)+'">Open in Logos</a></div></div>';
+  });
+  html+='<h3>The Biblical Truth</h3><p>'+escHtml(truth)+'</p>';
+  html+='<h3>Practical Application — Respond to the Purpose</h3><p>'+escHtml(application)+'</p>';
+  html+='<p>Do not leave the Word in the notebook. In obedience to our purpose — <b>'+escHtml(purpose)+'</b> — let it become a decision, a practice, a prayer and a changed way of living this week.</p>';
+  html+='<h3>Conclusion & Appeal</h3><p>Return to '+escHtml(s.passage)+' and repeat the central truth: <b>'+escHtml(big)+'</b> The goal is not simply to remember the sermon. The goal is to respond to God through His Word. If this Word has spoken to you, respond now — stand, lift your hand, come forward, surrender that area — and let God fulfil His purpose in you.</p>';
   html+='<h3>5 Prayer Points — Inline With the Message</h3>';
-  prayers.forEach((p,i)=>{html+='<div class="prayerPoint"><b>Prayer '+(i+1)+':</b> '+esc(p)+'</div>'});
-  html+='<h3>Closing Prayer</h3><p>'+esc(prayerSeed+' Let this Word remain alive in us, guide our steps and produce fruit that brings glory to Jesus Christ. Amen.')+'</p>';
+  prayers.forEach((p,i)=>{html+='<div class="prayerPoint"><b>Prayer '+(i+1)+':</b> '+escHtml(p)+'</div>'});
+  html+='<h3>Closing Prayer</h3><p>'+escHtml(prayerSeed+' Let this Word remain alive in us, guide our steps and produce fruit that brings glory to Jesus Christ. Amen.')+'</p>';
+  html+='<div class="purposeBox"><b>PREACHER\'S ONE-LINE SUMMARY:</b> '+escHtml(big)+' — Purpose: '+escHtml(purpose)+'</div>';
+  html+='<p class="small muted">Want a longer, fully-written manuscript? Click “💬 Send to ChatGPT” above — your study, notes and 20 Scriptures travel with it.</p>';
   html+='</article>';
-  document.getElementById('fullSermon').innerHTML=html;
-  toast('Full sermon generated with 20 backing Scriptures and five prayer points');
+  box.innerHTML=html;
+  toast('Full sermon generated: ordered study, highlighted notes, 20 Scriptures with highlighted key points');
 }
 function copyFullSermon(){
   const el=document.getElementById('fullSermon');
@@ -810,7 +1178,8 @@ function copyFullSermon(){
 function findRelatedScriptures(){
   const s=selectedStudyData();if(!s.passage)return toast('Set a Scripture passage first');
   const refs=getTwentyReferenceScriptures(s.passage,s).slice(0,20),el=document.getElementById('relatedScriptures');
-  el.innerHTML=refs.map((r,i)=>`<div class="relatedItem"><b>${esc(r)}</b><small>${['Confirm the truth','Explain the principle','Show a biblical example','Strengthen the application','Add a wider biblical perspective'][i%5]}</small><div class="relatedActions"><a class="btn small" target="_blank" rel="noopener noreferrer" href="${youVersionUrl(r)}">Open in YouVersion</a><a class="btn small" target="_blank" rel="noopener noreferrer" href="${logosUrl(r)}">Open in Logos</a><button type="button" class="btn small" onclick="addRelatedToContext(${JSON.stringify(r)})">Add to study</button></div></div>`).join('');
+  const dirR=((document.getElementById('sermonDirection')||{}).value||'').trim(),themeR=extractTheme(s),purposeR=dirR||s.theology||s.apply||('the truth of '+s.passage);
+  el.innerHTML=refs.map((r,i)=>`<div class="relatedItem"><b>${esc(r)}</b><small>${esc(verseFocus(r,i,purposeR,themeR,s.passage))}</small><small>🔑 Key connected to ${esc(s.passage)}: ${esc(shortKeyPoint(i,s.passage,extractTheme(s)))}</small><div class="relatedActions"><a class="btn small" target="_blank" rel="noopener noreferrer" href="${youVersionUrl(r)}">Open in YouVersion</a><a class="btn small" target="_blank" rel="noopener noreferrer" href="${logosUrl(r)}">Open in Logos</a><button type="button" class="btn small" onclick="addRelatedToContext(${JSON.stringify(r)})">Add to study</button></div></div>`).join('');
 }
 function openBibleRef(r){return openExternal(youVersionUrl(r));}
 function openBible(ref=currentRef){return openExternal(youVersionUrl(ref));}
@@ -904,5 +1273,5 @@ initBooks();loadDaily();loadTodayScripture();renderBooks();renderMemory();render
 if(state.dark===false)document.body.classList.add('light');
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39b26167994b6da',t:'MTc4OTE3NjY0Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
