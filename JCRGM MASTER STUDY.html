@@ -34,6 +34,10 @@ textarea,input,select{width:100%;background:#081523;border:1px solid var(--line)
 .listItem{padding:12px;border:1px solid var(--line);border-radius:10px;margin:8px 0;background:#0b1829}.light .listItem{background:#f7f9fb}.small{font-size:12px}.score{font-weight:900;color:var(--green)}.tagbtn{margin:4px}
 .meditation{min-height:220px}.range{accent-color:var(--gold);width:100%}.soundRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.sessionMode{border:1px solid var(--gold);box-shadow:0 0 0 2px #e7bd6233 inset}
 .kbd{border:1px solid var(--line);border-bottom-width:3px;border-radius:6px;padding:1px 6px;font-size:12px;color:var(--muted)}
+.guidedPanel{margin-top:16px;border:1px solid var(--gold);border-radius:14px;padding:16px;background:linear-gradient(145deg,#141b33,#081522)}
+.light .guidedPanel{background:#f4f1ff}
+.guidedStep{margin-top:12px;border:1px dashed var(--line);border-radius:12px;padding:16px;min-height:120px}
+.guidedStep .gTitle{font-weight:900;color:var(--gold2);font-size:19px}
 
 .sermonBuilder{margin-top:18px;border:1px solid var(--gold);border-radius:16px;padding:18px;background:linear-gradient(145deg,#111f31,#091522);box-shadow:0 10px 30px #0002}.light .sermonBuilder{background:var(--panel)}.sermonBuilderHead{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.sermonTargets{margin-top:14px}.targetCard{border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0;background:#0b1829}.light .targetCard{background:#f7f9fb}.targetNum{display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;background:var(--gold);color:#17120a;font-weight:900;margin-right:8px}.targetTitle{font-weight:900;color:var(--gold2);font-size:17px}.targetText{margin:7px 0}.relatedBox{margin-top:16px;border-top:1px solid var(--line);padding-top:16px}.relatedGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}.relatedItem{border:1px solid var(--line);border-radius:10px;padding:11px;background:#0b1829}.light .relatedItem{background:#f7f9fb}.relatedItem b{color:var(--gold2)}.relatedItem small{display:block;color:var(--muted);margin-top:4px}.sermonOrder{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sermonOrder .targetCard{margin:0}.relatedActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.relatedActions a.btn{ text-decoration:none !important; } .relatedActions a.btn:hover{ text-decoration:none !important; }
 .referencePanel,.fullSermonPanel{margin-top:18px;border:1px solid var(--line);border-radius:16px;padding:18px;background:linear-gradient(145deg,#101f32,#091522)}
@@ -176,7 +180,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <div class="grid">
   <div class="card wide"><h2>Today's Mission</h2>
     <p class="muted">Do not merely finish chapters. Seek understanding, obedience, remembrance and transformation.</p>
-    <div class="verse">“Your word is a lamp to my feet and a light to my path.” <span class="ref">— Psalm 119:105</span></div><div class="scriptureBox" style="margin-top:14px"><h3>📜 Scripture for Today</h3><p class="muted">Choose your main Scripture for today.</p><div class="row3"><div><label>Book</label><select id="todayBook"></select></div><div><label>Chapter</label><input id="todayChapter" type="number" min="1" value="1"></div><div><label>Verse (optional)</label><input id="todayVerse" placeholder="e.g. 1-10"></div></div><br><div class="actions"><button class="btn primary" onclick="generateTodayScripture()">Generate Scripture</button><button class="btn" onclick="openTodayLogos()">Open in Logos</button><button class="btn" onclick="studyTodayScripture()">Study This</button></div><div id="todayScriptureResult" style="margin-top:12px"><div class="muted">No Scripture selected for today yet.</div></div></div>
+    <div class="verse">“Your word is a lamp to my feet and a light to my path.” <span class="ref">— Psalm 119:105</span></div><div class="scriptureBox" style="margin-top:14px"><h3>📜 Scripture for Today</h3><p class="muted">Choose your main Scripture for today.</p><div class="row3"><div><label>Book</label><select id="todayBook"></select></div><div><label>Chapter</label><input id="todayChapter" type="number" min="1" value="1"></div><div><label>Verse (optional)</label><input id="todayVerse" placeholder="e.g. 1-10"></div></div><br><div style="margin:10px 0"><label>Bible version</label><select class="verSelect" onchange="setBibleVersion(this.value)"></select></div><div class="actions"><button class="btn primary" onclick="generateTodayScripture()">Generate Scripture</button><button class="btn" onclick="openTodayLogos()">Open in Logos</button><button class="btn" onclick="studyTodayScripture()">Study This</button></div><div id="todayScriptureResult" style="margin-top:12px"><div class="muted">No Scripture selected for today yet.</div></div></div>
     <div class="progress"><div class="bar" id="daybar"></div></div>
     <small class="muted"><span id="daypct">0</span>% of today's rhythm completed</small>
   </div>
@@ -215,6 +219,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
   <div><label>Verse (optional)</label><input id="sVerse" placeholder="e.g. 1-10"></div>
 </div>
 <br>
+<div style="margin-bottom:10px"><label>Bible version</label><select class="verSelect" onchange="setBibleVersion(this.value)"></select></div>
 <div class="actions">
 <button class="btn primary" onclick="loadScripture()">Show Scripture</button>
 <button class="btn" onclick="openCurrentLogos()">Open in Logos</button>
@@ -223,7 +228,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <div id="scriptureResult" class="scriptureBox">
   <div class="muted">Choose a passage and select “Show Scripture”.</div>
 </div>
-<p class="small muted">The built-in reader uses the public-domain KJV through an external Bible API. For other translations, open the passage in your licensed Bible/Logos library.</p>
+<p class="small muted">The built-in reader auto-loads free versions (KJV, WEB, BSB, ASV, YLT). NKJV and AMPC are licensed: the app opens them in BibleGateway/YouVersion/Logos and lets you paste the text in.</p>
 </div>
 <div class="card">
 <h3>Study this passage</h3>
@@ -362,6 +367,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
     <div><label>Verse (optional)</label><input id="memVerse" placeholder="e.g. 1-10"></div>
   </div>
   <br>
+  <div style="margin-bottom:10px"><label>Bible version</label><select class="verSelect" onchange="setBibleVersion(this.value)"></select></div>
   <div class="actions">
     <button class="btn primary" onclick="generateMemoryScripture()">Generate Scripture</button>
     <button class="btn" onclick="useCurrentForMemory()">Use Current Scripture</button>
@@ -385,7 +391,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <button class="btn" onclick="revealMemory()">Reveal</button>
 <button class="btn good" onclick="memoryGrade(true)">I remembered</button>
 <button class="btn danger" onclick="memoryGrade(false)">I need review</button>
-<button class="btn" onclick="memoryHint()">Hint</button>
+<button class="btn" onclick="memoryHint()">Hint — reveal next</button>
 </div>
 <div class="small muted" id="memoryProgress"></div></div>
 </div>
@@ -431,6 +437,60 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <button class="btn" onclick="ambient('tone')">♪ Soft Tone</button>
 <button class="btn" onclick="stopAmbient()">■ Stop</button>
 </div>
+<h3>🌌 Meditation Soundscapes</h3>
+<div class="actions">
+<button class="btn" onclick="ambient('wind')">🌬 Breath of Wind</button>
+<button class="btn" onclick="ambient('drone')">🌌 Deep Stillness</button>
+<button class="btn" onclick="ambient('chimes')">🔔 Soft Chimes</button>
+</div>
+<h3>🌿 Nature</h3>
+<div class="actions">
+<button class="btn" onclick="ambient('ocean')">🌊 Ocean Waves</button>
+<button class="btn" onclick="ambient('birds')">🐦 Distant Birds</button>
+<button class="btn" onclick="ambient('shore')">🌅 Ocean & Birds</button>
+</div>
+<div class="guidedPanel">
+  <h3>👁 Guided Meditation — Opening Sight into the Spirit Realm</h3>
+  <p class="muted">A Scripture-led journey: be still, fix your eyes on Jesus, ask for opened eyes, watch, record — and test everything by the Word.</p>
+  <div class="row">
+    <div><label>Journey Scripture</label><input id="guidedRef" value="Ephesians 1:17-18"></div>
+    <div><label>Spoken guidance</label><select id="guidedVoice"><option value="on" selected>Voice on</option><option value="off">Silent (text only)</option></select></div>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <div><label>Voice — ★ = most realistic on your device</label><select id="guidedVoiceName"><option>Loading voices…</option></select></div>
+    <div><label>Pace</label><select id="guidedPace"><option value="0.85">Slow & deep</option><option value="0.95" selected>Calm</option><option value="1">Natural</option></select></div>
+  </div>
+  <div style="margin-top:10px">
+    <label>Scripture quoting speed — <span id="scriptureRateLabel">0.75×</span> <span class="small muted">(slower reading whenever the guide quotes the Bible)</span></label>
+    <input id="scriptureRate" class="range" type="range" min="0.5" max="1.2" step="0.05" value="0.75" oninput="updateScriptureRateLabel(this.value)">
+  </div>
+  <p class="small muted">Tip: for the most human-like voice use Microsoft Edge (Natural voices) or Chrome (Google voices), then press Test Voice to compare.</p>
+  <br>
+  <div class="actions">
+    <button class="btn primary" onclick="startGuided()">▶ Begin Journey</button>
+    <button class="btn" onclick="testGuidedVoice()">🔊 Test Voice</button>
+    <button class="btn" onclick="nextGuidedStep(true)">Next Step →</button>
+    <button class="btn danger" onclick="stopGuided()">■ End Journey</button>
+    <button class="btn" onclick="guidedToMeditation()">✍ Record in Meditation Room</button>
+  </div>
+  <div id="guidedStep" class="guidedStep"><div class="muted">Press “Begin Journey” — each step appears here and is spoken aloud. Headphones and low light recommended.</div></div>
+  <div class="small muted" id="guidedProgress" style="margin-top:8px"></div>
+</div>
+<div class="guidedPanel" style="border-color:var(--green)">
+  <h3>📜 Turn Study Scripture into Guided Meditation</h3>
+  <p class="muted">Take the Scripture you are studying in this focus session and turn it into a spoken guided meditation — read, observe, understand, apply, pray and remember — for deep understanding.</p>
+  <div class="row">
+    <div><label>Study Scripture</label><input id="focusStudyRef" placeholder="e.g. Romans 8:1-4"></div>
+    <div><label>Study notes</label><select id="focusStudyNotes"><option value="on" selected>Include my Deep Study notes</option><option value="off">Scripture only</option></select></div>
+  </div>
+  <br>
+  <div class="actions">
+    <button class="btn" onclick="pullStudyIntoFocus()">↗ Use Current Study</button>
+    <button class="btn primary" onclick="buildScriptureJourney(true)">✨ Create & Begin Meditation</button>
+    <button class="btn" onclick="restoreSightJourney()">👁 Sight Journey</button>
+  </div>
+  <div id="scriptureJourneyStatus" class="small muted" style="margin-top:8px">No Scripture meditation built yet — active journey: Opening Sight into the Spirit Realm.</div>
+</div>
 <p class="small muted">For actual worship instrumentals, use a local audio file you own or have permission to use.</p>
 <input id="audioFile" type="file" accept="audio/*">
 <audio id="audioPlayer" controls loop style="width:100%;margin-top:10px"></audio>
@@ -475,12 +535,12 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <section id="settings" class="section">
 <div class="grid">
 <div class="card"><h2>Data</h2><button class="btn primary" onclick="exportData()">Export Study Data</button><button class="btn" onclick="importData()">Import Data</button><button class="btn danger" onclick="resetData()">Reset Local Data</button><p class="muted">Notes, progress, memory and study records are stored locally in this browser.</p></div>
-<div class="card"><h2>Preferences</h2><label>Default focus minutes</label><input id="defaultFocus" type="number" value="25" min="1" max="180"><br><br><label>Daily target</label><select id="target"><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60" selected>60 minutes</option><option value="90">90 minutes</option><option value="120">120 minutes</option></select></div>
+<div class="card"><h2>Preferences</h2><label>Default focus minutes</label><input id="defaultFocus" type="number" value="25" min="1" max="180"><br><br><label>Bible version (whole app)</label><select class="verSelect" onchange="setBibleVersion(this.value)"></select><br><br><label>Daily target</label><select id="target"><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60" selected>60 minutes</option><option value="90">90 minutes</option><option value="120">120 minutes</option></select></div>
 <div class="card"><h2>Keyboard shortcuts</h2><p><span class="kbd">Space</span> Start/Pause timer</p><p><span class="kbd">R</span> Reset timer</p><p><span class="kbd">M</span> Scripture Reader</p><p><span class="kbd">F</span> Focus Room</p></div>
 </div>
 </section>
 
-<div class="footer">JCRGM MASTER STUDY WORLD CLASS • Personal Bible-study workspace • Scripture text shown by the built-in reader is KJV/public-domain API output; use licensed translations in Logos or your Bible app.</div>
+<div class="footer">JCRGM MASTER STUDY WORLD CLASS • Personal Bible-study workspace • Scripture text shown by the built-in reader is free API output (KJV, WEB, BSB, ASV, YLT) plus licensed NKJV & AMPC via open & paste; use licensed translations in Logos or your Bible app.</div>
 </main></div>
 
 
@@ -512,7 +572,7 @@ const NT=['Matthew','Mark','Luke','John','Acts','Romans','1 Corinthians','2 Cori
 const BOOKS=[...OT,...NT];
 const TOPICS=['God','Jesus Christ','Holy Spirit','Faith','Grace','Salvation','Prayer','Holiness','Love','Wisdom','Fear of the Lord','Kingdom of God','Discipleship','Forgiveness','Repentance','Covenant','Worship','Justice','Suffering','Hope','Resurrection','Church','Mission','Spiritual warfare','Money & stewardship','Marriage & family','Leadership','Temptation','Identity in Christ','Eternal life'];
 let state=JSON.parse(localStorage.getItem('jcrgmMasterAdvanced')||'{"done":[],"journal":[],"memory":[],"studies":[],"meditations":[],"dark":true,"streak":0}');
-let currentRef='Genesis 1', currentMemory=-1, timer=null, seconds=1500, timerMode='focus', audioCtx=null, audioNode=null;
+let currentRef='Genesis 1', currentMemory=-1, timer=null, seconds=1500, timerMode='focus', audioCtx=null, audioNode=null, memoryHintLevel=0;
 
 function save(){
   state.version=3;
@@ -583,15 +643,31 @@ function loadStudyIndex(i){
   renderSermonStudySelect();toast('Study loaded');
 }
 function startMemoryIndex(i){
-  if(!state.memory[i])return;currentMemory=i;const x=state.memory[i];
+  if(!state.memory[i])return;currentMemory=i;memoryHintLevel=0;const x=state.memory[i];
   document.getElementById('memoryReview').innerHTML=`<div><div class="big">${esc(x.ref)}</div><p class="muted">Recall the verse before revealing it.</p></div>`;
   updateMemoryProgress();
 }
 function memoryHint(){
   if(currentMemory<0||!state.memory[currentMemory])return toast('Start a memory review first');
-  const x=state.memory[currentMemory], words=x.text.trim().split(/\s+/);
-  const n=Math.max(1,Math.ceil(words.length*.2));
-  document.getElementById('memoryReview').innerHTML=`<div><div class="big">${esc(words.slice(0,n).join(' '))}…</div><p class="muted">Hint — now continue from memory.</p></div>`;
+  const x=state.memory[currentMemory], text=x.text.trim();
+  let parts=text.match(/[^.!?]+[.!?]+["'\u201C\u201D\u2019\)]*/g);
+  if(!parts||!parts.length)parts=[text];
+  parts=parts.map(s=>s.trim()).filter(Boolean);
+  if(parts.length<=1){
+    const words=text.split(/\s+/), chunk=Math.max(1,Math.ceil(words.length/4));
+    parts=[];
+    for(let i=0;i<words.length;i+=chunk)parts.push(words.slice(i,i+chunk).join(' '));
+  }
+  memoryHintLevel=(typeof memoryHintLevel==='number'?memoryHintLevel:0)+1;
+  if(memoryHintLevel>=parts.length){
+    memoryHintLevel=parts.length;
+    document.getElementById('memoryReview').innerHTML='<div><div class="big">'+esc(x.ref)+'</div><p class="verse">'+esc(parts.join(' '))+'</p><p class="muted">Fully revealed ('+parts.length+' of '+parts.length+'). Now grade yourself below.</p></div>';
+    updateMemoryProgress();
+    return toast('Fully revealed');
+  }
+  const shown=parts.slice(0,memoryHintLevel).join(' '), hidden=parts.length-memoryHintLevel;
+  document.getElementById('memoryReview').innerHTML='<div><div class="big">'+esc(x.ref)+'</div><p class="verse">'+esc(shown)+' <span class="muted">\u2026 (+'+hidden+' more '+(hidden===1?'sentence':'sentences')+' hidden)</span></p><p class="muted">Hint '+memoryHintLevel+' of '+parts.length+' \u2014 press Hint again to reveal the next sentence.</p></div>';
+  updateMemoryProgress();
 }
 function updateMemoryProgress(){
   const el=document.getElementById('memoryProgress');if(!el)return;
@@ -645,7 +721,10 @@ let s=document.getElementById('sBook');s.innerHTML=BOOKS.map(b=>'<option>'+b+'</
 let mb=document.getElementById('memBook');if(mb)mb.innerHTML=BOOKS.map(b=>'<option>'+b+'</option>').join('');let tb=document.getElementById('todayBook');if(tb)tb.innerHTML=BOOKS.map(b=>'<option>'+b+'</option>').join('');
 }
 function passageValue(){let b=document.getElementById('sBook').value,c=document.getElementById('sChapter').value||1,v=document.getElementById('sVerse').value.trim();return b+' '+c+(v?':'+v:'')}
-async function loadScripture(){let ref=passageValue();currentRef=ref;let box=document.getElementById('scriptureResult');box.innerHTML='<div class="muted">Loading Scripture…</div>';try{let r=await fetch('https://bible-api.com/'+encodeURIComponent(ref)+'?translation=kjv');if(!r.ok)throw Error();let d=await r.json();let txt=(d.verses||[]).map(x=>x.text).join(' ').trim();if(!txt)throw Error();box.innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(d.reference||ref)+'</span><span class="pill">KJV</span></div>'}catch(e){box.innerHTML='<b>Could not load this passage.</b><p class="muted">Check your internet connection, then try again. You can still open the reference directly in Logos or Bible.com.</p>'}}
+async function loadScripture(){let ref=passageValue();currentRef=ref;let box=document.getElementById('scriptureResult');box.innerHTML='<div class="muted">Loading Scripture…</div>';try{let d=await fetchPassage(ref);box.innerHTML='<div class="scriptureText">'+esc(d.text)+'</div><div class="scriptureMeta"><span class="pill">'+esc(d.ref)+'</span><span class="pill">'+esc(d.ver)+'</span></div>'}catch(e){if(e&&e.code==='LICENSED'){licensedPendingRef=ref;box.innerHTML=licensedFallbackHTML(ref,getBibleVersion(),'reader')}else{box.innerHTML='<b>Could not load this passage.</b><p class="muted">Check your internet connection, then try again. You can still open the reference directly in Logos or Bible.com.</p>'}}}
+function licensedLinks(ref,ver){const bg=(ver==='AMPC'?'AMPC':'NKJV');return '<div class="actions"><a class="btn primary" target="_blank" rel="noopener noreferrer" href="https://www.biblegateway.com/passage/?search='+encodeURIComponent(ref)+'&version='+bg+'">Read in '+ver+' on BibleGateway</a><a class="btn" target="_blank" rel="noopener noreferrer" href="'+youVersionUrl(ref)+'">Open in YouVersion</a><a class="btn" target="_blank" rel="noopener noreferrer" href="'+logosUrl(ref)+'">Open in Logos</a></div>'}
+function licensedFallbackHTML(ref,ver,target){return '<b>'+esc(ver)+' is a licensed translation.</b><p class="muted">Free Bible APIs cannot auto-load '+esc(ver)+' text (copyright). Open the passage below, then paste the text here to continue in the app.</p>'+licensedLinks(ref,ver)+'<br><label>Paste the '+esc(ver)+' text of '+esc(ref)+'</label><textarea id="licensedPaste_'+target+'" placeholder="Paste the passage text here…"></textarea><br><br><button class="btn primary" onclick="useLicensedText(\''+target+'\')">Use This Text</button>'}
+function useLicensedText(target){const ta=document.getElementById('licensedPaste_'+target),txt=((ta&&ta.value)||'').trim();if(!txt)return toast('Paste the passage text first');const ver=getBibleVersion(),ref=licensedPendingRef||currentRef;if(target==='reader'){currentRef=ref;document.getElementById('scriptureResult').innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(ref)+'</span><span class="pill">'+esc(ver)+' (pasted)</span></div>'}else if(target==='memory'){document.getElementById('memRef').value=ref;document.getElementById('memText').value=txt;document.getElementById('memoryScriptureResult').innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(ref)+'</span><span class="pill">'+esc(ver)+' (pasted)</span></div><br><button class="btn primary" onclick="saveMemory()">Save This Scripture</button>'}else if(target==='today'){localStorage.setItem('jcrgmTodayScripture',ref);localStorage.setItem('jcrgmTodayScriptureText',txt);localStorage.setItem('jcrgmTodayScriptureVer',ver+' (pasted)');document.getElementById('todayScriptureResult').innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(ref)+'</span><span class="pill">'+esc(ver)+' (pasted)</span></div>'}toast(ver+' text loaded')}
 function openCurrentLogos(){openLink('https://app.logos.com/search?query='+encodeURIComponent(currentRef))}
 function openCurrentBible(){openLink('https://www.bible.com/search?query='+encodeURIComponent(currentRef))}
 function sendPassageToStudy(){document.getElementById('passage').value=currentRef;go('study')}
@@ -852,7 +931,7 @@ function buildChatGPTSermonPrompt(){
   L.push('1) ARRANGE THE STUDY IN ORDER first, under headings: 01 THE TEXT (observation) > 02 THE MEANING (interpretation) > 03 THE CONTEXT > 04 THE TRUTH (theology, one memorable sentence) > 05 THE MOVEMENT (3-4 preaching points arising from the text) > 06 THE RESPONSE (application) > 07 THE SUPPORT (backing Scriptures) > 08 THE APPEAL (call to respond).');
   L.push('2) THEN WRITE THE FULL PREACHING MANUSCRIPT (2,500-3,500 words, ready to preach verbatim): Title, Main Text (tell reader to stand & read), Opening Prayer, Introduction (hook, need, tension the text answers), Central Truth (bold, repeated), Body (3-4 points; EACH point = Explanation of text + Illustration/story + Application + 2-3 backing Scriptures woven in), Conclusion (return to Central Truth), Altar Call / Appeal, 5 Prayer Points inline with the message, Closing Prayer, and a one-line Preacher Summary.');
   L.push('3) HIGHLIGHT THE STUDY NOTES: whenever you use the author\'s own wording from Observation/Interpretation/Theology/Application above, set it apart as: "> STUDY NOTE: [their exact words]" so the preacher sees their notes highlighted inside the sermon. Do NOT contradict or discard those notes — expand and preach them faithfully.');
-  L.push('4) 20 BACKING SCRIPTURES WITH WHAT THEY SAY + HIGHLIGHTED KEY POINTS: in a dedicated section, list ALL 20 references above IN ORDER. For EACH one: (a) write the reference in bold, (b) QUOTE what it says (1-3 key verses, KJV wording), (c) HIGHLIGHT the key points of that passage connected to the KEY (main) Scripture — put the key phrases in **bold** inside the quote AND list them as "KEY POINTS: phrase 1 | phrase 2 | phrase 3", (d) add one line: "KEY POINT CONNECTED TO [main Scripture]: ..." (1-2 sentences showing exactly how this backing passage confirms/explains/illustrates/strengthens the main text and drives the intended purpose). Also add (e) a FOCUS line telling the preacher exactly what to concentrate on when reading that verse (never generic filler). Every one of the 20 must appear with its quoted text, highlighted key points and FOCUS line.');
+  L.push('4) 20 BACKING SCRIPTURES WITH WHAT THEY SAY + HIGHLIGHTED KEY POINTS: in a dedicated section, list ALL 20 references above IN ORDER. For EACH one: (a) write the reference in bold, (b) QUOTE what it says (1-3 key verses, '+getBibleVersion()+' wording), (c) HIGHLIGHT the key points of that passage connected to the KEY (main) Scripture — put the key phrases in **bold** inside the quote AND list them as "KEY POINTS: phrase 1 | phrase 2 | phrase 3", (d) add one line: "KEY POINT CONNECTED TO [main Scripture]: ..." (1-2 sentences showing exactly how this backing passage confirms/explains/illustrates/strengthens the main text and drives the intended purpose). Also add (e) a FOCUS line telling the preacher exactly what to concentrate on when reading that verse (never generic filler). Every one of the 20 must appear with its quoted text, highlighted key points and FOCUS line.');
   L.push('5) ALIGNMENT WITH INTENDED PURPOSE: the Title, Central Truth, every point, every illustration, the appeal and all 5 prayer points must drive toward this purpose: "'+purpose+'". Repeat the purpose language deliberately. If any material drifts from it, cut it.');
   L.push('6) FAITHFULNESS: Christ-centered, Scripture-tested preaching. Distinguish clear teaching from illustration. Never present inference as direct quote. Keep tone warm, urgent, pastoral and authoritative.');
   L.push('7) FORMATTING: Use clear headings, short paragraphs, bold key truths. End with: "PREACHER\'S ONE-LINE SUMMARY: ..."');
@@ -891,15 +970,45 @@ async function openChatGPTWithStudy(){
   const w=window.open(url,'_blank','noopener,noreferrer');
   if(!w)toast('Pop-up blocked — open chatgpt.com and paste the copied prompt');
 }
-async function fetchScriptureText(ref){
-  try{
-    const r=await fetch('https://bible-api.com/'+encodeURIComponent(ref)+'?translation=kjv');
-    if(!r.ok)return '';
-    const d=await r.json();
-    const txt=(d.verses||[]).map(x=>x.text).join(' ').replace(/\s+/g,' ').trim();
-    return txt||'';
-  }catch(e){return ''}
+const BIBLE_VERSIONS=[
+{id:'KJV',name:'KJV \u2014 King James Version'},
+{id:'WEB',name:'WEB \u2014 World English Bible (modern)'},
+{id:'BSB',name:'BSB \u2014 Berean Standard Bible (modern)'},
+{id:'ASV',name:'ASV \u2014 American Standard Version'},
+{id:'YLT',name:"YLT \u2014 Young's Literal Translation"},
+{id:'NKJV',name:'NKJV — New King James (licensed)',licensed:true},
+{id:'AMPC',name:'AMPC — Amplified Classic (licensed)',licensed:true}
+];
+let licensedPendingRef='';
+function getBibleVersion(){try{return localStorage.getItem('jcrgmBibleVersion')||'KJV'}catch(e){return 'KJV'}}
+function setBibleVersion(v){try{localStorage.setItem('jcrgmBibleVersion',v)}catch(e){}document.querySelectorAll('.verSelect').forEach(s=>{s.value=v});toast('Bible version: '+v)}
+function populateVerSelects(){const cur=getBibleVersion();document.querySelectorAll('.verSelect').forEach(s=>{s.innerHTML=BIBLE_VERSIONS.map(v=>'<option value="'+v.id+'">'+v.name+'</option>').join('');s.value=cur})}
+function bookNumber(name){const i=BOOKS.indexOf(name);return i>=0?i+1:0}
+function parseRef(ref){const m=String(ref||'').match(/^(.+?)\s+(\d+)(?::(.+))?$/);if(!m)return null;return{book:m[1].trim(),chapter:+m[2],verses:(m[3]||'').trim()}}
+function verseInRange(v,spec){if(!spec)return true;const parts=String(spec).split(/[,\s]+/);for(const p of parts){const m=p.match(/(\d+)(?:\s*[\u2013\u2014\-]\s*(\d+))?/);if(!m)continue;const a=+m[1],b=m[2]?+m[2]:a;if(v>=a&&v<=b)return true}return false}
+function cleanVerseText(s){return String(s||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim()}
+async function fetchPassage(ref){
+  const ver=getBibleVersion();
+  const vinfo=BIBLE_VERSIONS.find(v=>v.id===ver);
+  if(vinfo&&vinfo.licensed){const le=new Error('licensed');le.code='LICENSED';throw le}
+  if(ver==='KJV'||ver==='WEB'){
+    try{
+      const r=await fetch('https://bible-api.com/'+encodeURIComponent(ref)+'?translation='+ver.toLowerCase());
+      if(r.ok){const d=await r.json();const txt=(d.verses||[]).map(x=>cleanVerseText(x.text)).join(' ').trim();if(txt)return{text:txt,ref:d.reference||ref,ver:ver}}
+    }catch(e){}
+  }
+  const pr=parseRef(ref);if(!pr)throw Error('badref');
+  const bn=bookNumber(pr.book);if(!bn)throw Error('badbook');
+  const r=await fetch('https://bolls.life/get-text/'+encodeURIComponent(ver)+'/'+bn+'/'+pr.chapter+'/');
+  if(!r.ok)throw Error('net');
+  const d=await r.json(),arr=Array.isArray(d)?d:[];
+  const picked=arr.filter(v=>verseInRange(+v.verse,pr.verses));
+  const txt=(picked.length?picked:arr).map(v=>cleanVerseText(v.text)).join(' ').trim();
+  if(!txt)throw Error('empty');
+  return{text:txt,ref:ref,ver:ver};
 }
+function unfetchedNote(){const v=getBibleVersion(),vi=BIBLE_VERSIONS.find(x=>x.id===v);if(vi&&vi.licensed)return '('+v+' is licensed \u2014 tap Read in YouVersion/BibleGateway below to read it, or switch to KJV, WEB, BSB, ASV or YLT for auto-quoted text.)';return '(Text could not be fetched \u2014 open in YouVersion/Logos to read it.)'}
+async function fetchScriptureText(ref){try{const d=await fetchPassage(ref);return d.text||''}catch(e){return ''}}
 function escHtml(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 const VERSE_FOCUS={
 'Psalm 119:105':"FOCUS: God's Word as lamp and light — focus on how Scripture gives your next step, not just information.",
@@ -1145,11 +1254,11 @@ async function generateFullSermon(){
     const sub=refs.slice(i*2,i*2+2).join(' • ');
     html+='<div class="targetCard"><div><span class="targetNum">0'+(i+1)+'</span><span class="targetTitle">'+escHtml(p.title)+' — aligned with the purpose</span></div><p class="targetText">'+escHtml(p.text)+'</p><p class="small muted"><b>Explain:</b> unfold this from '+escHtml(s.passage)+'. <b>Illustrate:</b> give a real-life story or biblical example. <b>Apply:</b> drive it toward — '+escHtml(purpose)+'</p><p class="small muted"><b>Woven Scriptures:</b> '+escHtml(sub)+'</p></div>';
   });
-  html+='<h3>Biblical Witness — 20 Backing Scriptures With What They Say</h3><p class="muted">Each backing Scripture below is quoted so you can hear what it says. <span class="keyHL">Gold-highlighted words</span> are the key points connected to the key Scripture ('+escHtml(s.passage)+'), and each passage closes with its Key Point.</p>';
+  html+='<h3>Biblical Witness — 20 Backing Scriptures With What They Say</h3><p class="muted">Each backing Scripture below is quoted so you can hear what it says. <span class="keyHL">Gold-highlighted words</span> are the key points connected to the key Scripture ('+escHtml(s.passage)+'), and each passage closes with its Key Point. Quoted in <b>'+getBibleVersion()+'</b> — change the version in Scripture Reader or Settings.</p>';
   const sermonKeys=extractSermonKeywords(s,purpose,theme);
   refs.forEach((r,i)=>{
     const raw=texts[i]||'';
-    const t=raw||'(Text could not be fetched — open in YouVersion/Logos to read it.)';
+    const t=raw||unfetchedNote();
     const hl=raw?highlightBackingText(escHtml(t),sermonKeys):{html:escHtml(t),found:[]};
     const kp=backingKeyPointSentence(i,r,s.passage,purpose,theme,hl.found);
     const pills=hl.found.length?'<div class="keyPills">'+hl.found.map(k=>'<span class="keyPill">🔑 '+escHtml(k)+'</span>').join('')+'</div>':'';
@@ -1200,16 +1309,13 @@ async function generateMemoryScripture(){
   let box=document.getElementById('memoryScriptureResult');
   box.innerHTML='<div class="muted">Generating Scripture…</div>';
   try{
-    let r=await fetch('https://bible-api.com/'+encodeURIComponent(ref)+'?translation=kjv');
-    if(!r.ok)throw Error();
-    let d=await r.json();
-    let txt=(d.verses||[]).map(x=>x.text).join(' ').trim();
-    if(!txt)throw Error();
-    document.getElementById('memRef').value=d.reference||ref;
+    let d=await fetchPassage(ref);
+    let txt=d.text;
+    document.getElementById('memRef').value=d.ref;
     document.getElementById('memText').value=txt;
-    box.innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(d.reference||ref)+'</span><span class="pill">KJV</span></div><br><button class="btn primary" onclick="saveMemory()">Save This Scripture</button>';
+    box.innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(d.ref)+'</span><span class="pill">'+esc(d.ver)+'</span></div><br><button class="btn primary" onclick="saveMemory()">Save This Scripture</button>';
   }catch(e){
-    box.innerHTML='<b>Could not generate this passage.</b><p class="muted">Check your internet connection, then try again. You can also open the reference in Logos.</p>';
+    if(e&&e.code==='LICENSED'){licensedPendingRef=ref;box.innerHTML=licensedFallbackHTML(ref,getBibleVersion(),'memory')}else{box.innerHTML='<b>Could not generate this passage.</b><p class="muted">Check your internet connection, then try again. You can also open the reference in Logos.</p>'};
   }
 }
 function useCurrentForMemory(){
@@ -1225,8 +1331,8 @@ function openMemoryLogos(){
 function saveMemory(){if(!memRef.value.trim()||!memText.value.trim())return toast('Add a reference and verse');state.memory.unshift({ref:memRef.value.trim(),text:memText.value.trim(),date:new Date().toLocaleDateString(),reviews:[],nextReview:new Date().toISOString()});save();memRef.value='';memText.value='';renderMemory();toast('Memory verse saved')}
 function renderMemory(){document.getElementById('memoryList').innerHTML=state.memory.map((x,i)=>`<div class="listItem"><span class="ref">${esc(x.ref)}</span><p class="verse">${esc(x.text)}</p><div class="small muted">Saved ${esc(x.date)}</div><button class="btn danger" onclick="removeMem(${i})">Remove</button></div>`).join('')||'<p class="muted">No memory verses yet.</p>'}
 function removeMem(i){state.memory.splice(i,1);save();renderMemory()}
-function startMemoryReview(){if(!state.memory.length)return toast('Add a memory verse first');currentMemory=Math.floor(Math.random()*state.memory.length);let x=state.memory[currentMemory];document.getElementById('memoryReview').innerHTML='<div><div class="big">'+esc(x.ref)+'</div><p class="muted">Say the verse aloud from memory before revealing it.</p></div>'}
-function revealMemory(){if(currentMemory<0)return toast('Start a review first');let x=state.memory[currentMemory];document.getElementById('memoryReview').innerHTML='<div><div class="big">'+esc(x.ref)+'</div><p class="verse">'+esc(x.text)+'</p></div>'}
+function startMemoryReview(){if(!state.memory.length)return toast('Add a memory verse first');currentMemory=Math.floor(Math.random()*state.memory.length);memoryHintLevel=0;let x=state.memory[currentMemory];document.getElementById('memoryReview').innerHTML='<div><div class="big">'+esc(x.ref)+'</div><p class="muted">Say the verse aloud from memory. Press Hint to reveal it sentence by sentence.</p></div>'}
+function revealMemory(){if(currentMemory<0)return toast('Start a review first');let x=state.memory[currentMemory];memoryHintLevel=99999;document.getElementById('memoryReview').innerHTML='<div><div class="big">'+esc(x.ref)+'</div><p class="verse">'+esc(x.text)+'</p></div>';updateMemoryProgress()}
 function memoryGrade(ok){if(currentMemory<0)return toast('Start a review first');state.memory[currentMemory].reviews.push({date:new Date().toISOString(),ok});save();toast(ok?'Excellent — keep reviewing.':'Keep this verse on the next review.');startMemoryReview()}
 function saveMeditation(){let x={date:new Date().toLocaleString(),ref:medRef.value,focus:medFocus.value,still:medStill.value,scripture:medScripture.value,reflection:medReflection.value,impression:medImpression.value,test:medTest.value,response:medResponse.value};if(!x.ref.trim())return toast('Add a Scripture reference');state.meditations.unshift(x);save();renderMeditations();toast('Meditation saved')}
 function renderMeditations(){document.getElementById('medList').innerHTML=state.meditations.length?state.meditations.slice(0,6).map(x=>`<div class="listItem"><b>${esc(x.ref)}</b><div class="small muted">${esc(x.date)}</div><p>${esc(x.impression||'No impression recorded.').slice(0,160)}</p></div>`).join(''):'<span class="muted">No saved sessions.</span>'}
@@ -1235,7 +1341,7 @@ function saveJournal(){if(!journalText.value.trim())return toast('Write somethin
 function renderJournal(){let e=document.getElementById('journalList');e.innerHTML=state.journal.length?state.journal.map(x=>`<div class="listItem"><b>${esc(x.title)}</b><small class="muted"> ${esc(x.date)}</small><p>${esc(x.text).replace(/\n/g,'<br>')}</p></div>`).join(''):'No entries yet.'}
 function renderTopics(){document.getElementById('topicsList').innerHTML=TOPICS.map(t=>`<button class="btn tagbtn" onclick="topicSearch('${esc(t)}')">${esc(t)}</button>`).join('')}
 function topicSearch(t){openLink('https://www.blueletterbible.org/search/search.cfm?Criteria='+encodeURIComponent(t));toast('Opening topic search')}
-async function generateTodayScripture(){let b=todayBook.value,c=todayChapter.value||1,v=todayVerse.value.trim(),ref=b+' '+c+(v?':'+v:'');currentRef=ref;localStorage.setItem('jcrgmTodayScripture',ref);let box=todayScriptureResult;box.innerHTML='<div class="muted">Loading Scripture…</div>';try{let r=await fetch('https://bible-api.com/'+encodeURIComponent(ref)+'?translation=kjv');if(!r.ok)throw Error();let d=await r.json(),txt=(d.verses||[]).map(x=>x.text).join(' ').trim();if(!txt)throw Error();localStorage.setItem('jcrgmTodayScriptureText',txt);box.innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(d.reference||ref)+'</span><span class="pill">KJV</span></div>';toast('Today’s Scripture selected')}catch(e){box.innerHTML='<b>Could not generate this passage.</b><p class="muted">Check your internet connection and try again, or open the reference in Logos.</p>'}}
+async function generateTodayScripture(){let b=todayBook.value,c=todayChapter.value||1,v=todayVerse.value.trim(),ref=b+' '+c+(v?':'+v:'');currentRef=ref;localStorage.setItem('jcrgmTodayScripture',ref);let box=todayScriptureResult;box.innerHTML='<div class="muted">Loading Scripture…</div>';try{let d=await fetchPassage(ref),txt=d.text;localStorage.setItem('jcrgmTodayScriptureText',txt);localStorage.setItem('jcrgmTodayScriptureVer',d.ver);box.innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(d.ref)+'</span><span class="pill">'+esc(d.ver)+'</span></div>';toast('Today’s Scripture selected')}catch(e){if(e&&e.code==='LICENSED'){licensedPendingRef=ref;box.innerHTML=licensedFallbackHTML(ref,getBibleVersion(),'today')}else{box.innerHTML='<b>Could not generate this passage.</b><p class="muted">Check your internet connection and try again, or open the reference in Logos.</p>'}}}
 function openTodayLogos(){let ref=localStorage.getItem('jcrgmTodayScripture')||'Genesis 1';openLink('https://app.logos.com/search?query='+encodeURIComponent(ref))}
 function studyTodayScripture(){let ref=localStorage.getItem('jcrgmTodayScripture')||'';passage.value=ref;go('study')}
 function loadTodayScripture(){let ref=localStorage.getItem('jcrgmTodayScripture');if(!ref)return;let m=ref.match(/^(.*) (\d+)(?::(.+))?$/);if(m){todayBook.value=m[1];todayChapter.value=m[2];todayVerse.value=m[3]||''}let txt=localStorage.getItem('jcrgmTodayScriptureText');if(txt)todayScriptureResult.innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(ref)+'</span><span class="pill">KJV</span></div>'}
@@ -1256,9 +1362,43 @@ function beep(){try{let c=new (window.AudioContext||window.webkitAudioContext)()
 function setVolume(v){if(audioNode)audioNode.gain.value=(+v/100)*.12}
 function ambient(type){stopAmbient();audioCtx=new (window.AudioContext||window.webkitAudioContext)();let gain=audioCtx.createGain();gain.gain.value=(+document.getElementById('volume').value/100)*.12;gain.connect(audioCtx.destination);audioNode=gain;
 if(type==='tone'){let o=audioCtx.createOscillator();o.type='sine';o.frequency.value=220;o.connect(gain);o.start();audioNode.osc=o;return}
+if(type==='wind'){let len=audioCtx.sampleRate*3,buf=audioCtx.createBuffer(1,len,audioCtx.sampleRate),ch=buf.getChannelData(0);for(let i=0;i<len;i++)ch[i]=Math.random()*2-1;let wsrc=audioCtx.createBufferSource();wsrc.buffer=buf;wsrc.loop=true;let f=audioCtx.createBiquadFilter();f.type='bandpass';f.frequency.value=500;f.Q.value=.6;let lfo=audioCtx.createOscillator();lfo.type='sine';lfo.frequency.value=.08;let lg=audioCtx.createGain();lg.gain.value=320;lfo.connect(lg);lg.connect(f.frequency);wsrc.connect(f);f.connect(gain);wsrc.start();lfo.start();return}
+if(type==='drone'){[55,82.5,110,165].forEach(fr=>{let o=audioCtx.createOscillator();o.type='sine';o.frequency.value=fr;let og=audioCtx.createGain();og.gain.value=.22;o.connect(og);og.connect(gain);o.start()});return}
+if(type==='chimes'){const scale=[523.25,587.33,659.25,783.99,880,1046.5];const ring=()=>{try{const fr=scale[Math.floor(Math.random()*scale.length)];let o=audioCtx.createOscillator();o.type='sine';o.frequency.value=fr;let e=audioCtx.createGain();const t=audioCtx.currentTime;e.gain.setValueAtTime(.0001,t);e.gain.exponentialRampToValueAtTime(.5,t+.05);e.gain.exponentialRampToValueAtTime(.0001,t+3.2);o.connect(e);e.connect(gain);o.start(t);o.stop(t+3.4)}catch(e){}};ring();audioNode._timers=[setInterval(()=>{if(Math.random()<.8)ring()},4200)];return}
+if(type==='birds'||type==='shore'){let alen=audioCtx.sampleRate*3,abuf=audioCtx.createBuffer(1,alen,audioCtx.sampleRate),achd=abuf.getChannelData(0);for(let i=0;i<alen;i++)achd[i]=(Math.random()*2-1)*.5;let asrc=audioCtx.createBufferSource();asrc.buffer=abuf;asrc.loop=true;let ahp=audioCtx.createBiquadFilter();ahp.type='highpass';ahp.frequency.value=4000;let ag=audioCtx.createGain();ag.gain.value=.02;asrc.connect(ahp);ahp.connect(ag);ag.connect(gain);asrc.start();let delay=audioCtx.createDelay(1);delay.delayTime.value=.31;let fb=audioCtx.createGain();fb.gain.value=.35;let wet=audioCtx.createGain();wet.gain.value=.5;delay.connect(fb);fb.connect(delay);delay.connect(wet);wet.connect(gain);const chirp=()=>{try{const t0=audioCtx.currentTime+.05,base=2200+Math.random()*1800,n=2+Math.floor(Math.random()*3);for(let k=0;k<n;k++){let o=audioCtx.createOscillator();o.type='sine';let e=audioCtx.createGain();const st=t0+k*(.12+Math.random()*.1),dur=.09+Math.random()*.16,f1=base*(0.9+Math.random()*.3),f2=base*(0.8+Math.random()*.5);o.frequency.setValueAtTime(f1,st);o.frequency.exponentialRampToValueAtTime(f2,st+dur*.5);o.frequency.exponentialRampToValueAtTime(f1*.92,st+dur);e.gain.setValueAtTime(.0001,st);e.gain.exponentialRampToValueAtTime(.1+Math.random()*.07,st+.02);e.gain.exponentialRampToValueAtTime(.0001,st+dur);o.connect(e);e.connect(gain);e.connect(delay);o.start(st);o.stop(st+dur+.05)}}catch(e){}};chirp();const schedule=()=>{const tm=setTimeout(()=>{if(Math.random()<.85)chirp();schedule()},2200+Math.random()*4200);(audioNode._timers=audioNode._timers||[]).push(tm)};schedule();if(type==='birds')return}
+if(type==='ocean'||type==='shore'){let len=audioCtx.sampleRate*4,buf=audioCtx.createBuffer(1,len,audioCtx.sampleRate),ch=buf.getChannelData(0),last=0;for(let i=0;i<len;i++){let w=Math.random()*2-1;last=(last+.03*w)/1.03;ch[i]=last*3.2}let osrc=audioCtx.createBufferSource();osrc.buffer=buf;osrc.loop=true;let of=audioCtx.createBiquadFilter();of.type='lowpass';of.frequency.value=700;of.Q.value=.4;let swell=audioCtx.createGain();swell.gain.value=.6;let lfo=audioCtx.createOscillator();lfo.type='sine';lfo.frequency.value=.09;let lg=audioCtx.createGain();lg.gain.value=380;lfo.connect(lg);lg.connect(of.frequency);let lfo2=audioCtx.createOscillator();lfo2.type='sine';lfo2.frequency.value=.06;let lg2=audioCtx.createGain();lg2.gain.value=.3;lfo2.connect(lg2);lg2.connect(swell.gain);osrc.connect(of);of.connect(swell);swell.connect(gain);osrc.start();lfo.start();lfo2.start();return}
 let buffer=audioCtx.createBuffer(1,audioCtx.sampleRate*2,audioCtx.sampleRate),data=buffer.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1;
 let src=audioCtx.createBufferSource();src.buffer=buffer;src.loop=true;src.connect(gain);src.start();if(type==='brown'){let last=0;let proc=audioCtx.createScriptProcessor(4096,1,1);proc.onaudioprocess=e=>{let o=e.outputBuffer.getChannelData(0);for(let i=0;i<o.length;i++){let w=data[Math.floor(Math.random()*data.length)];last=(last+.02*w)/1.02;o[i]=last*3.5}};proc.connect(gain);audioNode.proc=proc}}
-function stopAmbient(){if(audioCtx){try{audioCtx.close()}catch{}audioCtx=null;audioNode=null}}
+let GUIDED_STEPS=[
+{t:"Be Still",s:"Psalm 46:10",d:60,x:"Be still, and know that I am God. Let your breathing slow down. Release every distraction, every noise, every hurry. You are coming before the throne of grace. Quiet your heart. Be still."},
+{t:"Fix Your Eyes on Jesus",s:"Hebrews 12:1-2",d:75,x:"Lay aside every weight. Turn the eyes of your heart toward Jesus. See Him, high and lifted up, worthy of all honor. Let His face fill your inner vision as you worship Him softly."},
+{t:"Ask for Opened Eyes",s:"Ephesians 1:17-18 • 2 Kings 6:17",d:75,x:"Now pray with Elisha: Lord, open my eyes, that I may see. Ask the Father for the spirit of wisdom and revelation, that the eyes of your understanding would be enlightened. Ask expectantly."},
+{t:"Watch and Wait",s:"Habakkuk 2:1",d:90,x:"Stand upon your watch. Become a watcher. Quietly present what you are carrying to the Lord, and then wait. Notice the pictures, the scriptures, the gentle thoughts that arise. Do not force anything. Simply watch."},
+{t:"Receive and Record",s:"Habakkuk 2:2",d:60,x:"Write the vision. Whatever you sensed, a picture, a verse, a word, a warmth, hold it gently. You will record it in the Meditation Room. Nothing is lost when it is written down."},
+{t:"Test Everything",s:"1 Thessalonians 5:21 • 1 John 4:1",d:60,x:"Now test it. Does it agree with Scripture? Does it honor Christ? Does it produce His character? Hold fast to what is good. Lay aside what is unclear, and wait on the Lord."},
+{t:"Respond and Rest",s:"Psalm 27:4 • Jude 20-21",d:45,x:"Respond with worship and obedience. Thank Him for what He has shown you. Keep yourself in the love of God. Rest now. His presence goes with you, and He gives you rest."}
+];
+const SIGHT_JOURNEY=GUIDED_STEPS;
+let guidedIdx=-1,guidedTimer=null,guidedInt=null,guidedRemaining=0;
+function voiceScore(v){let s=0;const nm=((v.name||'')+' '+(v.voiceURI||''));if(/^en/i.test(v.lang||''))s+=10;if(/natural|neural/i.test(nm))s+=10;if(/online/i.test(nm))s+=8;if(/google uk english female|google us english/i.test(nm))s+=7;if(/google/i.test(nm))s+=4;if(/samantha|siri|zira|aria|jenny|sonia|serena|moira|tessa|kate|victoria|karen|fiona|david|guy|mark/i.test(nm))s+=3;if(v.localService===false)s+=2;return s}
+function refreshGuidedVoices(){try{if(!window.speechSynthesis)return;const sel=document.getElementById('guidedVoiceName');if(!sel)return;const vs=speechSynthesis.getVoices()||[];if(!vs.length){sel.innerHTML='<option>Loading voices…</option>';return}const saved=localStorage.getItem('jcrgmGuidedVoice')||'';const ranked=[...vs].sort((a,b)=>voiceScore(b)-voiceScore(a));sel.innerHTML=ranked.map(v=>'<option value="'+String(v.name).replace(/"/g,'&quot;')+'">'+(voiceScore(v)>=15?'★ ':'')+v.name+' ('+v.lang+')</option>').join('');if(saved&&[...sel.options].some(o=>o.value===saved))sel.value=saved;else sel.selectedIndex=0;const pr=document.getElementById('guidedPace'),savedRate=localStorage.getItem('jcrgmGuidedRate');if(pr&&savedRate)pr.value=savedRate;const sr=document.getElementById('scriptureRate'),savedScr=localStorage.getItem('jcrgmScriptureRate');if(sr&&savedScr){sr.value=savedScr;const lb=document.getElementById('scriptureRateLabel');if(lb)lb.textContent=(+savedScr).toFixed(2)+'×'}}catch(e){}}
+function pickCalmVoice(){try{const vs=(window.speechSynthesis?speechSynthesis.getVoices():[])||[];if(!vs.length)return null;const sel=document.getElementById('guidedVoiceName');const want=((sel&&sel.value)||localStorage.getItem('jcrgmGuidedVoice')||'');return vs.find(v=>v.name===want)||[...vs].sort((a,b)=>voiceScore(b)-voiceScore(a))[0]||null}catch(e){return null}}
+function updateScriptureRateLabel(v){const lb=document.getElementById('scriptureRateLabel');if(lb)lb.textContent=(+v).toFixed(2)+'×';try{localStorage.setItem('jcrgmScriptureRate',v)}catch(e){}}
+function scriptureRate(){let r=parseFloat(((document.getElementById('scriptureRate')||{}).value)||localStorage.getItem('jcrgmScriptureRate')||'.75');if(!(r>0))r=.75;return r}
+function speakGuided(text,scrText){try{if(!window.speechSynthesis)return;if(((document.getElementById('guidedVoice')||{}).value)==='off')return;speechSynthesis.cancel();const v=pickCalmVoice();let rate=parseFloat((((document.getElementById('guidedPace')||{}).value))||'.95')||.95;const sRate=scriptureRate();const queue=(String(text).match(/[^.!?]+[.!?]+/g)||[text]).map(s=>({p:s.trim(),r:rate})).filter(o=>o.p);if(scrText){(String(scrText).match(/[^.!?]+[.!?]+/g)||[scrText]).map(s=>s.trim()).filter(Boolean).forEach(q=>queue.push({p:q,r:sRate}))}(queue.length?queue:[{p:text,r:rate}]).forEach(o=>{const u=new SpeechSynthesisUtterance(o.p);u.rate=o.r;u.pitch=1;if(v)u.voice=v;speechSynthesis.speak(u)})}catch(e){}}
+function testGuidedVoice(){try{const sel=document.getElementById('guidedVoiceName');if(sel&&sel.value)localStorage.setItem('jcrgmGuidedVoice',sel.value);const pace=document.getElementById('guidedPace');if(pace&&pace.value)localStorage.setItem('jcrgmGuidedRate',pace.value)}catch(e){}if(!window.speechSynthesis)return toast('Voice not supported in this browser');if(((document.getElementById('guidedVoice')||{}).value)==='off')return toast('Spoken guidance is set to Silent');speakGuided('Be still, and know that I am God. Listen to the difference. First, my guiding voice. Now, the Scripture quoting speed.','Thy word is a lamp unto my feet, and a light unto my path.');toast('Playing sample — try different voices')}
+try{if(window.speechSynthesis){speechSynthesis.onvoiceschanged=refreshGuidedVoices;refreshGuidedVoices()}}catch(e){}
+function renderGuidedStep(){const st=GUIDED_STEPS[guidedIdx],ref=((document.getElementById('guidedRef')||{}).value)||'Ephesians 1:17-18';document.getElementById('guidedStep').innerHTML='<div><div class="gTitle">Step '+(guidedIdx+1)+' of '+GUIDED_STEPS.length+' — '+st.t+'</div><div style="margin:8px 0"><span class="pill">'+st.s+'</span> <span class="pill">Journey: '+ref+'</span></div><p class="verse" style="font-size:19px">'+st.x+'</p></div>';speakGuided('Step '+(guidedIdx+1)+'. '+st.t+'. '+(st.speak||st.x),st.scripture)}
+function startGuided(){if(guidedTimer){clearTimeout(guidedTimer);guidedTimer=null}if(guidedInt){clearInterval(guidedInt);guidedInt=null}try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}if(!audioCtx){try{ambient('wind')}catch(e){}}try{const sv=document.getElementById('guidedVoiceName');if(sv&&sv.value)localStorage.setItem('jcrgmGuidedVoice',sv.value);const pr=document.getElementById('guidedPace');if(pr&&pr.value)localStorage.setItem('jcrgmGuidedRate',pr.value);const srr=document.getElementById('scriptureRate');if(srr&&srr.value)localStorage.setItem('jcrgmScriptureRate',srr.value)}catch(e){}guidedIdx=-1;nextGuidedStep();toast('Guided journey begun — headphones recommended')}
+function stopGuided(){if(guidedTimer){clearTimeout(guidedTimer);guidedTimer=null}if(guidedInt){clearInterval(guidedInt);guidedInt=null}try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}guidedIdx=-1;document.getElementById('guidedStep').innerHTML='<div class="muted">Journey ended. Record anything you received in the Meditation Room — and test it by Scripture.</div>';document.getElementById('guidedProgress').textContent='';toast('Journey ended')}
+function nextGuidedStep(manual){if(guidedTimer){clearTimeout(guidedTimer);guidedTimer=null}if(guidedInt){clearInterval(guidedInt);guidedInt=null}try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}if(manual&&guidedIdx<0)return toast('Press Begin Journey first');guidedIdx++;if(guidedIdx>=GUIDED_STEPS.length){guidedIdx=-1;document.getElementById('guidedStep').innerHTML='<div><div class="gTitle">Journey Complete</div><p>Remain quiet a moment longer. Then record what you received — press “Record in Meditation Room.” Test everything by Scripture.</p></div>';document.getElementById('guidedProgress').textContent='';speakGuided('Journey complete. Record what you received, and test everything by Scripture.');return toast('Journey complete — record what you received')}renderGuidedStep();guidedRemaining=GUIDED_STEPS[guidedIdx].d;const total=GUIDED_STEPS[guidedIdx].d;const prog=()=>{document.getElementById('guidedProgress').textContent='Step '+(guidedIdx+1)+' of '+GUIDED_STEPS.length+' • next step in '+guidedRemaining+'s (or press Next Step)'};prog();guidedInt=setInterval(()=>{guidedRemaining--;if(guidedRemaining<=0){clearInterval(guidedInt);guidedInt=null;return}prog()},1000);guidedTimer=setTimeout(()=>nextGuidedStep(),total*1000)}
+function guidedToMeditation(){const ref=((document.getElementById('guidedRef')||{}).value)||'Ephesians 1:17-18';document.getElementById('medRef').value=ref;document.getElementById('medFocus').value='Opening sight — what did I see, sense or receive?';go('meditation');toast('Record what you received — test it by Scripture')}
+function focusStudyData(){const g=id=>((document.getElementById(id)||{}).value||'').trim();return{ref:g('focusStudyRef')||g('passage')||currentRef,obs:g('obs'),interp:g('interp'),context:g('context'),theology:g('theology'),apply:g('apply'),prayer:g('prayer')}}
+function pullStudyIntoFocus(){const p=((document.getElementById('passage')||{}).value||'').trim()||currentRef;document.getElementById('focusStudyRef').value=p;const goal=document.getElementById('focusGoal');if(goal&&!goal.value.trim())goal.value='Meditate deeply on '+p+' for full understanding.';toast('Study Scripture loaded: '+p)}
+function trimNote(t,n){t=(t||'').replace(/\s+/g,' ').trim();if(t.length>n){t=t.slice(0,n);const cut=t.lastIndexOf('. ');if(cut>60)t=t.slice(0,cut+1)}return t}
+async function buildScriptureJourney(autoStart){const s=focusStudyData();if(!s.ref)return toast('Enter a study Scripture first');const status=document.getElementById('scriptureJourneyStatus');status.textContent='Preparing guided meditation on '+s.ref+' — fetching Scripture text…';document.getElementById('focusStudyRef').value=s.ref;document.getElementById('guidedRef').value=s.ref;const withNotes=((document.getElementById('focusStudyNotes')||{}).value)!=='off';let text=await fetchScriptureText(s.ref);if(!text)text='(Open '+s.ref+' in your Bible and read it slowly now.)';let spoken=text;if(spoken.length>1500){const cut=spoken.slice(0,1500).lastIndexOf('. ');spoken=(cut>400?spoken.slice(0,cut+1):spoken.slice(0,1500))+' Continue reading the rest silently.'}const obs=withNotes?trimNote(s.obs,400):'',interp=withNotes?trimNote(s.interp,400):'',theo=withNotes?trimNote(s.theology,300):'',app=withNotes?trimNote(s.apply,350):'',pr=withNotes?trimNote(s.prayer,300):'';GUIDED_STEPS=[{t:'Read and Receive',s:s.ref,d:90,speak:'Hear the Word of God. '+s.ref+'. Listen as it is read, and let each phrase settle in your heart.',scripture:spoken,x:'Hear the Word of God. '+s.ref+'. Listen as it is read, and let each phrase settle in your heart. '+text},{t:'Observe — What Does It Say?',s:s.ref,d:75,x:obs?('Look closely at what the text actually says. Your study notes observe: '+obs+' Linger on each key word. What repeats? What stands out?'):('Look closely at what the text actually says. Linger on each key word. What repeats? What commands, promises or warnings stand out? Notice exactly what is written before you interpret it.')},{t:'Understand — What Does It Mean?',s:s.ref,d:75,x:interp?('Now press into the meaning. Your study uncovered: '+interp+' Ask the Spirit to open your understanding as you turn this over slowly.'):('Now press into the meaning. Who is speaking, and to whom? Why was this written? What did it mean first, before what it means now? Ask the Spirit to open your understanding.')},{t:'The Central Truth',s:s.ref,d:60,x:theo?('Hold the central truth before you: '+theo+' Let this one truth echo. Say it quietly to yourself, and let it search you.'):('Distill this passage to one central truth about God, Christ, or His work. Hold that truth before you. Say it quietly to yourself, and let it search you.')},{t:'Apply — How Must I Respond?',s:s.ref,d:75,x:app?('The Word demands a response. You have discerned: '+app+' Decide now. What will you believe, change, start, or surrender? Picture yourself obeying this week.'):('The Word demands a response. What must you believe, change, start, or surrender? Decide now. Picture yourself obeying this passage this very week.')},{t:'Pray the Scripture',s:s.ref,d:60,x:pr?('Turn the passage into prayer. Pray with your own words: '+pr):('Turn each phrase of the passage into prayer. Worship where it reveals God. Confess where it convicts you. Ask where it promises. Pray it back to the Father now.')},{t:'Rest and Remember',s:s.ref,d:45,x:'Choose one phrase from '+s.ref+' to carry today. Repeat it softly. Let it be the last word in your mind as you rest. His Word will not return void. Carry it, remember it, and live it.'}];window._journeyName='Scripture Deep-Dive: '+s.ref;status.textContent='Active journey: '+window._journeyName+' ('+GUIDED_STEPS.length+' steps • '+(withNotes?'with your study notes':'Scripture only')+')';const goal=document.getElementById('focusGoal');if(goal&&!goal.value.trim())goal.value='Gain deep understanding of '+s.ref+' through guided meditation.';toast('Scripture meditation ready: '+s.ref);if(autoStart)startGuided()}
+function restoreSightJourney(){GUIDED_STEPS=SIGHT_JOURNEY;window._journeyName='Opening Sight into the Spirit Realm';document.getElementById('scriptureJourneyStatus').textContent='Active journey: Opening Sight into the Spirit Realm.';stopGuided();toast('Sight journey restored')}
+function stopAmbient(){if(audioNode&&audioNode._timers)audioNode._timers.forEach(t=>{try{clearInterval(t)}catch(e){}});if(audioCtx){try{audioCtx.close()}catch(e){}audioCtx=null;audioNode=null}}
 document.getElementById('audioFile').addEventListener('change',e=>{let f=e.target.files[0];if(!f)return;let p=document.getElementById('audioPlayer');p.src=URL.createObjectURL(f);p.play().catch(()=>{})});
 document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;if(e.code==='Space'){e.preventDefault();timer?pauseTimer():startTimer()}if(e.key.toLowerCase()==='r')resetTimer();if(e.key.toLowerCase()==='m')go('scripture');if(e.key.toLowerCase()==='f')go('focus')});
 document.getElementById('focusMin').addEventListener('change',resetTimer);
@@ -1269,9 +1409,9 @@ document.getElementById('commandInput')?.addEventListener('input',e=>renderSearc
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openCommandPalette()}if(e.key==='Escape')closeCommandPalette()});
 ['passage','obs','interp','context','theology','apply','prayer'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>{clearTimeout(window.__draftTimer);window.__draftTimer=setTimeout(saveStudyDraft,500)}));
 
-initBooks();loadDaily();loadTodayScripture();renderBooks();renderMemory();renderJournal();renderStudies();renderMeditations();renderTopics();renderSermonStudySelect();timerDisplay();updateMemoryProgress();
+initBooks();loadDaily();loadTodayScripture();populateVerSelects();renderBooks();renderMemory();renderJournal();renderStudies();renderMeditations();renderTopics();renderSermonStudySelect();timerDisplay();updateMemoryProgress();
 if(state.dark===false)document.body.classList.add('light');
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39b26167994b6da',t:'MTc4OTE3NjY0Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39b8fdebebdb575',t:'MTc4OTE4MDk3OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
