@@ -317,6 +317,10 @@ input[type=date].inp::-webkit-calendar-picker-indicator{filter:invert(.82) sepia
 .chat-foot p{font-size:12.5px;color:var(--muted);margin-top:7px}
 .copybtn{margin-top:14px;width:100%;min-height:44px;border-radius:99px;border:1px solid rgba(255,255,255,.17);background:transparent;
   color:#dbe3f3;font-size:12.5px;font-weight:800;cursor:pointer}
+.wurow{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid rgba(255,255,255,.08);background:rgba(4,6,13,.5);border-radius:12px;padding:9px 9px 9px 13px;margin-top:8px}
+.wurow small{display:block;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.wurow b{font-size:14.5px;color:#fff}
+.wucopy{width:auto!important;min-height:38px;margin-top:0!important;padding:8px 16px;flex:none}
 .aside-box{margin-top:16px;border:1px solid rgba(220,185,85,.24);background:rgba(220,185,85,.07);border-radius:20px;padding:20px}
 .aside-box b{font-family:var(--serif);font-size:20px;color:var(--gold-200)}
 .aside-box p{font-size:13px;color:var(--muted);margin-top:5px}
@@ -459,10 +463,22 @@ footer a{word-break:break-word}
 .saveband p{font-size:13px;color:var(--muted);margin-top:5px}
 @media(max-width:520px){.saveband .btn{width:100%}}
 
+#printSheet{display:none}
 @media print{
-  .fab-wrap,.drawer,.topbar,header.nav,.marquee,.rays,.motes,.arches,.saveband,.preview{display:none!important}
-  body{background:#fff;color:#000}
-  .sec{padding:18px 0}
+  body{background:#fff!important;color:#000!important}
+  body>*{display:none!important}
+  #printSheet{display:block!important;color:#000;font-family:Georgia,serif;padding:8px}
+  #printSheet .ps-head{display:flex;justify-content:space-between;gap:16px;border-bottom:3px solid #c39a2c;padding-bottom:12px}
+  #printSheet h2{font-size:26px;color:#000;margin:0}
+  #printSheet h3{font-size:16px;margin:18px 0 8px;color:#000;border-bottom:1px solid #c39a2c;padding-bottom:4px}
+  #printSheet p{font-size:13px}
+  #printSheet .ps-ref{text-align:right}
+  #printSheet .ps-ref b{display:block;font-size:18px}
+  #printSheet table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  #printSheet th,#printSheet td{border:1px solid #999;padding:7px 9px;text-align:left;vertical-align:top}
+  #printSheet th{width:38%;background:#f2ecd9}
+  #printSheet .ps-foot{margin-top:16px;font-size:12px;color:#333}
+  #printSheet .ps-sign{display:flex;justify-content:space-between;margin-top:26px;font-size:13px}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition-duration:.01ms!important}
@@ -669,7 +685,7 @@ footer a{word-break:break-word}
     <div class="sec-head rv">
       <span class="eyebrow">Book an appointment</span>
       <h2>Fill it in once — <span class="gold">we do the typing</span></h2>
-      <p>Everything below is turned into one neat WhatsApp message addressed to the appointment desk on 0979 554 970. You only press send.</p>
+      <p>Everything below is turned into one neat WhatsApp message addressed to the appointment desk on 0979 554 970. You only press send. Visiting from outside Zambia? Tap “Yes” in the form and travel plus lodging details open up.</p>
       <div class="hair"></div>
     </div>
 
@@ -702,6 +718,97 @@ footer a{word-break:break-word}
           </div></div>
         <div class="f" id="wrapOther" style="display:none"><label class="lb" for="f_other">Their name &amp; relationship</label>
           <input class="inp" id="f_other" type="text" placeholder="e.g. John Phiri — my brother"><p class="err" id="e_other"></p></div>
+        <div class="f"><label class="lb">Visiting from outside Zambia?</label>
+          <div class="chips" data-group="intl">
+            <button type="button" class="chip on" data-val="no">No</button>
+            <button type="button" class="chip" data-val="yes">✈ Yes</button>
+          </div></div>
+      </div>
+
+      <div id="intlSection" style="display:none">
+      <div class="fs-head"><i style="font-size:14px">✈</i><h3>International visitor details</h3><span class="hair"></span></div>
+      <div class="row">
+        <div class="f"><label class="lb" for="f_country">Country of residence</label>
+          <input class="inp" id="f_country" type="text" placeholder="e.g. South Africa" autocomplete="country-name"><p class="err" id="e_country"></p></div>
+        <div class="f"><label class="lb" for="f_passport">Full name as in passport (optional)</label>
+          <input class="inp" id="f_passport" type="text" placeholder="As printed in passport"></div>
+      </div>
+      <div class="row">
+        <div class="f"><label class="lb" for="f_arrival">Arrival date in Zambia</label>
+          <input class="inp" type="date" id="f_arrival" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}"><p class="err" id="e_arrival"></p></div>
+        <div class="f"><label class="lb" for="f_depart">Departure date (optional)</label>
+          <input class="inp" type="date" id="f_depart" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}"></div>
+      </div>
+      <div class="row">
+        <div class="f"><label class="lb" for="f_passno">Passport / ID number</label>
+          <input class="inp" id="f_passno" type="text" placeholder="e.g. ZM1234567" autocomplete="off"><p class="err" id="e_passno"></p></div>
+        <div class="f"><label class="lb" for="f_flight">Flight details (optional)</label>
+          <input class="inp" id="f_flight" type="text" placeholder="e.g. Proflight P0020, arriving 14:35"></div>
+      </div>
+      <div class="row">
+        <div class="f"><label class="lb">Airport pickup (KKIA)?</label>
+          <div class="chips" data-group="pickup">
+            <button type="button" class="chip on" data-val="yes">Yes, pick me up</button>
+            <button type="button" class="chip" data-val="no">No</button>
+          </div></div>
+        <div class="f"><label class="lb">Visa invitation letter?</label>
+          <div class="chips" data-group="visa">
+            <button type="button" class="chip on" data-val="no">No</button>
+            <button type="button" class="chip" data-val="yes">Yes, I need one</button>
+          </div></div>
+      </div>
+      <div class="row">
+        <div class="f"><label class="lb">Need lodging arranged?</label>
+          <div class="chips" data-group="lodge">
+            <button type="button" class="chip on" data-val="no">No</button>
+            <button type="button" class="chip" data-val="yes">Yes, arrange lodging</button>
+          </div></div>
+        <div class="f"><label class="lb">Need an interpreter?</label>
+          <div class="chips" data-group="interp">
+            <button type="button" class="chip on" data-val="no">No</button>
+            <button type="button" class="chip" data-val="yes">Yes</button>
+          </div></div>
+      </div>
+      <div class="f" id="interpWrap" style="display:none"><label class="lb" for="f_lang">Which language?</label>
+        <input class="inp" id="f_lang" type="text" placeholder="e.g. French, Portuguese, Swahili"></div>
+      <div id="lodgeFields" style="display:none">
+        <div class="row">
+          <div class="f"><label class="lb" for="f_checkin">Lodging check-in</label>
+            <input class="inp" type="date" id="f_checkin" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}"></div>
+          <div class="f"><label class="lb" for="f_checkout">Lodging check-out</label>
+            <input class="inp" type="date" id="f_checkout" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}"></div>
+        </div>
+        <div class="row">
+          <div class="f"><label class="lb" for="f_guests">Number of guests</label>
+            <div class="selwrap"><select class="inp" id="f_guests"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select></div></div>
+          <div class="f"><label class="lb" for="f_lodgetype">Lodging type</label>
+            <div class="selwrap"><select class="inp" id="f_lodgetype"><option>Hotel</option><option>Guest house</option><option>Budget room</option><option>Church-arranged stay</option></select></div></div>
+        </div>
+        <div class="f"><label class="lb" for="f_lodgenotes">Lodging needs (optional)</label>
+          <input class="inp" id="f_lodgenotes" type="text" placeholder="e.g. ground floor, vegetarian meals, wheelchair access"></div>
+        <p class="err" id="e_lodge"></p>
+        <div class="notice" style="margin-top:16px">
+          <b>💸 Paying for church-arranged lodging? Send via Western Union</b>
+          <div class="wurow"><span><small>Receiver name</small><b>Emmanuel Sakala</b></span><button type="button" class="copybtn wucopy" data-copy="Emmanuel Sakala">Copy</button></div>
+          <div class="wurow"><span><small>Phone</small><b>+260979554970</b></span><button type="button" class="copybtn wucopy" data-copy="+260979554970">Copy</button></div>
+          <div class="wurow"><span><small>Country</small><b>Lusaka, Zambia</b></span><button type="button" class="copybtn wucopy" data-copy="Lusaka, Zambia">Copy</button></div>
+          <div class="wurow"><span><small>NRC number</small><b>177361/10/1</b></span><button type="button" class="copybtn wucopy" data-copy="177361/10/1">Copy</button></div>
+        </div>
+        <div class="row">
+          <div class="f"><label class="lb" for="f_payamount">Amount being sent</label>
+            <input class="inp" id="f_payamount" type="text" inputmode="decimal" placeholder="e.g. 200" autocomplete="off"></div>
+          <div class="f"><label class="lb" for="f_paycurrency">Currency</label>
+            <div class="selwrap"><select class="inp" id="f_paycurrency"></select></div></div>
+        </div>
+        <div class="notice" id="fxOut" style="margin-top:12px">Enter the amount to see the Kwacha equivalent.</div>
+        <button class="copybtn" type="button" id="fxRefresh" style="margin-top:10px">🔄 Refresh exchange rates</button>
+        <div class="f"><label class="lb" for="f_payplace">Payment for (place + details)</label>
+          <input class="inp" id="f_payplace" type="text" placeholder="e.g. Protea Hotel — 3 nights, bed &amp; breakfast"></div>
+        <div class="f"><label class="lb" for="f_mtcn">MTCN tracking number (after sending)</label>
+          <input class="inp" id="f_mtcn" type="text" inputmode="numeric" placeholder="10-digit Western Union MTCN" autocomplete="off"></div>
+      </div>
+      <div class="f"><label class="lb" for="f_emergency">Emergency contact (name + phone)</label>
+        <input class="inp" id="f_emergency" type="text" placeholder="e.g. Grace Mwanza — +27 82 000 0000"><p class="err" id="e_emergency"></p></div>
       </div>
 
       <div class="fs-head"><i>2</i><h3>Which ministry desk?</h3><span class="hair"></span></div>
@@ -762,6 +869,7 @@ footer a{word-break:break-word}
       <div class="actions" style="justify-content:center">
         <a class="btn btn-wa" id="reopen" href="#" rel="noopener"><span class="i-wa"></span>Open WhatsApp again</a>
         <button class="btn btn-out" type="button" id="copyBtn2">Copy the message</button>
+        <button class="btn btn-out" type="button" id="printBtn">🖨 Print / Save PDF</button>
         <button class="btn btn-ghost" type="button" id="againBtn">Make another booking</button>
       </div>
     </div>
@@ -778,6 +886,7 @@ footer a{word-break:break-word}
         <span class="kicker" style="color:var(--dim);letter-spacing:.18em">Live preview</span>
         <p>This is exactly what will land in the office inbox. Edit the form and watch it update.</p>
         <button class="copybtn" type="button" id="copyBtn">Copy message text</button>
+        <button class="copybtn" type="button" id="printBtn2">🖨 Print / Save PDF (draft)</button>
       </div>
     </div>
     <div class="aside-box">
@@ -907,8 +1016,8 @@ footer a{word-break:break-word}
     </div>
     <div class="chan">
       <span class="ico">&#9993;&#65039;</span>
-      <div class="cc"><small>Email</small><b style="font-size:15.5px"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ccbca9a8ada4b6b9bea1a5a2a5bfb8bea5a9bf8caba1ada5a0e2afa3a1">[email&#160;protected]</a></b><p>Invitations, partnerships &amp; enquiries</p></div>
-      <a class="btn btn-out btn-sm" href="/cdn-cgi/l/email-protection#a5d5c0c1c4cddfd0d7c8cccbccd6d1d7ccc0d6e5c2c8c4ccc98bc6cac89ad6d0c7cfc0c6d198e0cbd4d0ccd7dc80979588809795f5d7cad5cdc0d1d6809795eac3c3ccc6c0">Send email</a>
+      <div class="cc"><small>Email</small><b style="font-size:15.5px"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="76061312171e0c03041b1f181f0502041f130536111b171f1a5815191b">[email&#160;protected]</a></b><p>Invitations, partnerships &amp; enquiries</p></div>
+      <a class="btn btn-out btn-sm" href="/cdn-cgi/l/email-protection#e8988d8c8980929d9a858186819b9c9a818d9ba88f85898184c68b8785d79b9d8a828d8b9cd5ad86999d819a91cddad8c5cddad8b89a8798808d9c9bcddad8a78e8e818b8d">Send email</a>
     </div>
     <div class="chan">
       <span class="ico">&#128205;</span>
@@ -959,7 +1068,7 @@ footer a{word-break:break-word}
         <h4>Reach the desk</h4>
         <ul>
           <li><span class="lbl">WhatsApp / Phone</span><a href="tel:0979554970" style="color:var(--gold-200)">0979 554 970 · +260 979 554 970</a></li>
-          <li><span class="lbl">Email</span><a href="/cdn-cgi/l/email-protection#aadacfcecbc2d0dfd8c7c3c4c3d9ded8c3cfd9eacdc7cbc3c684c9c5c7"><span class="__cf_email__" data-cfemail="74041110151c0e0106191d1a1d0700061d1107341319151d185a171b19">[email&#160;protected]</span></a></li>
+          <li><span class="lbl">Email</span><a href="/cdn-cgi/l/email-protection#ccbca9a8ada4b6b9bea1a5a2a5bfb8bea5a9bf8caba1ada5a0e2afa3a1"><span class="__cf_email__" data-cfemail="ff8f9a9b9e97858a8d929691968c8b8d969a8cbf98929e9693d19c9092">[email&#160;protected]</span></a></li>
           <li><span class="lbl">Office</span>Meanwood Ndeke Phase 2, Lusaka, Zambia</li>
           <li><span class="lbl">Hours</span>Tue – Fri 09:00 – 17:00 · Sat 09:00 – 13:00 · Sun 13:30 – 15:00</li>
         </ul>
@@ -991,6 +1100,21 @@ footer a{word-break:break-word}
   <button class="fab" id="fab" type="button" aria-label="Chat on WhatsApp"><span class="ring"></span><span class="i-wa"></span></button>
 </div>
 
+<div id="printSheet" aria-hidden="true">
+  <div class="ps-head">
+    <div>
+      <h2>Prophets Office</h2>
+      <p>Pedahzur Ministries · Bishop Emmanuel Sakala<br>Meanwood Ndeke Phase 2, Lusaka, Zambia · 0979 554 970</p>
+    </div>
+    <div class="ps-ref"><small>Reference</small><b id="ps_ref">—</b><small id="ps_date"></small></div>
+  </div>
+  <h3>Appointment Booking Request</h3>
+  <table id="ps_table"></table>
+  <h3>Brief description of the matter</h3>
+  <p id="ps_details"></p>
+  <p class="ps-foot">Bring this reference with you and arrive 15 minutes early. Nothing is stored on the website — this printout was generated on your own device.</p>
+  <div class="ps-sign"><span>Received by: __________</span><span>Date: __________</span></div>
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
@@ -1356,6 +1480,9 @@ function savePage(){
     var sv=$("#f_service",clone);
     if(sv){ while(sv.options.length>1) sv.remove(1); }
     $$(".i-wa",clone).forEach(function(e){e.innerHTML=""});
+    $$("[data-group]",clone).forEach(function(g){$$("[data-val]",g).forEach(function(b,i){if(i===0)b.classList.add("on");else b.classList.remove("on")})});
+    ["#intlSection","#lodgeFields","#interpWrap"].forEach(function(s){var e=$(s,clone);if(e)e.style.display="none"});
+    var wo=$("#wrapOther",clone);if(wo)wo.style.display="none";var wf=$("#wrapFirst",clone);if(wf)wf.style.display="";
     $$("input",clone).forEach(function(e){
       if(e.type==="checkbox"||e.type==="radio") e.removeAttribute("checked");
       else if(e.id!=="f_loc") e.setAttribute("value","");
@@ -1386,8 +1513,9 @@ function savePage(){
 }
 
 /* ================= BOOKING FORM ================= */
-var state={forWho:"self",firstTime:"yes",mode:"in-person",urgency:"normal",time:""};
+var state={forWho:"self",firstTime:"yes",mode:"in-person",urgency:"normal",time:"",intl:"no",pickup:"yes",visa:"no",lodge:"no",interp:"no"};
 var lastMsg="";
+var lastRef="";
 
 $$("[data-group]").forEach(function(group){
   var key=group.getAttribute("data-group");
@@ -1400,6 +1528,9 @@ $$("[data-group]").forEach(function(group){
         $("#wrapOther").style.display=state.forWho==="other"?"":"none";
         $("#wrapFirst").style.display=state.forWho==="other"?"none":"";
       }
+      if(key==="intl"){$("#intlSection").style.display=state.intl==="yes"?"":"none"}
+      if(key==="lodge"){$("#lodgeFields").style.display=state.lodge==="yes"?"":"none"}
+      if(key==="interp"){$("#interpWrap").style.display=state.interp==="yes"?"":"none"}
       updatePreview();
     });
   });
@@ -1407,6 +1538,8 @@ $$("[data-group]").forEach(function(group){
 
 function iso(d){return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
 $("#f_date").min=iso(new Date());
+$("#f_arrival").min=iso(new Date());
+$("#f_checkin").min=iso(new Date());
 $("#f_date").max=iso(new Date(Date.now()+90*864e5));
 
 var DATE_RE=/^(\d{4})-(\d{2})-(\d{2})$/;
@@ -1481,6 +1614,22 @@ function buildMessage(ref){
   L.push("*Priority:* "+(state.urgency==="urgent"?"\uD83D\uDEA8 URGENT":"Normal"));
   if(state.forWho==="self")L.push("*First time at the office:* "+(state.firstTime==="yes"?"Yes":"No"));
   L.push("*City / Country:* "+(val("#f_loc")||"\u2014"));
+  if(state.intl==="yes"){
+    L.push("*International visitor:* Yes \u2708");
+    L.push("*Country of residence:* "+(val("#f_country")||"\u2014"));
+    if(val("#f_passport"))L.push("*Passport name:* "+val("#f_passport"));
+    L.push("*Passport / ID number:* "+(val("#f_passno")||"\u2014"));
+    L.push("*Arrival in Zambia:* "+prettyDate($("#f_arrival").value));
+    if($("#f_depart").value)L.push("*Departure:* "+prettyDate($("#f_depart").value));
+    if(val("#f_flight"))L.push("*Flight:* "+val("#f_flight"));
+    L.push("*Airport pickup:* "+(state.pickup==="yes"?"Yes, from KKIA":"No"));
+    L.push("*Visa invitation letter:* "+(state.visa==="yes"?"Yes, needed":"No"));
+    L.push("*Interpreter:* "+(state.interp==="yes"?("Yes \u2014 "+(val("#f_lang")||"language to confirm")):"No"));
+    if(state.lodge==="yes"){L.push("*Lodging:* Yes \u2014 "+val("#f_lodgetype")+", "+val("#f_guests")+" guest(s), "+prettyDate($("#f_checkin").value)+" to "+prettyDate($("#f_checkout").value)+(val("#f_lodgenotes")?(" ("+val("#f_lodgenotes")+")"):""))}
+    else{L.push("*Lodging:* No, already arranged")}
+    if(state.lodge==="yes"){var pamt=parseFloat(String(val("#f_payamount")||"").replace(/,/g,""));var pcur=$("#f_paycurrency")?$("#f_paycurrency").value:"USD";if(pamt>0){var zk=toZMW(pamt,pcur);L.push("*Lodging payment:* "+pamt+" "+pcur+(zk?(" (\u2248 K"+fmtNum(zk)+")"):"")+" via Western Union");if(val("#f_payplace"))L.push("*Payment for:* "+val("#f_payplace"));if(val("#f_mtcn"))L.push("*MTCN:* "+val("#f_mtcn"))}}
+    L.push("*Emergency contact:* "+(val("#f_emergency")||"\u2014"));
+  }
   L.push("");
   L.push("*Brief description of the matter:*");
   L.push(val("#f_details")||"\u2014");
@@ -1493,12 +1642,14 @@ function updatePreview(){
   $("#bubble").textContent=lastMsg;
   $("#count").textContent=val("#f_details").length;
 }
-["#f_name","#f_phone","#f_email","#f_loc","#f_other","#f_details"].forEach(function(id){
+["#f_name","#f_phone","#f_email","#f_loc","#f_other","#f_details","#f_country","#f_passport","#f_passno","#f_flight","#f_lang","#f_lodgenotes","#f_emergency"].forEach(function(id){
   var el=$(id);
   on(el,"input",function(){hideErr(id.replace("#f_",""));updatePreview()});
   on(el,"change",updatePreview);
 });
 on($("#f_service"),"change",function(){hideErr("service");updatePreview()});
+on($("#f_arrival"),"change",function(){hideErr("arrival");updatePreview()});
+["#f_depart","#f_checkin","#f_checkout","#f_guests","#f_lodgetype"].forEach(function(id){var el=$(id);on(el,"change",function(){hideErr("lodge");updatePreview()})});
 on($("#f_agree"),"change",function(){hideErr("agree")});
 
 function showErr(k,m){var e=$("#e_"+k);if(e){e.textContent=m;e.classList.add("show")}}
@@ -1506,7 +1657,7 @@ function hideErr(k){var e=$("#e_"+k);if(e)e.classList.remove("show")}
 
 function validate(){
   var ok=true;
-  ["name","phone","email","other","service","date","time","details","agree"].forEach(hideErr);
+  ["name","phone","email","other","service","date","time","details","agree","country","arrival","emergency","lodge","passno"].forEach(hideErr);
   if(val("#f_name").length<3){showErr("name","Please enter your full name.");ok=false}
   if(val("#f_phone").replace(/[^0-9]/g,"").length<9){showErr("phone","Enter a valid phone number.");ok=false}
   if(val("#f_email")&&!/^\S+@\S+\.\S+$/.test(val("#f_email"))){showErr("email","That email does not look right.");ok=false}
@@ -1516,6 +1667,16 @@ function validate(){
   else if(slotsFor($("#f_date").value).closed){showErr("date","The office is closed on Mondays. Please choose another day.");ok=false}
   if(!state.time){showErr("time","Choose a time slot.");ok=false}
   if(val("#f_details").length<10){showErr("details","Give us a sentence or two so we can prepare.");ok=false}
+  if(state.intl==="yes"){
+    if(val("#f_country").length<2){showErr("country","Which country are you visiting from?");ok=false}
+    if(val("#f_passno").length<4){showErr("passno","Enter passport or ID number.");ok=false}
+    if(!$("#f_arrival").value){showErr("arrival","When do you arrive in Zambia?");ok=false}
+    if(val("#f_emergency").replace(/[^0-9]/g,"").length<9&&val("#f_emergency").length<5){showErr("emergency","Add an emergency contact (name + phone).");ok=false}
+    if(state.lodge==="yes"){
+      if(!$("#f_checkin").value||!$("#f_checkout").value){showErr("lodge","Select lodging check-in and check-out dates.");ok=false}
+      else if($("#f_checkout").value<=$("#f_checkin").value){showErr("lodge","Check-out must be after check-in.");ok=false}
+    }
+  }
   if(!$("#f_agree").checked){showErr("agree","Please accept the office guidelines.");ok=false}
   return ok;
 }
@@ -1533,7 +1694,7 @@ on($("#bookForm"),"submit",function(e){
     return;
   }
   var ref=makeRef();
-  lastMsg=buildMessage(ref);
+  lastMsg=buildMessage(ref);lastRef=ref;
   $("#r_ref").textContent=ref;
   $("#r_desk").textContent=serviceName();
   $("#r_date").textContent=prettyDate($("#f_date").value);
@@ -1550,19 +1711,22 @@ on($("#againBtn"),"click",function(){
   $("#done").classList.remove("show");
   $("#bookForm").style.display="";
   $("#bookForm").reset();
-  state={forWho:"self",firstTime:"yes",mode:"in-person",urgency:"normal",time:""};
+  state={forWho:"self",firstTime:"yes",mode:"in-person",urgency:"normal",time:"",intl:"no",pickup:"yes",visa:"no",lodge:"no",interp:"no"};
   $$("[data-group]").forEach(function(g){
     var key=g.getAttribute("data-group");
     $$("[data-val]",g).forEach(function(b){b.classList.toggle("on",b.getAttribute("data-val")===state[key])});
   });
   $("#wrapOther").style.display="none"; $("#wrapFirst").style.display="";
+  $("#intlSection").style.display="none";$("#lodgeFields").style.display="none";$("#interpWrap").style.display="none";
   $("#f_loc").value="Lusaka, Zambia";
   renderSlots(); updatePreview(); scrollToId("booking");
 });
 on($("#clearBtn"),"click",function(){
-  $("#bookForm").reset(); state.time="";
+  $("#bookForm").reset(); state.time=""; state.intl="no";state.pickup="yes";state.visa="no";state.lodge="no";state.interp="no";
+  ["intl","pickup","visa","lodge","interp"].forEach(function(k){var g=document.querySelector('[data-group="'+k+'"]');if(g)$$("[data-val]",g).forEach(function(b,i){b.classList.toggle("on",i===0)})});
+  $("#intlSection").style.display="none";$("#lodgeFields").style.display="none";$("#interpWrap").style.display="none";
   $("#f_loc").value="Lusaka, Zambia";
-  ["name","phone","email","other","service","date","time","details","agree"].forEach(hideErr);
+  ["name","phone","email","other","service","date","time","details","agree","country","arrival","emergency","lodge","passno"].forEach(hideErr);
   renderSlots(); updatePreview(); toast("Form cleared");
 });
 
@@ -1583,6 +1747,8 @@ function legacyCopy(txt){
   document.body.removeChild(ta);
 }
 on($("#copyBtn"),"click",copyMsg);
+on($("#printBtn"),"click",function(){printSheet(lastRef||null)});
+on($("#printBtn2"),"click",function(){printSheet(lastRef||null)});
 on($("#copyBtn2"),"click",copyMsg);
 
 on($("#prayBtn"),"click",function(){
@@ -1594,13 +1760,106 @@ on($("#prayBtn"),"click",function(){
 });
 on($("#p_req"),"input",function(){hideErr("pray")});
 
+/* ================= LODGING PAYMENT + LIVE EXCHANGE RATES ================= */
+var CURRS="USD:US Dollar|EUR:Euro|GBP:British Pound|ZMW:Zambian Kwacha|ZAR:South African Rand|BWP:Botswana Pula|NAD:Namibian Dollar|MZN:Mozambican Metical|ZWL:Zimbabwean Dollar|MWK:Malawian Kwacha|AOA:Angolan Kwanza|NGN:Nigerian Naira|GHS:Ghanaian Cedi|KES:Kenyan Shilling|UGX:Ugandan Shilling|TZS:Tanzanian Shilling|RWF:Rwandan Franc|BIF:Burundian Franc|ETB:Ethiopian Birr|SOS:Somali Shilling|SDG:Sudanese Pound|SSP:South Sudanese Pound|EGP:Egyptian Pound|MAD:Moroccan Dirham|DZD:Algerian Dinar|TND:Tunisian Dinar|LYD:Libyan Dinar|XOF:West African CFA Franc|XAF:Central African CFA Franc|CDF:Congolese Franc|GNF:Guinean Franc|LSL:Lesotho Loti|SZL:Eswatini Lilangeni|MUR:Mauritian Rupee|SCR:Seychellois Rupee|KMF:Comorian Franc|DJF:Djiboutian Franc|ERN:Eritrean Nakfa|MRU:Mauritanian Ouguiya|STN:St Thomas Dobra|CVE:Cape Verdean Escudo|GMD:Gambian Dalasi|SLL:Sierra Leonean Leone|LRD:Liberian Dollar|CNY:Chinese Yuan|JPY:Japanese Yen|INR:Indian Rupee|KRW:South Korean Won|SGD:Singapore Dollar|HKD:Hong Kong Dollar|TWD:Taiwan Dollar|THB:Thai Baht|MYR:Malaysian Ringgit|IDR:Indonesian Rupiah|PHP:Philippine Peso|VND:Vietnamese Dong|KHR:Cambodian Riel|LAK:Lao Kip|MMK:Myanmar Kyat|BDT:Bangladeshi Taka|PKR:Pakistani Rupee|LKR:Sri Lankan Rupee|NPR:Nepalese Rupee|BTN:Bhutanese Ngultrum|MVR:Maldivian Rufiyaa|AFN:Afghan Afghani|AUD:Australian Dollar|NZD:New Zealand Dollar|CAD:Canadian Dollar|CHF:Swiss Franc|SEK:Swedish Krona|NOK:Norwegian Krone|DKK:Danish Krone|ISK:Icelandic Krona|CZK:Czech Koruna|PLN:Polish Zloty|HUF:Hungarian Forint|RON:Romanian Leu|BGN:Bulgarian Lev|HRK:Croatian Kuna|RSD:Serbian Dinar|BAM:Bosnian Mark|MKD:Macedonian Denar|ALL:Albanian Lek|MDL:Moldovan Leu|UAH:Ukrainian Hryvnia|BYN:Belarusian Ruble|RUB:Russian Ruble|GEL:Georgian Lari|AMD:Armenian Dram|AZN:Azerbaijani Manat|KZT:Kazakhstani Tenge|UZS:Uzbekistani Som|KGS:Kyrgyzstani Som|TJS:Tajikistani Somoni|TMT:Turkmenistani Manat|AED:UAE Dirham|SAR:Saudi Riyal|QAR:Qatari Riyal|KWD:Kuwaiti Dinar|BHD:Bahraini Dinar|OMR:Omani Rial|JOD:Jordanian Dinar|ILS:Israeli Shekel|TRY:Turkish Lira|LBP:Lebanese Pound|SYP:Syrian Pound|IQD:Iraqi Dinar|IRR:Iranian Rial|YER:Yemeni Rial|BRL:Brazilian Real|MXN:Mexican Peso|ARS:Argentine Peso|CLP:Chilean Peso|COP:Colombian Peso|PEN:Peruvian Sol|UYU:Uruguayan Peso|PYG:Paraguayan Guarani|BOB:Bolivian Boliviano|VES:Venezuelan Bolivar|DOP:Dominican Peso|GTQ:Guatemalan Quetzal|HNL:Honduran Lempira|NIO:Nicaraguan Cordoba|CRC:Costa Rican Colon|PAB:Panamanian Balboa|JMD:Jamaican Dollar|TTD:Trinidad Dollar|BBD:Barbadian Dollar|BSD:Bahamian Dollar|XCD:East Caribbean Dollar|FJD:Fijian Dollar|PGK:Papua New Guinean Kina|WST:Samoan Tala|TOP:Tongan Paanga|SBD:Solomon Dollar|VUV:Vanuatu Vatu".split("|");
+var FX={rates:null,stamp:""};
+function fmtNum(n){try{return Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}catch(e){return String(Math.round(Number(n)*100)/100)}}
+function toZMW(amount,code){amount=+amount;if(!(amount>0))return null;if(code==="ZMW")return amount;if(!FX.rates)return null;var per=FX.rates[code];if(!(per>0))return null;return amount/per}
+function updateFxUI(){
+  var box=$("#fxOut");if(!box)return;
+  var amt=parseFloat(String(val("#f_payamount")||"").replace(/,/g,""));
+  var code=$("#f_paycurrency")?$("#f_paycurrency").value:"USD";
+  var h="";
+  if(!(amt>0)){h="Enter the amount being sent to see the Kwacha equivalent."}
+  else{var z=toZMW(amt,code);
+    if(z==null){h="Amount recorded: <b>"+amt+" "+esc(code)+"</b>. Kwacha equivalent will show when exchange rates load (needs internet once)."}
+    else{var per=code==="ZMW"?1:(1/(FX.rates[code]||1));h="\u2248 <b style=\"font-size:17px\">K"+fmtNum(z)+"</b> Zambian Kwacha<br><span style=\"font-size:11.5px;color:var(--dim)\">1 "+esc(code)+" = K"+fmtNum(per)+(FX.stamp?(" \u00B7 rates updated "+esc(FX.stamp.slice(0,16))):"")+"</span>"}}
+  box.innerHTML=h;updatePreview();
+}
+async function loadRates(force){
+  try{
+    var now=Date.now(),cached=null;
+    try{cached=JSON.parse(localStorage.getItem("po_fx")||"null")}catch(e){}
+    if(!force&&cached&&cached.rates&&cached.time&&(now-cached.time)<12*3600*1000){FX.rates=cached.rates;FX.stamp=cached.stamp||"";updateFxUI();return}
+    var r=await fetch("https://open.er-api.com/v6/latest/ZMW");
+    if(!r.ok)throw 0;
+    var d=await r.json();
+    if(!d||d.result!=="success"||!d.rates)throw 0;
+    FX.rates=d.rates;FX.stamp=d.time_last_update_utc||"";
+    try{localStorage.setItem("po_fx",JSON.stringify({rates:d.rates,time:now,stamp:FX.stamp}))}catch(e){}
+    if(force)toast("\u2713 Rates updated");
+  }catch(e){if(force)toast("Could not reach rate server \u2014 using last saved rates")}
+  updateFxUI();
+}
+function copyWU(t){
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast("\u2713 Copied: "+t)},function(){wuLegacy(t)})}
+  else wuLegacy(t);
+}
+function wuLegacy(t){
+  try{var ta=document.createElement("textarea");ta.value=t;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;top:0;left:0;opacity:0";document.body.appendChild(ta);ta.select();try{ta.setSelectionRange(0,99999)}catch(e){}document.execCommand("copy");document.body.removeChild(ta);toast("\u2713 Copied: "+t)}
+  catch(e){toast("Long-press to copy: "+t)}
+}
+function initFx(){
+  var sel=$("#f_paycurrency");
+  if(sel){sel.innerHTML=CURRS.map(function(c){var ps=c.split(":");return '<option value="'+ps[0]+'">'+ps[0]+" \u2014 "+ps[1]+"</option>"}).join("");sel.value="USD"}
+  $$("[data-copy]").forEach(function(b){on(b,"click",function(){copyWU(b.getAttribute("data-copy"))})});
+  on($("#f_payamount"),"input",updateFxUI);
+  on($("#f_paycurrency"),"change",updateFxUI);
+  on($("#f_payplace"),"input",updatePreview);
+  on($("#f_mtcn"),"input",updatePreview);
+  on($("#fxRefresh"),"click",function(){toast("Updating exchange rates\u2026");loadRates(true)});
+  loadRates(false);
+}
+function fillPrintSheet(ref){
+  var r=ref||lastRef||"DRAFT";
+  $("#ps_ref").textContent=r;
+  try{$("#ps_date").textContent=new Date().toLocaleString()}catch(e){}
+  var rows=[
+    ["Full name",val("#f_name")||"—"],
+    ["WhatsApp / Phone",val("#f_phone")||"—"]
+  ];
+  if(val("#f_email"))rows.push(["Email",val("#f_email")]);
+  rows.push(["Booking for",state.forWho==="self"?"Myself":("Someone else — "+(val("#f_other")||"name to be shared"))]);
+  rows.push(["Ministry desk",serviceName()]);
+  rows.push(["Session mode",modeLabel()]);
+  rows.push(["Preferred date",prettyDate($("#f_date").value)]);
+  rows.push(["Preferred time",state.time||"—"]);
+  rows.push(["Priority",state.urgency==="urgent"?"URGENT":"Normal"]);
+  if(state.forWho==="self")rows.push(["First time at the office",state.firstTime==="yes"?"Yes":"No"]);
+  rows.push(["City / Country",val("#f_loc")||"—"]);
+  if(state.intl==="yes"){
+    rows.push(["International visitor","Yes ✈"]);
+    rows.push(["Country of residence",val("#f_country")||"—"]);
+    if(val("#f_passport"))rows.push(["Passport name",val("#f_passport")]);
+    rows.push(["Passport / ID number",val("#f_passno")||"—"]);
+    rows.push(["Arrival in Zambia",prettyDate($("#f_arrival").value)]);
+    if($("#f_depart").value)rows.push(["Departure",prettyDate($("#f_depart").value)]);
+    if(val("#f_flight"))rows.push(["Flight",val("#f_flight")]);
+    rows.push(["Airport pickup",state.pickup==="yes"?"Yes, from KKIA":"No"]);
+    rows.push(["Visa invitation letter",state.visa==="yes"?"Yes, needed":"No"]);
+    rows.push(["Interpreter",state.interp==="yes"?("Yes — "+(val("#f_lang")||"to confirm")):"No"]);
+    if(state.lodge==="yes"){
+      rows.push(["Lodging",val("#f_lodgetype")+", "+val("#f_guests")+" guest(s)"]);
+      rows.push(["Lodging dates",prettyDate($("#f_checkin").value)+" to "+prettyDate($("#f_checkout").value)]);
+      if(val("#f_lodgenotes"))rows.push(["Lodging needs",val("#f_lodgenotes")]);
+      var pamt=parseFloat(String(val("#f_payamount")||"").replace(/,/g,""));
+      var pcur=$("#f_paycurrency")?$("#f_paycurrency").value:"USD";
+      if(pamt>0){var zk=null;try{zk=toZMW(pamt,pcur)}catch(e){}rows.push(["Lodging payment",pamt+" "+pcur+(zk?(" (≈ K"+fmtNum(zk)+")"):"")+" via Western Union"]);if(val("#f_payplace"))rows.push(["Payment for",val("#f_payplace")]);if(val("#f_mtcn"))rows.push(["MTCN",val("#f_mtcn")])}
+    }else{rows.push(["Lodging","No, already arranged"])}
+    rows.push(["Emergency contact",val("#f_emergency")||"—"]);
+  }
+  $("#ps_table").innerHTML=rows.map(function(x){return "<tr><th>"+esc(x[0])+"</th><td>"+esc(x[1])+"</td>"}).join("");
+  $("#ps_details").textContent=val("#f_details")||"—";
+}
+function printSheet(ref){fillPrintSheet(ref||lastRef||null);setTimeout(function(){try{window.print()}catch(e){}},80)}
 /* init */
 renderSlots();
+initFx();
 updatePreview();
 paintIcons(document);
 
 })();
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39bd3ca8dc8b56f',t:'MTc4OTE4Mzc2MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39c1f14ee91b56c',t:'MTc4OTE4Njg0NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
