@@ -31,13 +31,13 @@
   --ease:cubic-bezier(.16,1,.3,1);
 }
 *,*::before,*::after{box-sizing:border-box}
-html{overflow-x:hidden;-webkit-text-size-adjust:100%}
+html{overflow-x:hidden;overflow-x:clip;-webkit-text-size-adjust:100%;scroll-padding-top:84px}
 body{margin:0;background:var(--ink-950);color:var(--txt);font-family:var(--sans);font-size:16px;line-height:1.62;
-  overflow-x:hidden;width:100%;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:rgba(220,185,85,.18)}
+  overflow-x:hidden;overflow-x:clip;width:100%;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:rgba(220,185,85,.18)}
 img,svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none;touch-action:manipulation}
 button{font:inherit;color:inherit;touch-action:manipulation}
-input,select,textarea{font:inherit;color:inherit}
+input,select,textarea{font:inherit;color:inherit;touch-action:manipulation}
 ::selection{background:var(--gold-400);color:#0a0f1f}
 ::-webkit-scrollbar{width:9px;height:9px}
 ::-webkit-scrollbar-track{background:#04060d}
@@ -71,12 +71,13 @@ p{margin:0}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(220,185,85,.28);background:rgba(220,185,85,.06);
   border-radius:999px;padding:7px 16px;font-size:10px;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-300)}
 .sec{padding:76px 0;position:relative}
+section[id]{scroll-margin-top:78px}
 .sec-head{max-width:740px;margin:0 auto;text-align:center}
 .sec-head h2{font-size:clamp(1.9rem,6vw,3rem);margin-top:18px;color:#fff}
 .sec-head p{margin-top:16px;color:#b3bfd8;font-size:15px}
 .sec-head .hair{width:150px;margin:24px auto 0}
-.rv{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-.rv.on{opacity:1;transform:none}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease);pointer-events:none}
+.rv.on{opacity:1;transform:none;pointer-events:auto}
 
 .topbar{background:var(--ink-950);border-bottom:1px solid rgba(220,185,85,.13);font-size:11.5px;color:#96a3bd}
 .topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:18px;padding-top:8px;padding-bottom:8px}
@@ -108,8 +109,8 @@ header.nav.stuck{background:rgba(4,6,13,.97);border-bottom-color:rgba(220,185,85
 @media(max-width:1080px){.menu{display:none}.burger{display:block}}
 @media(max-width:620px){.nav-cta .btn{display:none}.brand-n{font-size:16px}.crest{width:38px;height:38px}}
 
-.drawer{position:fixed;inset:0;z-index:300;visibility:hidden;opacity:0;transition:opacity .28s,visibility .28s}
-.drawer.open{visibility:visible;opacity:1}
+.drawer{position:fixed;inset:0;z-index:300;visibility:hidden;opacity:0;transition:opacity .28s,visibility .28s;pointer-events:none}
+.drawer.open{visibility:visible;opacity:1;pointer-events:auto}
 .drawer-bg{position:absolute;inset:0;background:rgba(3,5,11,.86)}
 .drawer-panel{position:absolute;top:0;right:0;height:100%;width:min(88%,340px);background:var(--ink-900);
   border-left:1px solid rgba(220,185,85,.22);padding:18px 18px calc(28px + env(safe-area-inset-bottom));
@@ -426,9 +427,10 @@ footer a{word-break:break-word}
 .fbot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:22px;font-size:12px;color:var(--dim)}
 
 .fab-wrap{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:250;display:flex;flex-direction:column;
-  align-items:flex-end;gap:11px;opacity:0;visibility:hidden;transform:translateY(18px);transition:.35s var(--ease)}
+  align-items:flex-end;gap:11px;opacity:0;visibility:hidden;transform:translateY(18px);transition:.35s var(--ease);pointer-events:none}
 .fab-wrap.show{opacity:1;visibility:visible;transform:none}
-.fab-panel{width:286px;max-width:calc(100vw - 32px);border:1px solid rgba(255,255,255,.13);border-radius:22px;overflow:hidden;
+.fab-wrap>*{pointer-events:auto}
+.fab-panel{position:absolute;right:0;bottom:69px;width:286px;max-width:calc(100vw - 32px);border:1px solid rgba(255,255,255,.13);border-radius:22px;overflow:hidden;
   background:#080d1a;box-shadow:0 26px 60px -18px rgba(0,0,0,.85);transform-origin:bottom right;transform:scale(.9);
   opacity:0;visibility:hidden;transition:.26s var(--ease)}
 .fab-panel.open{transform:none;opacity:1;visibility:visible}
@@ -447,7 +449,7 @@ footer a{word-break:break-word}
 
 .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,16px);background:#0a0f1e;border:1px solid rgba(220,185,85,.45);
   color:var(--gold-100);padding:12px 22px;border-radius:99px;font-size:13px;font-weight:700;z-index:400;opacity:0;visibility:hidden;
-  transition:.28s;max-width:calc(100vw - 32px);text-align:center}
+  transition:.28s;max-width:calc(100vw - 32px);text-align:center;pointer-events:none}
 .toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
 
 .saveband{border:1px solid rgba(220,185,85,.26);background:linear-gradient(150deg,rgba(220,185,85,.1),rgba(7,11,24,.5));
@@ -905,8 +907,8 @@ footer a{word-break:break-word}
     </div>
     <div class="chan">
       <span class="ico">&#9993;&#65039;</span>
-      <div class="cc"><small>Email</small><b style="font-size:15.5px">pedahzurministries@gmail.com</b><p>Invitations, partnerships &amp; enquiries</p></div>
-      <a class="btn btn-out btn-sm" href="mailto:pedahzurministries@gmail.com?subject=Enquiry%20-%20Prophets%20Office">Send email</a>
+      <div class="cc"><small>Email</small><b style="font-size:15.5px"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ccbca9a8ada4b6b9bea1a5a2a5bfb8bea5a9bf8caba1ada5a0e2afa3a1">[email&#160;protected]</a></b><p>Invitations, partnerships &amp; enquiries</p></div>
+      <a class="btn btn-out btn-sm" href="/cdn-cgi/l/email-protection#a5d5c0c1c4cddfd0d7c8cccbccd6d1d7ccc0d6e5c2c8c4ccc98bc6cac89ad6d0c7cfc0c6d198e0cbd4d0ccd7dc80979588809795f5d7cad5cdc0d1d6809795eac3c3ccc6c0">Send email</a>
     </div>
     <div class="chan">
       <span class="ico">&#128205;</span>
@@ -957,7 +959,7 @@ footer a{word-break:break-word}
         <h4>Reach the desk</h4>
         <ul>
           <li><span class="lbl">WhatsApp / Phone</span><a href="tel:0979554970" style="color:var(--gold-200)">0979 554 970 · +260 979 554 970</a></li>
-          <li><span class="lbl">Email</span><a href="mailto:pedahzurministries@gmail.com">pedahzurministries@gmail.com</a></li>
+          <li><span class="lbl">Email</span><a href="/cdn-cgi/l/email-protection#aadacfcecbc2d0dfd8c7c3c4c3d9ded8c3cfd9eacdc7cbc3c684c9c5c7"><span class="__cf_email__" data-cfemail="74041110151c0e0106191d1a1d0700061d1107341319151d185a171b19">[email&#160;protected]</span></a></li>
           <li><span class="lbl">Office</span>Meanwood Ndeke Phase 2, Lusaka, Zambia</li>
           <li><span class="lbl">Hours</span>Tue – Fri 09:00 – 17:00 · Sat 09:00 – 13:00 · Sun 13:30 – 15:00</li>
         </ul>
@@ -991,7 +993,7 @@ footer a{word-break:break-word}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 (function(){
 "use strict";
 
@@ -1282,6 +1284,22 @@ on(window,"scroll",onScroll); onScroll();
     en.forEach(function(x){if(x.isIntersecting){x.target.classList.add("on");io.unobserve(x.target)}});
   },{rootMargin:"0px 0px -6% 0px",threshold:.04});
   items.forEach(function(el,i){el.style.transitionDelay=((i%4)*55)+"ms";io.observe(el)});
+  /* Safety sweep: if the reveal observer ever stalls (slow phones, mid-scroll taps),
+     force-reveal anything actually visible so it is always tappable where it shows. */
+  function revealSweep(){
+    var h=window.innerHeight||document.documentElement.clientHeight||0;
+    var w=window.innerWidth||document.documentElement.clientWidth||0;
+    $$(".rv:not(.on)").forEach(function(el){
+      try{
+        var r=el.getBoundingClientRect();
+        if(r.bottom>=0&&r.top<=h&&r.right>=0&&r.left<=w){el.classList.add("on")}
+      }catch(e){}
+    });
+  }
+  var sweepT=null;
+  function queueSweep(){if(sweepT)return;sweepT=setTimeout(function(){sweepT=null;revealSweep()},180)}
+  on(window,"scroll",queueSweep);on(window,"resize",queueSweep);on(document,"touchend",queueSweep);
+  setTimeout(revealSweep,900);setTimeout(revealSweep,2500);
 })();
 
 $$("#acc .q").forEach(function(btn){
@@ -1584,5 +1602,5 @@ paintIcons(document);
 })();
 </script>
 
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39bd3ca8dc8b56f',t:'MTc4OTE4Mzc2MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
