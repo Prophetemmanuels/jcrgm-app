@@ -963,6 +963,7 @@ figure,q,cite{margin:0;padding:0}
           </select>
         </div>
         <button class="btn gold" type="submit">＋ Add request</button>
+        <a class="btn ghost" id="reqMail" href="/cdn-cgi/l/email-protection#d0a0b5b4b1b8aaa5a2bdb9beb9a3a4a2b9b5a390b7bdb1b9bcfeb3bfbd" title="Sends your saved requests and today's progress to the church">✉️ Email the list</a>
       </div>
     </form>
 
@@ -992,9 +993,9 @@ figure,q,cite{margin:0;padding:0}
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.2 2.2Z"/></svg>
         WhatsApp +260 97 955 4970
       </a>
-      <a href="/cdn-cgi/l/email-protection#4f3f2a2b2e27353a3d222621263c3b3d262a3c0f28222e2623612c2022">
+      <a href="/cdn-cgi/l/email-protection#75051011141d0f0007181c1b1c0601071c1006351218141c195b161a18">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 6.5 12 13l9-6.5"/></svg>
-        <span class="__cf_email__" data-cfemail="c4b4a1a0a5acbeb1b6a9adaaadb7b0b6ada1b784a3a9a5ada8eaa7aba9">[email&#160;protected]</span>
+        <span id="footerEmailText"><span class="__cf_email__" data-cfemail="dcacb9b8bdb4a6a9aeb1b5b2b5afa8aeb5b9af9cbbb1bdb5b0f2bfb3b1">[email&#160;protected]</span></span>
       </a>
     </div>
 
@@ -1071,6 +1072,13 @@ const Store = (function () {
    ------------------------------------------------------------ */
 
 const TZ = "Africa/Lusaka";
+
+/* ------------------------------------------------------------
+   CHURCH CONTACT
+   The only place to change the church e-mail address. It is
+   written into every mailto: link and label on the page.
+   ------------------------------------------------------------ */
+const CHURCH_EMAIL = "pedahzurministries@gmail.com";
 
 /* ------------------------------------------------------------
    CHURCH LOGO
@@ -2537,6 +2545,16 @@ function removeRequest(id) {
   renderRequests();
 }
 
+function bindRequestMail() {
+  const mail = document.getElementById("reqMail");
+  if (!mail) return;
+  mail.addEventListener("click", function () {
+    const built = churchMailto();
+    mail.href = built.href;
+    if (built.trimmed) toast("✉️ The list was trimmed to fit your mail app — paste the rest if needed.");
+  });
+}
+
 function bindRequestForm() {
   const form = document.getElementById("reqForm");
   if (!form) return;
@@ -2793,6 +2811,58 @@ function toast(message) {
    PUBLIC API (used by inline handlers)
    ============================================================ */
 
+/* ---- a pre-filled mail to the church: saved requests + today's watch ---- */
+
+function churchMailto() {
+  const date = longDate();
+  const open = REQUESTS.filter(function (item) { return !item.answered; });
+  const answered = REQUESTS.filter(function (item) { return item.answered; });
+  const lines = [
+    "Prayer requests from the Prophet's Daily Order of Prayer",
+    date + " · Lusaka, Zambia",
+    ""
+  ];
+
+  if (open.length) {
+    lines.push("BEING CARRIED IN PRAYER");
+    open.forEach(function (item) {
+      lines.push("  - " + item.who + (item.topic ? " : " + item.topic : "") + " [" + item.cat + "]");
+    });
+    lines.push("");
+  }
+  if (answered.length) {
+    lines.push("THANKSGIVING - ANSWERED");
+    answered.forEach(function (item) {
+      lines.push("  + " + item.who + (item.topic ? " : " + item.topic : "") + " [" + item.cat + "]");
+    });
+    lines.push("");
+  }
+  if (!REQUESTS.length) {
+    lines.push("(no requests saved on this device yet)");
+    lines.push("");
+  }
+
+  lines.push("TODAY'S PROGRESS");
+  PRAYER_ORDERS.forEach(function (order) {
+    const states = statesFor(order.id);
+    lines.push("  " + order.label + ": " + states.filter(Boolean).length + "/" + order.targets.length + " targets prayed");
+  });
+  lines.push("");
+  lines.push("Sent from the JCRGM Prophet's Daily Order of Prayer.");
+
+  const subject = "Prayer requests - " + date;
+  /* long mailto: bodies break in some mail clients, so keep it inside a safe length */
+  const trimmed = lines.join("\n").length > 1500;
+  const body = trimmed ? lines.join("\n").slice(0, 1480) + "\n…" : lines.join("\n");
+
+  return {
+    href: "mailto:" + CHURCH_EMAIL +
+          "?subject=" + encodeURIComponent(subject) +
+          "&body=" + encodeURIComponent(body),
+    trimmed: trimmed
+  };
+}
+
 window.JCRGM = {
   toggle: function (orderId, index) {
     const card = document.getElementById("card-" + orderId + "-" + index);
@@ -2882,13 +2952,21 @@ function boot() {
       paintAll();
     }],
     ["notes", restoreNotes],
-    ["requests", function () { bindRequestForm(); renderRequests(); }],
+    ["requests", function () { bindRequestForm(); renderRequests(); bindRequestMail(); }],
     ["timer", function () { TAB_IDS.forEach(paintTimer); }],
     ["today", function () { updateTodayMessage(); updateGathering(); }],
     ["storage notice", function () {
       if (Store.mode !== "local") {
         toast("ℹ️ This view blocks saved data — progress and notes will last for this session only.");
       }
+    }],
+    ["church contact", function () {
+      const label = document.getElementById("footerEmailText");
+      if (label) label.textContent = CHURCH_EMAIL;
+      document.querySelectorAll('a[href^="mailto:"]').forEach(function (link) {
+        const rest = link.getAttribute("href").replace(/^mailto:[^?]+/, "");
+        link.setAttribute("href", "mailto:" + CHURCH_EMAIL + rest);
+      });
     }],
     ["logo", function () {
       /* one embedded copy of the logo, reused by the footer badge */
@@ -2947,5 +3025,5 @@ if (document.readyState === "loading") {
 }
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39d3291ee0cb578',t:'MTc4OTE5ODEyOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39d47c409f3b575',t:'MTc4OTE5ODk5Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
