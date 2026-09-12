@@ -431,7 +431,7 @@ table.t tr.is-hit{background:#f2fbf5;box-shadow:inset 3px 0 0 #2f9e5f}
     </div>
     <div class="mast-act">
       <button class="chipbtn" type="button" data-slide="pageRegistrar" title="Opens the Registrar page - marking, fees and the staff code">&#10148; Registrar</button>
-      <a class="chipbtn" href="/cdn-cgi/l/email-protection#a2d2c7c6c3cad8d7d0cfcbcccbd1d6d0cbc7d1e2c5cfc3cbce8cc1cdcf" data-contact="pedahzurministries@gmail.com">&#9993; E-mail the office</a>
+      <a class="chipbtn" href="/cdn-cgi/l/email-protection#59293c3d3831232c2b343037302a2d2b303c2a193e34383035773a3634" data-mail="href" data-contact="pedahzurministries@gmail.com">&#9993; E-mail the office</a>
       <a class="chipbtn" href="tel:+260979554970" data-contact="+260979554970">&#9742; 0979 554 970</a>
       <button class="chipbtn" type="button" id="btnContinue">&#9654; Continue studying</button>
       <button class="chipbtn gold" type="button" id="btnMastCert">Certificate</button>
@@ -592,7 +592,7 @@ table.t tr.is-hit{background:#f2fbf5;box-shadow:inset 3px 0 0 #2f9e5f}
       <ul class="ticks"><li>Clearing the browser's site data erases your record; print or export it before you change devices.</li><li>The registrar's console is protected by a staff code and must not be left open on a shared device.</li><li>Keep a paper or printed copy of your transcript and certificate with your church records.</li></ul></div>
     <div class="card"><div class="rule"></div><h3>9. Speaking with the Administration</h3>
       <p>Every enquiry goes through the <b>Registrar</b> page, where a form composes your message and opens it on WhatsApp to the office line <b>+260 97 955 4970</b> (0979 554 970, account name <b>Emmanuel Sakala</b>). Tick <i>Add my record so far</i> and the office receives your enrolment, your marks and your fee position with it.</p>
-      <ul class="ticks"><li>Attach a photograph of the Airtel Money confirmation in the WhatsApp thread; quote your student ID as the reference.</li><li>By e-mail the office is <b><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="85f5e0e1e4edfff0f7e8ecebecf6f1f7ece0f6c5e2e8e4ece9abe6eae8">[email&#160;protected]</a></b>; the same form will compose it for you.</li><li>Write plainly and once: what happened, what you need, and when. Answers are given in the same thread, and admission, marking and the seal are not decided by whoever asks loudest.</li></ul></div>
+      <ul class="ticks"><li>Attach a photograph of the Airtel Money confirmation in the WhatsApp thread; quote your student ID as the reference.</li><li>By e-mail the office is <b data-mail="text"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="76061312171e0c03041b1f181f0502041f130536111b171f1a5815191b">[email&#160;protected]</a></b>; the same form will compose it for you.</li><li>Write plainly and once: what happened, what you need, and when. Answers are given in the same thread, and admission, marking and the seal are not decided by whoever asks loudest.</li></ul></div>
   </div>
 </section>
 
@@ -632,7 +632,7 @@ table.t tr.is-hit{background:#f2fbf5;box-shadow:inset 3px 0 0 #2f9e5f}
       <p style="font-size:.9rem;margin:0">Jesus Christ Redeems Global Ministries &mdash; demonstrating the love, glory, power and authority of our Lord Jesus Christ by the Word of God. Pedahzur: the rock of redemption.</p></div>
     <div><h4>Reach us</h4><ul>
       <li><a href="tel:+260979554970">0979 554 970</a> (Airtel Money for fees)</li>
-      <li><a href="/cdn-cgi/l/email-protection#2050454441485a55524d494e4953545249455360474d41494c0e434f4d"><span class="__cf_email__" data-cfemail="79091c1d1811030c0b141017100a0d0b101c0a391e14181015571a1614">[email&#160;protected]</span></a></li>
+      <li><a href="/cdn-cgi/l/email-protection#76061312171e0c03041b1f181f0502041f130536111b171f1a5815191b" data-mail="href"><span class="__cf_email__" data-cfemail="96e6f3f2f7feece3e4fbfff8ffe5e2e4fff3e5d6f1fbf7fffab8f5f9fb">[email&#160;protected]</span></a></li>
       <li><a href="https://facebook.com/pedahzurchurch" target="_blank" rel="noopener">facebook.com/pedahzurchurch</a></li>
       <li><a id="waLink" href="https://wa.me/260979554970" target="_blank" rel="noopener">WhatsApp the school</a></li></ul></div>
     <div><h4>Students</h4><ul>
@@ -2215,6 +2215,7 @@ App.renderHome=function(){
   $("#btnMastCert") && ($("#btnMastCert").onclick=function(){ openSection("pageCertificate"); });
   /* A mailto: or tel: on a device with no mail or dialler app dead-ends the whole page.
      The address is copied first, so the click is never a dead end however the device is set up. */
+  syncOfficeMail();
   $$("a[data-contact]").forEach(function(a){
     a.setAttribute("title","Copies the address as well, in case this device has no mail or phone app set up");
     a.addEventListener("click",function(){
@@ -2414,6 +2415,17 @@ function waDigits(v){
 }
 function waNumber(){ return waDigits((S.cfg&&S.cfg.adminWa)?S.cfg.adminWa:WA_ADMIN)||WA_ADMIN; }
 function waLink(msg,num){ var d=num?waDigits(num):""; return "https://wa.me/"+(d||waNumber())+"?text="+encodeURIComponent(msg); }
+/* One office address, one source of truth: churchMail() (Settings can change it).
+   The literal address stays in the markup so a printed handbook or a JS-less read is still correct. */
+function syncOfficeMail(){
+  var m=churchMail(); if(!m) return;
+  $$("[data-mail]").forEach(function(el){
+    if(el.getAttribute("data-mail")==="text"){ el.textContent=m; return; }
+    el.setAttribute("href","mailto:"+m);
+    if(/^\S+@\S+$/.test(el.textContent.trim())) el.textContent=m;
+    if(el.hasAttribute("data-contact")) el.setAttribute("data-contact",m);
+  });
+}
 function churchMail(){ return (S.cfg&&S.cfg.churchMail)?String(S.cfg.churchMail).trim():CHURCH_EMAIL; }
 function mailLink(subject,body){ return "mailto:"+churchMail()+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body); }
 function whatsAppLink(msg){ return waLink(msg); }
@@ -3646,6 +3658,13 @@ function lqPaper(code,i){
   }
   return '<details class="lqpaper"><summary>Answers as the student sealed them &mdash; '+q.c+"/"+q.t+'</summary><div class="lqcells">'+cells.join("")+"</div></details>";
 }
+function regMailHref(){
+
+      var msg="JCRGM Bible Institution register - "+todayKey()+"\nStudent: "+(S.student?S.student.name+" ("+studentId()+")":"none")+"\n"+
+        LEVELS.map(function(l){ return l.name+": "+l.courses.filter(isAnswered).length+"/"+l.courses.length+" answered, "+l.courses.filter(isCompleted).length+" completed, certificate "+(paidFor(l.id)?"unsealed":"sealed"); }).join("\n");
+      return "mailto:"+churchMail()+"?subject="+encodeURIComponent("JCRGM register "+todayKey())+"&body="+encodeURIComponent(msg);
+    
+}
 function ledgerCsv(){
   var head="Student,Student ID,Course,Level,Lessons,Part A,Part A percent,Part A sealed at,Lesson checks sealed,Lesson checks sealed at,Part B /100,Final percent,Status,Certificate";
   var rows=COURSE_LIST.filter(function(code){ var a=asg(code); return (a&&(a.mcqChecked||a.status)) || hasSealedLq(code); });
@@ -3842,7 +3861,7 @@ App.renderRegistrar=function(){
       row("Essays awaiting marking",Object.keys(S.st.assignments).filter(function(k){return S.st.assignments[k].status==="submitted";}).length)+
       row("Storage mode",Store.mode==="local"?"browser storage on this device":"<b>memory only</b> &mdash; this browser blocks storage, nothing will persist")+
       "</tbody></table>"+
-      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn ghost sm" type="button" id="btnRegCsv">Export the class CSV</button><button class="btn ghost sm" type="button" id="btnRegLedger">Export the sealed-work ledger (CSV)</button><button class="btn ghost sm" type="button" id="btnRegPrint">Print the register</button><button class="btn ghost sm" type="button" id="btnRegMail">E-mail the register</button></div></div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn ghost sm" type="button" id="btnRegCsv">Export the class CSV</button><button class="btn ghost sm" type="button" id="btnRegLedger">Export the sealed-work ledger (CSV)</button><button class="btn ghost sm" type="button" id="btnRegPrint">Print the register</button><a class="btn ghost sm" id="btnRegMail" href="'+esc(regMailHref())+'">E-mail the register</a></div></div>'+
       '<div class="card" style="margin-top:14px"><div class="rule"></div><h3>Level completion</h3><div class="scroll-x"><table class="t"><thead><tr><th>Level</th><th class="num">Courses</th><th class="num">Answered</th><th class="num">Completed</th><th>Status</th><th>Certificate</th></tr></thead><tbody>'+byLevel+"</tbody></table></div></div>";
     var bl2=$("#btnRegLedger"); if(bl2) bl2.onclick=function(){ downloadFile("jcrgm-ledger-"+todayKey()+".csv",ledgerCsv(),"text/csv"); toast("Ledger exported with the sealing times, for the church's books.","ok"); };
     var brr=$("#btnRegReply"); if(brr) brr.onclick=function(){ replySummary(); };
@@ -3851,12 +3870,7 @@ App.renderRegistrar=function(){
       downloadFile("jcrgm-register-"+todayKey()+".csv",txt,"text/csv"); toast("Register exported.","ok");
     };
     var bp2=$("#btnRegPrint"); if(bp2) bp2.onclick=function(){ $$("section.page").forEach(function(p){p.classList.remove("printing");}); $("#pageRegistrar").classList.add("printing"); setTimeout(function(){ try{WIN.print();}catch(e){} setTimeout(function(){$("#pageRegistrar").classList.remove("printing");},400); },120); };
-    var bm=$("#btnRegMail"); if(bm) bm.onclick=function(){
-      var msg="JCRGM Bible Institution register - "+todayKey()+"\nStudent: "+(S.student?S.student.name+" ("+studentId()+")":"none")+"\n"+
-        LEVELS.map(function(l){ return l.name+": "+l.courses.filter(isAnswered).length+"/"+l.courses.length+" answered, "+l.courses.filter(isCompleted).length+" completed, certificate "+(paidFor(l.id)?"unsealed":"sealed"); }).join("\n");
-      WIN.location.href="mailto:"+churchMail()+"?subject="+encodeURIComponent("JCRGM register "+todayKey())+"&body="+encodeURIComponent(msg);
-    };
-  }
+      }
   if(regTab==="settings"){
     pane.innerHTML='<div class="card"><div class="rule"></div><h3>Standing codes</h3>'+
       '<div class="grid2"><label class="f"><span>Registrar console code</span><input type="text" id="setReg" value="'+esc(S.cfg.regCode||"")+'"></label>'+
@@ -3882,7 +3896,7 @@ App.renderRegistrar=function(){
       if($("#setWa")) S.cfg.adminWa=($("#setWa").value||WA_ADMIN).trim();
       if($("#setMail")) CHURCH_EMAIL=($("#setMail").value||CHURCH_EMAIL).trim();
       S.cfg.churchMail=($("#setMail").value||CHURCH_EMAIL).trim();
-      saveCfg(); App.renderHome(); App.renderAdmin(); toast("Settings saved. The enquiry form uses the new line at once.","ok");
+      saveCfg(); syncOfficeMail(); App.renderHome(); App.renderAdmin(); App.renderRegistrar(); toast("Settings saved. The enquiry form uses the new line at once.","ok");
     };
     var wa=$("#btnWipeAsg"); if(wa) wa.onclick=function(){ if(WIN.confirm("Clear every mark, grade and answered stamp?")){ S.st.assignments={}; saveState(); Store.remove(SK.drafts); App.renderAll(); toast("Marks cleared."); } };
     var wp=$("#btnWipePay"); if(wp) wp.onclick=function(){ if(WIN.confirm("Delete all fee claims and unseal every certificate?")){ S.fees={claims:[],released:{}}; saveFees(); App.renderAll(); toast("Fee records cleared."); } };
@@ -4173,5 +4187,5 @@ App.api={
 if(DOC.readyState==="loading") DOC.addEventListener("DOMContentLoaded",boot); else boot();
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a034ab4ffdb56c',t:'MTc4OTIyOTY3Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a04d640fb3b572',t:'MTc4OTIzMDY4NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
