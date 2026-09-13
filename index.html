@@ -786,7 +786,8 @@ animation:wgPulse 1.8s ease-in-out infinite;}
 
   <div class="nav-group">
     <span class="nav-group-title">Membership &amp; Administration</span>
-    <button class="tab-green" onclick="showMembership()">📝 Membership</button>
+    <a href="membership.html"><button class="tab-green">📝 Membership</button></a>
+    <a href="membership_admin.html"><button class="tab-indigo">🧮 Membership Admin</button></a>
     <button class="tab-teal" onclick="viewMembers()">👥 View Members</button>
     <button class="tab-navy" onclick="openJCRGMChurchManagementPrayerCenter()">⛪ Church Management</button>
     <button class="tab-gold" onclick="openChurchConstitution()">📜 Church Constitution</button>
@@ -832,20 +833,6 @@ animation:wgPulse 1.8s ease-in-out infinite;}
 <span id="scriptureText"></span>
 </div>
 
-<!-- Membership -->
-<div id="membershipContent" class="hidden-section">
-<h2>Membership Registration</h2>
-<p>Attach a passport-sized photo, enter your details below:</p>
-<form id="membershipForm">
-<label>Full Name:</label><input type="text" id="memberName" required>
-<label>Phone Number:</label><input type="tel" id="memberPhone" required>
-<label>Residence:</label><input type="text" id="memberResidence" required>
-<label>NRC Number (Optional):</label><input type="text" id="memberNRC">
-<label>Email:</label><input type="email" id="memberEmail" required>
-<button type="button" class="whatsapp" onclick="sendMembership()">📲 Send to WhatsApp</button>
-</form>
-</div>
-
 <div id="prayerFormContainer" class="hidden-section">
 <h2>Send Your Prayer Petition</h2>
 <form id="prayerForm">
@@ -872,7 +859,6 @@ animation:wgPulse 1.8s ease-in-out infinite;}
 <li>📱 MTN Mobile Money: 0760528887</li>
 </ul>
 </div>
-
 
 <!-- Sunday Programs -->
 <div id="sundayContent" style="display:none">
@@ -908,11 +894,10 @@ animation:wgPulse 1.8s ease-in-out infinite;}
 </div>
 
 <footer>
-📞 <strong>Phone:</strong> 0979554970 &nbsp;|&nbsp; ✉ <strong>Email:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f2f3a3b3e37252a2d323631362c2b2d363a2c1f38323e3633713c3032">[email&#160;protected]</a><br>
+📞 <strong>Phone:</strong> 0979554970 &nbsp;|&nbsp; ✉ <strong>Email:</strong> <a href="/cdn-cgi/l/email-protection#1060757471786a65627d797e7963646279756350777d71797c3e737f7d" class="map-link"><span class="__cf_email__" data-cfemail="78081d1c1910020d0a151116110b0c0a111d0b381f15191114561b1715">[email&#160;protected]</span></a><br>
 📍 <strong>Location:</strong> <a id="footerMapLink" href="#" target="_blank" rel="noopener" class="map-link">Find Our Church on Google Maps</a><br>
 © <span id="year"></span> Jesus Christ Redeems Global Ministries — All Rights Reserved
 </footer>
-
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){navigator.serviceWorker.register('service-worker.js').catch(function(){});}
@@ -952,7 +937,7 @@ document.getElementById("footerMapLink").href = CHURCH_CONFIG.mapLink;
 function toggleProjector(){document.documentElement.classList.toggle("projector");}
 
 // Show sections
-function showMembership(){document.getElementById('membershipContent').style.display='block';document.getElementById('membershipContent').scrollIntoView({behavior:'smooth'});}
+function showMembership(){window.location.href='membership.html';}
 function openJCRGMChurchManagementPrayerCenter(){ window.location.href = "JCRGM_Church_Management_Prayer_Center.html";}
 function openJCRGMCompleteBiblicalPropheticTrainingGuide(){ window.location.href = "JCRGM_Complete_Biblical_Prophetic_Training_Guide.html";}
 function viewMembers() {window.location.href = "images.html";}
@@ -963,18 +948,6 @@ function openMasterStudy(){window.location.href='JCRGM%20MASTER%20STUDY.html';}
 function openBiblePlan() {window.location.href = "full_bible_plan.html";}
 function openCrossover(){ window.location.href = "crossover.html";}
 function openPrayerGuide(){window.location.href = "prayer-guide.html";}
-
-// Membership WhatsApp
-function sendMembership(){
-  const name=document.getElementById('memberName').value;
-  const phone=document.getElementById('memberPhone').value;
-  const residence=document.getElementById('memberResidence').value;
-  const nrc=document.getElementById('memberNRC').value;
-  const email=document.getElementById('memberEmail').value;
-  const msg=`Membership Registration\nName: ${name}\nPhone: ${phone}\nResidence: ${residence}\nNRC: ${nrc||'Not Provided'}\nEmail: ${email}\nNote: Please attach a passport-sized photo.`;
-  const url=`https://wa.me/260979554970?text=${encodeURIComponent(msg)}`;
-  window.open(url,'_blank');
-}
 
 // Payments via USSD
 function makePayment(){ window.location.href = "tel:*115%23"; }
@@ -1008,7 +981,6 @@ function nextSunday(){
     d.setHours(9,0,0,0);
     return d;
 }
-
 
 // ============================================================
 //  HEAVENLY TONE ENGINE (Web Audio — works fully offline)
@@ -1109,7 +1081,6 @@ playHeavenlyWelcome();
     if(!Heaven.played) playHeavenlyWelcome();
   });
 });
-
 
 /* Welcome gate: sound + entrance */
 (function(){
@@ -1212,8 +1183,6 @@ function sendPrayer() {
     // Optional: Clear form after sending
     document.getElementById('prayerForm').reset();
 }
-
-
 
 /* ============================================================
    ✨ GOLD DUST FLARE ENGINE — floating embers & sparkles
@@ -1318,5 +1287,5 @@ function sendPrayer() {
   });
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39cb889fec9b575',t:'MTc4OTE5MzEzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39cb889fec9b575',t:'MTc4OTE5MzEzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a58ef3adf8b572',t:'MTc4OTI4NTc5OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
