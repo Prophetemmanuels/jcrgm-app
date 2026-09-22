@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -22,6 +22,10 @@ h4{color:var(--gold);margin:18px 0 6px}
 .tab.active,.tab:hover{background:#4b418e;border-color:#877cff}
 .panel{display:none;border:1px solid var(--line);background:#111426e8;border-radius:18px;padding:26px;margin:10px 0 22px;box-shadow:0 16px 55px #0006}
 .panel.active{display:block}
+.panel{scroll-margin-top:78px}
+html.no-js .panel:target{display:block}
+html.no-js:has(.panel:target) .panel.active:not(:target){display:none}
+a.tab{text-decoration:none;display:inline-block}
 .notice,.scripture,.warn,.heartnote{padding:16px;border-radius:12px;margin:14px 0}
 .notice{border-left:4px solid var(--gold);background:#e4c56d0e}
 .warn{border-left:4px solid var(--red);background:#ff73800e}
@@ -132,6 +136,7 @@ a.placelink:hover{background:#4b418e55;border-radius:4px}
  #printPack td,#printPack th{border:1px solid #444;padding:5px 7px;color:#000}
 }
 </style>
+<script>document.documentElement.className="js";</script>
 </head>
 <body>
 <header>
@@ -148,18 +153,18 @@ a.placelink:hover{background:#4b418e55;border-radius:4px}
 
 <div class="wrap">
 <nav class="tabs">
-<button class="tab active" data-t="p-start">✦ Start Here</button>
-<button class="tab" data-t="p-found">📖 Foundation &amp; The 6 Senses</button>
-<button class="tab" data-t="p-char">🔥 Calling &amp; Character</button>
-<button class="tab" data-t="p-hear">👂 Hearing Lab</button>
-<button class="tab" data-t="p-see">👁 Seeing Lab</button>
-<button class="tab" data-t="p-names">🔤 Names &amp; Details Lab</button>
-<button class="tab" data-t="p-arena">🎯 Precision Arena</button>
-<button class="tab" data-t="p-heart">💗 The Heart Room</button>
-<button class="tab" data-t="p-discern">⚖ Discernment</button>
-<button class="tab" data-t="p-course">🎓 12-Week Curriculum</button>
-<button class="tab" data-t="p-journal">📝 Journal &amp; Exams</button>
-<button class="tab" data-t="p-lab">▶ Video Lab</button>
+<a class="tab active" href="#p-start" data-t="p-start">✦ Start Here</a>
+<a class="tab" href="#p-found" data-t="p-found">📖 Foundation &amp; The 6 Senses</a>
+<a class="tab" href="#p-char" data-t="p-char">🔥 Calling &amp; Character</a>
+<a class="tab" href="#p-hear" data-t="p-hear">👂 Hearing Lab</a>
+<a class="tab" href="#p-see" data-t="p-see">👁 Seeing Lab</a>
+<a class="tab" href="#p-names" data-t="p-names">🔤 Names &amp; Details Lab</a>
+<a class="tab" href="#p-arena" data-t="p-arena">🎯 Precision Arena</a>
+<a class="tab" href="#p-heart" data-t="p-heart">💗 The Heart Room</a>
+<a class="tab" href="#p-discern" data-t="p-discern">⚖ Discernment</a>
+<a class="tab" href="#p-course" data-t="p-course">🎓 12-Week Curriculum</a>
+<a class="tab" href="#p-journal" data-t="p-journal">📝 Journal &amp; Exams</a>
+<a class="tab" href="#p-lab" data-t="p-lab">▶ Video Lab</a>
 </nav>
 
 <!-- ================= START HERE ================= -->
@@ -624,7 +629,7 @@ a.placelink:hover{background:#4b418e55;border-radius:4px}
 <div class="notice"><b>How to use video teaching:</b> watch prayerfully and critically. Take notes on the biblical principles taught, compare every claim with Scripture, and practice only what is consistent with Scripture, wisdom, safety and responsible ministry. This guide does not automatically endorse every interpretation in an external video — <b>you</b> are the Berean (Acts 17:11).</div>
 
 <h3>Lesson 1 — How to Practice Seeing in the Realm of the Spirit (MWB)</h3>
-<p>Watch on the ministry channel: <a href="https://www.youtube.com/@CelebrationTVNETWORK" style="color:var(--cyan)">youtube.com/@CelebrationTVNETWORK</a> — "How to Practice Seeing in the Realm of the Spirit." Use it as a practical observation/discussion resource alongside the Seeing Lab.</p>
+<p>Watch on the ministry channel (optional — needs internet): <b class="cyan">youtube.com/@CelebrationTVNETWORK</b> <button class="ghost" onclick="copyText('youtube.com/@CelebrationTVNETWORK')">📋 Copy channel address</button> — "How to Practice Seeing in the Realm of the Spirit." Use it as a practical observation/discussion resource alongside the Seeing Lab. <span class="muted">Kept as plain text on purpose — this file is 100% standalone and never uses the network.</span></p>
 
 <h4>Before watching — 5-minute preparation</h4>
 <ol class="check">
@@ -945,16 +950,14 @@ function renderHUD(){
 }
 
 /* ============ TABS ============ */
-document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>goTab(t.dataset.t,true));
-function goTab(id,push){
- document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.t===id));
- document.querySelectorAll(".panel").forEach(x=>x.classList.toggle("active",x.id===id));
- window.scrollTo({top:0,behavior:"smooth"});
+document.querySelectorAll(".tab").forEach(t=>t.onclick=function(){goTab(t.dataset.t);try{location.hash=t.dataset.t;}catch(e){}});
+function goTab(id){
  try{
-  if(location.hash!=="#"+id){
-   if(push)history.pushState(null,"","#"+id);
-   else history.replaceState(null,"","#"+id);
-  }
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.t===id));
+  document.querySelectorAll(".panel").forEach(x=>x.classList.toggle("active",x.id===id));
+  const el=document.getElementById(id);
+ if(el&&el.scrollIntoView){try{el.scrollIntoView({block:"start"});}catch(e){try{el.scrollIntoView();}catch(e2){}}}
+ else{try{window.scrollTo({top:0});}catch(e){}}
  }catch(e){}
 }
 
@@ -1567,7 +1570,8 @@ initNarration();
 window.navTo=function(target){
  target=String(target);
  if(target.indexOf("drill:")===0){openArena(target.slice(6));return;}
- goTab(target,true);
+ try{location.hash=target;}catch(e){}
+ goTab(target);
 };
 const PLACE_LINKS=[
  [/Foundation & (?:The )?6 Senses/,"p-found"],
@@ -1619,12 +1623,16 @@ function wrapPlaces(root,rx,target,skipSel){
  });
 }
 function linkifyPlaces(){
- const skipSel="button,a,textarea,select,input,h2,h3,h4,.modecard,#stageArea,#results,#jList,#printPack,.hud,#charGate,.audiocard";
+ const skipSel="button,a,textarea,select,input,h2,h3,h4,.modecard,#stageArea,#results,#jList,#printPack,.hud,#charGate,.audiocard,.weekhead";
  PLACE_LINKS.forEach(function(pair){
   document.querySelectorAll(".panel").forEach(function(p){wrapPlaces(p,pair[0],pair[1],skipSel);});
  });
 }
 window.linkifyPlaces=linkifyPlaces;
+window.copyText=function(t){
+ try{navigator.clipboard.writeText(t);alert("Copied: "+t);}
+ catch(e){alert("Clipboard unavailable here — the address is: "+t);}
+};
 (function initNav(){
  try{
   function fromHash(){
@@ -1650,5 +1658,5 @@ pray5:"data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU5LjI3LjEwMAAAAA
 });
 if(window.refreshAudioUI)refreshAudioUI();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f43e29ed7d73c6',t:'MTc5MDExMDg2NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f4672d89218c8b',t:'MTc5MDExMjU0NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
