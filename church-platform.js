@@ -1,0 +1,55 @@
+/* Shared public configuration and authentication. Never place a secret key here. */
+(function(){'use strict';
+const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const C=window.Church={client:null,user:null,member:null,ready:false,online:navigator.onLine,configured:false,error:'',escape,identityBusy:false};
+C.isMember=()=>!!(C.user&&C.member?.user_id===C.user.id&&C.member.approved);C.isLeader=()=>C.isMember()&&C.member.role==='leader';
+C.message=(text)=>{let e=document.getElementById('churchMessage');if(!e){e=document.createElement('div');e.id='churchMessage';e.className='church-message';e.setAttribute('role','status');document.body.appendChild(e);}e.textContent=text;clearTimeout(C.messageTimer);C.messageTimer=setTimeout(()=>e.textContent='',10000);};
+C.emit=()=>window.dispatchEvent(new CustomEvent('church-identity',{detail:{user:C.user,member:C.member,online:C.online}}));
+C.validateConfig=cfg=>{if(!cfg?.url||!cfg?.key||cfg.url.includes('YOUR_')||cfg.key.includes('YOUR_'))return false;try{const u=new URL(cfg.url);if(u.protocol!=='https:'||!u.hostname.endsWith('.supabase.co'))return false;if(cfg.key.startsWith('sb_secret_'))throw Error('Secret keys must never be placed in the website. Rotate any exposed secret.');if(cfg.key.startsWith('sb_publishable_'))return true;const payload=JSON.parse(atob(cfg.key.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));if(payload.role==='service_role')throw Error('A service-role key is not safe for this website. Rotate it and use the publishable or anon key.');return payload.role==='anon';}catch(e){if(e.message.includes('key'))throw e;return false;}};
+C.refreshIdentity=async()=>{
+ if(!C.client||C.identityBusy)return;C.identityBusy=true;
+ try{const {data,error}=await C.client.auth.getSession();if(error)throw error;const prior=C.user?.id;C.user=data.session?.user||null;if(prior!==C.user?.id)C.member=null;
+ if(!C.user){C.member=null;C.online=navigator.onLine;C.error='';}
+ else{const checkedUser=C.user.id;const {data:member,error:me}=await C.client.from('church_members').select('user_id,display_name,email,role,approved').eq('user_id',checkedUser).maybeSingle();if(me)throw me;if(C.user?.id===checkedUser)C.member=member;C.online=true;C.error='';}
+ }catch(e){C.online=false;C.error='Connection unavailable. Shared data may be out of date.';}finally{C.identityBusy=false;C.ready=true;C.emit();}
+};
+C.start=async()=>{
+ if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('service-worker.js',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{});
+ try{C.configured=C.validateConfig(window.JCRGM_SUPABASE);if(!C.configured){C.error='Shared service not connected yet.';C.ready=true;C.emit();return;}if(!window.supabase?.createClient)throw Error('The Supabase library did not load. Keep the vendor folder beside these pages.');
+ C.authStorageKey='jcrgm-shared-'+new URL(window.JCRGM_SUPABASE.url).hostname.split('.')[0]+'-auth';C.client=window.supabase.createClient(window.JCRGM_SUPABASE.url,window.JCRGM_SUPABASE.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:C.authStorageKey},global:{fetch:(url,options)=>fetch(url,{...options,cache:'no-store'})}});
+ C.client.auth.onAuthStateChange((event)=>{if(event==='PASSWORD_RECOVERY')setTimeout(()=>C.openAuth('recover'),0);setTimeout(()=>C.refreshIdentity(),0);});
+ await C.refreshIdentity();setInterval(()=>C.refreshIdentity(),25000);
+ }catch(e){C.error=e.message;C.ready=true;C.emit();}
+};
+window.addEventListener('online',()=>C.refreshIdentity());window.addEventListener('offline',()=>{C.online=false;C.emit();});
+C.signOut=async()=>{if(!C.client)return;const {error}=await C.client.auth.signOut({scope:'local'});if(error){try{localStorage.removeItem(C.authStorageKey);localStorage.removeItem(C.authStorageKey+'-code-verifier');}catch(e){}C.user=null;C.member=null;C.emit();location.replace(new URL('announcements.html',location.href).href);return;}C.user=null;C.member=null;const dialog=document.getElementById('churchAuthDialog');if(dialog){if(dialog.open)dialog.close();dialog.replaceChildren();}C.emit();C.message('Signed out on this device.');};
+C.authButton=()=>C.user?`<span class="church-user">${escape(C.member?.display_name||C.user.email||'Signed in')} · ${C.isLeader()?'Leader':C.isMember()?'Member':'Awaiting approval'}</span><button class="church-btn" data-church-signout>Sign out</button>`:'<button class="church-btn" data-church-signin>Member / leader sign in</button>';
+C.wireAuth=()=>{document.querySelectorAll('[data-church-signin]').forEach(b=>b.onclick=()=>C.openAuth('login'));document.querySelectorAll('[data-church-signout]').forEach(b=>b.onclick=async()=>{if(window.confirm('Sign out of this device? Any unpublished edits will be discarded.'))await C.signOut();});};
+C.setupNotice=()=>`<div class="church-empty"><span class="church-eyebrow">One-time setup required</span><h2>Connect your church workspace</h2><p>The pages are ready, but shared data is not live until your Supabase project is configured. The website owner should run the supplied database script, create the first leader and add the public project connection settings.</p><a class="church-btn primary" href="shared-setup.html">Open setup guide →</a></div>`;
+C.gate=()=>!C.ready?'<div class="church-empty"><h2>Checking access…</h2></div>':!C.configured?C.setupNotice():!C.user?`<div class="church-empty"><span class="church-eyebrow">Church members only</span><h2>Sign in to view programme preparations</h2><p>Approved members can view shared checklists. Only approved leaders can change them. Announcements remain public.</p><div class="church-actions"><button class="church-btn primary" data-church-signin>Sign in / request access</button><a class="church-btn" href="announcements.html">Public announcements</a></div></div>`:!C.isMember()?`<div class="church-empty"><h2>${C.online?'Waiting for church approval':'Unable to confirm access'}</h2><p>${C.online?'Your account is signed in, but a leader must approve it before programme checklists become available.':'Connect to the internet and refresh to verify your membership.'}</p><p class="church-muted">${escape(C.user.email||'')}</p><button class="church-btn" data-church-signout>Sign out</button></div>`:'';
+C.openAuth=mode=>{
+ if(!C.configured||!C.client){C.message('The website owner must finish Supabase setup before sign-in is available.');return;}
+ let dialog=document.getElementById('churchAuthDialog');if(!dialog){dialog=document.createElement('dialog');dialog.id='churchAuthDialog';dialog.className='church-dialog';document.body.appendChild(dialog);}
+ const signup=mode==='signup',recover=mode==='recover',reset=mode==='reset';
+ dialog.innerHTML=`<div class="church-dialog-head"><h2>${recover?'Set a new password':reset?'Reset password':signup?'Request church access':'Welcome back'}</h2><button type="button" class="church-icon-btn" id="churchCloseAuth" aria-label="Close sign-in">×</button></div><p class="church-muted">${signup?'Create your account, verify your email and wait for a leader to approve membership.':'Your sign-in does not make announcements private; they remain public.'}</p><form id="churchAuthForm">${signup?'<label for="churchName">Your name</label><input id="churchName" required maxlength="120" autocomplete="name">':''}${!recover?'<label for="churchEmail">Email address</label><input id="churchEmail" type="email" required autocomplete="email">':''}${!reset?`<label for="churchPassword">${recover?'New password':'Password'}</label><input id="churchPassword" type="password" required ${signup||recover?'minlength="10"':''} autocomplete="${signup||recover?'new-password':'current-password'}">`:''}<p id="churchAuthStatus" class="church-form-status" role="status"></p><button type="submit" class="church-btn primary" id="churchAuthSubmit">${recover?'Update password':reset?'Send reset email':signup?'Create account':'Sign in'}</button></form>${!recover?`<div class="church-auth-links"><button class="church-link" id="churchSwitchAuth">${signup?'Already registered? Sign in':'New here? Request access'}</button><button class="church-link" id="churchResetAuth">Forgot password?</button></div>`:''}`;
+ document.getElementById('churchCloseAuth').onclick=()=>{dialog.close();dialog.replaceChildren();};if(!recover){document.getElementById('churchSwitchAuth').onclick=()=>C.openAuth(signup?'login':'signup');document.getElementById('churchResetAuth').onclick=()=>C.openAuth('reset');}
+ document.getElementById('churchAuthForm').onsubmit=async e=>{e.preventDefault();const status=document.getElementById('churchAuthStatus'),button=document.getElementById('churchAuthSubmit');button.disabled=true;status.textContent='Please wait…';try{
+ const email=document.getElementById('churchEmail')?.value.trim(),password=document.getElementById('churchPassword')?.value;
+ const redirect=new URL('announcements.html',location.href).href.split('#')[0];let result;
+ if(recover)result=await C.client.auth.updateUser({password});
+ else if(reset)result=await C.client.auth.resetPasswordForEmail(email,{redirectTo:redirect});
+ else if(signup)result=await C.client.auth.signUp({email,password,options:{data:{display_name:document.getElementById('churchName').value.trim()},emailRedirectTo:redirect}});
+ else result=await C.client.auth.signInWithPassword({email,password});
+ if(result.error)throw result.error;
+ if(reset){status.textContent='If the address is registered, check its inbox for the reset link. Mail delivery and rate limits depend on your Supabase email setup.';}
+ else if(signup){status.textContent='Check your email for a confirmation link. After confirmation, sign in; church approval is still required.';const passwordInput=document.getElementById('churchPassword');if(passwordInput)passwordInput.value='';await C.refreshIdentity();}
+ else {dialog.close();dialog.replaceChildren();await C.refreshIdentity();C.message(recover?'Password updated.':'Signed in. Checking church access…');}
+ }catch(err){status.textContent=err.message||'The request could not be completed.';}finally{button.disabled=false;}};
+ if(!dialog.open)dialog.showModal();
+};
+// Real-time signals trigger a fresh permission-checked read. Periodic refresh covers scheduled notices and missed signals.
+C.subscribe=(table,callback)=>{if(!C.client)return null;return C.client.channel(table+'-'+Math.random().toString(36).slice(2)).on('postgres_changes',{event:'*',schema:'public',table},callback).subscribe();};
+C.date=v=>new Date(v).toLocaleString('en-GB',{timeZone:'Africa/Lusaka',dateStyle:'medium',timeStyle:'short'});
+C.zambiaInput=v=>{const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Lusaka',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(v));const x=Object.fromEntries(parts.map(p=>[p.type,p.value]));return `${x.year}-${x.month}-${x.day}T${x.hour}:${x.minute}`;};
+C.isoFromZambia=v=>v?new Date(v+':00+02:00').toISOString():null;
+})();
