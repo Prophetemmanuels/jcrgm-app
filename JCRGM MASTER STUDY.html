@@ -263,10 +263,22 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
       <h3>📚 20 Backing Scriptures</h3>
       <p class="muted">Study 20 connected passages that confirm, explain, illustrate and strengthen your main Scripture.</p>
     </div>
-    <button class="btn primary" onclick="generateStudyReferences()">Generate 20 References</button>
+    <div class="relatedActions" style="margin:0">
+      <button class="btn primary" onclick="researchRefsWithChatGPT()">🤖 Research 20 with ChatGPT Search</button>
+      <button class="btn" onclick="generateStudyReferences()">⚡ Built-in List</button>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:6px">Flow: ① press “Research 20” — ChatGPT uses its search to study your passage, theme &amp; purpose and replies with 20 connected Scriptures → ② paste its reply into the box below → ③ Import — the app parses every reference, fetches each Scripture and displays all 20 here. Your imported list is remembered per passage and used automatically for the sermon prompt.</p>
+  <div style="margin-top:10px">
+    <label>Paste ChatGPT’s list of 20 Scriptures here:</label>
+    <textarea id="chatRefsInput" placeholder="1. Genesis 22:8 — The Lord will provide&#10;2. Psalm 23:1 — The Shepherd supplies&#10;3. Philippians 4:19 — Every need supplied…" style="min-height:110px"></textarea>
+    <div class="relatedActions">
+      <button class="btn good" onclick="importChatGPTRefs()">📥 Import &amp; Display Scriptures</button>
+      <button class="btn danger" onclick="clearChatGPTRefs()">🗑 Clear ChatGPT List</button>
+    </div>
   </div>
   <div id="studyReferences" class="relatedGrid">
-    <span class="muted">Enter your main Scripture, then generate 20 backing Scriptures.</span>
+    <span class="muted">Enter your main Scripture, then research 20 backing Scriptures with ChatGPT search.</span>
   </div>
 </div>
 
@@ -288,6 +300,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
       <select id="sermonStudySelect"></select>
     </div>
     <div>
+      <label>Sermon title (optional)</label>
+      <input id="sermonTitle" placeholder="e.g. The God Who Provides">
       <label>Sermon direction / burden</label>
       <input id="sermonDirection" placeholder="e.g. Faith in difficult seasons">
     </div>
@@ -869,12 +883,136 @@ function openExternal(url){window.open(url,'_blank');return false;}
 function generateStudyReferences(){
   const s=selectedStudyData();
   if(!s.passage)return toast('Set a Scripture passage first');
+  const saved=getSavedChatRefs();
+  if(saved.length){renderRefCards(saved.map(r=>({ref:r.ref,why:r.why})),s,'🤖 ChatGPT researched');return}
   const refs=getTwentyReferenceScriptures(s.passage,s);
   const dirS=((document.getElementById('sermonDirection')||{}).value||'').trim();
   const themeS=extractTheme(s),purposeS=dirS||s.theology||s.apply||('the truth of '+s.passage);
   const el=document.getElementById('studyReferences');
   el.innerHTML=refs.map((r,i)=>`<div class="relatedItem"><b>${esc(r)}</b><small>${esc(verseFocus(r,i,purposeS,themeS,s.passage))}</small><small>🔑 Key connected to ${esc(s.passage)}: ${esc(shortKeyPoint(i,s.passage,extractTheme(s)))}</small><div class="relatedActions"><a class="btn small" target="_blank" rel="noopener noreferrer" href="${youVersionUrl(r)}">Open in YouVersion</a><a class="btn small" target="_blank" rel="noopener noreferrer" href="${logosUrl(r)}">Open in Logos</a><button type="button" class="btn small" onclick="addRelatedToContext(${JSON.stringify(r)})">Add to study</button></div></div>`).join('');
-  toast('20 backing Scriptures generated');
+  toast('20 built-in backing Scriptures shown — for researched ones press 🤖 Research 20 with ChatGPT Search');
+}
+// ---------- Genre auto-selection (from the passage book) ----------
+const BOOK_NAME_FIX={'gen':'Genesis','genesis':'Genesis','exod':'Exodus','exo':'Exodus','exodus':'Exodus','lev':'Leviticus','leviticus':'Leviticus','num':'Numbers','numbers':'Numbers','deut':'Deuteronomy','deuteronomy':'Deuteronomy','josh':'Joshua','joshua':'Joshua','judg':'Judges','judges':'Judges','ruth':'Ruth','1 sam':'1 Samuel','1sam':'1 Samuel','1 samuel':'1 Samuel','2 sam':'2 Samuel','2sam':'2 Samuel','2 samuel':'2 Samuel','1 kgs':'1 Kings','1 kings':'1 Kings','2 kgs':'2 Kings','2 kings':'2 Kings','1 chr':'1 Chronicles','1 chron':'1 Chronicles','1 chronicles':'1 Chronicles','2 chr':'2 Chronicles','2 chron':'2 Chronicles','2 chronicles':'2 Chronicles','ezra':'Ezra','neh':'Nehemiah','nehemiah':'Nehemiah','esth':'Esther','esther':'Esther','job':'Job','ps':'Psalms','psa':'Psalms','pss':'Psalms','psalm':'Psalms','psalms':'Psalms','prov':'Proverbs','proverbs':'Proverbs','eccl':'Ecclesiastes','ecclesiastes':'Ecclesiastes','song':'Song of Solomon','songs':'Song of Solomon','song of solomon':'Song of Solomon','isa':'Isaiah','isaiah':'Isaiah','jer':'Jeremiah','jeremiah':'Jeremiah','lam':'Lamentations','lamentations':'Lamentations','ezek':'Ezekiel','ezekiel':'Ezekiel','dan':'Daniel','daniel':'Daniel','hos':'Hosea','hosea':'Hosea','joel':'Joel','joel ':'Joel','amos':'Amos','obad':'Obadiah','obadiah':'Obadiah','jonah':'Jonah','jon':'Jonah','mic':'Micah','micah':'Micah','nah':'Nahum','nahum':'Nahum','hab':'Habakkuk','habakkuk':'Habakkuk','zeph':'Zephaniah','zep':'Zephaniah','zephaniah':'Zephaniah','hag':'Haggai','haggai':'Haggai','zech':'Zechariah','zec':'Zechariah','zechariah':'Zechariah','mal':'Malachi','malachi':'Malachi','mt':'Matthew','matt':'Matthew','matthew':'Matthew','mk':'Mark','mr':'Mark','mark':'Mark','lk':'Luke','luke':'Luke','jn':'John','joh':'John','john':'John','ac':'Acts','acts':'Acts','ro':'Romans','rom':'Romans','romans':'Romans','1 co':'1 Corinthians','1co':'1 Corinthians','1 cor':'1 Corinthians','1 corinthians':'1 Corinthians','2 co':'2 Corinthians','2co':'2 Corinthians','2 cor':'2 Corinthians','2 corinthians':'2 Corinthians','gal':'Galatians','galatians':'Galatians','eph':'Ephesians','ephesians':'Ephesians','php':'Philippians','phil':'Philippians','philippians':'Philippians','col':'Colossians','colossians':'Colossians','1 th':'1 Thessalonians','1 thess':'1 Thessalonians','1 thessalonians':'1 Thessalonians','2 th':'2 Thessalonians','2 thess':'2 Thessalonians','2 thessalonians':'2 Thessalonians','1 ti':'1 Timothy','1 tim':'1 Timothy','1 timothy':'1 Timothy','2 ti':'2 Timothy','2 tim':'2 Timothy','2 timothy':'2 Timothy','tit':'Titus','titus':'Titus','phm':'Philemon','phlm':'Philemon','philemon':'Philemon','heb':'Hebrews','hebrews':'Hebrews','jas':'James','james':'James','1 pe':'1 Peter','1 pet':'1 Peter','1 peter':'1 Peter','2 pe':'2 Peter','2 pet':'2 Peter','2 peter':'2 Peter','1 jn':'1 John','1 joh':'1 John','1 john':'1 John','2 jn':'2 John','2 john':'2 John','3 jn':'3 John','3 john':'3 John','jude':'Jude','rev':'Revelation','revelation':'Revelation'};
+const GENRE_BY_BOOK={'Exodus':'Law','Leviticus':'Law','Numbers':'Law','Deuteronomy':'Law','Genesis':'Narrative','Joshua':'Narrative','Judges':'Narrative','Ruth':'Narrative','1 Samuel':'Narrative','2 Samuel':'Narrative','1 Kings':'Narrative','2 Kings':'Narrative','1 Chronicles':'Narrative','2 Chronicles':'Narrative','Ezra':'Narrative','Nehemiah':'Narrative','Esther':'Narrative','Job':'Poetry/Wisdom','Psalms':'Poetry/Wisdom','Proverbs':'Poetry/Wisdom','Ecclesiastes':'Poetry/Wisdom','Song of Solomon':'Poetry/Wisdom','Lamentations':'Poetry/Wisdom','Isaiah':'Prophecy','Jeremiah':'Prophecy','Ezekiel':'Prophecy','Daniel':'Prophecy','Hosea':'Prophecy','Joel':'Prophecy','Amos':'Prophecy','Obadiah':'Prophecy','Jonah':'Prophecy','Micah':'Prophecy','Nahum':'Prophecy','Habakkuk':'Prophecy','Zephaniah':'Prophecy','Haggai':'Prophecy','Zechariah':'Prophecy','Malachi':'Prophecy','Matthew':'Gospel','Mark':'Gospel','Luke':'Gospel','John':'Gospel','Acts':'Acts/History','Romans':'Epistle','1 Corinthians':'Epistle','2 Corinthians':'Epistle','Galatians':'Epistle','Ephesians':'Epistle','Philippians':'Epistle','Colossians':'Epistle','1 Thessalonians':'Epistle','2 Thessalonians':'Epistle','1 Timothy':'Epistle','2 Timothy':'Epistle','Titus':'Epistle','Philemon':'Epistle','Hebrews':'Epistle','James':'Epistle','1 Peter':'Epistle','2 Peter':'Epistle','1 John':'Epistle','2 John':'Epistle','3 John':'Epistle','Jude':'Epistle','Revelation':'Apocalyptic'};
+const CHAT_ALIAS_SORTED=[...new Set(Object.keys(BOOK_NAME_FIX))].sort((a,b)=>b.length-a.length);
+function bookOfRef(ref){
+  const m=String(ref||'').trim().match(/^((?:[1-3]\s?)?[A-Za-z][A-Za-z. ]*?)\s+\d/);
+  if(!m)return '';
+  const b=m[1].trim().replace(/\s+/g,' ').replace(/\.$/,'');
+  const low=b.toLowerCase(),spaced=low.replace(/^([1-3])\s*/,'$1 ');
+  return BOOK_NAME_FIX[low]||BOOK_NAME_FIX[spaced]||'';
+}
+function genreForRef(ref){const b=bookOfRef(ref);return GENRE_BY_BOOK[b]||''}
+function autoGenre(){
+  const inp=document.getElementById('passage'),sel=document.getElementById('genre');
+  if(!inp||!sel)return;
+  const g=genreForRef(inp.value);
+  if(g&&sel.value!==g){sel.value=g;toast('Genre auto-selected: '+g)}
+}
+// ---------- ChatGPT-researched backing Scriptures ----------
+function chatRefsStoreKey(p){return 'jcrgmChatRefs:'+normalizeRef(p)}
+function getSavedChatRefs(){
+  const p=normalizeRef((document.getElementById('passage')||{}).value||'');
+  if(!p)return [];
+  try{const d=JSON.parse(localStorage.getItem(chatRefsStoreKey(p))||'null');if(d&&d.passage===p)return d.refs||[];return []}catch(e){return []}
+}
+function saveChatRefs(refs){
+  const p=normalizeRef((document.getElementById('passage')||{}).value||'');
+  if(!p)return;
+  try{localStorage.setItem(chatRefsStoreKey(p),JSON.stringify({passage:p,refs,at:Date.now()}))}catch(e){}
+}
+function clearChatGPTRefs(){
+  const p=normalizeRef((document.getElementById('passage')||{}).value||'');
+  if(!p)return toast('Set a Scripture passage first');
+  try{localStorage.removeItem(chatRefsStoreKey(p))}catch(e){}
+  document.getElementById('studyReferences').innerHTML='<span class="muted">ChatGPT list cleared — use the built-in list or research again.</span>';
+  toast('ChatGPT Scriptures cleared for '+p);
+}
+function escapeRe(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
+function refsRegex(){
+  const names=[...new Set([...BOOKS,...Object.keys(BOOK_NAME_FIX)])].filter(x=>/[a-z]/i.test(x)).sort((a,b)=>b.length-a.length);
+  return new RegExp('((?:[1-3]\\s?)?(?:'+names.map(escapeRe).join('|')+')\\s*\\d+(?::\\d+(?:\\s*[-–—]\\s*\\d+)?(?:\\s*,\\s*\\d+(?:\\s*[-–—]\\s*\\d+)?)*)(?:\\s*[-–—]\\s*\\d+)?)','gi');
+}
+function parseRefsFromText(txt,mainRef){
+  const re=refsRegex();
+  const lines=String(txt||'').replace(/\*\*/g,'').replace(/\|/g,' — ').split(/\n+/);
+  const out=[],seen=new Set(),mainN=normalizeRef(mainRef||'').toLowerCase();
+  for(const line of lines){
+    let m;re.lastIndex=0;
+    while((m=re.exec(line))){
+      let ref=normalizeRef(m[1]).replace(/\s*:\s*/g,':').replace(/\s*[-–—]\s*/g,'-').replace(/[,;.\s]+$/,'').replace(/\s+/g,' ');
+      const low0=ref.toLowerCase();
+      for(const nm of CHAT_ALIAS_SORTED){
+        if(low0===nm||low0.startsWith(nm+' ')){
+          const canon=BOOK_NAME_FIX[nm];
+          if(canon){ref=canon+ref.slice(nm.length).replace(/^\s+/,' ')}
+          break;
+        }
+      }
+      const low=ref.toLowerCase();
+      if(!low||low===mainN||seen.has(low)){continue}
+      seen.add(low);
+      let why=line.slice(m.index+m[0].length).replace(/^\s*(?:[—–\-:,]+)\s*/,'').replace(/^(?:is|means)\s+/i,'').trim();
+      if(why.length>120)why=why.slice(0,117)+'…';
+      out.push({ref,why:why.replace(/\s+/g,' ')});
+      if(out.length>=20)break;
+    }
+    if(out.length>=20)break;
+  }
+  return out;
+}
+function researchRefsWithChatGPT(){
+  const s=selectedStudyData();if(!s.passage)return toast('Set a Scripture passage first');
+  const theme=extractTheme(s);
+  const dir=((document.getElementById('sermonDirection')||{}).value||'').trim();
+  const purpose=dir||s.theology||s.apply||('the truth of '+s.passage);
+  const g=((document.getElementById('genre')||{}).value)||s.genre||'';
+  const notes=[s.obs&&'OBSERVATION: '+s.obs,s.interp&&'INTERPRETATION: '+s.interp,s.context&&'CONTEXT: '+s.context,s.theology&&'THEOLOGY: '+s.theology,s.apply&&'APPLICATION: '+s.apply].filter(Boolean).join('\n')||'(no study notes yet — derive the theme from the text)';
+  const P=[
+'SEARCH TASK — BACKING SCRIPTURE RESEARCH FOR THE JCRGM MASTER STUDY.',
+'You are an anointed Bible researcher and expository teacher. Use your SEARCH capability across the whole counsel of God to find EXACTLY 20 Scriptures genuinely connected to the main text below — passages that CONFIRM it, EXPLAIN it, ILLUSTRATE it and STRENGTHEN its theme and purpose. Do not pad the list. Do not proof-text: every connection must be real in context, Christ-centred and faithful.',
+'',
+'MAIN SCRIPTURE: '+s.passage,
+'GENRE: '+g,
+'THEME: '+theme,
+'INTENDED PURPOSE: '+purpose,
+'STUDY NOTES:',notes,
+'',
+'RULES: 1) Never repeat or merely re-cite the main Scripture. 2) Draw from both Testaments where genuinely connected (Law, Narrative, Poetry/Wisdom, Prophets, Gospels, Acts, Epistles, Revelation). 3) Prefer clear, quotable passages. 4) Verify each reference exists and is cited correctly before listing it. 5) Keep the Spirit-breathed text as the final authority over any tradition.',
+'REPLY FORMAT — exactly 20 lines, numbered, nothing else:',
+'1. Book Chapter:Verse — connection in max 8 words',
+'2. Book Chapter:Verse — connection in max 8 words',
+'…through 20.',
+'',
+'After I receive your list I will paste it into my study app, which will parse the references and display the Scriptures with their text.'
+].join('\n');
+  (async()=>{
+    try{await navigator.clipboard.writeText(P)}catch(e){const ta=document.createElement('textarea');ta.value=P;document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(_){}ta.remove()}
+    let url='https://chatgpt.com/';
+    if(P.length<6500){try{url='https://chatgpt.com/?q='+encodeURIComponent(P)}catch(e){}}
+    const w=window.open(url,'_blank','noopener,noreferrer');
+    if(!w)toast('Pop-up blocked — open chatgpt.com and paste the copied research prompt');
+    toast('Research prompt copied — in ChatGPT enable search, paste, press Enter, then Import its list below');
+  })();
+}
+async function importChatGPTRefs(){
+  const s=selectedStudyData();if(!s.passage)return toast('Set a Scripture passage first');
+  const box=document.getElementById('chatRefsInput');
+  const refs=parseRefsFromText((box||{}).value||'',s.passage);
+  if(!refs.length)return toast('No Scripture references found in the pasted text — paste ChatGPT’s numbered list');
+  saveChatRefs(refs);
+  await renderRefCards(refs,s,'🤖 ChatGPT researched');
+  toast(refs.length+' researched Scriptures displayed (max 20) — they now feed the sermon prompt');
+}
+async function renderRefCards(items,s,badge){
+  const el=document.getElementById('studyReferences');
+  el.innerHTML='<span class="muted">⏳ Displaying '+items.length+' Scriptures — fetching texts…</span>';
+  const cards=await Promise.all(items.map(async(it,i)=>{
+    const txt=await fetchScriptureText(it.ref);
+    return `<div class="relatedItem"><b>${i+1}. ${esc(it.ref)}</b> ${badge?`<span class="pill">${badge}</span>`:''}${it.why?`<small>🔗 ${esc(it.why)}</small>`:''}<small class="verse" style="font-size:14px;margin-top:4px">${txt?esc(txt):'(text not fetched — open below)'}</small><div class="relatedActions"><a class="btn small" target="_blank" rel="noopener noreferrer" href="${youVersionUrl(it.ref)}">Open in YouVersion</a><a class="btn small" target="_blank" rel="noopener noreferrer" href="${logosUrl(it.ref)}">Open in Logos</a><button type="button" class="btn small" onclick="addRelatedToContext(${JSON.stringify(it.ref)})">Add to study</button></div></div>`;
+  }));
+  el.innerHTML=cards.join('');
 }
 function sermonParagraph(text,fallback){return (text||fallback||'').trim().replace(/\s+/g,' ')}
 function buildSermonPoints(s, refs){
@@ -890,54 +1028,131 @@ function buildSermonPoints(s, refs){
 function buildChatGPTSermonPrompt(){
   const s=selectedStudyData();
   if(!s.passage)return '';
-  const dir=(document.getElementById('sermonDirection')?.value||'').trim();
-  const refs=getTwentyReferenceScriptures(s.passage,s);
+  const g=(document.getElementById('genre')||{}).value||s.genre||'not stated';
+  const dir=((document.getElementById('sermonDirection')||{}).value||'').trim();
+  const title=((document.getElementById('sermonTitle')||{}).value||'').trim();
+  const st=(typeof state!=='undefined'&&state&&state.studies)?state.studies.find(x=>x.passage===s.passage):null;
+  const ctx=(st&&Array.isArray(st.contextScriptures)?st.contextScriptures:[]).filter(Boolean).slice(0,25);
   const theme=extractTheme(s);
-  const purpose=dir||s.theology||s.apply||'Teach and apply the truth of '+s.passage+' faithfully.';
-  const L=[];
-  L.push('YOU ARE AN ANOINTED EXPOSITORY PREACHER AND BIBLE TEACHER.');
-  L.push('');
-  L.push('TASK: Using the STUDY DETAILS below, (1) arrange the study in order, (2) write a FULL PREACHING MANUSCRIPT with the study notes HIGHLIGHTED, (3) include all 20 BACKING SCRIPTURES with WHAT EACH ONE SAYS quoted, and (4) make the WHOLE SERMON align with the INTENDED PURPOSE.');
-  L.push('');
-  L.push('================ STUDY DETAILS ================');
-  L.push('MAIN SCRIPTURE: '+(s.passage||''));
-  L.push('GENRE: '+(s.genre||''));
-  L.push('THEME: '+theme);
-  L.push('INTENDED PURPOSE / SERMON DIRECTION (the sermon must align with this): '+purpose);
-  L.push('');
-  L.push('--- O: OBSERVATION (what the text says) ---');
-  L.push(s.obs||'(No observation notes — derive carefully from the text.)');
-  L.push('');
-  L.push('--- I: INTERPRETATION (what it meant) ---');
-  L.push(s.interp||'(No interpretation notes — interpret faithfully in context.)');
-  L.push('');
-  L.push('--- C: CONTEXT & CROSS-REFERENCES ---');
-  L.push(s.context||'(No context notes.)');
-  L.push('');
-  L.push('--- T: THEOLOGY / TRUTH ---');
-  L.push(s.theology||'(No theology notes.)');
-  L.push('');
-  L.push('--- A: APPLICATION ---');
-  L.push(s.apply||'(No application notes.)');
-  L.push('');
-  L.push('--- P: PRAYER SEED ---');
-  L.push(s.prayer||'(No prayer notes.)');
-  L.push('');
-  L.push('--- 20 BACKING SCRIPTURES (quote what each says) ---');
-  refs.forEach((r,i)=>L.push((i+1)+'. '+r));
-  L.push('===============================================');
-  L.push('');
-  L.push('STRICT INSTRUCTIONS:');
-  L.push('1) ARRANGE THE STUDY IN ORDER first, under headings: 01 THE TEXT (observation) > 02 THE MEANING (interpretation) > 03 THE CONTEXT > 04 THE TRUTH (theology, one memorable sentence) > 05 THE MOVEMENT (3-4 preaching points arising from the text) > 06 THE RESPONSE (application) > 07 THE SUPPORT (backing Scriptures) > 08 THE APPEAL (call to respond).');
-  L.push('2) THEN WRITE THE FULL PREACHING MANUSCRIPT (2,500-3,500 words, ready to preach verbatim): Title, Main Text (tell reader to stand & read), Opening Prayer, Introduction (hook, need, tension the text answers), Central Truth (bold, repeated), Body (3-4 points; EACH point = Explanation of text + Illustration/story + Application + 2-3 backing Scriptures woven in), Conclusion (return to Central Truth), Altar Call / Appeal, 5 Prayer Points inline with the message, Closing Prayer, and a one-line Preacher Summary.');
-  L.push('3) HIGHLIGHT THE STUDY NOTES: whenever you use the author\'s own wording from Observation/Interpretation/Theology/Application above, set it apart as: "> STUDY NOTE: [their exact words]" so the preacher sees their notes highlighted inside the sermon. Do NOT contradict or discard those notes — expand and preach them faithfully.');
-  L.push('4) 20 BACKING SCRIPTURES WITH WHAT THEY SAY + HIGHLIGHTED KEY POINTS: in a dedicated section, list ALL 20 references above IN ORDER. For EACH one: (a) write the reference in bold, (b) QUOTE what it says (1-3 key verses, '+getBibleVersion()+' wording), (c) HIGHLIGHT the key points of that passage connected to the KEY (main) Scripture — put the key phrases in **bold** inside the quote AND list them as "KEY POINTS: phrase 1 | phrase 2 | phrase 3", (d) add one line: "KEY POINT CONNECTED TO [main Scripture]: ..." (1-2 sentences showing exactly how this backing passage confirms/explains/illustrates/strengthens the main text and drives the intended purpose). Also add (e) a FOCUS line telling the preacher exactly what to concentrate on when reading that verse (never generic filler). Every one of the 20 must appear with its quoted text, highlighted key points and FOCUS line.');
-  L.push('5) ALIGNMENT WITH INTENDED PURPOSE: the Title, Central Truth, every point, every illustration, the appeal and all 5 prayer points must drive toward this purpose: "'+purpose+'". Repeat the purpose language deliberately. If any material drifts from it, cut it.');
-  L.push('6) FAITHFULNESS: Christ-centered, Scripture-tested preaching. Distinguish clear teaching from illustration. Never present inference as direct quote. Keep tone warm, urgent, pastoral and authoritative.');
-  L.push('7) FORMATTING: Use clear headings, short paragraphs, bold key truths. End with: "PREACHER\'S ONE-LINE SUMMARY: ..."');
-  L.push('');
-  L.push('Begin now: first the ORDERED STUDY, then the FULL SERMON.');
-  return L.join('\n');
+  const purpose=dir||s.theology||s.apply||('Lead people from the text to repentance, faith, holiness and hope in Christ');
+  const chatRefs=getSavedChatRefs();
+  const bibleLine=chatRefs.length
+    ?'After searching, select 20 Scriptures that confirm, explain, illustrate and strengthen the main text. For this manuscript use the researched backing Scriptures I imported from ChatGPT search (the main text plus these '+chatRefs.length+'):\n'+chatRefs.map((r,i)=>(i+1)+'. '+r.ref+(r.why?' — '+r.why:'')).join('\n')
+    :'After searching, select 20 Scriptures that confirm, explain, illustrate and strengthen the main text.';
+  const notesBlock=[
+  '1. OBSERVATION: '+(s.obs||'(none recorded — derive from the text)'),
+  '2. INTERPRETATION: '+(s.interp||'(none recorded — derive from the text)'),
+  '3. CONTEXT: '+(s.context||'(none recorded'+(ctx.length?'; related passages already in my study context shelf: '+ctx.join(', '):'')+')'),
+  '4. THEOLOGY: '+(s.theology||'(none recorded)'),
+  '5. APPLICATION: '+(s.apply||'(none recorded)'),
+  '6. PRAYER: '+(s.prayer||'(none recorded)')
+  ].join('\n');
+  return [
+'You are an anointed expository preacher and Bible teacher, full of the Holy Ghost and the Word of God.',
+'',
+'Your task is to produce one complete, preachable, Bible-saturated expository sermon manuscript from my study notes.',
+'',
+'TASKS:',
+'1. Produce a complete preaching manuscript of 2,500-3,500 words - preachable, flowing and ready for the pulpit.',
+'2. After searching, select 20 Scriptures that confirm, explain, illustrate and strengthen the main text'+(chatRefs.length?' (list supplied below - use it)':'')+'.',
+'3. Use the 20 connected Scriptures as the Bible\'s own backing for the manuscript.',
+'4. Quote all Scripture references in the full text - not only citation.',
+'5. Each connected Scripture must be formatted exactly like this:',
+'REFERENCE',
+'NKJV - full text',
+'WHAT THE SCRIPTURE SAYS: [what it actually teaches]',
+'KEY POINT: [the major truth in one sentence]',
+'CONNECTION: [how it confirms, strengthens or clarifies the focus Scripture]',
+'FOCUS: [focus of the sermon]',
+'6. Do not force 20 Scriptures if the text does not support them.',
+'7. Do not pad with unrelated verses.',
+'8. Do not invent, misapply or mishandle the text.',
+'9. End with 5 powerful and specific prayer points.',
+'10. End with a preacher\'s summary: a short spiritual and practical compass of the message.',
+'11. Preserve the preacher\'s intent and leading; do not override it.',
+'12. Write as an anointed expository preacher, not a devotional writer.',
+'13. Keep the flow preachable, not academic.',
+'14. Do not turn this into a series - one sermon only.',
+'15. Do not use shallow hype; let the text and the Spirit do the work.',
+'16. Build one central truth and drive the sermon through it.',
+'17. Do not invent meanings that are not in the text. Clearly distinguish between what the text states and what you infer.',
+'18. Do not use prosperity manipulation or emotional hype.',
+'19. The Spirit-breathed Word is to be the final authority over every idea, tradition, preference and human opinion.',
+'',
+'Use the following order:',
+'',
+'# SEARCH AND SELECT',
+'Search the main text and its theme thoroughly.',
+bibleLine,
+'',
+'# STUDY DETAILS',
+'SERMON TITLE: '+(title||'(create a title that carries the central truth)'),
+'MAIN SCRIPTURE: '+s.passage,
+'GENRE: '+g,
+'INTENDED PURPOSE: '+purpose,
+'CENTRAL TRUTH: '+theme,
+'STUDY NOTES:',
+notesBlock,
+(keywordsLine(s,ctx)),
+'KEY WORDS TO DEFINE: [select only words that need study from the text; define them simply, from the text and, if possible, from the Hebrew/Greek]',
+'IMPORTANT OBSERVATIONS: [what you clearly saw in the text - repeated words, contrasts, commands, promises, theology, structure]',
+'MAIN POINTS: [use the points already recorded in my notes above if present; if not, create 3-4 from the text]',
+'PERSONS/EXAMPLES FROM SCRIPTURE: [biblical examples that support the message]',
+'PRACTICAL APPLICATIONS: [practical, pastoral and specific applications]',
+'SPECIAL EMPHASIS: '+(dir||'[state the particular burden of this message]'),
+'',
+'# ARRANGE',
+'Use the text and the study notes to arrange the message into:',
+'01. THE TEXT - Read, understand and confirm the main text.',
+'02. CONTEXT - Show the meaning of the text from what comes before and after, the book\'s argument, and the Testaments.',
+'03. KEY WORDS - Select only the words that need study; define them from the text and, if possible, from the Hebrew/Greek.',
+'04. CROSS-REFERENCES - Select only the references that truly illuminate the text.',
+'05. MAIN POINTS - Form 3-4 main points, each flowing from the text, explaining the text and applying the text.',
+'06. SUPPORTING SCRIPTURE - Confirm the text with other passages.',
+'07. PRACTICAL APPLICATION - Apply the text to real life.',
+'08. THE APPEAL - Call for response, repentance, faith, obedience, hope, love and holiness.',
+'',
+'# FULL PREACHING MANUSCRIPT',
+'TITLE',
+'OPENING PRAYER',
+'INTRODUCTION',
+'CENTRAL TRUTH',
+'KEY WORD DEFINITIONS',
+'BIBLICAL CONTEXT',
+'MAIN POINTS 1-4',
+'Each point must have:',
+'Explanation',
+'Study note',
+'Scripture',
+'Biblical example',
+'Practical example',
+'Application',
+'20 BACKING SCRIPTURES FROM THE BIBLE',
+'Each must include:',
+'REFERENCE',
+'NKJV TEXT',
+'WHAT THE SCRIPTURE SAYS',
+'KEY POINT',
+'CONNECTION',
+'FOCUS',
+'PRACTICAL APPLICATION',
+'CHRIST-CENTERED CONNECTION',
+'CONCLUSION',
+'ALTAR CALL / RESPONSE APPEAL',
+'FIVE PRAYER POINTS',
+'PREACHER\'S SUMMARY',
+'',
+'Use plain, strong, pastoral and preachable sentences.',
+'The manuscript should be suitable for preaching, not merely reading.',
+'The goal is a complete, flowing, preachable, Bible-saturated expository sermon manuscript that honours the text, equips the church and leads people to Christ.',
+'',
+'TEACH THE TEXT. EXPLAIN THE TEXT. APPLY THE TEXT. LEAD PEOPLE TO CHRIST. CALL PEOPLE TO OBEY THE WORD.'
+  ].join('\n');
+}
+function keywordsLine(s,ctx){
+  const keys=[s.obs,s.interp,s.theology].filter(Boolean).join(' ');
+  const words=[...new Set((keys.match(/\b[A-Za-z][A-Za-z-]{5,}\b/g)||[]).map(w=>w.toLowerCase()))].filter(w=>!['therefore','according','righteousness','covenant','accordingly','whenever','wherefore','everlasting','sanctification','glorification','salvation','redemption','propitiation'].includes(w)).slice(0,6);
+  return 'KEY WORDS TO DEFINE (from my notes): '+(words.length?words.join(', '):'(none recorded - select them from the text)')+(ctx.length?' | Context shelf: '+ctx.join(', '):'');
 }
 function previewChatGPTPrompt(){
   const p=buildChatGPTSermonPrompt();
@@ -1415,8 +1630,9 @@ document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLower
 ['passage','obs','interp','context','theology','apply','prayer'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>{clearTimeout(window.__draftTimer);window.__draftTimer=setTimeout(saveStudyDraft,500)}));
 
 initBooks();loadDaily();loadTodayScripture();populateVerSelects();renderBooks();renderMemory();renderJournal();renderStudies();renderMeditations();renderTopics();renderSermonStudySelect();timerDisplay();updateMemoryProgress();
+document.getElementById('passage').addEventListener('input',autoGenre);document.getElementById('passage').addEventListener('change',autoGenre);autoGenre();
 if(state.dark===false)document.body.classList.add('light');
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39bbe4d9a34b56c',t:'MTc4OTE4Mjg4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39bbe4d9a34b56c',t:'MTc4OTE4Mjg4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3fcde82294a95f6',t:'MTc5MDIwMTMxOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
