@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>All Night Programmes & Crossover Service Programme — The Year of Recovery</title>
+  <title>All Night Programmes &amp; Crossover Service Programme — The Year of Recovery</title>
   <style>
     :root{--bg:#0f1724;--card:#0b1220;--accent:#f59e0b;--muted:#9aa4b2;--glass: rgba(255,255,255,0.03)}
     html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
@@ -16,31 +16,108 @@
     p.lead{margin:0;color:var(--muted)}
 
     .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:18px;margin-top:18px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
-    .flex{display:flex;gap:12px}
     .cols{display:grid;grid-template-columns:1fr 360px;gap:18px}
 
-    .timeline{list-style:none;padding:0;margin:0}
-    .item{display:flex;gap:12px;padding:12px;border-radius:10px;align-items:flex-start;transition: all 0.3s ease;}
-    .item.active{background:rgba(245,158,11,0.2);box-shadow:0 0 12px rgba(245,158,11,0.5);transform:scale(1.02);}
-    .time{min-width:88px;font-weight:700;color:var(--accent)}
+    /* ---- programme switcher buttons ---- */
+    .switcher{display:flex;gap:14px;margin-top:18px;flex-wrap:wrap}
+    .prog-btn{flex:1;min-width:280px;text-align:left;background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.08);color:#e6eef8;padding:16px 18px;border-radius:14px;cursor:pointer;transition:all .25s ease}
+    .prog-btn .btn-title{display:block;font-size:18px;font-weight:800;margin-bottom:4px}
+    .prog-btn .btn-sub{display:block;font-size:13px;color:var(--muted);font-weight:400}
+    .prog-btn:hover{border-color:rgba(245,158,11,0.55)}
+    .prog-btn.active{background:linear-gradient(135deg,var(--accent),#ef4444);color:#071126;border-color:transparent;box-shadow:0 8px 24px rgba(245,158,11,0.35)}
+    .prog-btn.active .btn-sub{color:rgba(7,17,38,0.75)}
+
+    /* ---- anchor moments strip ---- */
+    .preach-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+    .preach-card{border:1px solid rgba(245,158,11,0.35);border-radius:12px;padding:12px 14px;background:rgba(245,158,11,0.06)}
+    .preach-card.prayer-card{border-color:rgba(56,189,248,0.45);background:rgba(56,189,248,0.06)}
+    .preach-card.prayer-card strong{color:#7dd3fc}
+    .preach-card.mama-card{border-color:rgba(244,114,182,0.45);background:rgba(244,114,182,0.06)}
+    .preach-card.mama-card strong{color:#f9a8d4}
+    .preach-card strong{color:var(--accent)}
+    .preach-card .muted{display:block;margin-top:4px}
+    @media (max-width:1000px){.preach-strip{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:600px){.preach-strip{grid-template-columns:1fr}}
+
+    /* ---- programme panels ---- */
+    .program-panel{display:none}
+    .program-panel.active{display:block}
+    .panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+    .panel-note{font-size:13px;color:var(--muted);max-width:680px}
+
+    /* ---- timeline ---- */
+    .timeline{list-style:none;padding:0;margin:8px 0 0}
+    .item{display:flex;gap:12px;padding:12px;border-radius:10px;align-items:flex-start;transition:all 0.3s ease;border-left:3px solid transparent}
+    .item:hover{background:rgba(255,255,255,0.03)}
+    .item.active{background:rgba(245,158,11,0.16);box-shadow:0 0 12px rgba(245,158,11,0.35);transform:scale(1.01);border-left-color:var(--accent)}
+    .time{min-width:104px;font-weight:700;color:var(--accent)}
     .content{flex:1}
     .role{color:var(--muted);font-size:13px;margin-top:6px}
-    .section-title{font-weight:700;margin:6px 0}
+    .section-title{font-weight:700;margin:2px 0}
+    .item.sermon{border:1px solid rgba(245,158,11,0.6);background:rgba(245,158,11,0.08)}
+    .item.sermon .section-title{color:#ffd166}
+    .item.prayerline{border:1px solid rgba(56,189,248,0.6);background:rgba(56,189,248,0.08)}
+    .item.prayerline .section-title{color:#7dd3fc}
+    .item.mama{border:1px solid rgba(244,114,182,0.65);background:rgba(244,114,182,0.08)}
+    .item.mama .section-title{color:#f9a8d4}
+    .item.midnight{border:1px dashed rgba(245,158,11,0.7);background:rgba(239,68,68,0.10)}
+    .item.midnight .section-title{color:#fca5a5}
+    .badge{display:inline-block;background:var(--accent);color:#071126;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;letter-spacing:.6px;margin-left:8px;vertical-align:middle}
+    .badge.pink{background:#f472b6}
+    .badge.blue{background:#38bdf8}
+    .badge.red{background:#ef4444;color:#fff}
+    .phase-divider{list-style:none;margin:14px 0 4px;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);
+      display:flex;align-items:center;gap:10px}
+    .phase-divider::after{content:"";flex:1;height:1px;background:rgba(255,255,255,0.08)}
+    .phase-divider .phase-num{background:rgba(245,158,11,0.15);color:var(--accent);border-radius:6px;padding:2px 8px}
 
+    /* ---- controls & sidebar ---- */
     .controls{display:flex;gap:8px;flex-wrap:wrap}
     button{background:var(--accent);border:none;padding:10px 12px;border-radius:8px;color:#071126;font-weight:700;cursor:pointer}
     button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent)}
 
     .roles-table{width:100%;border-collapse:collapse;margin-top:8px}
-    .roles-table th,.roles-table td{padding:8px;border-bottom:1px dashed rgba(255,255,255,0.03);text-align:left}
+    .roles-table th,.roles-table td{padding:8px;border-bottom:1px dashed rgba(255,255,255,0.03);text-align:left;font-size:14px}
     .muted{color:var(--muted)}
-
     .print-note{font-size:13px;color:var(--muted);margin-top:8px}
-
     footer{margin-top:18px;color:var(--muted);font-size:13px}
 
-    @media (max-width:900px){.cols{grid-template-columns:1fr} .logo{width:52px;height:52px}}
-    @media print{body{background:#fff;color:#000}.card{box-shadow:none;background:transparent}button,.controls{display:none}}
+    /* ===== MIDNIGHT COUNTDOWN POPUP ===== */
+    .overlay{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,#111d3d 0%, #050a18 72%);
+      display:flex;align-items:center;justify-content:center}
+    .overlay[hidden]{display:none}
+    .overlay-inner{position:relative;text-align:center;z-index:2}
+    .cd-number{font-size:min(48vmin,360px);font-weight:900;color:var(--accent);line-height:1;
+      text-shadow:0 0 70px rgba(245,158,11,0.6)}
+    .cd-number.pop{animation:pop .92s ease}
+    @keyframes pop{0%{transform:scale(1.5);opacity:.35}28%{transform:scale(1);opacity:1}100%{transform:scale(.96);opacity:1}}
+    .cd-message{font-size:min(8.5vmin,62px);font-weight:900;color:#ffd166;line-height:1.15;
+      text-shadow:0 0 45px rgba(255,209,102,0.55);animation:glowpulse 1.2s ease infinite alternate}
+    @keyframes glowpulse{from{text-shadow:0 0 25px rgba(255,209,102,.35)}to{text-shadow:0 0 70px rgba(255,209,102,.85)}}
+    .cd-sub{margin-top:14px;color:var(--muted);font-size:min(3vmin,19px);letter-spacing:3px;text-transform:uppercase}
+    .hidden{display:none!important}
+    .cd-close{position:absolute;top:18px;right:18px;z-index:3;background:transparent;border:1px solid rgba(255,255,255,0.25);
+      color:#e6eef8;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600}
+    #confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+    .confetti-piece{position:absolute;top:-8%;animation:fall 3.8s linear forwards}
+    @keyframes fall{to{transform:translateY(120vh) rotate(540deg)}}
+
+    @media (max-width:900px){.cols{grid-template-columns:1fr} .logo{width:52px;height:52px} .time{min-width:88px}}
+    @media print{
+      body{background:#fff;color:#000;padding:8px}
+      .card{box-shadow:none;background:transparent;border:1px solid #ddd}
+      button,.controls,.switcher{display:none!important}
+      #countdownOverlay{display:none!important}
+      .program-panel{display:block!important;page-break-before:always}
+      .program-panel:first-of-type{page-break-before:auto}
+      .item.active{background:#fff7e6;box-shadow:none;transform:none}
+      .phase-divider,.muted,.role{color:#444}
+      .time,.item.sermon .section-title,.preach-card strong{color:#92400e}
+      .item.prayerline .section-title,.preach-card.prayer-card strong{color:#075985}
+      .item.mama .section-title,.preach-card.mama-card strong{color:#9d174d}
+      .item.midnight .section-title{color:#b91c1c}
+    }
   </style>
 </head>
 <body>
@@ -48,57 +125,157 @@
     <header>
       <div style="font-size:14px;color:#f59e0b;font-weight:700;text-align:right;width:100%">
         Current Time: <span id='liveTime'></span><br>
-        <span style="color:#9aa4b2;font-size:13px">Countdown to Crossover: <span id='countdown'></span></span>
+        <span style="color:#9aa4b2;font-size:13px">Countdown to Crossover Night: <span id='countdown'></span></span>
       </div>
       <div class="brand">
         <div class="logo">JCR</div>
         <div>
-          <h1>Jesus Christ Redeems Global Ministries — AllNight and Crossover Services — "Empowered for Greater Works"</h1>
-          <p class="lead">Date: 31 December — Time: 19:30hrs — 05:00hrs | Venue: Kasisi Area, Off Zambezi Road, Lusaka</p>
+          <h1>Jesus Christ Redeems Global Ministries — Allnight &amp; Crossover Programmes</h1>
+          <p class="lead">Theme: “Empowered for Greater Works” | Venue: Kasisi Area, Off Zambezi Road, Lusaka | All programmes start 19:30</p>
         </div>
       </div>
       <div class="controls">
         <button id="printBtn">Print Programme</button>
+        <button id="previewCdBtn" class="ghost">▶ Rehearse Midnight Countdown</button>
         <button id="downloadBtn" class="ghost">Download HTML</button>
       </div>
     </header>
 
-    <main class="card cols" id="mainCard">
+    <!-- ===== PROGRAMME SWITCHER: TWO BUTTONS ===== -->
+    <nav class="switcher" aria-label="Programme selector">
+      <button class="prog-btn active" id="btnAllnight" onclick="switchProgram('allnight')">
+        <span class="btn-title">🌙 Allnight Programme</span>
+        <span class="btn-sub">Night Watch · 19:30 – 05:00 · Preaching 1 at 22:00 · Mama at 01:00 · Preaching 2: 02:00–04:00</span>
+      </button>
+      <button class="prog-btn" id="btnCrossover" onclick="switchProgram('crossover')">
+        <span class="btn-title">✨ Crossover Night</span>
+        <span class="btn-sub">31 December · 19:30 – 05:00 · 10-second countdown popup into the New Year at midnight</span>
+      </button>
+    </nav>
+
+    <!-- ===== THE FOUR ANCHOR MOMENTS AT A GLANCE ===== -->
+    <div class="preach-strip">
+      <div class="preach-card">
+        <strong>★ First Preaching — 22:00 – 23:30</strong><br>
+        1 hour 30 minutes of the Word.
+        <span class="muted">Both programmes, right after worship.</span>
+      </div>
+      <div class="preach-card prayer-card">
+        <strong>Prayerline / Mass Prayer — 23:30 – 00:00</strong><br>
+        30 minutes after the Word.
+        <span class="muted">Praying right up to midnight.</span>
+      </div>
+      <div class="preach-card mama-card">
+        <strong>★ Mama Ministers — 01:00 – 02:00</strong><br>
+        Mama steps on at 01:00 sharp.
+        <span class="muted">A dedicated hour of ministry.</span>
+      </div>
+      <div class="preach-card">
+        <strong>★ Second Preaching — 02:00 – 04:00</strong><br>
+        2 hours anchoring the morning watch.
+        <span class="muted">Then anointing &amp; sunrise thanksgiving to 05:00.</span>
+      </div>
+    </div>
+
+    <main class="card cols">
       <section>
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-          <div>
-            <strong>Service Flow (Timed)</strong>
-            <div class="print-note">This timeline is organised for excellence — each item shows suggested timings and role assignments.</div>
+
+        <!-- ================= ALLNIGHT PROGRAMME ================= -->
+        <div class="program-panel active" id="panel-allnight">
+          <div class="panel-head">
+            <div>
+              <strong style="font-size:17px">🌙 Allnight Programme — Night Watch</strong>
+              <div class="panel-note">Time: 19:30 – 05:00 · Flow of excellence: Opening → Praise &amp; Worship → First Preaching at 22:00 (1h30) → Prayerline (30 min to midnight) → Midnight Communion &amp; Warfare → Mama Ministers at 01:00 → Second Preaching 02:00–04:00 → Anointing &amp; Sunrise Sending.</div>
+            </div>
           </div>
+
+          <ul class="timeline">
+            <li class="phase-divider"><span class="phase-num">Phase 1</span> Opening the Night</li>
+            <li class="item" data-start="19:30" data-end="20:00"><div class="time">19:30 — 20:00</div><div class="content"><div class="section-title">Arrival, Seating &amp; Worship Atmosphere</div><div class="role muted">Ushers, Media, Intercessors — Soft worship, seating guidance, mic checks</div></div></li>
+            <li class="item" data-start="20:00" data-end="20:10"><div class="time">20:00 — 20:10</div><div class="content"><div class="section-title">Opening Prayer, Welcome &amp; House Guidelines</div><div class="role muted">MC &amp; Prayer Team — Opening the night; Scripture: Psalm 91</div></div></li>
+
+            <li class="phase-divider"><span class="phase-num">Phase 2</span> Praise, Worship &amp; Preparation</li>
+            <li class="item" data-start="20:10" data-end="20:40"><div class="time">20:10 — 20:40</div><div class="content"><div class="section-title">Praise &amp; Thanksgiving</div><div class="role muted">Praise Team — Songs of victory and thanksgiving</div></div></li>
+            <li class="item" data-start="20:40" data-end="21:10"><div class="time">20:40 — 21:10</div><div class="content"><div class="section-title">Deep Worship &amp; Surrender</div><div class="role muted">Worship Team — Soaking worship; congregation kneels</div></div></li>
+            <li class="item" data-start="21:10" data-end="21:30"><div class="time">21:10 — 21:30</div><div class="content"><div class="section-title">Corporate Repentance &amp; Cleansing</div><div class="role muted">Leadership — Altar call of repentance; Scripture: Psalm 51</div></div></li>
+            <li class="item" data-start="21:30" data-end="21:50"><div class="time">21:30 — 21:50</div><div class="content"><div class="section-title">Choir Ministration</div><div class="role muted">Choir — Songs preparing hearts for the Word</div></div></li>
+            <li class="item" data-start="21:50" data-end="22:00"><div class="time">21:50 — 22:00</div><div class="content"><div class="section-title">Scripture Reading &amp; Introduction of the Word</div><div class="role muted">MC — Reading of the anchor scripture; preacher escorted to the pulpit</div></div></li>
+
+            <li class="phase-divider"><span class="phase-num">Phase 3</span> First Preaching &amp; Prayerline</li>
+            <li class="item sermon" data-start="22:00" data-end="23:30"><div class="time">22:00 — 23:30</div><div class="content"><div class="section-title">★ First Preaching — “The Word for the Watch”<span class="badge">1 HR 30 MIN</span></div><div class="role muted">Bishop / Guest Minister — Full 1h30 delegated; ushers hold movement, media records</div></div></li>
+            <li class="item prayerline" data-start="23:30" data-end="00:00"><div class="time">23:30 — 00:00</div><div class="content"><div class="section-title">Prayerline / Mass Prayer<span class="badge blue">30 MIN</span></div><div class="role muted">Immediately after the Word — all ministers to the front; mass prayer carrying the night to midnight</div></div></li>
+
+            <li class="phase-divider"><span class="phase-num">Phase 4</span> The Midnight Watch</li>
+            <li class="item" data-start="00:00" data-end="00:30"><div class="time">00:00 — 00:30</div><div class="content"><div class="section-title">Holy Communion at the Midnight Watch</div><div class="role muted">Pastoral Team — Reverent communion at midnight; quiet worship</div></div></li>
+            <li class="item" data-start="00:30" data-end="00:50"><div class="time">00:30 — 00:50</div><div class="content"><div class="section-title">Deliverance &amp; Breakthrough Prayers</div><div class="role muted">Prayer Warriors — War prayers; breaking of stagnation</div></div></li>
+            <li class="item" data-start="00:50" data-end="01:00"><div class="time">00:50 — 01:00</div><div class="content"><div class="section-title">Choir Prelude — Preparing Hearts</div><div class="role muted">Choir — Soft ministration as the congregation prepares for Mama's ministry</div></div></li>
+
+            <li class="phase-divider"><span class="phase-num">Phase 5</span> Mama's Ministry</li>
+            <li class="item mama" data-start="01:00" data-end="02:00"><div class="time">01:00 — 02:00</div><div class="content"><div class="section-title">★ Mama Steps On to Minister<span class="badge pink">MAMA MINISTERS</span></div><div class="role muted">Mama — A dedicated hour of ministry; protocol team escorts her at 01:00 sharp</div></div></li>
+
+            <li class="phase-divider"><span class="phase-num">Phase 6</span> Second Preaching</li>
+            <li class="item sermon" data-start="02:00" data-end="04:00"><div class="time">02:00 — 04:00</div><div class="content"><div class="section-title">★ Second Preaching — “The Word for the New Season”<span class="badge">2 HOURS</span></div><div class="role muted">Bishop / Guest Minister — Anchors the morning watch of the night vigil</div></div></li>
+
+            <li class="phase-divider"><span class="phase-num">Phase 7</span> Ministry, Anointing &amp; Sending</li>
+            <li class="item" data-start="04:00" data-end="04:15"><div class="time">04:00 — 04:15</div><div class="content"><div class="section-title">Response &amp; Altar Call</div><div class="role muted">Pastoral Team — Ministry in response to the Word</div></div></li>
+            <li class="item" data-start="04:15" data-end="04:30"><div class="time">04:15 — 04:30</div><div class="content"><div class="section-title">Testimonies</div><div class="role muted">Testimony Team — Max 3 testimonies, 5 minutes each (pre-vetted)</div></div></li>
+            <li class="item" data-start="04:30" data-end="04:45"><div class="time">04:30 — 04:45</div><div class="content"><div class="section-title">Anointing Service</div><div class="role muted">Anointing Team — Anointing of hands, head &amp; feet</div></div></li>
+            <li class="item" data-start="04:45" data-end="04:55"><div class="time">04:45 — 04:55</div><div class="content"><div class="section-title">Thanksgiving Worship (Sunrise)</div><div class="role muted">Choir &amp; Worship Team — Gentle morning worship; offering of thanks</div></div></li>
+            <li class="item" data-start="04:55" data-end="05:00"><div class="time">04:55 — 05:00</div><div class="content"><div class="section-title">Closing Prayer &amp; Benediction</div><div class="role muted">Bishop &amp; Pastoral Team — Benediction; safe journey home</div></div></li>
+          </ul>
         </div>
 
-        <ul class="timeline" id="timeline">
-          <li class="item" data-start="19:30" data-end="20:00"><div class="time">19:30 — 20:00</div><div class="content"><div class="section-title">Arrival, Seating & Worship Atmosphere</div><div class="role muted">Ushers, Media, Intercessors — Soft instrumental worship, seating guidance, mic checks</div></div></li>
-          <li class="item" data-start="20:00" data-end="20:10"><div class="time">20:00 — 20:10</div><div class="content"><div class="section-title">Opening Protocols</div><div class="role muted">MC: Opening declaration, welcome address, house guidelines</div></div></li>
-          <li class="item" data-start="20:10" data-end="20:40"><div class="time">20:10 — 20:40</div><div class="content"><div class="section-title">Intense Praise Session</div><div class="role muted">Praise Team — Songs of victory and thanksgiving</div></div></li>
-          <li class="item" data-start="20:40" data-end="21:30"><div class="time">20:40 — 21:30</div><div class="content"><div class="section-title">Deep Worship & Surrender</div><div class="role muted">Worship Team — Soaking, prophetic moments, congregation kneels</div></div></li>
-          <li class="item" data-start="21:30" data-end="22:00"><div class="time">21:30 — 22:00</div><div class="content"><div class="section-title">Corporate Repentance & Cleansing</div><div class="role muted">Bishop & Leadership — Altar call, Scriptures (Psalm 51)</div></div></li>
-          <li class="item" data-start="22:00" data-end="22:40"><div class="time">22:00 — 22:40</div><div class="content"><div class="section-title">Intercession: National & Church Prayer Pillars</div><div class="role muted">Intercessory Team — Revival, Souls, Families, Zambia</div></div></li>
-          <li class="item" data-start="22:40" data-end="23:10"><div class="time">22:40 — 23:10</div><div class="content"><div class="section-title">Testimonies</div><div class="role muted">Selected Testimony Team — 5 testimonies, 5 minutes each</div></div></li>
-          <li class="item" data-start="23:10" data-end="23:40"><div class="time">23:10 — 23:40</div><div class="content"><div class="section-title">Prophetic Praise Explosion</div><div class="role muted">Praise & Dance Team — Drums, flags, celebration</div></div></li>
-          <li class="item" data-start="23:40" data-end="00:10"><div class="time">23:40 — 00:10</div><div class="content"><div class="section-title">Prophetic Declarations & Countdown</div><div class="role muted">MC & Bishop — Countdown to midnight, declaration, anointing</div></div></li>
-          <li class="item" data-start="00:10" data-end="00:40"><div class="time">00:10 — 00:40</div><div class="content"><div class="section-title">Holy Communion & Thanksgiving</div><div class="role muted">Pastoral Team — Quiet worship, reverent communion</div></div></li>
-          <li class="item" data-start="00:40" data-end="01:20"><div class="time">00:40 — 01:20</div><div class="content"><div class="section-title">Prophetic Ministration & Personal Words</div><div class="role muted">Bishop & Ministers — Impartation, altar protocol</div></div></li>
-          <li class="item" data-start="01:20" data-end="01:50"><div class="time">01:20 — 01:50</div><div class="content"><div class="section-title">Vision Declaration for 2025</div><div class="role muted">Leadership — Reading of annual theme, commitments, projects</div></div></li>
-          <li class="item" data-start="01:50" data-end="02:30"><div class="time">01:50 — 02:30</div><div class="content"><div class="section-title">Deliverance & Breakthrough Prayer</div><div class="role muted">Deliverance Team — War prayers, breaking of stagnation</div></div></li>
-          <li class="item" data-start="02:30" data-end="03:00"><div class="time">02:30 — 03:00</div><div class="content"><div class="section-title">Choir Ministration & Worship</div><div class="role muted">Choir — Healing & restoration songs</div></div></li>
-          <li class="item" data-start="03:00" data-end="03:40"><div class="time">03:00 — 03:40</div><div class="content"><div class="section-title">Intercession Round 2 (Personal Breakthrough)</div><div class="role muted">Intercessors — Finances, Health, Protection, Activation</div></div></li>
-          <li class="item" data-start="03:40" data-end="04:00"><div class="time">03:40 — 04:00</div><div class="content"><div class="section-title">Anointing Service</div><div class="role muted">Anointing Team — Anoint hands, head & feet</div></div></li>
-          <li class="item" data-start="04:00" data-end="04:30"><div class="time">04:00 — 04:30</div><div class="content"><div class="section-title">Thanksgiving Worship (Sunrise)</div><div class="role muted">Worship Team & Choir — Gentle morning worship</div></div></li>
-          <li class="item" data-start="04:30" data-end="04:55"><div class="time">04:30 — 04:55</div><div class="content"><div class="section-title">Final Exhortation & Blessing</div><div class="role muted">Bishop — Charge & scripture (Isaiah 60)</div></div></li>
-          <li class="item" data-start="04:55" data-end="05:00"><div class="time">04:55 — 05:00</div><div class="content"><div class="section-title">Closing Prayer & Benediction</div><div class="role muted">Pastoral Team & Bishop — Final benediction</div></div></li>
-        </ul>
+        <!-- ================= CROSSOVER NIGHT ================= -->
+        <div class="program-panel" id="panel-crossover">
+          <div class="panel-head">
+            <div>
+              <strong style="font-size:17px">✨ Crossover Night — 31 December</strong>
+              <div class="panel-note">Time: 19:30 – 05:00 · Flow of excellence: Gathering → Praise &amp; Worship → First Preaching at 22:00 (1h30) → Prayerline to Midnight → ★ 10-Second Countdown Popup into the New Year → Declarations &amp; Vision → Mama Ministers at 01:00 → Second Preaching 02:00–04:00 → Communion &amp; Sunrise Sending.</div>
+            </div>
+          </div>
+
+          <ul class="timeline">
+            <li class="phase-divider"><span class="phase-num">Phase 1</span> Gathering</li>
+            <li class="item" data-start="19:30" data-end="20:00"><div class="time">19:30 — 20:00</div><div class="content"><div class="section-title">Arrival, Seating &amp; Worship Atmosphere</div><div class="role muted">Ushers, Media, Intercessors — Soft instrumental worship, seating guidance, mic checks</div></div></li>
+            <li class="item" data-start="20:00" data-end="20:10"><div class="time">20:00 — 20:10</div><div class="content"><div class="section-title">Opening Protocols</div><div class="role muted">MC — Opening declaration, welcome address, house guidelines</div></div></li>
+
+            <li class="phase-divider"><span class="phase-num">Phase 2</span> Praise, Worship &amp; Preparation</li>
+            <li class="item" data-start="20:10" data-end="20:40"><div class="time">20:10 — 20:40</div><div class="content"><div class="section-title">Intense Praise Session</div><div class="role muted">Praise Team — Songs of victory and thanksgiving for the year gone by</div></div></li>
+            <li class="item" data-start="20:40" data-end="21:10"><div class="time">20:40 — 21:10</div><div class="content"><div class="section-title">Deep Worship &amp; Surrender</div><div class="role muted">Worship Team — Soaking, prophetic moments, congregation kneels</div></div></li>
+            <li class="item" data-start="21:10" data-end="21:30"><div class="time">21:10 — 21:30</div><div class="content"><div class="section-title">Corporate Repentance &amp; Cleansing</div><div class="role muted">Bishop &amp; Leadership — Altar call of repentance; Scripture: Psalm 51</div></div></li>
+            <li class="item" data-start="21:30" data-end="21:50"><div class="time">21:30 — 21:50</div><div class="content"><div class="section-title">Choir Ministration</div><div class="role muted">Choir — Songs preparing hearts for the Word</div></div></li>
+            <li class="item" data-start="21:50" data-end="22:00"><div class="time">21:50 — 22:00</div><div class="content"><div class="section-title">Scripture Reading &amp; Introduction of the Word</div><div class="role muted">MC — Reading of the anchor scripture; preacher escorted to the pulpit</div></div></li>
+
+            <li class="phase-divider"><span class="phase-num">Phase 3</span> First Preaching &amp; Prayerline to Midnight</li>
+            <li class="item sermon" data-start="22:00" data-end="23:30"><div class="time">22:00 — 23:30</div><div class="content"><div class="section-title">★ First Preaching — “The Word That Carries Us Into the New Year”<span class="badge">1 HR 30 MIN</span></div><div class="role muted">Bishop / Guest Minister — Full 1h30 delegated; ushers hold movement, media records</div></div></li>
+            <li class="item prayerline" data-start="23:30" data-end="00:00"><div class="time">23:30 — 00:00</div><div class="content"><div class="section-title">Prayerline / Mass Prayer — Praying Into the New Year<span class="badge blue">30 MIN</span></div><div class="role muted">All ministers to the front; mass prayer rises until midnight — ending exactly as the countdown begins</div></div></li>
+
+            <li class="phase-divider"><span class="phase-num">Phase 4</span> The Midnight Crossover</li>
+            <li class="item midnight" data-start="00:00" data-end="00:10"><div class="time">00:00 — 00:10</div><div class="content"><div class="section-title">★ 10-Second Countdown Popup → Praise Explosion Into the New Year<span class="badge red">CROSSOVER MOMENT</span></div><div class="role muted">At 23:59:50 the full-screen popup counts 10… 9… 8… live on screen &amp; projector — at 00:00: “HAPPY NEW YEAR!” with shouting, drums &amp; praise</div></div></li>
+            <li class="item" data-start="00:10" data-end="00:30"><div class="time">00:10 — 00:30</div><div class="content"><div class="section-title">New Year Prophetic Declarations &amp; Anointing</div><div class="role muted">Bishop — Declarations over the congregation; fresh anointing oil</div></div></li>
+            <li class="item" data-start="00:30" data-end="00:50"><div class="time">00:30 — 00:50</div><div class="content"><div class="section-title">Vision Declaration for the New Year</div><div class="role muted">Leadership — Reading of annual theme, commitments &amp; projects ahead</div></div></li>
+            <li class="item" data-start="00:50" data-end="01:00"><div class="time">00:50 — 01:00</div><div class="content"><div class="section-title">Consecration Worship — Preparing Hearts</div><div class="role muted">Worship Team — Soft ministration as the congregation prepares for Mama's ministry</div></div></li>
+
+            <li class="phase-divider"><span class="phase-num">Phase 5</span> Mama's Ministry</li>
+            <li class="item mama" data-start="01:00" data-end="02:00"><div class="time">01:00 — 02:00</div><div class="content"><div class="section-title">★ Mama Steps On to Minister<span class="badge pink">MAMA MINISTERS</span></div><div class="role muted">Mama — A dedicated hour of ministry over the New Year congregation; protocol team escorts her at 01:00 sharp</div></div></li>
+
+            <li class="phase-divider"><span class="phase-num">Phase 6</span> Second Preaching</li>
+            <li class="item sermon" data-start="02:00" data-end="04:00"><div class="time">02:00 — 04:00</div><div class="content"><div class="section-title">★ Second Preaching — “Empowered for Greater Works in the New Year”<span class="badge">2 HOURS</span></div><div class="role muted">Bishop / Guest Minister — Anchors the morning watch of the crossover night</div></div></li>
+
+            <li class="phase-divider"><span class="phase-num">Phase 7</span> Communion &amp; Sunrise Sending</li>
+            <li class="item" data-start="04:00" data-end="04:20"><div class="time">04:00 — 04:20</div><div class="content"><div class="section-title">Response &amp; Intercession Round 2 — Personal Breakthrough</div><div class="role muted">Intercessors — Finances, health, protection, activation for the New Year</div></div></li>
+            <li class="item" data-start="04:20" data-end="04:35"><div class="time">04:20 — 04:35</div><div class="content"><div class="section-title">Holy Communion &amp; Thanksgiving</div><div class="role muted">Pastoral Team — Quiet worship, reverent communion in the New Year</div></div></li>
+            <li class="item" data-start="04:35" data-end="04:45"><div class="time">04:35 — 04:45</div><div class="content"><div class="section-title">Anointing Service</div><div class="role muted">Anointing Team — Anoint hands, head &amp; feet for the New Year</div></div></li>
+            <li class="item" data-start="04:45" data-end="04:55"><div class="time">04:45 — 04:55</div><div class="content"><div class="section-title">Thanksgiving Worship (Sunrise)</div><div class="role muted">Worship Team &amp; Choir — Gentle morning worship</div></div></li>
+            <li class="item" data-start="04:55" data-end="05:00"><div class="time">04:55 — 05:00</div><div class="content"><div class="section-title">Final Exhortation &amp; Benediction</div><div class="role muted">Bishop — Charge &amp; scripture (Isaiah 60); final benediction; safe journey home</div></div></li>
+          </ul>
+        </div>
       </section>
 
       <aside>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <strong>Roles & Departments</strong>
-          <small class="muted">Assigned responsibilities for excellence</small>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap">
+          <strong>Roles &amp; Departments</strong>
+          <small class="muted">Same teams serve both programmes</small>
         </div>
 
         <table class="roles-table">
@@ -106,15 +283,21 @@
             <tr><th>Department</th><th>Lead / Notes</th></tr>
           </thead>
           <tbody>
-            <tr><td>Ushers</td><td>Chief Usher — Maintain reverence, seating plan</td></tr>
-            <tr><td>Media</td><td>Media Lead — Countdown slide, livestream, sound checks</td></tr>
-            <tr><td>Security</td><td>Sec Lead — Perimeter, entrance control</td></tr>
-            <tr><td>Intercessors</td><td>Prayer Lead — Silent perimeter prayer & altar control</td></tr>
-            <tr><td>Worship Team</td><td>Worship Lead — Dress code white/gold, set-list & transitions</td></tr>
-            <tr><td>Testimony Team</td><td>Max 5 testimonies; 5 minutes each — pre-vetted</td></tr>
-            <tr><td>Hospitality</td><td>Hot water, light refreshments post-service</td></tr>
+            <tr><td>Ushers</td><td>Chief Usher — Reverence, seating plan, movement held during preachings</td></tr>
+            <tr><td>Media</td><td>Countdown popup on projector at 23:59:50 (Crossover); livestream, sound checks, sermon recording — rehearse with the ▶ button</td></tr>
+            <tr><td>Security</td><td>Security Lead — Perimeter, entrance control, night vigilance</td></tr>
+            <tr><td>Intercessors</td><td>Prayer Lead — Silent perimeter prayer, altar control &amp; leading the prayerline</td></tr>
+            <tr><td>Worship Team</td><td>Worship Lead — Dress code white/gold, set-list &amp; transitions</td></tr>
+            <tr><td>Preaching Ministry</td><td>Preaching 1: 22:00 for 1h30; Preaching 2: 02:00–04:00 — notes &amp; timing agreed in advance</td></tr>
+            <tr><td>Prayerline Team</td><td>23:30 — ministers assembled &amp; mic'd in advance; mass-prayer points prepared to carry into midnight</td></tr>
+            <tr><td>Mama's Ministry</td><td>Protocol escorts Mama on at 01:00 sharp; special seat, mic &amp; water ready</td></tr>
+            <tr><td>MC / Protocol</td><td>Keeps the flow on time; leads the shout of praise at 00:00; transitions every segment with excellence</td></tr>
+            <tr><td>Testimony Team</td><td>Max 3 testimonies; 5 minutes each — pre-vetted</td></tr>
+            <tr><td>Hospitality</td><td>Hot water &amp; light refreshments after the prayerline / post-service</td></tr>
           </tbody>
         </table>
+
+        <p class="print-note">★ Gold = preachings (22:00–23:30 &amp; 02:00–04:00) · Blue = Prayerline (23:30–00:00) · Rose = Mama (01:00–02:00) · Red dashed = the midnight countdown moment on Crossover Night.</p>
       </aside>
     </main>
 
@@ -124,11 +307,31 @@
     </footer>
   </div>
 
+  <!-- ===== MIDNIGHT COUNTDOWN POPUP OVERLAY ===== -->
+  <div id="countdownOverlay" class="overlay" hidden>
+    <div id="confetti"></div>
+    <button id="cdClose" class="cd-close">✕ Close</button>
+    <div class="overlay-inner">
+      <div id="cdNumber" class="cd-number">10</div>
+      <div id="cdMessage" class="cd-message hidden">🎉 HAPPY NEW YEAR! 🎉</div>
+      <div id="cdSub" class="cd-sub">Empowered for Greater Works</div>
+    </div>
+  </div>
+
   <script>
     // populate created date
     document.getElementById('createdDate').textContent = new Date().toLocaleString();
 
-    // print button
+    // ===== programme switcher (two buttons) =====
+    function switchProgram(name){
+      document.querySelectorAll('.program-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.prog-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('panel-' + name).classList.add('active');
+      document.getElementById(name === 'allnight' ? 'btnAllnight' : 'btnCrossover').classList.add('active');
+      highlightSegment();
+    }
+
+    // print button — prints whichever programme is currently open
     document.getElementById('printBtn').addEventListener('click', function(){window.print()});
 
     // download HTML button
@@ -137,57 +340,131 @@
       const blob = new Blob([content], {type: 'text/html'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url; a.download = 'crossover-programme.html';
+      a.href = url; a.download = 'allnight-crossover-programme.html';
       document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    // ===== MIDNIGHT COUNTDOWN POPUP (10 seconds into the New Year) =====
+    let cdTimer = null;
+    let cdAutoFired = false;
+
+    function popNumber(el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+
+    function launchConfetti(){
+      const box = document.getElementById('confetti');
+      box.innerHTML = '';
+      const emojis = ['🎉','✨','🙌','🎊','⭐','🔥'];
+      for(let i = 0; i < 40; i++){
+        const s = document.createElement('span');
+        s.className = 'confetti-piece';
+        s.textContent = emojis[i % emojis.length];
+        s.style.left = Math.random() * 100 + '%';
+        s.style.animationDelay = (Math.random() * 2.2) + 's';
+        s.style.fontSize = (16 + Math.random() * 30) + 'px';
+        box.appendChild(s);
+      }
+    }
+
+    // startFrom = number to count down from (10 = full countdown; used for late page loads)
+    function startCountdown(startFrom){
+      const overlay = document.getElementById('countdownOverlay');
+      const num = document.getElementById('cdNumber');
+      const msg = document.getElementById('cdMessage');
+      const sub = document.getElementById('cdSub');
+      if(!overlay.hidden) return;              // already running
+      if(cdTimer) clearInterval(cdTimer);
+
+      overlay.hidden = false;
+      document.getElementById('confetti').innerHTML = '';
+      msg.classList.add('hidden');
+      num.classList.remove('hidden');
+      let n = startFrom;
+      num.textContent = n;
+      popNumber(num);
+
+      cdTimer = setInterval(() => {
+        n--;
+        if(n > 0){
+          num.textContent = n;
+          popNumber(num);
+        } else {
+          clearInterval(cdTimer); cdTimer = null;
+          num.classList.add('hidden');
+          msg.classList.remove('hidden');
+          sub.textContent = 'Empowered for Greater Works — ' + (new Date().getFullYear() + 1);
+          launchConfetti();
+        }
+      }, 1000);
+    }
+
+    // AUTO-TRIGGER: fires on 31 December at 23:59:50 → counts 10..1 into midnight
+    function checkAutoCountdown(){
+      const now = new Date();
+      if(cdAutoFired || !document.getElementById('countdownOverlay').hidden) return;
+      if(now.getMonth() === 11 && now.getDate() === 31 &&
+         now.getHours() === 23 && now.getMinutes() === 59 && now.getSeconds() >= 50){
+        cdAutoFired = true;
+        startCountdown(60 - now.getSeconds());   // 23:59:50 → 10, 23:59:55 → 5 …
+      }
+    }
+
+    // REHEARSAL button — media team can preview the popup anytime
+    document.getElementById('previewCdBtn').addEventListener('click', () => startCountdown(10));
+
+    document.getElementById('cdClose').addEventListener('click', () => {
+      if(cdTimer){ clearInterval(cdTimer); cdTimer = null; }
+      document.getElementById('countdownOverlay').hidden = true;
     });
 
     // live time display
     setInterval(() => { document.getElementById('liveTime').textContent = new Date().toLocaleTimeString(); }, 1000);
+    document.getElementById('liveTime').textContent = new Date().toLocaleTimeString();
 
-    // countdown with days
+    // countdown to Crossover Night (31 Dec, 19:30)
     function updateCountdown() {
       const now = new Date();
-      let year = now.getFullYear();
-      let serviceStart = new Date(year,11,31,19,30,0); // 31 Dec 19:30
-      if(now > serviceStart) serviceStart.setFullYear(year+1);
+      let serviceStart = new Date(now.getFullYear(), 11, 31, 19, 30, 0);
+      if (now > serviceStart) serviceStart.setFullYear(now.getFullYear() + 1);
 
       let diff = serviceStart - now;
-      if(diff <=0){ document.getElementById('countdown').textContent="00d 00h 00m 00s"; return;}
+      if (diff <= 0) { document.getElementById('countdown').textContent = "00d 00h 00m 00s"; return; }
 
-      const days = Math.floor(diff/(1000*60*60*24));
-      diff -= days*24*60*60*1000;
-      const hrs = Math.floor(diff/(1000*60*60));
-      diff -= hrs*60*60*1000;
-      const mins = Math.floor(diff/(1000*60));
-      diff -= mins*60*1000;
-      const secs = Math.floor(diff/1000);
+      const days = Math.floor(diff / (1000*60*60*24)); diff -= days*24*60*60*1000;
+      const hrs  = Math.floor(diff / (1000*60*60));    diff -= hrs*60*60*1000;
+      const mins = Math.floor(diff / (1000*60));       diff -= mins*60*1000;
+      const secs = Math.floor(diff / 1000);
 
-      document.getElementById('countdown').textContent = 
+      document.getElementById('countdown').textContent =
         `${days.toString().padStart(2,'0')}d ${hrs.toString().padStart(2,'0')}h ${mins.toString().padStart(2,'0')}m ${secs.toString().padStart(2,'0')}s`;
     }
 
-    // highlight current segment
+    // highlight the segment that is LIVE right now (only inside the open programme)
     function highlightSegment(){
       const now = new Date();
       const currentMinutes = now.getHours()*60 + now.getMinutes();
-      document.querySelectorAll('.item').forEach(segment=>{
-        let [startH,startM] = segment.dataset.start.split(':').map(Number);
-        let [endH,endM] = segment.dataset.end.split(':').map(Number);
-        let startMinutes = startH*60 + startM;
-        let endMinutes = endH*60 + endM;
+      const activePanel = document.querySelector('.program-panel.active');
+      if(!activePanel) return;
+      activePanel.querySelectorAll('.item').forEach(segment=>{
+        const [startH,startM] = segment.dataset.start.split(':').map(Number);
+        const [endH,endM]   = segment.dataset.end.split(':').map(Number);
+        const startMinutes = startH*60 + startM;
+        const endMinutes   = endH*60 + endM;
 
+        let isLive;
         if(endMinutes < startMinutes){ // crosses midnight
-          if(currentMinutes >= startMinutes || currentMinutes < endMinutes){ segment.classList.add('active');}
-          else{ segment.classList.remove('active');}
-        } else{
-          if(currentMinutes >= startMinutes && currentMinutes < endMinutes){ segment.classList.add('active');}
-          else{ segment.classList.remove('active');}
+          isLive = currentMinutes >= startMinutes || currentMinutes < endMinutes;
+        } else if(endMinutes === 0 && startMinutes > 0){ // ends exactly at midnight
+          isLive = currentMinutes >= startMinutes;
+        } else {
+          isLive = currentMinutes >= startMinutes && currentMinutes < endMinutes;
         }
+        segment.classList.toggle('active', isLive);
       });
     }
 
-    setInterval(updateCountdown,1000);
-    setInterval(highlightSegment,30000);
+    setInterval(updateCountdown, 1000);
+    setInterval(highlightSegment, 10000);
+    setInterval(checkAutoCountdown, 500);
     updateCountdown();
     highlightSegment();
   </script>
