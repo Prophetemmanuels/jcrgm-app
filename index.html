@@ -807,7 +807,7 @@ animation:wgPulse 1.8s ease-in-out infinite;}
     <button class="tab-indigo" onclick="openBiblePlan()">📑 Full Bible Teaching Plan</button>
     <button class="tab-slate" onclick="window.location.href='fasting-programme.html'">🕊 Fasting Programme</button>
     <button class="tab-teal" onclick="openPrayerGuide()">🙏 Monthly Prayer Guide</button>
-    <button class="whatsapp" onclick="showPrayerForm()">💌 Prayer Petition</button>
+    <a href="prayer.html"><button class="whatsapp">💌 Prayer Petition</button></a>
     <button onclick="openCrossover()" class="games">🌙 Allnight and Crossover Programmes</button>
   </div>
 
@@ -831,22 +831,6 @@ animation:wgPulse 1.8s ease-in-out infinite;}
 <div id="scriptureBox">
 📖 <strong>Scripture Reading</strong><br>
 <span id="scriptureText"></span>
-</div>
-
-<div id="prayerFormContainer" class="hidden-section">
-<h2>Send Your Prayer Petition</h2>
-<form id="prayerForm">
-  <label>Name:</label>
-  <input type="text" id="prayerName" placeholder="Your Name" required>
-
-  <label>Location:</label>
-  <input type="text" id="prayerLocation" placeholder="City/Area" required>
-
-  <label>Prayer Point:</label>
-  <textarea id="prayerPoint" placeholder="Type your prayer request here" required></textarea>
-
-  <button type="button" class="whatsapp" onclick="sendPrayer()">📲 Send via WhatsApp</button>
-</form>
 </div>
 
 <!-- Tithes -->
@@ -1158,31 +1142,6 @@ function update(){
 
 update();
 setInterval(update,1000);
-
-function showPrayerForm() {
-    document.getElementById('prayerFormContainer').style.display = 'block';
-    document.getElementById('prayerFormContainer').scrollIntoView({behavior:'smooth'});
-}
-
-function sendPrayer() {
-    const name = document.getElementById('prayerName').value.trim();
-    const location = document.getElementById('prayerLocation').value.trim();
-    const prayer = document.getElementById('prayerPoint').value.trim();
-
-    if(!name || !location || !prayer){
-        alert("Please fill in all fields.");
-        return;
-    }
-
-    const msg = `🙏 Prayer Petition\n\nName: ${name}\nLocation: ${location}\nPrayer Point: ${prayer}`;
-    const whatsappNumber = "260979554970"; // Church WhatsApp
-    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
-
-    window.open(url, "_blank");
-
-    // Optional: Clear form after sending
-    document.getElementById('prayerForm').reset();
-}
 
 /* ============================================================
    ✨ GOLD DUST FLARE ENGINE — floating embers & sparkles
