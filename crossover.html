@@ -43,6 +43,7 @@
     /* ---- programme panels ---- */
     .program-panel{display:none}
     .program-panel.active{display:block}
+    .title-one{display:none}
     .panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:6px}
     .panel-note{font-size:13px;color:var(--muted);max-width:680px}
 
@@ -112,8 +113,13 @@
       .clockline,.controls,.switcher,#countdownOverlay,button{display:none !important}
       .container{max-width:100%}
       .card{border:1px solid #ccc;background:#fff !important}
-      .program-panel{display:block !important;page-break-before:always}
-      .program-panel:first-of-type{page-break-before:auto}
+      /* print ONLY the programme that is open — never both */
+      .program-panel{display:none !important}
+      .program-panel.active{display:block !important;page-break-before:auto}
+      .title-both{display:none !important}
+      .title-one{display:none !important}
+      body:has(#panel-allnight.active) .title-allnight{display:inline !important}
+      body:has(#panel-crossover.active) .title-crossover{display:inline !important}
       .item,.preach-card{background:#fff !important;break-inside:avoid;page-break-inside:avoid}
       .item.active{transform:none}
       .item.sermon{border:1px solid #b45309;background:#fffbeb !important}
@@ -140,14 +146,14 @@
       <div class="brand">
         <div class="logo">JCR</div>
         <div>
-          <h1>Jesus Christ Redeems Global Ministries — Allnight &amp; Crossover Programmes</h1>
+          <h1 id="pageTitle"><span class="title-both">Jesus Christ Redeems Global Ministries — Allnight &amp; Crossover Programmes</span><span class="title-one title-allnight">Jesus Christ Redeems Global Ministries — Allnight Programme</span><span class="title-one title-crossover">Jesus Christ Redeems Global Ministries — Crossover Night</span></h1>
           <p class="lead">Theme: “Empowered for Greater Works” | Venue: Kasisi Area, Off Zambezi Road, Lusaka | All programmes start 19:30</p>
         </div>
       </div>
       <div class="controls">
-        <button id="printBtn">Print Programme</button>
+        <button id="printBtn">Print Allnight Programme</button>
         <button id="previewCdBtn" class="ghost">▶ Rehearse Midnight Countdown</button>
-        <button id="downloadBtn" class="ghost">Download HTML</button>
+        <button id="downloadBtn" class="ghost">Download Allnight Programme</button>
       </div>
     </header>
 
@@ -168,7 +174,7 @@
       <div class="preach-card">
         <strong>★ First Preaching — 22:00 – 23:30</strong><br>
         1 hour 30 minutes of the Word.
-        <span class="muted">Both programmes, right after worship.</span>
+        <span class="muted">Right after worship.</span>
       </div>
       <div class="preach-card prayer-card">
         <strong>Prayerline / Mass Prayer — 23:30 – 00:00</strong><br>
@@ -285,7 +291,7 @@
       <aside>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap">
           <strong>Roles &amp; Departments</strong>
-          <small class="muted">Same teams serve both programmes</small>
+          <small class="muted" id="teamsNote">Teams on duty for the open programme</small>
         </div>
 
         <table class="roles-table">
@@ -314,7 +320,7 @@
     <footer>
       <div>Prepared for: Jesus Christ Redeems Global Ministries — Kasisi Area</div>
       <div style="margin-top:6px">Program created: <span id="createdDate"></span></div>
-      <div style="margin-top:6px" class="print-note">Tip: if Print or Download seems blank inside a preview window, download/open this file directly in Chrome or Edge — both buttons work perfectly there.</div>
+      <div style="margin-top:6px" class="print-note">Print and Download save only the programme that is open — Allnight or Crossover, never both. If the output looks blank inside a preview window, open this file directly in Chrome or Edge.</div>
     </footer>
   </div>
 
@@ -333,33 +339,91 @@
     // populate created date
     document.getElementById('createdDate').textContent = new Date().toLocaleString();
 
+    // ===== which programme is open (print & download use only this one) =====
+    function currentProgramme(){
+      const panels = document.querySelectorAll('.program-panel');
+      const active = document.querySelector('.program-panel.active') || panels[0];
+      const crossover = active && active.id === 'panel-crossover';
+      return crossover
+        ? {key:'crossover', label:'Crossover Night', file:'crossover-night-programme.html'}
+        : {key:'allnight', label:'Allnight Programme', file:'allnight-programme.html'};
+    }
+
+    function refreshActionButtons(){
+      const p = currentProgramme();
+      const printBtn = document.getElementById('printBtn');
+      const downloadBtn = document.getElementById('downloadBtn');
+      if(printBtn) printBtn.textContent = 'Print ' + p.label;
+      if(downloadBtn) downloadBtn.textContent = 'Download ' + p.label;
+      const note = document.getElementById('teamsNote');
+      if(note) note.textContent = 'Teams on duty — ' + p.label;
+    }
+
     // ===== programme switcher (two buttons) =====
     function switchProgram(name){
+      const panel = document.getElementById('panel-' + name);
+      if(!panel) return;
       document.querySelectorAll('.program-panel').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.prog-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById('panel-' + name).classList.add('active');
-      document.getElementById(name === 'allnight' ? 'btnAllnight' : 'btnCrossover').classList.add('active');
+      panel.classList.add('active');
+      const btn = document.getElementById(name === 'allnight' ? 'btnAllnight' : 'btnCrossover');
+      if(btn) btn.classList.add('active');
+      refreshActionButtons();
       highlightSegment();
     }
 
-    // print button — prints whichever programme is currently open
+    // printed page heading follows the open programme (browser header/footer uses document.title)
+    let titleBeforePrint = document.title;
+    window.addEventListener('beforeprint', () => {
+      const p = currentProgramme();
+      titleBeforePrint = document.title;
+      document.title = p.label + ' — Jesus Christ Redeems Global Ministries';
+    });
+    window.addEventListener('afterprint', () => {
+      document.title = titleBeforePrint;
+    });
+
+    // print button — prints ONLY the programme that is open
     document.getElementById('printBtn').addEventListener('click', function(){window.print()});
 
-    // download HTML button — fixed: delayed revoke so the file is never saved empty,
-    // plus feedback and a clear message if the preview environment blocks downloads
+    // download HTML — saves ONLY the open programme (the other panel is removed from the file)
     document.getElementById('downloadBtn').addEventListener('click', function(){
       const btn = this;
+      const p = currentProgramme();
       try{
-        const content = '<!doctype html>' + document.documentElement.innerHTML;
-        const blob = new Blob([content], {type: 'text/html'});
+        const clone = document.documentElement.cloneNode(true);
+        clone.querySelectorAll('.program-panel').forEach(panel => {
+          if(panel.id !== 'panel-' + p.key) panel.remove();
+          else panel.classList.add('active');
+        });
+        const sw = clone.querySelector('.switcher');
+        if(sw) sw.remove();
+        const h1 = clone.querySelector('#pageTitle');
+        if(h1) h1.textContent = 'Jesus Christ Redeems Global Ministries — ' + p.label;
+        const title = clone.querySelector('title');
+        if(title) title.textContent = p.label + ' — Jesus Christ Redeems Global Ministries';
+        const lead = clone.querySelector('p.lead');
+        if(lead) lead.textContent = 'Theme: “Empowered for Greater Works” | Venue: Kasisi Area, Off Zambezi Road, Lusaka | ' + p.label + ' · 19:30 – 05:00';
+        const cPrint = clone.querySelector('#printBtn');
+        const cDown = clone.querySelector('#downloadBtn');
+        if(cPrint) cPrint.textContent = 'Print ' + p.label;
+        if(cDown) cDown.textContent = 'Download ' + p.label;
+        const teams = clone.querySelector('#teamsNote');
+        if(teams) teams.textContent = 'Teams on duty — ' + p.label;
+        if(p.key === 'allnight'){
+          const preview = clone.querySelector('#previewCdBtn');
+          if(preview) preview.remove();
+        }
+
+        const content = '<!doctype html>\n' + clone.outerHTML;
+        const blob = new Blob([content], {type: 'text/html;charset=utf-8'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url; a.download = 'allnight-crossover-programme.html';
+        a.href = url; a.download = p.file;
         document.body.appendChild(a); a.click(); a.remove();
-        // only release the blob after the browser has had time to save it
         setTimeout(() => URL.revokeObjectURL(url), 30000);
-        btn.textContent = 'Download started ✓';
-        setTimeout(() => { btn.textContent = 'Download HTML'; }, 2500);
+        btn.textContent = p.label + ' saved ✓';
+        setTimeout(() => { btn.textContent = 'Download ' + p.label; }, 2500);
       }catch(e){
         btn.textContent = 'Blocked — open in browser to download';
       }
@@ -420,8 +484,11 @@
 
     // AUTO-TRIGGER: fires on 31 December at 23:59:50 → counts 10..1 into midnight
     function checkAutoCountdown(){
+      const overlay = document.getElementById('countdownOverlay');
+      // only on a page that still contains Crossover Night
+      if(!overlay || !document.getElementById('panel-crossover')) return;
       const now = new Date();
-      if(cdAutoFired || !document.getElementById('countdownOverlay').hidden) return;
+      if(cdAutoFired || !overlay.hidden) return;
       if(now.getMonth() === 11 && now.getDate() === 31 &&
          now.getHours() === 23 && now.getMinutes() === 59 && now.getSeconds() >= 50){
         cdAutoFired = true;
@@ -430,11 +497,14 @@
     }
 
     // REHEARSAL button — media team can preview the popup anytime
-    document.getElementById('previewCdBtn').addEventListener('click', () => startCountdown(10));
+    const previewCdBtn = document.getElementById('previewCdBtn');
+    if(previewCdBtn) previewCdBtn.addEventListener('click', () => startCountdown(10));
 
-    document.getElementById('cdClose').addEventListener('click', () => {
+    const cdClose = document.getElementById('cdClose');
+    if(cdClose) cdClose.addEventListener('click', () => {
       if(cdTimer){ clearInterval(cdTimer); cdTimer = null; }
-      document.getElementById('countdownOverlay').hidden = true;
+      const overlay = document.getElementById('countdownOverlay');
+      if(overlay) overlay.hidden = true;
     });
 
     // live time display
