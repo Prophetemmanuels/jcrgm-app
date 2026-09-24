@@ -388,7 +388,52 @@ button:active{transform:translateY(0) scale(.98);}
   opacity:.95;
   text-shadow:0 0 10px rgba(255,215,0,.35);
 }
-.nav-group button{font-size:13.5px; padding:9px 16px;}
+/* ----------  LAUNCHPAD TILES (world-class nav) ---------- */
+.nav-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:10px;padding:4px 2px 8px;}
+.tile{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:13px;
+  background:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.045));
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 4px 14px rgba(4,10,28,.28);
+  color:#fff;text-decoration:none;cursor:pointer;font-family:inherit;
+  transition:transform .22s cubic-bezier(.2,.8,.25,1),box-shadow .22s,border-color .22s,background .22s;
+  position:relative;overflow:hidden;margin:0;min-height:58px;text-align:left;line-height:1.2;}
+.tile::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 32%,rgba(255,255,255,.16) 50%,transparent 68%);transform:translateX(-115%);transition:transform .6s ease;pointer-events:none;}
+.tile:hover{transform:translateY(-3px);border-color:rgba(255,215,0,.45);
+  background:linear-gradient(160deg,rgba(255,255,255,.17),rgba(255,255,255,.06));
+  box-shadow:0 14px 30px rgba(4,10,28,.45),0 0 22px rgba(255,215,0,.13);}
+.tile:hover::after{transform:translateX(115%);}
+.tile:active{transform:translateY(-1px) scale(.99);}
+.tile:focus-visible{outline:2px solid #ffd700;outline-offset:2px;}
+.t-ico{flex:0 0 35px;width:35px;height:35px;border-radius:11px;display:grid;place-items:center;font-size:17px;
+  background:linear-gradient(135deg,var(--c1,#5a76b8),var(--c2,#26365f));
+  box-shadow:0 3px 10px var(--cg,rgba(31,60,136,.45)),inset 0 1px 0 rgba(255,255,255,.30);
+  transition:transform .22s;}
+.tile:hover .t-ico{transform:scale(1.12) rotate(-4deg);}
+.t-txt{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.t-name{font-size:13px;font-weight:700;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.t-sub{font-size:10.5px;color:#c9d4f2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tile .t-ext{position:absolute;top:7px;right:9px;font-size:9.5px;color:#9fb3e8;opacity:.85;}
+.c-blue{--c1:#4a76d0;--c2:#2a4f9e;--cg:rgba(59,89,152,.5)}
+.c-red{--c1:#ff5c5c;--c2:#c21010;--cg:rgba(214,0,0,.4)}
+.c-gold{--c1:#ffd700;--c2:#c9960a;--cg:rgba(212,175,55,.55)}
+.c-green{--c1:#3ecf7d;--c2:#1e8e4f;--cg:rgba(39,174,96,.5)}
+.c-teal{--c1:#2bc5c5;--c2:#0e7c86;--cg:rgba(23,162,184,.5)}
+.c-navy{--c1:#31549f;--c2:#141f3d;--cg:rgba(20,31,61,.55)}
+.c-indigo{--c1:#6a7fe0;--c2:#3b3fb8;--cg:rgba(59,63,184,.5)}
+.c-slate{--c1:#748aab;--c2:#334155;--cg:rgba(71,85,105,.5)}
+.c-rose{--c1:#f65d7a;--c2:#b81e3f;--cg:rgba(220,53,69,.5)}
+.c-violet{--c1:#a75dc9;--c2:#7d3c98;--cg:rgba(142,68,173,.5)}
+.c-orange{--c1:#ffb340;--c2:#f0850a;--cg:rgba(255,152,0,.5)}
+.nav-group-head{display:flex;align-items:center;gap:10px;margin:4px 6px 11px;}
+.ng-ico{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-size:14px;
+  background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.28);
+  box-shadow:inset 0 0 12px rgba(255,215,0,.10);}
+.ng-title{display:block;margin:0;font-size:11.5px;font-weight:700;letter-spacing:2.2px;text-transform:uppercase;color:#ffe38a;opacity:.95;text-shadow:0 0 10px rgba(255,215,0,.35);}
+.ng-rule{flex:1;height:1px;background:linear-gradient(90deg,rgba(255,215,0,.35),rgba(255,255,255,.04));}
+.ng-count{font-size:10px;letter-spacing:1px;color:#c9d4f2;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:99px;padding:2px 9px;}
+.nav-group{padding:16px 18px 12px;}
+@media (max-width:640px){.nav-grid{grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px;}.tile{padding:9px 11px;}.t-sub{display:none;}.t-ico{flex-basis:31px;width:31px;height:31px;font-size:15px;}}
+@media (prefers-reduced-motion:reduce){.tile,.t-ico,.tile::after{transition:none;}}
 .nav-group[data-accent="sky"]{border-color:rgba(125,211,252,.22);}
 .nav-group[data-accent="sky"]::before{background:linear-gradient(180deg,transparent,#7dd3fc,transparent);}
 .nav-group[data-accent="sky"] .nav-group-title{color:#bae6fd;text-shadow:0 0 10px rgba(125,211,252,.4);}
@@ -779,7 +824,7 @@ animation:wgPulse 1.8s ease-in-out infinite;}
   .container::before,.container::after{width:34px;height:34px;}
   th, td{padding:10px 10px; font-size:13.5px;}
   button{width:calc(100% - 10px);}
-  .nav-group button{width:auto;}
+  .social-buttons .tile{width:auto;}
   .timer-box{padding:24px 16px;}
   .halo{width:90vw;}
 }
@@ -826,49 +871,57 @@ animation:wgPulse 1.8s ease-in-out infinite;}
 <button class="projector-btn" onclick="toggleProjector()">🖥 Toggle Projector Mode</button>
 <button id="soundToggle" class="projector-btn" onclick="toggleHeavenSound()">🔔 Heavenly Tone: On</button>
 
-<div class="social-buttons">
+<div class="social-buttons" role="navigation" aria-label="Church ministries">
 
   <div class="nav-group" data-accent="sky">
-    <span class="nav-group-title">Connect With Us</span>
-    <a href="https://web.facebook.com/pedahzurchurch" target="_blank"><button class="facebook">📘 Facebook</button></a>
-    <a href="https://www.youtube.com/@officialjcrgmtv" target="_blank"><button class="youtube">📺 YouTube</button></a>
-    <a href="https://www.youtube.com/results?search_query=bible+movies"><button class="movies">🎬 Bible Movies</button></a>
-    <a href="https://www.youtube.com/watch?v=UdyYc99iWew&list=RDUdyYc99iWew&start_radio=1"><button class="meditation">🎵 Prayer &amp; Meditation</button></a>
-    <a href="https://chatgpt.com/"><button class="Research">🔎 Research</button></a>
+    <div class="nav-group-head"><span class="ng-ico">🌐</span><span class="ng-title">Connect With Us</span><span class="ng-rule"></span><span class="ng-count">5 portals</span></div>
+    <div class="nav-grid">
+      <a class="tile" href="https://web.facebook.com/pedahzurchurch" target="_blank" rel="noopener noreferrer"><span class="t-ico c-blue">📘</span><span class="t-txt"><span class="t-name">Facebook</span><span class="t-sub">Live streams &amp; announcements</span></span><span class="t-ext">↗</span></a>
+      <a class="tile" href="https://www.youtube.com/@officialjcrgmtv" target="_blank" rel="noopener noreferrer"><span class="t-ico c-red">📺</span><span class="t-txt"><span class="t-name">YouTube</span><span class="t-sub">JCRGM TV — sermons &amp; clips</span></span><span class="t-ext">↗</span></a>
+      <a class="tile" href="https://www.youtube.com/results?search_query=bible+movies" target="_blank" rel="noopener noreferrer"><span class="t-ico c-gold">🎬</span><span class="t-txt"><span class="t-name">Bible Movies</span><span class="t-sub">Scripture on screen</span></span><span class="t-ext">↗</span></a>
+      <a class="tile" href="https://www.youtube.com/watch?v=UdyYc99iWew&list=RDUdyYc99iWew&start_radio=1" target="_blank" rel="noopener noreferrer"><span class="t-ico c-violet">🎵</span><span class="t-txt"><span class="t-name">Prayer &amp; Meditation</span><span class="t-sub">Soaking music</span></span><span class="t-ext">↗</span></a>
+      <a class="tile" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer"><span class="t-ico c-slate">🔎</span><span class="t-txt"><span class="t-name">Research</span><span class="t-sub">AI study companion</span></span><span class="t-ext">↗</span></a>
+    </div>
   </div>
 
   <div class="nav-group">
-    <span class="nav-group-title">Membership &amp; Administration</span>
-    <a href="membership.html"><button class="tab-green">📝 Membership</button></a>
-    <a href="membership_admin.html"><button class="tab-indigo">🧮 Membership Admin</button></a>
-    <button class="tab-teal" onclick="viewMembers()">👥 View Members</button>
-    <button class="tab-navy" onclick="openJCRGMChurchManagementPrayerCenter()">⛪ Church Management</button>
-    <button class="tab-gold" onclick="openChurchConstitution()">📜 Church Constitution</button>
-    <button class="tab-slate" onclick="window.location.href='jcrgm_policy_system.html'">📋 Church Policy</button>
-    <button class="games" onclick="window.location.href='ministry-workers.html'">🙌 Ministry Workers</button>
-    <button class="meditation" onclick="window.location.href='Prophets Office.html'">🕊 Prophets Office</button>
-    <button class="tab-indigo" onclick="window.location.href='JCRGM_Service_Schedule_Router.html'">🗓 Service Schedule Router</button>
+    <div class="nav-group-head"><span class="ng-ico">🏛</span><span class="ng-title">Membership &amp; Administration</span><span class="ng-rule"></span><span class="ng-count">9 portals</span></div>
+    <div class="nav-grid">
+      <a class="tile" href="membership.html"><span class="t-ico c-green">📝</span><span class="t-txt"><span class="t-name">Membership</span><span class="t-sub">Register + digital ID card</span></span></a>
+      <a class="tile" href="membership_admin.html"><span class="t-ico c-indigo">🧮</span><span class="t-txt"><span class="t-name">Membership Admin</span><span class="t-sub">Number desk &amp; verification</span></span></a>
+      <button type="button" class="tile" onclick="viewMembers()"><span class="t-ico c-teal">👥</span><span class="t-txt"><span class="t-name">View Members</span><span class="t-sub">Local register</span></span></button>
+      <button type="button" class="tile" onclick="openJCRGMChurchManagementPrayerCenter()"><span class="t-ico c-navy">⛪</span><span class="t-txt"><span class="t-name">Church Management</span><span class="t-sub">Prayer centre dashboard</span></span></button>
+      <button type="button" class="tile" onclick="openChurchConstitution()"><span class="t-ico c-gold">📜</span><span class="t-txt"><span class="t-name">Church Constitution</span><span class="t-sub">Governing document</span></span></button>
+      <button type="button" class="tile" onclick="window.location.href='jcrgm_policy_system.html'"><span class="t-ico c-slate">📋</span><span class="t-txt"><span class="t-name">Church Policy</span><span class="t-sub">Order &amp; excellence</span></span></button>
+      <button type="button" class="tile" onclick="window.location.href='ministry-workers.html'"><span class="t-ico c-orange">🙌</span><span class="t-txt"><span class="t-name">Ministry Workers</span><span class="t-sub">Departments &amp; orders</span></span></button>
+      <button type="button" class="tile" onclick="window.location.href='Prophets Office.html'"><span class="t-ico c-violet">🕊</span><span class="t-txt"><span class="t-name">Prophets Office</span><span class="t-sub">Word &amp; intercession</span></span></button>
+      <button type="button" class="tile" onclick="window.location.href='JCRGM_Service_Schedule_Router.html'"><span class="t-ico c-indigo">🗓</span><span class="t-txt"><span class="t-name">Service Schedule Router</span><span class="t-sub">Who serves when</span></span></button>
+    </div>
   </div>
 
   <div class="nav-group" data-accent="violet">
-    <span class="nav-group-title">Study &amp; Prayer</span>
-    <button class="tab-green" onclick="openJCRGMCompleteBiblicalPropheticTrainingGuide()">🧭 Practical Guide</button>
-    <button class="tab-navy" onclick="window.location.href='JCRGM_Bible_Institution.html'">🎓 Bible School</button>
-    <button onclick="window.location.href='JCRGM LIBRARY.html'">📚 Jcrgm Library</button>
-    <button onclick="openprophetsprayer()" class="tab-rose">🔥 Prophets Prayer</button>
-    <button onclick="openMasterStudy()" class="meditation">📖 JCRGM Master Study</button>
-    <button class="tab-indigo" onclick="openBiblePlan()">📑 Full Bible Teaching Plan</button>
-    <button class="tab-slate" onclick="window.location.href='fasting-programme.html'">🕊 Fasting Programme</button>
-    <button class="tab-teal" onclick="openPrayerGuide()">🙏 Monthly Prayer Guide</button>
-    <a href="prayer.html"><button class="whatsapp">💌 Prayer Petition</button></a>
-    <button onclick="openCrossover()" class="games">🌙 Allnight and Crossover Programmes</button>
+    <div class="nav-group-head"><span class="ng-ico">📖</span><span class="ng-title">Study &amp; Prayer</span><span class="ng-rule"></span><span class="ng-count">10 portals</span></div>
+    <div class="nav-grid">
+      <button type="button" class="tile" onclick="openJCRGMCompleteBiblicalPropheticTrainingGuide()"><span class="t-ico c-green">🧭</span><span class="t-txt"><span class="t-name">Practical Guide</span><span class="t-sub">Prophetic training manual</span></span></button>
+      <button type="button" class="tile" onclick="window.location.href='JCRGM_Bible_Institution.html'"><span class="t-ico c-navy">🎓</span><span class="t-txt"><span class="t-name">Bible School</span><span class="t-sub">JCRGM institution portal</span></span></button>
+      <button type="button" class="tile" onclick="window.location.href='JCRGM LIBRARY.html'"><span class="t-ico c-blue">📚</span><span class="t-txt"><span class="t-name">JCRGM Library</span><span class="t-sub">Books &amp; resources</span></span></button>
+      <button type="button" class="tile" onclick="openprophetsprayer()"><span class="t-ico c-rose">🔥</span><span class="t-txt"><span class="t-name">Prophets Prayer</span><span class="t-sub">The daily fire</span></span></button>
+      <button type="button" class="tile" onclick="openMasterStudy()"><span class="t-ico c-violet">📖</span><span class="t-txt"><span class="t-name">JCRGM Master Study</span><span class="t-sub">O-I-C-T-A sermon studio</span></span></button>
+      <button type="button" class="tile" onclick="openBiblePlan()"><span class="t-ico c-indigo">📑</span><span class="t-txt"><span class="t-name">Full Bible Teaching Plan</span><span class="t-sub">The Case for the Bible</span></span></button>
+      <button type="button" class="tile" onclick="window.location.href='fasting-programme.html'"><span class="t-ico c-slate">🕊</span><span class="t-txt"><span class="t-name">Fasting Programme</span><span class="t-sub">Holy appointments</span></span></button>
+      <button type="button" class="tile" onclick="openPrayerGuide()"><span class="t-ico c-teal">🙏</span><span class="t-txt"><span class="t-name">Monthly Prayer Guide</span><span class="t-sub">Marching orders</span></span></button>
+      <a class="tile" href="prayer.html"><span class="t-ico c-green">💌</span><span class="t-txt"><span class="t-name">Prayer Petition</span><span class="t-sub">Bring your burden to the desk</span></span></a>
+      <button type="button" class="tile" onclick="openCrossover()"><span class="t-ico c-orange">🌙</span><span class="t-txt"><span class="t-name">Allnight &amp; Crossover</span><span class="t-sub">Programmes of glory</span></span></button>
+    </div>
   </div>
 
   <div class="nav-group" data-accent="emerald">
-    <span class="nav-group-title">Giving &amp; Events</span>
-    <button class="tab-gold" onclick="showTithes()">💰 Tithes &amp; Offerings</button>
-    <button class="tab-indigo" onclick="window.location.href='Church Calendar.html'">📅 Church Calendar</button>
-    <button class="payments" onclick="makePayment()">💳 Make Payments</button>
+    <div class="nav-group-head"><span class="ng-ico">🕊</span><span class="ng-title">Giving &amp; Events</span><span class="ng-rule"></span><span class="ng-count">3 portals</span></div>
+    <div class="nav-grid">
+      <button type="button" class="tile" onclick="showTithes()"><span class="t-ico c-gold">💰</span><span class="t-txt"><span class="t-name">Tithes &amp; Offerings</span><span class="t-sub">Cheerful giving</span></span></button>
+      <button type="button" class="tile" onclick="window.location.href='Church Calendar.html'"><span class="t-ico c-indigo">📅</span><span class="t-txt"><span class="t-name">Church Calendar</span><span class="t-sub">Holy convocations</span></span></button>
+      <button type="button" class="tile" onclick="makePayment()"><span class="t-ico c-green">💳</span><span class="t-txt"><span class="t-name">Make Payments</span><span class="t-sub">Dues, building &amp; projects</span></span></button>
+    </div>
   </div>
 
 </div>
