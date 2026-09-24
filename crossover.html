@@ -105,25 +105,35 @@
 
     @media (max-width:900px){.cols{grid-template-columns:1fr} .logo{width:52px;height:52px} .time{min-width:88px}}
     @media print{
-      body{background:#fff;color:#000;padding:8px}
-      .card{box-shadow:none;background:transparent;border:1px solid #ddd}
-      button,.controls,.switcher{display:none!important}
-      #countdownOverlay{display:none!important}
-      .program-panel{display:block!important;page-break-before:always}
+      /* bulletproof print output: everything dark-on-white, accents kept via borders */
+      *{color:#000 !important;text-shadow:none !important;box-shadow:none !important;background-image:none !important}
+      html,body{background:#fff !important;margin:0}
+      body{padding:8px !important}
+      .clockline,.controls,.switcher,#countdownOverlay,button{display:none !important}
+      .container{max-width:100%}
+      .card{border:1px solid #ccc;background:#fff !important}
+      .program-panel{display:block !important;page-break-before:always}
       .program-panel:first-of-type{page-break-before:auto}
-      .item.active{background:#fff7e6;box-shadow:none;transform:none}
-      .phase-divider,.muted,.role{color:#444}
-      .time,.item.sermon .section-title,.preach-card strong{color:#92400e}
-      .item.prayerline .section-title,.preach-card.prayer-card strong{color:#075985}
-      .item.mama .section-title,.preach-card.mama-card strong{color:#9d174d}
-      .item.midnight .section-title{color:#b91c1c}
+      .item,.preach-card{background:#fff !important;break-inside:avoid;page-break-inside:avoid}
+      .item.active{transform:none}
+      .item.sermon{border:1px solid #b45309;background:#fffbeb !important}
+      .item.sermon .section-title,.time,.preach-card strong{color:#92400e !important}
+      .item.prayerline{border:1px solid #0369a1;background:#f0f9ff !important}
+      .item.prayerline .section-title,.preach-card.prayer-card strong{color:#075985 !important}
+      .item.mama{border:1px solid #be185d;background:#fdf2f8 !important}
+      .item.mama .section-title,.preach-card.mama-card strong{color:#9d174d !important}
+      .item.midnight{border:1px dashed #b91c1c;background:#fef2f2 !important}
+      .item.midnight .section-title{color:#b91c1c !important}
+      .badge{border:1px solid #666;background:#eee !important}
+      .phase-divider .phase-num{background:#eee !important;border:1px solid #999}
+      .muted,.role,.panel-note,.print-note,.btn-sub{color:#333 !important}
     }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <div style="font-size:14px;color:#f59e0b;font-weight:700;text-align:right;width:100%">
+      <div class="clockline" style="font-size:14px;color:#f59e0b;font-weight:700;text-align:right;width:100%">
         Current Time: <span id='liveTime'></span><br>
         <span style="color:#9aa4b2;font-size:13px">Countdown to Crossover Night: <span id='countdown'></span></span>
       </div>
@@ -304,6 +314,7 @@
     <footer>
       <div>Prepared for: Jesus Christ Redeems Global Ministries — Kasisi Area</div>
       <div style="margin-top:6px">Program created: <span id="createdDate"></span></div>
+      <div style="margin-top:6px" class="print-note">Tip: if Print or Download seems blank inside a preview window, download/open this file directly in Chrome or Edge — both buttons work perfectly there.</div>
     </footer>
   </div>
 
@@ -334,14 +345,24 @@
     // print button — prints whichever programme is currently open
     document.getElementById('printBtn').addEventListener('click', function(){window.print()});
 
-    // download HTML button
+    // download HTML button — fixed: delayed revoke so the file is never saved empty,
+    // plus feedback and a clear message if the preview environment blocks downloads
     document.getElementById('downloadBtn').addEventListener('click', function(){
-      const content = '<!doctype html>' + document.documentElement.innerHTML;
-      const blob = new Blob([content], {type: 'text/html'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'allnight-crossover-programme.html';
-      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      const btn = this;
+      try{
+        const content = '<!doctype html>' + document.documentElement.innerHTML;
+        const blob = new Blob([content], {type: 'text/html'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'allnight-crossover-programme.html';
+        document.body.appendChild(a); a.click(); a.remove();
+        // only release the blob after the browser has had time to save it
+        setTimeout(() => URL.revokeObjectURL(url), 30000);
+        btn.textContent = 'Download started ✓';
+        setTimeout(() => { btn.textContent = 'Download HTML'; }, 2500);
+      }catch(e){
+        btn.textContent = 'Blocked — open in browser to download';
+      }
     });
 
     // ===== MIDNIGHT COUNTDOWN POPUP (10 seconds into the New Year) =====
