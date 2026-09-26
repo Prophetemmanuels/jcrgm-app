@@ -1,88 +1,211 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JCRGM Monthly Prayer Guide</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10251f">
+<meta name="description" content="A day-by-day prayer guide for September 2026 from Jesus Christ Redeems Global Ministries.">
+<title>Monthly Prayer Guide · September 2026 | JCRGM</title>
 <style>
-body{margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#1e3c72);background-size:400% 400%;animation:gradientBG 15s ease infinite;color:white;}
-@keyframes gradientBG{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
-header{text-align:center;padding:60px 20px;}
-header h1{font-size:34px;margin:0;}
-header h2{margin-top:10px;font-weight:300;color:#ffd700;}
-.datetime{margin-top:20px;font-size:18px;font-weight:500;background:rgba(255,255,255,.1);display:inline-block;padding:10px 20px;border-radius:30px;}
-.section{max-width:1000px;margin:auto;padding:20px;}
-.card{background:rgba(255,255,255,.08);padding:30px;margin-bottom:25px;border-radius:15px;}
-.card h3,h4{color:#ffd700;}
-.today-highlight{background:rgba(255,215,0,.15);border-left:5px solid #ffd700;padding:10px;border-radius:8px;}
+:root{
+  color-scheme:light;
+  --ink:#1e2d28; --muted:#6c7972; --forest:#10251f; --forest-2:#183b30;
+  --gold:#b88a3b; --gold-light:#f0dfb5; --paper:#faf8f2; --white:#fff;
+  --line:#e9e4d8; --sage:#eaf0e9; --shadow:0 18px 50px rgba(31,43,35,.09);
+  --radius:20px; --serif:Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+button,input{font:inherit}
+a{color:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #d6ae61;outline-offset:3px}
+.topbar{height:70px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 max(24px,calc((100vw - 1160px)/2));background:#fff;border-bottom:1px solid rgba(30,45,40,.08)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;min-width:0}
+.brand-mark{width:38px;height:38px;border-radius:12px;background:var(--forest);display:grid;place-items:center;color:#e8c77e;font-family:var(--serif);font-size:23px;box-shadow:0 5px 14px #10251f24}
+.brand-text{font-size:12px;font-weight:800;letter-spacing:.095em;text-transform:uppercase;color:var(--forest);line-height:1.25}
+.brand-text small{display:block;font-size:10px;font-weight:600;color:#88928a;letter-spacing:.13em;margin-top:3px}
+.back-link{font-size:13px;text-decoration:none;font-weight:700;color:#53645b;white-space:nowrap;padding:9px 13px;border-radius:9px;transition:.2s}
+.back-link:hover{background:#f2f2ec;color:var(--forest)}
+.hero{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(125deg,#10251f 0%,#17382f 58%,#244b3e 100%);color:#fff;padding:74px 24px 91px}
+.hero:before,.hero:after{content:"";position:absolute;z-index:-1;border:1px solid rgba(233,207,151,.16);border-radius:50%;pointer-events:none}
+.hero:before{width:490px;height:490px;right:-60px;top:-295px;box-shadow:0 0 0 32px rgba(233,207,151,.025),0 0 0 68px rgba(233,207,151,.025)}
+.hero:after{width:390px;height:390px;left:-235px;bottom:-285px;box-shadow:0 0 0 36px rgba(233,207,151,.025)}
+.hero-inner{max-width:1120px;margin:auto;position:relative}
+.eyebrow{display:flex;align-items:center;gap:11px;color:#e8c77e;font-size:11px;font-weight:800;letter-spacing:.22em;text-transform:uppercase}
+.eyebrow:before{content:"";width:28px;height:1px;background:#d9b86e}
+.hero h1{font-family:var(--serif);font-weight:500;letter-spacing:-.035em;line-height:.98;font-size:clamp(47px,8vw,86px);margin:20px 0 17px}
+.hero h1 span{display:block;color:#e8c77e;font-style:italic;font-size:.66em;letter-spacing:-.02em;margin-top:10px}
+.hero-copy{max-width:600px;color:#e2e9e3;font-size:16px;margin:0;line-height:1.75}
+.hero-bottom{display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin-top:30px}
+.today-pill,.clock-pill{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);border-radius:999px;padding:9px 14px;font-size:12px;color:#f7f5ed;backdrop-filter:blur(8px)}
+.today-pill b{color:#f0d695;font-weight:700}.clock-dot{width:7px;height:7px;border-radius:50%;background:#a8d3a4;box-shadow:0 0 0 4px #a8d3a421}
+.main{max-width:1120px;padding:0 24px 70px;margin:-34px auto 0;position:relative;z-index:2}
+.focus-card{display:grid;grid-template-columns:62px 1fr;gap:20px;align-items:start;padding:27px 31px;border:1px solid #e8dfcb;background:#fffdf7;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:42px}
+.focus-icon{width:58px;height:58px;border-radius:18px;background:#f4ead2;color:#99702d;display:grid;place-items:center;font-size:23px}
+.focus-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:#9b793b;margin:0 0 5px}
+.focus-quote{font:italic 19px/1.5 var(--serif);color:#33443b;margin:0}.focus-ref{font:700 12px/1.4 "Segoe UI",Arial,sans-serif;color:#88744e;white-space:nowrap}
+.guide-heading{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:18px}
+.section-kicker{font-size:10px;letter-spacing:.19em;text-transform:uppercase;font-weight:800;color:#9a783e;margin-bottom:5px}
+.guide-heading h2{font:500 clamp(28px,4vw,39px)/1.15 var(--serif);letter-spacing:-.025em;margin:0;color:var(--forest)}
+.guide-heading p{color:var(--muted);font-size:13px;margin:7px 0 0}
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.search-wrap{position:relative}
+.search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#77837b;pointer-events:none}
+.search{width:220px;border:1px solid #dedfd8;background:#fff;border-radius:11px;padding:10px 12px 10px 36px;color:var(--ink);font-size:13px}
+.print-btn{border:1px solid #d7d9d1;background:#fff;border-radius:11px;padding:10px 14px;font-size:12px;font-weight:700;color:#43554a;cursor:pointer;transition:.2s}
+.print-btn:hover{border-color:#b89a5e;background:#fcfaf4}
+.progress-card{display:grid;grid-template-columns:minmax(150px,220px) 1fr auto;gap:19px;align-items:center;padding:16px 20px;margin:20px 0 22px;background:#eff3ed;border:1px solid #e0e8df;border-radius:15px}
+.progress-copy{font-size:12px;font-weight:800;color:#294536}.progress-copy small{display:block;font-size:11px;font-weight:500;color:#718077;margin-top:2px}
+.progress-track{height:8px;background:#dbe4da;border-radius:20px;overflow:hidden}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#476f56,#a2b77a);border-radius:inherit;transition:width .35s ease}
+.progress-percent{font-size:12px;font-weight:800;color:#5c715e;font-variant-numeric:tabular-nums}
+.days{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.prayer-day{min-width:0;display:grid;grid-template-columns:52px minmax(0,1fr) 32px;gap:15px;align-items:start;padding:18px 18px 17px;background:#fff;border:1px solid #ebe8df;border-radius:15px;box-shadow:0 3px 12px rgba(31,43,35,.025);transition:border-color .2s,box-shadow .2s,transform .2s}
+.prayer-day:hover{transform:translateY(-2px);border-color:#d8c89f;box-shadow:0 10px 25px rgba(31,43,35,.07)}
+.day-number{width:48px;height:48px;background:#f5f3ed;border-radius:14px;display:grid;place-items:center;color:#64746a;font:500 18px/1 var(--serif);position:relative}
+.day-number small{font:700 8px/1 "Segoe UI",Arial,sans-serif;letter-spacing:.09em;color:#9a8a68;position:absolute;bottom:5px}
+.day-content{min-width:0}.day-title{font-size:14px;line-height:1.45;font-weight:750;color:#293b32;margin:1px 0 7px}
+.scripture{margin:0;color:#7a827a;font-size:12px;line-height:1.55}.scripture b{color:#94743a;font-size:10px;letter-spacing:.025em;text-transform:uppercase;display:block;margin-bottom:2px}
+.check{appearance:none;width:22px;height:22px;border:1.5px solid #c8d0c7;border-radius:7px;background:#fff;cursor:pointer;display:grid;place-items:center;margin:2px 0 0;transition:.2s}
+.check:checked{background:#285440;border-color:#285440}.check:checked:after{content:"✓";color:#fff;font-size:14px;font-weight:800;line-height:1}
+.prayer-day.is-done{background:#f8faf7;border-color:#dbe7dc}.prayer-day.is-done .day-title{color:#77857a;text-decoration:line-through;text-decoration-color:#b7c5b8}
+.prayer-day.is-today{border-color:#c39a4f;box-shadow:0 0 0 2px #d7b96b29,0 9px 24px rgba(31,43,35,.06);background:#fffdf8}
+.prayer-day.is-today .day-number{background:#e9d7a9;color:#493b1f}
+.today-label{display:inline-block;vertical-align:1px;margin-left:7px;padding:2px 7px;border-radius:999px;background:#f3e8cc;color:#806128;font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:800}
+.empty-state{display:none;padding:25px;text-align:center;color:#77837a;background:#fff;border:1px dashed #d6d9d0;border-radius:14px;font-size:14px}
+.declaration{margin-top:42px;padding:30px 34px;border-radius:var(--radius);background:linear-gradient(115deg,#17382f,#10251f);color:#fff;position:relative;overflow:hidden}
+.declaration:after{content:"✦";position:absolute;font-size:150px;right:32px;top:-60px;color:#e8c77e;opacity:.08;font-family:var(--serif)}
+.declaration .section-kicker{color:#e8c77e}.declaration blockquote{font:italic 23px/1.55 var(--serif);max-width:780px;margin:5px 0 0;color:#f8f4e9}
+.declaration p:last-child{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:#c0d0c4;margin:15px 0 0}
+.footer{max-width:1120px;margin:auto;padding:21px 24px 34px;border-top:1px solid #e6e3da;color:#818880;font-size:11px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.footer strong{color:#43554a}.no-script{max-width:1120px;margin:auto;padding:10px 24px;color:#8c5a18;font-size:13px}
+@media(max-width:780px){.days{grid-template-columns:1fr}.guide-heading{align-items:flex-start;flex-direction:column}.tools{justify-content:flex-start;width:100%}.search{width:min(300px,66vw)}.progress-card{grid-template-columns:1fr auto;gap:10px 14px}.progress-track{grid-column:1/-1;grid-row:2}.hero{padding-top:58px}.focus-card{padding:23px}}
+@media(max-width:480px){.topbar{height:62px;padding:0 16px}.brand-text{font-size:10px}.brand-text small{font-size:9px}.back-link{padding:8px;font-size:11px}.hero{padding:49px 20px 77px}.main{padding:0 14px 48px}.hero-copy{font-size:14px}.hero-bottom{gap:8px}.today-pill,.clock-pill{font-size:10px;padding:8px 11px}.focus-card{grid-template-columns:44px 1fr;gap:13px;padding:18px}.focus-icon{width:42px;height:42px;border-radius:13px;font-size:19px}.focus-quote{font-size:17px}.focus-ref{display:block;margin-top:4px}.prayer-day{grid-template-columns:44px minmax(0,1fr) 27px;padding:15px 13px;gap:11px}.day-number{width:42px;height:44px}.declaration{padding:25px 22px}.declaration blockquote{font-size:20px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+@media print{
+  :root{--paper:#fff}
+  body{background:#fff;color:#111;font-size:11pt}.topbar,.hero-bottom,.tools,.progress-card,.check,.footer,.today-label{display:none!important}
+  .hero{padding:24px 0 30px;background:#fff!important;color:#111;border-bottom:2px solid #b88a3b}.hero:before,.hero:after{display:none}.hero .eyebrow,.hero-copy{color:#555}.hero h1{font-size:38pt;color:#10251f;margin:10px 0}.hero h1 span{color:#8d6c31}
+  .main{max-width:none;margin:0;padding:18px 0}.focus-card{box-shadow:none;margin:0 0 20px;padding:16px}.guide-heading{margin-bottom:10px}.guide-heading h2{font-size:24pt}
+  .days{grid-template-columns:1fr 1fr;gap:7px}.prayer-day{padding:10px;box-shadow:none;break-inside:avoid;border-color:#ddd;grid-template-columns:38px 1fr 0}.prayer-day[hidden]{display:none!important}.day-number{width:34px;height:38px;font-size:14px}.day-title{font-size:10pt}.scripture{font-size:8.5pt}.declaration{background:#f3f3ed!important;color:#111;padding:18px;margin-top:20px}.declaration blockquote{font-size:15pt;color:#22382e}.declaration .section-kicker,.declaration p:last-child{color:#725b32}.prayer-day.is-today{background:#fffdf7!important;border-color:#b88a3b}
+}
 </style>
 </head>
 <body>
-<header>
-<h1>Jesus Christ Redeems Global Ministries</h1>
-<h2>Monthly Prayer Guide – SEPTEMBER 2026</h2>
-<div class="datetime"><span id="date"></span> | <span id="clock"></span></div>
+<nav class="topbar" aria-label="Page navigation">
+  <a class="brand" href="index.html" aria-label="Jesus Christ Redeems Global Ministries home">
+    <span class="brand-mark" aria-hidden="true">✝</span>
+    <span class="brand-text">Jesus Christ Redeems<small>Global Ministries</small></span>
+  </a>
+  <a class="back-link" href="index.html">← Back to ministry home</a>
+</nav>
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Monthly prayer guide · 2026</div>
+    <h1>September<span>A month of spiritual renewal</span></h1>
+    <p class="hero-copy">Set aside a moment each day to seek God, renew your spirit, and grow in purpose. Use this guide as a gentle rhythm for personal prayer throughout the month.</p>
+    <div class="hero-bottom">
+      <div class="today-pill"><span aria-hidden="true">✦</span><span id="todayDate">September 2026</span></div>
+      <div class="clock-pill"><span class="clock-dot" aria-hidden="true"></span><span id="clock" aria-label="Local time"></span></div>
+    </div>
+  </div>
 </header>
-<div class="section">
-<div class="card">
-<h3>🔥 Meditation Scripture</h3>
-<p><em>"Call to Me and I will answer you..." – Jeremiah 33:3</em></p>
-</div>
-<div class="card">
-<h3>🎯 Monthly Prayer Targets (Day-by-Day Guide)</h3>
-<ol>
-<li id="day1"><strong>Day 1:</strong> Repentance and cleansing of the heart<br>
-    <em style="color:#ffd700;">Scripture: 1 John 1:9 – "If we confess our sins, He is faithful and just to forgive us our sins and to cleanse us from all unrighteousness."</em></li><li id="day2"><strong>Day 2:</strong> Forgiveness and spiritual renewal<br>
-    <em style="color:#ffd700;">Scripture: Romans 12:2 – "Be transformed by the renewing of your mind."</em></li><li id="day3"><strong>Day 3:</strong> Healing from past spiritual wounds<br>
-    <em style="color:#ffd700;">Scripture: Psalm 147:3 – "He heals the brokenhearted and binds up their wounds."</em></li><li id="day4"><strong>Day 4:</strong> Restoring intimacy with the Holy Spirit<br>
-    <em style="color:#ffd700;">Scripture: James 4:8 – "Draw near to God and He will draw near to you."</em></li><li id="day5"><strong>Day 5:</strong> Breaking spiritual dryness and stagnation<br>
-    <em style="color:#ffd700;">Scripture: Isaiah 43:19 – "Behold, I will do a new thing."</em></li><li id="day6"><strong>Day 6:</strong> Renewing passion for prayer and the Word<br>
-    <em style="color:#ffd700;">Scripture: Jeremiah 15:16 – "Your words were found, and I ate them."</em></li><li id="day7"><strong>Day 7:</strong> Total surrender and rededication to God<br>
-    <em style="color:#ffd700;">Scripture: Romans 12:1 – "Present your bodies a living sacrifice."</em></li><li id="day8"><strong>Day 8:</strong> Rediscovering divine identity<br>
-    <em style="color:#ffd700;">Scripture: 1 Peter 2:9 – "You are a chosen generation..."</em></li><li id="day9"><strong>Day 9:</strong> Clarity of calling and assignment<br>
-    <em style="color:#ffd700;">Scripture: Jeremiah 1:5 – "Before I formed you... I ordained you."</em></li><li id="day10"><strong>Day 10:</strong> Breaking distractions and confusion<br>
-    <em style="color:#ffd700;">Scripture: 1 Corinthians 14:33 – "God is not the author of confusion."</em></li><li id="day11"><strong>Day 11:</strong> Alignment with God's timing<br>
-    <em style="color:#ffd700;">Scripture: Ecclesiastes 3:1 – "To everything there is a season."</em></li><li id="day12"><strong>Day 12:</strong> Grace to walk in obedience<br>
-    <em style="color:#ffd700;">Scripture: Deuteronomy 5:33 – "Walk in all the ways the Lord has commanded."</em></li><li id="day13"><strong>Day 13:</strong> Restoration of lost opportunities<br>
-    <em style="color:#ffd700;">Scripture: Joel 2:25 – "I will restore to you the years."</em></li><li id="day14"><strong>Day 14:</strong> Establishment in divine purpose<br>
-    <em style="color:#ffd700;">Scripture: Proverbs 19:21 – "The purpose of the Lord shall stand."</em></li><li id="day15"><strong>Day 15:</strong> Strength in the inner man<br>
-    <em style="color:#ffd700;">Scripture: Ephesians 3:16</em></li><li id="day16"><strong>Day 16:</strong> Grace to overcome temptation<br>
-    <em style="color:#ffd700;">Scripture: 1 Corinthians 10:13</em></li><li id="day17"><strong>Day 17:</strong> Activation of spiritual gifts<br>
-    <em style="color:#ffd700;">Scripture: 2 Timothy 1:6</em></li><li id="day18"><strong>Day 18:</strong> Boldness and spiritual authority<br>
-    <em style="color:#ffd700;">Scripture: Acts 4:31</em></li><li id="day19"><strong>Day 19:</strong> Discernment and sensitivity to the Spirit<br>
-    <em style="color:#ffd700;">Scripture: John 16:13</em></li><li id="day20"><strong>Day 20:</strong> Endurance and perseverance<br>
-    <em style="color:#ffd700;">Scripture: Hebrews 12:1</em></li><li id="day21"><strong>Day 21:</strong> Victory over spiritual battles<br>
-    <em style="color:#ffd700;">Scripture: Romans 8:37</em></li><li id="day22"><strong>Day 22:</strong> Manifestation of God's presence<br>
-    <em style="color:#ffd700;">Scripture: Exodus 33:14</em></li><li id="day23"><strong>Day 23:</strong> Divine favor before men<br>
-    <em style="color:#ffd700;">Scripture: Psalm 5:12</em></li><li id="day24"><strong>Day 24:</strong> Supernatural doors and opportunities<br>
-    <em style="color:#ffd700;">Scripture: Revelation 3:8</em></li><li id="day25"><strong>Day 25:</strong> Financial grace and provision<br>
-    <em style="color:#ffd700;">Scripture: Philippians 4:19</em></li><li id="day26"><strong>Day 26:</strong> Family restoration and peace<br>
-    <em style="color:#ffd700;">Scripture: Joshua 24:15</em></li><li id="day27"><strong>Day 27:</strong> Influence and kingdom relevance<br>
-    <em style="color:#ffd700;">Scripture: Matthew 5:14-16</em></li><li id="day28"><strong>Day 28:</strong> Overflow of blessings<br>
-    <em style="color:#ffd700;">Scripture: Malachi 3:10</em></li><li id="day29"><strong>Day 29:</strong> Divine elevation<br>
-    <em style="color:#ffd700;">Scripture: Psalm 75:6-7</em></li><li id="day30"><strong>Day 30:</strong> Promotion and establishment<br>
-    <em style="color:#ffd700;">Scripture: 1 Peter 5:10</em></li><li id="day31"><strong>Day 31:</strong> Thanksgiving & Prophetic Declaration for the next month<br>
-    <em style="color:#ffd700;">Scripture: Psalm 100:4</em></li>
-</ol>
-</div>
-<div class="card">
-<h3>✨ Monthly Declaration</h3>
-<p><strong>May God Almighty give you the strength not only to pray, but to become all that He has ordained for your life.</strong></p>
-</div>
-</div>
+<main class="main">
+  <section class="focus-card" aria-labelledby="focus-title">
+    <div class="focus-icon" aria-hidden="true">✧</div>
+    <div>
+      <p class="focus-label" id="focus-title">Meditation scripture</p>
+      <p class="focus-quote">“Call to me and I will answer you...” <span class="focus-ref">— Jeremiah 33:3</span></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="guide-title">
+    <div class="guide-heading">
+      <div>
+        <div class="section-kicker">Your daily rhythm</div>
+        <h2 id="guide-title">31 days of prayer</h2>
+        <p>Reflect on the focus, read the scripture, and mark each day as you pray.</p>
+      </div>
+      <div class="tools">
+        <label class="search-wrap" aria-label="Search prayer guide">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input id="search" class="search" type="search" aria-label="Search prayer focus or scripture" placeholder="Search focus or scripture…" autocomplete="off">
+        </label>
+        <button class="print-btn" type="button" onclick="window.print()">Print guide</button>
+      </div>
+    </div>
+    <div class="progress-card" aria-label="Prayer progress">
+      <div class="progress-copy"><span id="progressText">0 of 31 days prayed</span><small>Your progress is saved on this device.</small></div>
+      <div class="progress-track" role="progressbar" aria-label="Prayer days completed" aria-valuemin="0" aria-valuemax="31" aria-valuenow="0" id="progressTrack"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-percent" id="progressPercent">0%</div>
+    </div>
+    <ol class="days" id="daysList" aria-label="September daily prayer targets">
+      <li class="prayer-day" id="day1" data-day="1"><div class="day-number">01<small>DAY</small></div><div class="day-content"><h3 class="day-title">Repentance and cleansing of the heart</h3><p class="scripture"><b>Scripture · 1 John 1:9</b>“If we confess our sins, He is faithful and just to forgive us our sins and to cleanse us from all unrighteousness.”</p></div><input class="check" type="checkbox" aria-label="Mark day 1 as prayed"></li>
+      <li class="prayer-day" id="day2" data-day="2"><div class="day-number">02<small>DAY</small></div><div class="day-content"><h3 class="day-title">Forgiveness and spiritual renewal</h3><p class="scripture"><b>Scripture · Romans 12:2</b>“Be transformed by the renewing of your mind.”</p></div><input class="check" type="checkbox" aria-label="Mark day 2 as prayed"></li>
+      <li class="prayer-day" id="day3" data-day="3"><div class="day-number">03<small>DAY</small></div><div class="day-content"><h3 class="day-title">Healing from past spiritual wounds</h3><p class="scripture"><b>Scripture · Psalm 147:3</b>“He heals the brokenhearted and binds up their wounds.”</p></div><input class="check" type="checkbox" aria-label="Mark day 3 as prayed"></li>
+      <li class="prayer-day" id="day4" data-day="4"><div class="day-number">04<small>DAY</small></div><div class="day-content"><h3 class="day-title">Restoring intimacy with the Holy Spirit</h3><p class="scripture"><b>Scripture · James 4:8</b>“Draw near to God and He will draw near to you.”</p></div><input class="check" type="checkbox" aria-label="Mark day 4 as prayed"></li>
+      <li class="prayer-day" id="day5" data-day="5"><div class="day-number">05<small>DAY</small></div><div class="day-content"><h3 class="day-title">Breaking spiritual dryness and stagnation</h3><p class="scripture"><b>Scripture · Isaiah 43:19</b>“Behold, I will do a new thing.”</p></div><input class="check" type="checkbox" aria-label="Mark day 5 as prayed"></li>
+      <li class="prayer-day" id="day6" data-day="6"><div class="day-number">06<small>DAY</small></div><div class="day-content"><h3 class="day-title">Renewing passion for prayer and the Word</h3><p class="scripture"><b>Scripture · Jeremiah 15:16</b>“Your words were found, and I ate them.”</p></div><input class="check" type="checkbox" aria-label="Mark day 6 as prayed"></li>
+      <li class="prayer-day" id="day7" data-day="7"><div class="day-number">07<small>DAY</small></div><div class="day-content"><h3 class="day-title">Total surrender and rededication to God</h3><p class="scripture"><b>Scripture · Romans 12:1</b>“Present your bodies a living sacrifice.”</p></div><input class="check" type="checkbox" aria-label="Mark day 7 as prayed"></li>
+      <li class="prayer-day" id="day8" data-day="8"><div class="day-number">08<small>DAY</small></div><div class="day-content"><h3 class="day-title">Rediscovering divine identity</h3><p class="scripture"><b>Scripture · 1 Peter 2:9</b>“You are a chosen generation...”</p></div><input class="check" type="checkbox" aria-label="Mark day 8 as prayed"></li>
+      <li class="prayer-day" id="day9" data-day="9"><div class="day-number">09<small>DAY</small></div><div class="day-content"><h3 class="day-title">Clarity of calling and assignment</h3><p class="scripture"><b>Scripture · Jeremiah 1:5</b>“Before I formed you... I ordained you.”</p></div><input class="check" type="checkbox" aria-label="Mark day 9 as prayed"></li>
+      <li class="prayer-day" id="day10" data-day="10"><div class="day-number">10<small>DAY</small></div><div class="day-content"><h3 class="day-title">Breaking distractions and confusion</h3><p class="scripture"><b>Scripture · 1 Corinthians 14:33</b>“God is not the author of confusion.”</p></div><input class="check" type="checkbox" aria-label="Mark day 10 as prayed"></li>
+      <li class="prayer-day" id="day11" data-day="11"><div class="day-number">11<small>DAY</small></div><div class="day-content"><h3 class="day-title">Alignment with God’s timing</h3><p class="scripture"><b>Scripture · Ecclesiastes 3:1</b>“To everything there is a season.”</p></div><input class="check" type="checkbox" aria-label="Mark day 11 as prayed"></li>
+      <li class="prayer-day" id="day12" data-day="12"><div class="day-number">12<small>DAY</small></div><div class="day-content"><h3 class="day-title">Grace to walk in obedience</h3><p class="scripture"><b>Scripture · Deuteronomy 5:33</b>“Walk in all the ways the Lord has commanded.”</p></div><input class="check" type="checkbox" aria-label="Mark day 12 as prayed"></li>
+      <li class="prayer-day" id="day13" data-day="13"><div class="day-number">13<small>DAY</small></div><div class="day-content"><h3 class="day-title">Restoration of lost opportunities</h3><p class="scripture"><b>Scripture · Joel 2:25</b>“I will restore to you the years.”</p></div><input class="check" type="checkbox" aria-label="Mark day 13 as prayed"></li>
+      <li class="prayer-day" id="day14" data-day="14"><div class="day-number">14<small>DAY</small></div><div class="day-content"><h3 class="day-title">Establishment in divine purpose</h3><p class="scripture"><b>Scripture · Proverbs 19:21</b>“The purpose of the Lord shall stand.”</p></div><input class="check" type="checkbox" aria-label="Mark day 14 as prayed"></li>
+      <li class="prayer-day" id="day15" data-day="15"><div class="day-number">15<small>DAY</small></div><div class="day-content"><h3 class="day-title">Strength in the inner man</h3><p class="scripture"><b>Scripture · Ephesians 3:16</b></p></div><input class="check" type="checkbox" aria-label="Mark day 15 as prayed"></li>
+      <li class="prayer-day" id="day16" data-day="16"><div class="day-number">16<small>DAY</small></div><div class="day-content"><h3 class="day-title">Grace to overcome temptation</h3><p class="scripture"><b>Scripture · 1 Corinthians 10:13</b></p></div><input class="check" type="checkbox" aria-label="Mark day 16 as prayed"></li>
+      <li class="prayer-day" id="day17" data-day="17"><div class="day-number">17<small>DAY</small></div><div class="day-content"><h3 class="day-title">Activation of spiritual gifts</h3><p class="scripture"><b>Scripture · 2 Timothy 1:6</b></p></div><input class="check" type="checkbox" aria-label="Mark day 17 as prayed"></li>
+      <li class="prayer-day" id="day18" data-day="18"><div class="day-number">18<small>DAY</small></div><div class="day-content"><h3 class="day-title">Boldness and spiritual authority</h3><p class="scripture"><b>Scripture · Acts 4:31</b></p></div><input class="check" type="checkbox" aria-label="Mark day 18 as prayed"></li>
+      <li class="prayer-day" id="day19" data-day="19"><div class="day-number">19<small>DAY</small></div><div class="day-content"><h3 class="day-title">Discernment and sensitivity to the Spirit</h3><p class="scripture"><b>Scripture · John 16:13</b></p></div><input class="check" type="checkbox" aria-label="Mark day 19 as prayed"></li>
+      <li class="prayer-day" id="day20" data-day="20"><div class="day-number">20<small>DAY</small></div><div class="day-content"><h3 class="day-title">Endurance and perseverance</h3><p class="scripture"><b>Scripture · Hebrews 12:1</b></p></div><input class="check" type="checkbox" aria-label="Mark day 20 as prayed"></li>
+      <li class="prayer-day" id="day21" data-day="21"><div class="day-number">21<small>DAY</small></div><div class="day-content"><h3 class="day-title">Victory over spiritual battles</h3><p class="scripture"><b>Scripture · Romans 8:37</b></p></div><input class="check" type="checkbox" aria-label="Mark day 21 as prayed"></li>
+      <li class="prayer-day" id="day22" data-day="22"><div class="day-number">22<small>DAY</small></div><div class="day-content"><h3 class="day-title">Manifestation of God’s presence</h3><p class="scripture"><b>Scripture · Exodus 33:14</b></p></div><input class="check" type="checkbox" aria-label="Mark day 22 as prayed"></li>
+      <li class="prayer-day" id="day23" data-day="23"><div class="day-number">23<small>DAY</small></div><div class="day-content"><h3 class="day-title">Divine favor before men</h3><p class="scripture"><b>Scripture · Psalm 5:12</b></p></div><input class="check" type="checkbox" aria-label="Mark day 23 as prayed"></li>
+      <li class="prayer-day" id="day24" data-day="24"><div class="day-number">24<small>DAY</small></div><div class="day-content"><h3 class="day-title">Supernatural doors and opportunities</h3><p class="scripture"><b>Scripture · Revelation 3:8</b></p></div><input class="check" type="checkbox" aria-label="Mark day 24 as prayed"></li>
+      <li class="prayer-day" id="day25" data-day="25"><div class="day-number">25<small>DAY</small></div><div class="day-content"><h3 class="day-title">Financial grace and provision</h3><p class="scripture"><b>Scripture · Philippians 4:19</b></p></div><input class="check" type="checkbox" aria-label="Mark day 25 as prayed"></li>
+      <li class="prayer-day" id="day26" data-day="26"><div class="day-number">26<small>DAY</small></div><div class="day-content"><h3 class="day-title">Family restoration and peace</h3><p class="scripture"><b>Scripture · Joshua 24:15</b></p></div><input class="check" type="checkbox" aria-label="Mark day 26 as prayed"></li>
+      <li class="prayer-day" id="day27" data-day="27"><div class="day-number">27<small>DAY</small></div><div class="day-content"><h3 class="day-title">Influence and kingdom relevance</h3><p class="scripture"><b>Scripture · Matthew 5:14–16</b></p></div><input class="check" type="checkbox" aria-label="Mark day 27 as prayed"></li>
+      <li class="prayer-day" id="day28" data-day="28"><div class="day-number">28<small>DAY</small></div><div class="day-content"><h3 class="day-title">Overflow of blessings</h3><p class="scripture"><b>Scripture · Malachi 3:10</b></p></div><input class="check" type="checkbox" aria-label="Mark day 28 as prayed"></li>
+      <li class="prayer-day" id="day29" data-day="29"><div class="day-number">29<small>DAY</small></div><div class="day-content"><h3 class="day-title">Divine elevation</h3><p class="scripture"><b>Scripture · Psalm 75:6–7</b></p></div><input class="check" type="checkbox" aria-label="Mark day 29 as prayed"></li>
+      <li class="prayer-day" id="day30" data-day="30"><div class="day-number">30<small>DAY</small></div><div class="day-content"><h3 class="day-title">Promotion and establishment</h3><p class="scripture"><b>Scripture · 1 Peter 5:10</b></p></div><input class="check" type="checkbox" aria-label="Mark day 30 as prayed"></li>
+      <li class="prayer-day" id="day31" data-day="31"><div class="day-number">31<small>DAY</small></div><div class="day-content"><h3 class="day-title">Thanksgiving &amp; prophetic declaration for the next month</h3><p class="scripture"><b>Scripture · Psalm 100:4</b></p></div><input class="check" type="checkbox" aria-label="Mark day 31 as prayed"></li>
+    </ol>
+    <p class="empty-state" id="emptyState" role="status">No prayer days match your search. Try a different word or scripture reference.</p>
+  </section>
+
+  <section class="declaration" aria-labelledby="declaration-title">
+    <div class="section-kicker" id="declaration-title">A word for the month</div>
+    <blockquote>“May God Almighty give you the strength not only to pray, but to become all that He has ordained for your life.”</blockquote>
+    <p>Monthly declaration</p>
+  </section>
+</main>
+<footer class="footer"><span><strong>Jesus Christ Redeems Global Ministries</strong> · Monthly Prayer Guide</span><span>September 2026</span></footer>
+<noscript><p class="no-script">JavaScript is off. The full prayer guide is still available; progress tracking and search require JavaScript.</p></noscript>
 <script>
-function updateDateTime(){
-const now=new Date();
-document.getElementById("date").innerHTML=now.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-document.getElementById("clock").innerHTML=now.toLocaleTimeString();
-}
-setInterval(updateDateTime,1000);updateDateTime();
-function highlightTodayPrayer(){
-const today=new Date().getDate();
-const e=document.getElementById("day"+today);
-if(e)e.classList.add("today-highlight");
-}
-highlightTodayPrayer();
+(function(){
+  const guideMonth=8, guideYear=2026, totalDays=31;
+  const now=new Date();
+  const dateEl=document.getElementById('todayDate');
+  const clockEl=document.getElementById('clock');
+  const dateFormatter=new Intl.DateTimeFormat('en-ZM',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'Africa/Lusaka'});
+  const timeFormatter=new Intl.DateTimeFormat('en-ZM',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true,timeZone:'Africa/Lusaka'});
+  dateEl.textContent=dateFormatter.format(now);
+  function tick(){clockEl.textContent=timeFormatter.format(new Date())+' · Lusaka time'}
+  tick();setInterval(tick,1000);
+  const checks=[...document.querySelectorAll('.check')];
+  const storageKey='jcrgm-prayer-guide-2026-09';
+  let saved={};
+  try{saved=JSON.parse(localStorage.getItem(storageKey)||'{}')||{}}catch(e){saved={}}
+  checks.forEach((box)=>{box.checked=!!saved[box.closest('.prayer-day').dataset.day];updateDay(box);box.addEventListener('change',()=>{const day=box.closest('.prayer-day').dataset.day;saved[day]=box.checked;try{localStorage.setItem(storageKey,JSON.stringify(saved))}catch(e){}updateDay(box);updateProgress()})});
+  function updateDay(box){box.closest('.prayer-day').classList.toggle('is-done',box.checked)}
+  function updateProgress(){const done=checks.filter(c=>c.checked).length;const pct=Math.round(done/totalDays*100);document.getElementById('progressText').textContent=done+' of '+totalDays+' days prayed';document.getElementById('progressPercent').textContent=pct+'%';document.getElementById('progressFill').style.width=pct+'%';document.getElementById('progressTrack').setAttribute('aria-valuenow',done)}
+  updateProgress();
+  const search=document.getElementById('search'), days=[...document.querySelectorAll('.prayer-day')], empty=document.getElementById('emptyState');
+  search.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();let shown=0;days.forEach(card=>{const match=card.textContent.toLowerCase().includes(q);card.hidden=!match;if(match)shown++});empty.style.display=shown?'none':'block'});
+  if(now.getFullYear()===guideYear&&now.getMonth()===guideMonth){const card=document.getElementById('day'+now.getDate());if(card){card.classList.add('is-today');const title=card.querySelector('.day-title');const label=document.createElement('span');label.className='today-label';label.textContent='Today';title.appendChild(label)}}
+})();
 </script>
 </body>
 </html>
