@@ -29,22 +29,6 @@ a{color:var(--primary)}
 .skip{position:absolute;left:-9999px;top:0;background:#fff;padding:12px 16px;border-radius:0 0 10px 0;z-index:99;font-weight:700}
 .skip:focus{left:8px;top:8px}
 
-/* ===== secure cloud sign-in ===== */
-.auth-gate{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(900px 500px at 50% -10%,rgba(201,154,46,.14),transparent 60%),linear-gradient(145deg,#0e1728,#172d52 60%,#10233e);color:#172033}
-.auth-gate.hidden{display:none}
-.auth-card{width:min(430px,100%);background:#fff;border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:30px;box-shadow:0 28px 90px rgba(0,0,0,.35)}
-.auth-brand{display:flex;align-items:center;gap:12px;margin-bottom:22px}.auth-brand .brand-mark{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#e6c15a,#c99a2e);font-weight:900;color:#1b1405;font-size:20px}
-.auth-brand strong{display:block;color:#173b7a;font-size:15px;letter-spacing:.04em}.auth-brand small{display:block;color:#697386;font-size:11px;margin-top:2px}
-.auth-card h2{margin:0 0 7px;color:#172033;font-size:22px}.auth-card .auth-copy{margin:0 0 20px;color:#697386;font-size:13px;line-height:1.55}
-.auth-card label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#475467;display:block;margin:13px 0 6px}
-.auth-card input{width:100%;border:1px solid #d3dae5;border-radius:10px;padding:12px;background:#fff;font-size:14px}
-.auth-submit{width:100%;margin-top:17px;justify-content:center;padding:12px}.auth-message{display:none;margin-top:13px;padding:10px 12px;border-radius:9px;font-size:12px;line-height:1.45;background:#fff2ed;color:#9a3412}.auth-message.show{display:block}.auth-message.ok{background:#eaf7ee;color:#17633a}
-.auth-foot{margin-top:18px;padding-top:13px;border-top:1px solid #e7eaf0;color:#778196;font-size:10.5px;line-height:1.5}.auth-lock{display:flex;align-items:center;gap:7px;color:#5e6b80;font-size:11px;margin-top:14px}
-.app.cloud-hidden{display:none!important}
-.cloud-status{font-size:11px;color:#576477;background:#fff;border:1px solid var(--border);border-radius:999px;padding:6px 9px;white-space:nowrap}
-.cloud-status:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#94a3b8;margin-right:6px;vertical-align:1px}
-.cloud-status.ok:before{background:#20a05a}.cloud-status.busy:before{background:#d59b26}.cloud-status.err:before{background:#c63e35}
-
 /* ===== layout ===== */
 .app{display:flex;min-height:100vh}
 .sidebar{width:var(--nav-w);background:linear-gradient(180deg,#0f1728,#111d33 55%,#0d1424);color:#fff;display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;z-index:30;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#2c3a55 #131c2e}
@@ -337,27 +321,10 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
 </style>
 </head>
 <body>
-<div class="auth-gate" id="authGate" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-  <section class="auth-card">
-    <div class="auth-brand"><span class="brand-mark" aria-hidden="true">✝</span><span><strong>JCRGM CHURCH CENTER</strong><small>Secure shared records</small></span></div>
-    <h2 id="authTitle">Staff sign in</h2>
-    <p class="auth-copy">Sign in with your authorized church email to access shared records. Changes sync across signed-in devices.</p>
-    <form id="authForm" onsubmit="cloudLogin(event)" autocomplete="on">
-      <label for="authEmail">Staff email</label>
-      <input id="authEmail" type="email" autocomplete="username" required placeholder="name@example.com" value="pedahzurministries@gmail.com">
-      <label for="authPassword">Password</label>
-      <input id="authPassword" type="password" autocomplete="current-password" required placeholder="Your account password">
-      <button class="btn auth-submit" id="authSubmit" type="submit">Sign in securely</button>
-    </form>
-    <div id="authMessage" class="auth-message" role="status" aria-live="polite"></div>
-    <div class="auth-lock">🔒 Staff records are private and protected by Supabase access policies.</div>
-    <div class="auth-foot">Staff accounts must be created in Supabase Authentication before sign-in. Do not use a shared password. If you do not have access, ask the JCRGM administrator.</div>
-  </section>
-</div>
 <a class="skip no-print" href="#mainContent">Skip to main content</a>
 <button class="hamb no-print" type="button" id="navToggle" aria-controls="sidebar" aria-expanded="false">☰ Menu</button>
 
-<div class="app cloud-hidden" id="appRoot">
+<div class="app">
 <aside class="sidebar" id="sidebar" aria-label="Main navigation">
   <button class="side-close no-print" type="button" id="navClose" aria-label="Close menu">×</button>
   <div class="brand">
@@ -410,10 +377,8 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
   <header class="topbar no-print">
     <h2 id="pageTitle">Dashboard</h2>
     <div class="tb-right">
-      <span class="cloud-status busy" id="cloudStatus" aria-live="polite">Connecting…</span>
       <span class="clock" id="liveClock" aria-live="off"></span>
       <button class="btn secondary small" type="button" onclick="quickPrint()" title="Print or save this page as PDF">🖨 Print</button>
-      <button class="btn secondary small" type="button" onclick="cloudLogout()" title="Sign out of this device">Sign out</button>
     </div>
   </header>
 
@@ -804,7 +769,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
         <div><h3 style="margin:0">Giving &amp; Financial Record</h3><div class="sub muted">Offerings, tithes, pledges and other church income</div></div>
         <div class="actions no-print"><button class="btn" onclick="openGiving()">+ Add Record</button><button class="btn secondary" onclick="savePdf('giving')">Save as PDF</button><button class="btn whatsapp" onclick="sendWhatsAppReport('giving')">WhatsApp Report</button></div>
       </div>
-      <div class="alert dangerbox">Keep financial records carefully and restrict access to authorized church leaders. Access is limited to authorized staff and records sync through Supabase.</div>
+      <div class="alert dangerbox">Keep financial records carefully and restrict access to authorized church leaders. Records stay on this device.</div>
       <div class="grid stats" style="margin-bottom:14px">
         <div class="card stat tight"><div class="label">Total Recorded</div><strong id="giveTotal">0</strong><span class="muted" id="giveTotalCur">ZMW</span></div>
         <div class="card stat tight"><div class="label">Records</div><strong id="giveCount">0</strong></div>
@@ -831,7 +796,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
     <h2 id="pastH" style="position:absolute;left:-9999px">Pastoral Notes</h2>
     <div class="card">
       <div class="toolbar">
-        <div><h3 style="margin:0">Pastoral / Confidential Notes</h3><div class="sub muted">Confidential notes are visible only to authorized staff accounts.</div></div>
+        <div><h3 style="margin:0">Pastoral / Confidential Notes</h3><div class="sub muted">For authorized pastoral records only — stored in this browser on this device.</div></div>
         <div class="actions no-print"><button class="btn" onclick="openPastoral()">+ Add Note</button><button class="btn secondary" onclick="savePdf('pastoral')">Save as PDF</button></div>
       </div>
       <div class="tablewrap"><table><thead><tr><th>Date</th><th>Person</th><th>Category</th><th>Pastor/Leader</th><th>Summary</th><th>Actions</th></tr></thead><tbody id="pastoralTable"></tbody></table></div>
@@ -869,7 +834,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
     </div>
 
     <div class="card" style="margin-top:16px"><h3>Data Export / Backup</h3>
-      <p class="muted">Download a complete backup of the shared church records currently loaded by this staff account.</p>
+      <p class="muted">Create a complete backup of the church records stored in this browser.</p>
       <div class="actions"><button class="btn" onclick="backupJSON()">Download Backup (JSON)</button><button class="btn secondary" onclick="document.getElementById('restoreFile').click()">Restore Backup</button><input id="restoreFile" type="file" accept=".json,application/json" style="display:none" onchange="restoreJSON(event)"></div>
     </div>
   </section>
@@ -913,7 +878,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
   </section>
 
   </div><!-- /wrap -->
-  <footer class="foot">JCRGM Church Management &amp; Prayer Center • Secure staff access • Shared records sync across signed-in devices — keep regular backups.</footer>
+  <footer class="foot">JCRGM Church Management &amp; Prayer Center • Offline local application • Records stored on this device — keep regular backups.</footer>
 </main>
 </div>
 
@@ -963,7 +928,6 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
 </div>
 
 <div id="toasts" role="status" aria-live="polite"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* =========================================================================
    JCRGM CHURCH MANAGEMENT & PRAYER CENTER
@@ -1040,238 +1004,8 @@ function loadData(){
 }
 
 let db=loadData();
-
-/* ---------- shared Supabase configuration ----------
-   The publishable key is intended for browser apps. Authorization is enforced
-   separately by Supabase Auth and Row Level Security on public.jcrgm_records.
-*/
-const CLOUD_CONFIG={
-  url:'https://yisfzexlbjeoeujvmmno.supabase.co',
-  publishableKey:'sb_publishable_NJvHqe_S_6QxZwQD0THexg_-Za92muj',
-  table:'jcrgm_records'
-};
-const CLOUD_EDITORS=['pedahzurministries@gmail.com'];
-const Cloud={client:null,user:null,ready:false,booted:false,snapshot:new Map(),timer:null,
-  syncing:false,needsSync:false,channel:null,refreshTimer:null,pollTimer:null,lastError:'',refreshing:false};
-
-function cloudStatus(text,state){
-  const e=el('cloudStatus'); if(e){e.textContent=text;e.className='cloud-status '+(state||'');}
-}
-function authNotice(text,ok){
-  const e=el('authMessage'); if(!e)return;
-  e.textContent=text;e.className='auth-message show'+(ok?' ok':'');
-}
-function isCloudEditor(user){return !!(user&&user.email&&CLOUD_EDITORS.indexOf(String(user.email).trim().toLowerCase())>=0);}
-function currentRecordCount(data){return COLLECTIONS.reduce(function(n,k){return n+((data&&Array.isArray(data[k]))?data[k].length:0);},0);}
-function persistLocalOnly(){try{LS.setItem(KEY,JSON.stringify(db));return true;}catch(e){return false;}}
-function cloudRowsFromDb(){
-  const rows=[];
-  COLLECTIONS.forEach(function(name){
-    (db[name]||[]).forEach(function(item){
-      if(!item.id)item.id=uid();
-      rows.push({collection:name,record_id:String(item.id),payload:item,updated_by:Cloud.user?Cloud.user.id:null,updated_at:new Date().toISOString()});
-    });
-  });
-  rows.push({collection:'settings',record_id:'main',payload:db.settings||freshSettings(),updated_by:Cloud.user?Cloud.user.id:null,updated_at:new Date().toISOString()});
-  return rows;
-}
-function cloudMapFromRows(rows){
-  const map=new Map();
-  (rows||[]).forEach(function(r){map.set(r.collection+'::'+r.record_id,JSON.stringify(r.payload));});
-  return map;
-}
-function hydrateCloudRows(rows){
-  const fresh=clone(DEFAULT_DATA);
-  COLLECTIONS.forEach(function(k){fresh[k]=[];});
-  (rows||[]).forEach(function(r){
-    if(r.collection==='settings'&&r.record_id==='main')fresh.settings=Object.assign(freshSettings(),r.payload||{});
-    else if(COLLECTIONS.indexOf(r.collection)>=0&&r.payload&&typeof r.payload==='object')fresh[r.collection].push(r.payload);
-  });
-  db=migrate(fresh);
-  return db;
-}
-function deleteLocalCloudCache(){try{LS.removeItem(KEY);}catch(e){}}
-function unlockChurchApp(){
-  const gate=el('authGate'),root=el('appRoot');
-  if(gate)gate.classList.add('hidden');if(root)root.classList.remove('cloud-hidden');
-  document.body.classList.remove('locked');
-}
-function lockChurchApp(message,preserveLocal){
-  Cloud.ready=false;Cloud.user=null;Cloud.snapshot=new Map();
-  if(Cloud.timer){clearTimeout(Cloud.timer);Cloud.timer=null;}
-  if(Cloud.refreshTimer){clearTimeout(Cloud.refreshTimer);Cloud.refreshTimer=null;}
-  if(Cloud.pollTimer){clearInterval(Cloud.pollTimer);Cloud.pollTimer=null;}
-  if(Cloud.channel&&Cloud.client){try{Cloud.client.removeChannel(Cloud.channel);}catch(e){}Cloud.channel=null;}
-  db=clone(DEFAULT_DATA);if(!preserveLocal)deleteLocalCloudCache();
-  const gate=el('authGate'),root=el('appRoot');
-  if(root)root.classList.add('cloud-hidden');if(gate)gate.classList.remove('hidden');
-  if(message)authNotice(message,false);
-  cloudStatus('Signed out','');
-}
-async function cloudLogin(e){
-  if(e&&e.preventDefault)e.preventDefault();
-  if(!Cloud.client){authNotice('Cloud client failed to load. Check your internet connection, then reload this page.',false);return;}
-  const email=(el('authEmail').value||'').trim().toLowerCase(),password=el('authPassword').value||'';
-  if(CLOUD_EDITORS.indexOf(email)<0){authNotice('This email is not on the authorized staff list. Ask the JCRGM administrator for access.',false);return;}
-  const b=el('authSubmit');b.disabled=true;b.textContent='Signing in…';authNotice('Checking your secure staff account…',true);
-  try{
-    const result=await Cloud.client.auth.signInWithPassword({email:email,password:password});
-    if(result.error)throw result.error;
-    await cloudStartSession(result.data.user);
-    if(el('authPassword'))el('authPassword').value='';
-  }catch(err){
-    authNotice(err&&err.message?err.message:'Sign-in failed. Check the email and password.',false);
-    try{await Cloud.client.auth.signOut();}catch(ignore){}
-  }finally{b.disabled=false;b.textContent='Sign in securely';}
-}
-async function cloudLogout(){
-  try{if(Cloud.ready&&Cloud.timer){clearTimeout(Cloud.timer);Cloud.timer=null;await cloudSyncNow();}}catch(e){}
-  try{if(Cloud.client)await Cloud.client.auth.signOut();}catch(e){}
-  lockChurchApp('You have signed out. Sign in again to access church records.');
-}
-async function cloudFetchRows(){
-  const rows=[];let from=0;const pageSize=1000;
-  while(true){
-    const r=await Cloud.client.from(CLOUD_CONFIG.table)
-      .select('collection,record_id,payload,updated_at,updated_by')
-      .order('collection',{ascending:true}).order('record_id',{ascending:true})
-      .range(from,from+pageSize-1);
-    if(r.error)throw r.error;
-    const batch=r.data||[];rows.push.apply(rows,batch);
-    if(batch.length<pageSize)break;
-    from+=pageSize;
-  }
-  return rows;
-}
-function cloudLocalSnapshot(){return cloudMapFromRows(cloudRowsFromDb());}
-function cloudUploadInitial(rows){
-  if(!rows.length)return Promise.resolve();
-  return Cloud.client.from(CLOUD_CONFIG.table).upsert(rows,{onConflict:'collection,record_id'}).then(function(r){if(r.error)throw r.error;});
-}
-async function cloudStartSession(user){
-  if(!isCloudEditor(user)){
-    try{await Cloud.client.auth.signOut();}catch(e){}
-    lockChurchApp('This Supabase account is not authorized to edit JCRGM records.',true);return;
-  }
-  Cloud.user=user;Cloud.ready=false;cloudStatus('Loading shared records…','busy');
-  try{
-    const localCopy=db,localCount=currentRecordCount(localCopy);
-    const rows=await cloudFetchRows();
-    if(rows.length){
-      const remoteKeys=new Set(rows.map(function(r){return r.collection+'::'+r.record_id;}));
-      const remoteSettings=rows.some(function(r){return r.collection==='settings'&&r.record_id==='main';});
-      hydrateCloudRows(rows);Cloud.snapshot=cloudMapFromRows(rows);
-      if(localCount){
-        const importMissing=confirm('The shared register already has records, and this device also has '+localCount+' local record(s). Import only local records not already present in the shared register? Existing shared records will never be overwritten. Choose Cancel to use the shared register only.');
-        if(importMissing){
-          const additions=[];
-          COLLECTIONS.forEach(function(name){
-            (localCopy[name]||[]).forEach(function(item){if(!item.id)item.id=uid();const k=name+'::'+String(item.id);if(!remoteKeys.has(k)){db[name].push(item);additions.push({collection:name,record_id:String(item.id),payload:item,updated_by:user.id,updated_at:new Date().toISOString()});remoteKeys.add(k);}});
-          });
-          if(!remoteSettings&&localCopy.settings){db.settings=Object.assign(freshSettings(),localCopy.settings);additions.push({collection:'settings',record_id:'main',payload:db.settings,updated_by:user.id,updated_at:new Date().toISOString()});}
-          if(additions.length){await cloudUploadInitial(additions);additions.forEach(function(r){Cloud.snapshot.set(r.collection+'::'+r.record_id,JSON.stringify(r.payload));});toast('Imported '+additions.length+' new local record(s); existing cloud records were preserved.','ok',6000);}
-          else toast('No new local records to import; the shared register is already current.','ok',4500);
-        }
-      }
-      deleteLocalCloudCache();
-    }else if(localCount){
-      const importLocal=confirm('The shared Supabase register is empty. This device has '+localCount+' local record(s). Import those records to the shared church register now? Choose Cancel to start with an empty shared register.');
-      if(importLocal){
-        db=migrate(localCopy);
-        const initial=cloudRowsFromDb();
-        await cloudUploadInitial(initial);
-        Cloud.snapshot=cloudMapFromRows(initial);
-        toast('Local records imported to the shared register.','ok',5500);
-      }else{db=clone(DEFAULT_DATA);Cloud.snapshot=new Map();}
-      deleteLocalCloudCache();
-    }else{db=clone(DEFAULT_DATA);Cloud.snapshot=new Map();deleteLocalCloudCache();}
-    Cloud.ready=true;Cloud.lastError='';unlockChurchApp();renderAll();renderSettings();
-    cloudStatus('Connected · live sync','ok');
-    startCloudRealtime();
-    updateClock();
-  }catch(err){
-    Cloud.ready=false;Cloud.user=null;cloudStatus('Connection error','err');
-    authNotice('Could not load shared records: '+(err&&err.message?err.message:'Unknown error')+'. Verify the setup SQL and try again.',false);
-    try{await Cloud.client.auth.signOut();}catch(e){}
-  }
-}
-function currentCloudRows(){return cloudRowsFromDb();}
-function scheduleCloudSync(){
-  if(!Cloud.ready||!Cloud.user)return;
-  cloudStatus('Saving changes…','busy');
-  if(Cloud.syncing){Cloud.needsSync=true;return;}
-  if(Cloud.timer)clearTimeout(Cloud.timer);
-  Cloud.timer=setTimeout(function(){Cloud.timer=null;cloudSyncNow();},650);
-}
-async function cloudSyncNow(){
-  if(!Cloud.ready||!Cloud.user)return;
-  if(Cloud.syncing){Cloud.needsSync=true;return;}
-  Cloud.syncing=true;Cloud.needsSync=false;
-  try{
-    const rows=currentCloudRows(),nextMap=cloudMapFromRows(rows),upserts=[],deletes=[];
-    rows.forEach(function(r){const k=r.collection+'::'+r.record_id;if(Cloud.snapshot.get(k)!==nextMap.get(k))upserts.push(r);});
-    Cloud.snapshot.forEach(function(v,k){if(!nextMap.has(k)){const i=k.indexOf('::');deletes.push({collection:k.slice(0,i),record_id:k.slice(i+2)});}});
-    for(let i=0;i<upserts.length;i+=100){const r=await Cloud.client.from(CLOUD_CONFIG.table).upsert(upserts.slice(i,i+100),{onConflict:'collection,record_id'});if(r.error)throw r.error;}
-    for(const d of deletes){const r=await Cloud.client.from(CLOUD_CONFIG.table).delete().eq('collection',d.collection).eq('record_id',d.record_id);if(r.error)throw r.error;}
-    Cloud.snapshot=nextMap;Cloud.lastError='';cloudStatus('Connected · changes synced','ok');
-  }catch(err){
-    Cloud.lastError=err&&err.message?err.message:'Unknown sync error';
-    cloudStatus('Sync issue · retrying','err');
-    toast('Cloud sync failed: '+Cloud.lastError+'. Your edits remain on screen; check your connection and try again.','err',7000);
-  }finally{
-    Cloud.syncing=false;
-    if(Cloud.needsSync){Cloud.needsSync=false;scheduleCloudSync();}
-  }
-}
-function startCloudRealtime(){
-  if(!Cloud.client||!Cloud.ready)return;
-  if(Cloud.channel){try{Cloud.client.removeChannel(Cloud.channel);}catch(e){}}
-  if(Cloud.pollTimer)clearInterval(Cloud.pollTimer);
-  Cloud.pollTimer=setInterval(function(){scheduleCloudRefresh();},30000);
-  Cloud.channel=Cloud.client.channel('jcrgm-shared-records')
-    .on('postgres_changes',{event:'*',schema:'public',table:CLOUD_CONFIG.table},function(){scheduleCloudRefresh();})
-    .subscribe(function(status){
-      if(status==='SUBSCRIBED')cloudStatus('Connected · live sync','ok');
-      else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')cloudStatus('Connected · refresh mode','busy');
-    });
-}
-function scheduleCloudRefresh(){
-  if(!Cloud.ready)return;
-  if(Cloud.refreshTimer)clearTimeout(Cloud.refreshTimer);
-  Cloud.refreshTimer=setTimeout(function(){Cloud.refreshTimer=null;cloudRefreshFromServer();},500);
-}
-async function cloudRefreshFromServer(){
-  if(!Cloud.ready||Cloud.refreshing)return;
-  if(el('modal')&&el('modal').classList.contains('show')){scheduleCloudRefresh();return;}
-  Cloud.refreshing=true;
-  try{
-    if(Cloud.timer){clearTimeout(Cloud.timer);Cloud.timer=null;await cloudSyncNow();}
-    const rows=await cloudFetchRows(),remoteMap=cloudMapFromRows(rows);
-    let same=remoteMap.size===Cloud.snapshot.size;
-    if(same)remoteMap.forEach(function(v,k){if(Cloud.snapshot.get(k)!==v)same=false;});
-    if(!same){hydrateCloudRows(rows);Cloud.snapshot=remoteMap;renderAll();renderSettings();cloudStatus('Updated from another device','ok');}
-  }catch(err){cloudStatus('Live refresh paused','err');}
-  finally{Cloud.refreshing=false;}
-}
-async function bootCloud(){
-  if(!window.supabase||!window.supabase.createClient){cloudStatus('Cloud library unavailable','err');authNotice('The Supabase client could not load. Check internet access and reload.',false);return;}
-  try{
-    Cloud.client=window.supabase.createClient(CLOUD_CONFIG.url,CLOUD_CONFIG.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-    Cloud.client.auth.onAuthStateChange(function(event,session){
-      if(event==='SIGNED_OUT'&&Cloud.user){lockChurchApp('Your staff session has ended. Sign in to continue.');}
-    });
-    const s=await Cloud.client.auth.getSession();
-    if(s.error)throw s.error;
-    if(s.data&&s.data.session){await cloudStartSession(s.data.session.user);}
-    else{cloudStatus('Sign in required','');authNotice('Use your authorized staff email and password to continue.',true);}
-  }catch(err){cloudStatus('Connection error','err');authNotice('Could not connect to Supabase: '+(err&&err.message?err.message:'Unknown error'),false);}
-}
-function persist(){
-  if(Cloud.ready){scheduleCloudSync();return true;}
-  try{LS.setItem(KEY,JSON.stringify(db));return true;}
-  catch(e){toast('Could not save to this browser ('+e.message+'). Data is kept for this session only.','err',7000);return false;}
-}
-function save(){persist();renderAll();}
+function persist(){ try{ LS.setItem(KEY,JSON.stringify(db)); return true; }catch(e){ toast('Could not save to this browser ('+e.message+'). Data is kept for this session only.','err',7000); return false; } }
+function save(){ persist(); renderAll(); }
 
 /* ---------- tiny helpers ---------- */
 function el(id){ return document.getElementById(id); }
@@ -1864,7 +1598,7 @@ function saveRecordPdf(key,id){
     title:sc.label+' Record',
     subtitle:rec.name||rec.person||rec.family||rec.source||rec.department||'',
     meta:'Reference: '+String(rec.id||'').toUpperCase().slice(-8)+'  •  Generated '+fmtDate(today()),
-    blocks:[{type:'kv',items:recordPairs(key,rec).map(function(p){ return [p[0],p[1]]; })},{type:'note',text:'This record was generated by the '+db.settings.short+' church management system. '+(Cloud.ready?'Records are shared securely in the authorized staff register.':'Records are held in the current browser session.')}]
+    blocks:[{type:'kv',items:recordPairs(key,rec).map(function(p){ return [p[0],p[1]]; })},{type:'note',text:'This record was generated by the '+db.settings.short+' church management system. Records are stored locally on the church device.'}]
   }),(db.settings.short||'JCRGM')+'-'+key+'-'+(today())+'.pdf');
 }
 function sendAllWhatsApp(key){
@@ -3382,7 +3116,7 @@ function fullPackSpec(){
     rows:db.ceremonyRegistrations.map(function(r){ return {ref:r.referenceNo||'—',name:r.name||'—',cer:(r.ceremonyName||'—')+' ('+fmtDate(r.ceremonyDate)+')',ph:r.phone||'—',form:(CEREMONY_FORMS[r.formKey]||{}).name||'—',st:r.status||'Registered'}; })});
   if(db.events.length) blocks.push({type:'table',title:'CEREMONY CALENDAR',columns:[{l:'Date',w:56,k:'d'},{l:'Ceremony',w:130,k:'e'},{l:'Time',w:46,k:'t'},{l:'Venue',w:100,k:'v'},{l:'Minister',w:90,k:'l'},{l:'Status',w:50,k:'s'}],
     rows:db.events.map(function(x){ return {d:fmtDate(x.date),e:x.event,t:x.time||'—',v:x.venue||x.location||'—',l:x.leader||'—',s:x.status||'Scheduled'}; })});
-  return {title:'FULL CHURCH PACK',subtitle:Cloud.ready?'All registers in the shared staff workspace':'All registers currently held on this device',meta:'Generated '+fmtDate(today())+' at '+nowStamp()+'  •  '+(db.settings.church||''),blocks:blocks.length?blocks:[{type:'note',text:'No records have been captured yet in '+(Cloud.ready?'the shared register.':'this browser.')}]};
+  return {title:'FULL CHURCH PACK',subtitle:'All registers currently held on this device',meta:'Generated '+fmtDate(today())+' at '+nowStamp()+'  •  '+(db.settings.church||''),blocks:blocks.length?blocks:[{type:'note',text:'No records have been captured yet on this device.'}]};
 }
 function certificateListSpec(){
   const arr=db.ceremonyRegistrations.filter(function(r){ return r.status==='Completed'||r.certificateEligible; });
@@ -3616,7 +3350,7 @@ function renderDashboard(){
   const last=db.usherAttendance.slice().sort(function(a,b){ return String(b.date||'').localeCompare(String(a.date||'')); })[0];
   set('lastServiceTotal',last?(num(last.total)+' ('+fmtDate(last.date)+')'):'—');
   const totalRec=COLLECTIONS.reduce(function(s,k){ return s+(db[k]||[]).length; },0);
-  set('sideRecordCount',totalRec+' shared record'+(totalRec===1?'':'s'));
+  set('sideRecordCount',totalRec+' record'+(totalRec===1?'':'s')+' on this device');
 }
 function renderGivingStats(){
   const set=function(id,v){ const e=el(id); if(e) e.textContent=v; };
@@ -3652,8 +3386,9 @@ function renderSettings(){
   const pe=el('setPrayerEcho'); if(pe) pe.textContent=(s.prayer||'21:00–22:30')+' every day (Thursday overnight until 01:00)';
   const note=el('storageNote');
   if(note){
+    const bytes=(function(){ try{ return (LS.getItem(KEY)||'').length; }catch(e){ return 0; } })();
     const total=COLLECTIONS.reduce(function(a,k){ return a+(db[k]||[]).length; },0);
-    note.textContent=Cloud.ready?'Records are shared securely in Supabase and restricted to authorized staff by Row Level Security. Currently '+total+' shared record(s). Use Download Backup for an offline copy.':'Sign in to load the shared Supabase register. Local browser storage is used only to offer first-time migration.';
+    note.textContent=(LS===window.localStorage?'Records are saved in this browser (localStorage) on this device.':'This browser blocks local storage — records will only last for this session. Export a backup before closing.')+'  Currently '+total+' record(s), about '+Math.max(1,Math.round(bytes/1024))+' KB.';
   }
   const wl=el('waNumberLabel'); if(wl) wl.textContent=waPretty(s.whatsapp);
   const wi=el('waNumberInline'); if(wi) wi.textContent=waPretty(s.whatsapp);
@@ -3717,7 +3452,7 @@ function restoreJSON(ev){
     try{
       const x=JSON.parse(r.result);
       if(!x||typeof x!=='object'||!Array.isArray(x.members)) throw new Error('shape');
-      if(!confirm('Restore will replace everything currently in '+(Cloud.ready?'the shared register':'this browser')+' with '+((x.members||[]).length)+' member record(s) and '+(x.usherAttendance||[]).length+' ushers record(s). Continue?')) return;
+      if(!confirm('Restore will replace everything currently on this device with '+((x.members||[]).length)+' member record(s) and '+(x.usherAttendance||[]).length+' ushers record(s). Continue?')) return;
       db=migrate(x); persist(); renderAll(); toast('Backup restored successfully.','ok',4500);
     }catch(err){ toast('That is not a valid JCRGM backup file.','err',5000); }
     ev.target.value='';
@@ -3778,13 +3513,17 @@ function boot(){
       const h=document.createElement('div'); h.className='swipe-hint no-print'; h.textContent='↔ Swipe the table sideways to see every column';
       w.parentNode.insertBefore(h,w);
     });
-    injectGenericExports();
+    renderAll(); injectGenericExports();
+    renderSettings();
     resetPrayer();
     updateClock();
     setInterval(updateClock,1000);
-    if(!LS_setAvailable())toast('This browser blocks local storage. Cloud records remain shared while connected.','err',6000);
-    bootCloud();
-  }catch(err){bootError=err;showBootError(err);}
+    if(location.hash) routeFromHash(); else navTo('dashboard');
+    if(!LS_setAvailable()) toast('This browser is blocking local storage — records will not survive a reload. Export a backup before closing.','err',8000);
+  }catch(err){
+    bootError=err;
+    showBootError(err);
+  }
 }
 function LS_setAvailable(){ try{ LS.setItem('__probe','1'); LS.removeItem('__probe'); return LS!==window.localStorage||true; }catch(e){ return false; } }
 function showBootError(err){
@@ -3804,5 +3543,5 @@ window.addEventListener('error',function(e){ if(e&&e.message&&String(document.lo
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
