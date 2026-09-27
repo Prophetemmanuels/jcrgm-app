@@ -1054,7 +1054,9 @@ async function copyMonthlyTheme(){
 
                                 <i data-lucide="sparkles" class="w-5 h-5"></i>
 
-                                <span class="text-[10px] font-bold uppercase tracking-[0.25em]">
+                                <span
+                                    id="modalHeroTagline"
+                                    class="text-[10px] font-bold uppercase tracking-[0.25em]">
                                     Quarterly Redemption Convocation
                                 </span>
 
@@ -1082,7 +1084,9 @@ async function copyMonthlyTheme(){
                             </p>
 
 
-                            <p class="text-sm text-slate-300 leading-relaxed mt-4">
+                            <p
+                                id="modalHeroIntro"
+                                class="text-sm text-slate-300 leading-relaxed mt-4">
 
                                 A strategic night of prayer, redemption,
                                 spiritual renewal, prophetic ministry and
@@ -1094,6 +1098,8 @@ async function copyMonthlyTheme(){
 
                     </div>
 
+
+                    <div id="modalRedemptionTeaching" class="space-y-6">
 
                     <div class="space-y-2">
 
@@ -1146,19 +1152,28 @@ async function copyMonthlyTheme(){
 
                     </div>
 
+                    </div><!-- /modalRedemptionTeaching -->
+
 
                     <div class="bg-brand-navy/60 border border-brand-gold/20 rounded-2xl p-4 flex gap-3 items-start">
 
                         <i data-lucide="info" class="w-5 h-5 text-brand-gold shrink-0 mt-0.5"></i>
 
-                        <p class="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
+                        <p
+                            id="modalInfoNote"
+                            class="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
 
                             <strong class="text-white">
                                 The Night of the Redeemed
                             </strong>
-                            is a continuing quarterly convocation.
-                            Its season numbers are permanent and sequential.
-                            The numbering does not reset when a new calendar
+                            is a continuing convocation held in
+                            March, June and September — the last Friday
+                            of each of those months. December is reserved
+                            for the Crossover Night (31st December), which
+                            gives the church a full quarter of preparation
+                            time before the next convocation.
+                            Season numbers are permanent and sequential;
+                            the numbering does not reset when a new calendar
                             year begins.
 
                         </p>
@@ -1414,20 +1429,35 @@ async function copyMonthlyTheme(){
          * NIGHT OF THE REDEEMED OFFICIAL SEQUENCE
          * ========================================================
          *
+         * DECEMBER IS NO LONGER A REDEEMED MONTH.
+         *
+         * The last Friday of December sits too close to the
+         * CROSSOVER NIGHT (31st December, every year), so the
+         * December convocation has been moved forward to the
+         * NEXT MONTH IN THE PATTERN — MARCH.
+         *
+         * That leaves 31st December free for Crossover Night
+         * and gives the church a full quarter of preparation
+         * time between Crossover Night and the next
+         * Night of the Redeemed.
+         *
+         * DECEMBER SLOT  -> CROSSOVER NIGHT (31st December)
+         *
          * SEPTEMBER 2026 = SEASON 1
          *
-         * DECEMBER 2026 = SEASON 2
+         * MARCH 2027     = SEASON 2
+         * JUNE 2027      = SEASON 3
+         * SEPTEMBER 2027 = SEASON 4
          *
-         * MARCH 2027    = SEASON 3
-         * JUNE 2027     = SEASON 4
-         * SEPTEMBER 2027= SEASON 5
-         * DECEMBER 2027 = SEASON 6
+         * MARCH 2028     = SEASON 5
+         * JUNE 2028      = SEASON 6
+         * SEPTEMBER 2028 = SEASON 7
          *
-         * MARCH 2028    = SEASON 7
-         * JUNE 2028     = SEASON 8
-         * SEPTEMBER 2028= SEASON 9
-         * DECEMBER 2028 = SEASON 10
+         * MARCH 2029     = SEASON 8
+         * JUNE 2029      = SEASON 9
+         * SEPTEMBER 2029 = SEASON 10
          *
+         * THREE CONVOCATIONS A YEAR: MARCH, JUNE, SEPTEMBER.
          * THE NUMBERING NEVER RESETS.
          */
 
@@ -1435,6 +1465,39 @@ async function copyMonthlyTheme(){
 
         const NIGHT_REDEEMED_LAUNCH_MONTH = 8;
         // September = JavaScript month 8
+
+
+        const NIGHT_REDEEMED_SEASON_MONTHS = [
+            2,  // March
+            5,  // June
+            8   // September
+        ];
+
+
+        const NIGHT_REDEEMED_SEASONS_PER_YEAR =
+            NIGHT_REDEEMED_SEASON_MONTHS.length;
+        // 3 convocations every year
+
+
+        const CROSSOVER_MONTH = 11;
+        // December = JavaScript month 11
+
+
+        const CROSSOVER_DAY = 31;
+        // Crossover Night is ALWAYS the 31st of December
+
+
+        /*
+         * CROSSOVER NIGHT (31st December)
+         *
+         * It now owns the December slot that the
+         * Night of the Redeemed used to occupy.
+         * It is treated as a SPECIAL night — clickable
+         * portal, highlighted calendar day, detail card —
+         * but it carries NO season number, because the
+         * official season sequence belongs only to the
+         * Night of the Redeemed.
+         */
 
 
         /* =========================================================
@@ -1986,10 +2049,22 @@ async function copyMonthlyTheme(){
 
 
             /*
-             * 2026:
+             * December never carries a season:
+             * that slot belongs to Crossover Night.
+             */
+
+            if (
+                monthIndex === CROSSOVER_MONTH
+            ) {
+
+                return null;
+            }
+
+
+            /*
+             * 2026 (launch year):
              *
              * September = 1
-             * December  = 2
              */
 
             if (
@@ -1998,18 +2073,11 @@ async function copyMonthlyTheme(){
             ) {
 
                 if (
-                    monthIndex === 8
+                    monthIndex ===
+                    NIGHT_REDEEMED_LAUNCH_MONTH
                 ) {
 
                     return 1;
-                }
-
-
-                if (
-                    monthIndex === 11
-                ) {
-
-                    return 2;
                 }
 
 
@@ -2018,20 +2086,23 @@ async function copyMonthlyTheme(){
 
 
             /*
-             * Every year after 2026
-             * contains four events.
+             * Every year after the launch year
+             * contains THREE events.
              *
              * 2027:
-             * March     = 3
-             * June      = 4
-             * September = 5
-             * December  = 6
+             * March     = 2
+             * June      = 3
+             * September = 4
              *
              * 2028:
-             * March     = 7
-             * June      = 8
-             * September = 9
-             * December  = 10
+             * March     = 5
+             * June      = 6
+             * September = 7
+             *
+             * 2029:
+             * March     = 8
+             * June      = 9
+             * September = 10
              */
 
             const baseSeason =
@@ -2040,43 +2111,31 @@ async function copyMonthlyTheme(){
                     (year -
                         NIGHT_REDEEMED_LAUNCH_YEAR -
                         1
-                    ) * 4
+                    ) *
+                    NIGHT_REDEEMED_SEASONS_PER_YEAR
                 );
+            // Season of the FIRST convocation of that year:
+            // 2026 contributes ONE season (September), so
+            // 2027 starts at 2, then +3 per year:
+            //   2027 -> March 2, June 3, September 4
+            //   2028 -> March 5, June 6, September 7
+            //   2029 -> March 8, June 9, September 10
+
+
+            const position =
+                NIGHT_REDEEMED_SEASON_MONTHS
+                    .indexOf(monthIndex);
 
 
             if (
-                monthIndex === 2
+                position === -1
             ) {
 
-                return baseSeason + 1;
+                return null;
             }
 
 
-            if (
-                monthIndex === 5
-            ) {
-
-                return baseSeason + 2;
-            }
-
-
-            if (
-                monthIndex === 8
-            ) {
-
-                return baseSeason + 3;
-            }
-
-
-            if (
-                monthIndex === 11
-            ) {
-
-                return baseSeason + 4;
-            }
-
-
-            return null;
+            return baseSeason + position;
         }
 
 
@@ -2134,6 +2193,24 @@ async function copyMonthlyTheme(){
                 eventSeries:
                     "The Night of the Redeemed",
 
+                eventKind:
+                    "redeemed",
+
+                portalBadge:
+                    "THE NIGHT OF THE REDEEMED",
+
+                portalTitle:
+                    "The Night of the Redeemed",
+
+                portalTagline:
+                    "Quarterly Redemption Convocation",
+
+                portalLead:
+                    `Quarterly Redemption Convocation • Season ${season}`,
+
+                calendarMark:
+                    `S${season}`,
+
                 time:
                     "19:30 - 05:00 HRS",
 
@@ -2145,6 +2222,78 @@ async function copyMonthlyTheme(){
 
                 description:
                     `Quarterly Redemption Convocation • Season ${season}`
+
+            };
+        }
+
+
+        /* =========================================================
+           CREATE CROSSOVER NIGHT (31st DECEMBER)
+        ========================================================== */
+
+        function createCrossoverNight(
+            year
+        ) {
+
+            return {
+
+                holiday:
+                    "31st December",
+
+                holidayName:
+                    "New Year's Eve",
+
+                churchDate:
+                    new Date(
+                        year,
+                        CROSSOVER_MONTH,
+                        CROSSOVER_DAY
+                    ),
+
+                churchName:
+                    "Crossover Night",
+
+                shortName:
+                    "Crossover Night",
+
+                season:
+                    null,
+
+                seasonLabel:
+                    "31st December",
+
+                eventSeries:
+                    "Crossover Night",
+
+                eventKind:
+                    "crossover",
+
+                portalBadge:
+                    "CROSSOVER NIGHT",
+
+                portalTitle:
+                    "Crossover Night",
+
+                portalTagline:
+                    "Annual Year-End Crossover Service",
+
+                portalLead:
+                    "Annual Year-End Crossover Service • 31st December",
+
+                calendarMark:
+                    "XO",
+
+                time:
+                    "20:00 - 04:00 HRS",
+
+                venue:
+                    "JCRGM CHURCH",
+
+                type:
+                    "special",
+
+                description:
+                    "Crossover Night • 31st December every year"
 
             };
         }
@@ -2177,21 +2326,28 @@ async function copyMonthlyTheme(){
                 NIGHT_REDEEMED_LAUNCH_YEAR
             ) {
 
+                /*
+                 * Launch year: September only.
+                 * December 2026 belongs to
+                 * Crossover Night.
+                 */
+
                 months = [
-                    8,
-                    11
+                    NIGHT_REDEEMED_LAUNCH_MONTH
                 ];
 
             }
 
             else {
 
-                months = [
-                    2,
-                    5,
-                    8,
-                    11
-                ];
+                /*
+                 * March, June, September.
+                 * December is skipped — that slot
+                 * is the Crossover Night.
+                 */
+
+                months =
+                    NIGHT_REDEEMED_SEASON_MONTHS.slice();
 
             }
 
@@ -2876,34 +3032,9 @@ async function copyMonthlyTheme(){
                 },
 
 
-                /* CROSSOVER */
+                /* CROSSOVER NIGHT — owns the December slot */
 
-                {
-                    holiday:
-                        "31st December",
-
-                    holidayName:
-                        "New Year's Eve",
-
-                    churchDate:
-                        new Date(
-                            year,
-                            11,
-                            31
-                        ),
-
-                    churchName:
-                        "Crossover Night",
-
-                    time:
-                        "20:00 - 04:00 HRS",
-
-                    venue:
-                        "JCRGM CHURCH",
-
-                    type:
-                        "holiday"
-                },
+                createCrossoverNight(year),
 
 
                 /* NIGHT OF THE REDEEMED */
@@ -3518,6 +3649,31 @@ async function copyMonthlyTheme(){
            GET EVENTS FOR COUNTDOWN
         ========================================================== */
 
+        /*
+         * SPECIAL NIGHTS (Night of the Redeemed
+         * + Crossover Night), in date order.
+         */
+
+        function getSpecialNightEvents(
+            year
+        ) {
+
+            return getLiturgicalCalendar(
+                year
+            )
+            .filter(
+                event =>
+                    event.type ===
+                    "special"
+            )
+            .sort(
+                (a, b) =>
+                    a.churchDate -
+                    b.churchDate
+            );
+        }
+
+
         function getCountdownEvent() {
 
             const now =
@@ -3526,7 +3682,8 @@ async function copyMonthlyTheme(){
 
             /*
              * If the selected year is the
-             * current year, show the next Night
+             * current year, show the next special
+             * night (Redeemed or Crossover)
              * from the current date.
              */
 
@@ -3536,7 +3693,7 @@ async function copyMonthlyTheme(){
             ) {
 
                 const events =
-                    getNightOfRedeemedEvents(
+                    getSpecialNightEvents(
                         currentYear
                     );
 
@@ -3579,7 +3736,7 @@ async function copyMonthlyTheme(){
                  */
 
                 const nextYearEvents =
-                    getNightOfRedeemedEvents(
+                    getSpecialNightEvents(
                         currentYear + 1
                     );
 
@@ -3591,7 +3748,7 @@ async function copyMonthlyTheme(){
 
             /*
              * Future selected year:
-             * use first Night of the Redeemed
+             * use the first special night
              * for that selected year.
              */
 
@@ -3601,7 +3758,7 @@ async function copyMonthlyTheme(){
             ) {
 
                 const futureEvents =
-                    getNightOfRedeemedEvents(
+                    getSpecialNightEvents(
                         currentYear
                     );
 
@@ -3613,12 +3770,12 @@ async function copyMonthlyTheme(){
 
             /*
              * Past selected year:
-             * show the final Night of the Redeemed
+             * show the final special night
              * in that selected year.
              */
 
             const pastEvents =
-                getNightOfRedeemedEvents(
+                getSpecialNightEvents(
                     currentYear
                 );
 
@@ -3646,7 +3803,7 @@ async function copyMonthlyTheme(){
                 document.getElementById(
                     "nextEventTitle"
                 ).innerText =
-                    "No Night of the Redeemed scheduled";
+                    "No special night scheduled";
 
 
                 document.getElementById(
@@ -3761,6 +3918,11 @@ async function copyMonthlyTheme(){
                     event.season;
 
 
+                const isRedeemed =
+                    event.eventKind !==
+                    "crossover";
+
+
                 const dateText =
                     formatFullDateOrdinal(
                         event.churchDate
@@ -3770,13 +3932,19 @@ async function copyMonthlyTheme(){
                 document.getElementById(
                     "modalSeasonBadge"
                 ).innerText =
+                    event.portalBadge ||
                     "THE NIGHT OF THE REDEEMED";
 
 
                 document.getElementById(
                     "modalSeasonTitle"
                 ).innerText =
-                    `Season ${season}`;
+                    isRedeemed
+                        ? `Season ${season}`
+                        : (
+                            event.portalTitle ||
+                            "Crossover Night"
+                        );
 
 
                 document.getElementById(
@@ -3788,19 +3956,105 @@ async function copyMonthlyTheme(){
                 document.getElementById(
                     "modalHeroTitle"
                 ).innerText =
+                    event.portalTitle ||
                     "The Night of the Redeemed";
 
 
                 document.getElementById(
-                    "modalHeroSeason"
+                    "modalHeroTagline"
                 ).innerText =
-                    `Season ${season}`;
+                    event.portalTagline ||
+                    "Quarterly Redemption Convocation";
+
+
+                document.getElementById(
+                    "modalHeroIntro"
+                ).innerText =
+                    isRedeemed
+                        ? "A strategic night of prayer, redemption, spiritual renewal, prophetic ministry and personal encounter in the presence of God."
+                        : "An all-night watch of thanksgiving, worship and intercession as the church crosses from the old year into the new one in the presence of God.";
+
+
+                const heroSeason =
+                    document.getElementById(
+                        "modalHeroSeason"
+                    );
+
+
+                if (
+                    isRedeemed
+                ) {
+
+                    heroSeason.classList.remove(
+                        "hidden"
+                    );
+
+                    heroSeason.innerText =
+                        `Season ${season}`;
+
+                }
+
+                else {
+
+                    heroSeason.classList.add(
+                        "hidden"
+                    );
+
+                    heroSeason.innerText =
+                        "";
+
+                }
 
 
                 document.getElementById(
                     "modalHeroDate"
                 ).innerText =
                     dateText;
+
+
+                document.getElementById(
+                    "modalRedemptionTeaching"
+                ).classList.toggle(
+                    "hidden",
+                    !isRedeemed
+                );
+
+
+                document.getElementById(
+                    "modalInfoNote"
+                ).innerHTML =
+                    isRedeemed
+                        ? `
+                            <strong class="text-white">
+                                The Night of the Redeemed
+                            </strong>
+                            is a continuing convocation held in
+                            March, June and September — the last Friday
+                            of each of those months. December is reserved
+                            for the Crossover Night (31st December), which
+                            gives the church a full quarter of preparation
+                            time before the next convocation.
+                            Season numbers are permanent and sequential;
+                            the numbering does not reset when a new calendar
+                            year begins.
+                        `
+                        : `
+                            <strong class="text-white">
+                                Crossover Night
+                            </strong>
+                            is held on the
+                            31st of December every year. It now occupies
+                            the December slot, so the Night of the Redeemed
+                            no longer falls in December — its next
+                            convocation is in March, giving a full quarter
+                            of preparation time after the crossover.
+                            Crossover Night carries no season number.
+                        `;
+
+
+                modal.dataset.eventKind =
+                    event.eventKind ||
+                    "redeemed";
 
 
                 modal.dataset.season =
@@ -3911,6 +4165,23 @@ async function copyMonthlyTheme(){
                 getCountdownEvent();
 
 
+            const eventKind =
+                targetEvent
+                    ? (
+                        targetEvent.eventKind ||
+                        "redeemed"
+                    )
+                    : (
+                        modal.dataset.eventKind ||
+                        "redeemed"
+                    );
+
+
+            const isRedeemed =
+                eventKind !==
+                "crossover";
+
+
             const season =
                 targetEvent
                     ? targetEvent.season
@@ -3934,7 +4205,17 @@ async function copyMonthlyTheme(){
             const eventTitle =
                 targetEvent
                     ? targetEvent.churchName
-                    : `The Night of the Redeemed — Season ${season}`;
+                    : (
+                        isRedeemed
+                            ? `The Night of the Redeemed — Season ${season}`
+                            : "Crossover Night"
+                    );
+
+
+            const eventHeading =
+                isRedeemed
+                    ? `THE NIGHT OF THE REDEEMED — SEASON ${season}`
+                    : "CROSSOVER NIGHT — 31ST DECEMBER";
 
 
             const messageHeader =
@@ -3943,7 +4224,7 @@ async function copyMonthlyTheme(){
 
             const messageBody =
 
-                `\n\n🔴 *THE NIGHT OF THE REDEEMED — SEASON ${season}*` +
+                `\n\n🔴 *${eventHeading}*` +
 
                 `\n✨ *Official Event:* ${eventTitle}` +
 
@@ -3952,7 +4233,11 @@ async function copyMonthlyTheme(){
                 `\n⏰ *Time:* ${
                     targetEvent
                         ? targetEvent.time
-                        : "19:30 - 05:00 HRS"
+                        : (
+                            isRedeemed
+                                ? "19:30 - 05:00 HRS"
+                                : "20:00 - 04:00 HRS"
+                        )
                 }` +
 
                 `\n👑 *Request:* One-on-One Encounter with Bishop Emmanuel Sakala` +
@@ -4312,7 +4597,7 @@ async function copyMonthlyTheme(){
 
                                             <span
                                                 class="night-redeemed-dot"
-                                                aria-label="The Night of the Redeemed">
+                                                aria-label="${event.shortName}">
                                             </span>
 
                                         `;
@@ -4354,7 +4639,7 @@ async function copyMonthlyTheme(){
 
                                 <span class="text-[7px] sm:text-[8px] uppercase tracking-wider text-red-400 mt-1 font-extrabold">
 
-                                    S${specialEvent.season}
+                                    ${specialEvent.calendarMark}
 
                                 </span>
 
@@ -4524,7 +4809,7 @@ async function copyMonthlyTheme(){
 
                                 <span class="night-redeemed-dot"></span>
 
-                                Quarterly Redemption Convocation
+                                ${event.portalTagline}
 
                             </span>
 
@@ -4571,7 +4856,7 @@ async function copyMonthlyTheme(){
                                     class="w-3 h-3">
                                 </i>
 
-                                Official Sequence • Season ${event.season}
+                                Official Sequence • ${event.seasonLabel}
 
                             </div>
 
@@ -4803,7 +5088,7 @@ async function copyMonthlyTheme(){
 
                                     <span class="font-bold text-white">
 
-                                        The Night of the Redeemed
+                                        ${event.portalTitle}
 
                                     </span>
 
@@ -4812,7 +5097,7 @@ async function copyMonthlyTheme(){
 
                                         <span class="night-redeemed-dot"></span>
 
-                                        Season ${event.season}
+                                        ${event.seasonLabel}
 
                                     </span>
 
@@ -4829,7 +5114,11 @@ async function copyMonthlyTheme(){
 
                             ${
                                 isSpecial
-                                    ? "SEASON " + event.season
+                                    ? (
+                                        event.season
+                                            ? "SEASON " + event.season
+                                            : "31 DEC"
+                                    )
                                     : event.holiday
                             }
 
@@ -4846,7 +5135,7 @@ async function copyMonthlyTheme(){
 
                                             <span class="text-xs text-red-400 font-semibold">
 
-                                                Quarterly Redemption Convocation
+                                                ${event.portalTagline}
 
                                             </span>
 
@@ -4997,9 +5286,7 @@ async function copyMonthlyTheme(){
                                     <span class="text-white font-medium">
 
                                         ${
-                                            event.type === "special"
-                                                ? `The Night of the Redeemed — Season ${event.season}`
-                                                : event.churchName
+                                            event.churchName
                                         }
 
                                     </span>
@@ -5199,5 +5486,5 @@ async function copyMonthlyTheme(){
 })();
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39c8de33addb56f',t:'MTc4OTE5MTM4Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39c8de33addb56f',t:'MTc4OTE5MTM4Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4199997ec4ab578',t:'MTc5MDUwMjU4Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
