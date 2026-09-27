@@ -1457,8 +1457,40 @@ async function copyMonthlyTheme(){
          * JUNE 2029      = SEASON 9
          * SEPTEMBER 2029 = SEASON 10
          *
+         * ...and onward, without end.
+         *
          * THREE CONVOCATIONS A YEAR: MARCH, JUNE, SEPTEMBER.
          * THE NUMBERING NEVER RESETS.
+         *
+         * ------------------------------------------------
+         * BUILT FOR GENERATIONS AFTER US
+         * ------------------------------------------------
+         *
+         * There is NO end year anywhere in this engine.
+         * September 2026 (Season 1) is the ONLY anchor;
+         * every other date is computed from it, so the
+         * calendar is correct for any year from now until
+         * the end of the 4-digit calendar (year 9999).
+         *
+         * Closed form, for any year Y >= 2027:
+         *
+         *   season = 2 + ((Y - 2027) * 3) + position
+         *
+         *   position: March = 0, June = 1, September = 2
+         *
+         * Worked examples far ahead of us:
+         *
+         *   2100 -> March 221,  June 222,  September 223
+         *   2226 -> March 599,  June 600,  September 601
+         *   9999 -> March 23918, June 23919, September 23920
+         *
+         * Never hard-code a year, a season number or a
+         * date anywhere in this file — add the rule instead,
+         * so the generations after us inherit a calendar
+         * that still computes itself.
+         *
+         * Verified by tests/perpetual-calendar.test.mjs,
+         * which runs every single year from 2026 to 9999.
          */
 
         const NIGHT_REDEEMED_LAUNCH_YEAR = 2026;
@@ -1485,6 +1517,28 @@ async function copyMonthlyTheme(){
 
         const CROSSOVER_DAY = 31;
         // Crossover Night is ALWAYS the 31st of December
+
+
+        /*
+         * NIGHT PROGRAMME START TIME
+         *
+         * EVERY night programme starts at 19:30 HRS —
+         * the Night of the Redeemed AND the Crossover
+         * Night. Change the start time in ONE place only.
+         */
+
+        const NIGHT_PROGRAMME_START =
+            "19:30";
+
+
+        const NIGHT_PROGRAMME_TIME =
+            `${NIGHT_PROGRAMME_START} - 05:00 HRS`;
+        // Night of the Redeemed
+
+
+        const CROSSOVER_NIGHT_TIME =
+            `${NIGHT_PROGRAMME_START} - 04:00 HRS`;
+        // Crossover Night
 
 
         /*
@@ -2212,7 +2266,7 @@ async function copyMonthlyTheme(){
                     `S${season}`,
 
                 time:
-                    "19:30 - 05:00 HRS",
+                    NIGHT_PROGRAMME_TIME,
 
                 venue:
                     "JCRGM CHURCH",
@@ -2284,7 +2338,7 @@ async function copyMonthlyTheme(){
                     "XO",
 
                 time:
-                    "20:00 - 04:00 HRS",
+                    CROSSOVER_NIGHT_TIME,
 
                 venue:
                     "JCRGM CHURCH",
@@ -4233,11 +4287,7 @@ async function copyMonthlyTheme(){
                 `\n⏰ *Time:* ${
                     targetEvent
                         ? targetEvent.time
-                        : (
-                            isRedeemed
-                                ? "19:30 - 05:00 HRS"
-                                : "20:00 - 04:00 HRS"
-                        )
+                        : NIGHT_PROGRAMME_TIME
                 }` +
 
                 `\n👑 *Request:* One-on-One Encounter with Bishop Emmanuel Sakala` +
@@ -5486,5 +5536,5 @@ async function copyMonthlyTheme(){
 })();
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39c8de33addb56f',t:'MTc4OTE5MTM4Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4199997ec4ab578',t:'MTc5MDUwMjU4Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39c8de33addb56f',t:'MTc4OTE5MTM4Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a419bc958dedb575',t:'MTc5MDUwNDAxNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
