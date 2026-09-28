@@ -1003,7 +1003,7 @@ animation:none;opacity:.55;pointer-events:none;}
 </div>
 
 <footer>
-📞 <strong>Phone:</strong> 0979554970 &nbsp;|&nbsp; ✉ <strong>Email:</strong> <a href="/cdn-cgi/l/email-protection#81f1e4e5e0e9fbf4f3ece8efe8f2f5f3e8e4f2c1e6ece0e8edafe2eeec" class="map-link"><span class="__cf_email__" data-cfemail="64140100050c1e1116090d0a0d1710160d0117240309050d084a070b09">[email&#160;protected]</span></a><br>
+📞 <strong>Phone:</strong> 0979554970 &nbsp;|&nbsp; ✉ <strong>Email:</strong> <a id="footerEmailLink" href="/cdn-cgi/l/email-protection#cbbbaeafaaa3b1beb9a6a2a5a2b8bfb9a2aeb88baca6aaa2a7e5a8a4a6" class="map-link"><span class="__cf_email__" data-cfemail="a9d9cccdc8c1d3dcdbc4c0c7c0dadddbc0ccdae9cec4c8c0c587cac6c4">[email&#160;protected]</span></a><br>
 📍 <strong>Location:</strong> <a id="footerMapLink" href="#" target="_blank" rel="noopener" class="map-link">Find Our Church on Google Maps</a><br>
 © <span id="year"></span> Jesus Christ Redeems Global Ministries — All Rights Reserved
 </footer>
@@ -1020,6 +1020,7 @@ if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){navigato
 // ============================================================
 const CHURCH_CONFIG = {
   fullName: "Jesus Christ Redeems Global Ministries",
+  email: "pedahzurministries@gmail.com", // ✉️ ALWAYS use this church email
   mapVenueLabel: "JCRGM CHURCH", // 🏷️ Venue display text — edit here only
   mapLink: "https://maps.app.goo.gl/t8LcZowDWVmsAiJu8" // 📍 UPDATE THIS LINE ONLY
 };
@@ -1051,6 +1052,11 @@ function venueCell(venue){
 // Inject map link into footer (single source: CHURCH_CONFIG)
 const footerMap=document.getElementById("footerMapLink");
 if(footerMap) footerMap.href = CHURCH_CONFIG.mapLink;
+const footerEmail=document.getElementById("footerEmailLink");
+if(footerEmail && CHURCH_CONFIG.email){
+  footerEmail.href = "mailto:" + CHURCH_CONFIG.email;
+  footerEmail.textContent = CHURCH_CONFIG.email;
+}
 
 // Projector toggle
 function toggleProjector(){document.documentElement.classList.toggle("projector");}
@@ -1491,5 +1497,5 @@ document.addEventListener("visibilitychange", function(){ if(!document.hidden) u
   });
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4245270bcb04ebe',t:'MTc5MDYxNTAxMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42464b8feb390cf',t:'MTc5MDYxNTc2MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
