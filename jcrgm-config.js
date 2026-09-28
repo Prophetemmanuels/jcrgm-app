@@ -29,6 +29,12 @@ var JCRGM = (function () {
     // Office / helpdesk contacts
     phone: "0979554970",
     whatsapp: "260979554970",          // country code + number, digits only
+    /* The line the app's OWN problems go to: a write the database refused, a
+       register that will not load, a case that needs a second pair of eyes.
+       Leave it blank to use the church number above; set it if the help desk is
+       somebody else. Any shape works - 0979554970, +260 97 955 4970,
+       260979554970 - the app reduces it to the digits WhatsApp needs. */
+    supportWhatsapp: "",
     email: "pedahzurministries@gmail.com",
     mapLink: "https://maps.app.goo.gl/t8LcZowDWVmsAiJu8",
     mapVenueLabel: "JCRGM CHURCH",
@@ -273,6 +279,23 @@ var JCRGM = (function () {
   /** Last 4 digits — the light-touch secret for public status lookups. */
   W.phoneTail = function (raw) { var s = W.normalisePhone(raw); return s.length >= 4 ? s.slice(-4) : ""; };
 
+  /** A wa.me link that survives a hand-typed number and a long message.
+      A text too long for a URL is shortened and SAYSO — a support request that
+      silently loses half its lines is worse than one that admits it trimmed. */
+  W.waHref = function (rawNumber, text, maxChars) {
+    var digits = W.normalisePhone(rawNumber);
+    var cap = maxChars || 1300;
+    var src = String(text || "").replace(/\r\n/g, "\n").trim();
+    var body = src.length > cap ? src.slice(0, cap - 1).replace(/\s+\S*$/, "") + "\u2026" : src;
+    return {
+      number: digits,
+      ok: /^\d{9,15}$/.test(digits),
+      text: body,
+      truncated: body !== src,
+      url: digits ? "https://wa.me/" + digits + (body ? "?text=" + encodeURIComponent(body) : "") : ""
+    };
+  };
+
   W.nrc = function (raw) { return String(raw || "").toUpperCase().replace(/\s+/g, ""); };
   W.isValidNrc = function (raw) {
     var s = String(raw || "").replace(/\s+/g, "").toUpperCase();
@@ -481,6 +504,38 @@ var JCRGM = (function () {
   };
 
   /** A Postgres / PostgREST error in words a welfare volunteer can act on. */
+  /** The desk's "send this file to the church line" text.
+      Contact numbers, NRC, addresses, bank/till details, the vulnerability
+      flags and the consent fields stay BEHIND on purpose: a WhatsApp draft
+      leaves the phone inside a chat log the church does not control, so only
+      what identifies the case and the problem travels. opts.withContact adds
+      the last four digits of the applicant's number, which is enough to match
+      a call-back without publishing it. */
+  W.supportCaseText = function (rec, opts) {
+    rec = rec || {}; opts = opts || {};
+    var clip = function (v, n) {
+      var s = String(v == null ? "" : v).replace(/\s+/g, " ").trim();
+      return s.length > n ? s.slice(0, n - 1) + "\u2026" : s;
+    };
+    var money = function (v) { var n = Number(v); return isFinite(n) && n > 0 ? CONFIG.currencyDefault + " " + n.toFixed(2) : "not yet set"; };
+    var stt = (W.status && W.status(rec.status)) || {};
+    var L = [
+      CONFIG.shortName + " welfare \u2014 case detail for the Support Team",
+      "Case " + (rec.ref_no || "(no reference)"),
+      "Name: " + (clip(rec.beneficiary_name, 60) || "unnamed"),
+      "Status: " + (stt.label || rec.status || "-") + (rec.priority && rec.priority !== "normal" ? " / " + rec.priority : ""),
+      "Urgency: " + (rec.urgency || "normal") + "   Category: " + (rec.category || "-"),
+      "Asked: " + money(rec.amount_requested) + "   Released: " + money(rec.disbursed_amount),
+      rec.assigned_to ? "Assigned to: " + clip(rec.assigned_to, 40) : "",
+      rec.need_description ? "Need: " + clip(rec.need_description, 160) : "",
+      rec.decision_notes ? "Desk note: " + clip(rec.decision_notes, 120) : "",
+      rec.review_date ? "Next review: " + rec.review_date : "",
+      opts.withContact && W.phoneTail(rec.phone) ? "Call back on a number ending " + W.phoneTail(rec.phone) : "",
+      "Written up: " + new Date().toISOString().slice(0, 16).replace("T", " ") + " (app v" + CONFIG.version + ")"
+    ];
+    return L.filter(function (x) { return !!x; }).join("\n");
+  };
+
   W.explainError = function (e, labels) {
     if (!e) return "the database did not say why";
     var msg = String(e.message || e);
@@ -813,6 +868,46 @@ var JCRGM = (function () {
       return finished(out);
     });
   };
+  /** The line a support request goes to: the church's own number unless the
+      config names a different one for the help desk. */
+  S.supportNumber = function () { return W.normalisePhone(CONFIG.supportWhatsapp || CONFIG.whatsapp || CONFIG.phone); };
+
+  /**
+   * A plain-text description of what this page can and cannot see, for the
+   * church's WhatsApp line. Built from the same fields the failing code reads —
+   * the queue, the unsaved ledger and its per-row reasons, the last read error,
+   * the result of the checks — so whoever is helping sees the same facts the
+   * desk does. It never contains an applicant's phone number, address, NRC or
+   * bank detail, because the person being helped is not the one who consents.
+   */
+  S.supportReport = function (extra) {
+    var p = CH(), L = [];
+    L.push(CONFIG.shortName + " welfare desk \u2014 support request");
+    L.push("App v" + CONFIG.version + "   " + new Date().toISOString().slice(0, 16).replace("T", " "));
+    try { if (typeof location !== "undefined" && location.hostname) L.push("Page: " + location.hostname + (location.pathname || "/")); } catch (e) {}
+    L.push("Signed in: " + (p && p.user && p.user.id
+      ? "yes" + (p.member && p.member.role ? " (role " + p.member.role + (p.member.approved === false ? ", NOT approved" : "") + ")" : "")
+      : "no - the church session was not found"));
+    var st = S.settings();
+    L.push("Database: " + (st ? String(st.url).replace(/^https?:\/\//, "") + " via " + st.source : "not configured (supabase-config.js missing or blank)"));
+    L.push("Connection carries: " + (S.usingPlatformClient ? "the signed-in church token" : "the project key only - row policies will filter writes"));
+    var q = 0; try { q = DB.queueSize(); } catch (e) {}
+    var u = S.unsavedMap(), ids = Object.keys(u);
+    L.push("Waiting to upload: " + q + "   refused changes: " + ids.length);
+    if (S.lastListError) L.push("The register could not be read: " + String(S.lastListError).replace(/\s+/g, " ").slice(0, 170));
+    var all = S.localAll();
+    ids.slice(0, 5).forEach(function (id) {
+      var rec = null;
+      for (var i = 0; i < all.length; i++) if (all[i].id === id) rec = all[i];
+      L.push("Stuck " + ((rec && rec.ref_no) || id) + ": " + String(u[id] || "no reason was recorded").replace(/\s+/g, " ").slice(0, 170));
+    });
+    var d = S.lastSelfTest;
+    L.push(d ? "Checks: " + d.verdict + (d.advice ? " - " + String(d.advice).replace(/\s+/g, " ").slice(0, 170) : "")
+             : "Checks: not run yet on this page load.");
+    if (extra) L.push(String(extra).replace(/\s+/g, " ").slice(0, 200));
+    return L.join("\n");
+  };
+
   S.bindPlatformClient = function () {
     var c = CH();
     if (!c) return false;

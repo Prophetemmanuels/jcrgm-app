@@ -136,7 +136,7 @@ welfare categories, urgency levels, provinces, currency, disbursement methods an
 render from it — the HTML files contain no hard-coded contact details (a test enforces this).</p>
 <table>
 <tr><th>To change…</th><th>Edit in <code>jcrgm-config.js</code></th></tr>
-<tr><td>Phone / WhatsApp / email / office hours</td><td><code>phone</code>, <code>whatsapp</code>, <code>email</code>, <code>officeHours</code></td></tr>
+<tr><td>Phone / WhatsApp / email / office hours</td><td><code>phone</code>, <code>whatsapp</code>, <code>supportWhatsapp</code> (where the app’s own problems are reported), <code>email</code>, <code>officeHours</code></td></tr>
 <tr><td>What the team can fund</td><td><code>categories</code> array — <code>id</code> becomes the stored value</td></tr>
 <tr><td>Approval workflow</td><td><code>statuses</code> — must stay in step with the SQL <code>CHECK</code> constraint</td></tr>
 <tr><td>Currencies / banks</td><td><code>currencyOptions</code>, <code>disbursementMethods</code></td></tr>
@@ -190,7 +190,7 @@ written consent.</li>
 <h2>7. Tests</h2>
 <p>Four suites plus eight desk scenarios, all run with plain <code>node</code> — no build, no bundler, nothing that touches the church server.</p>
 <pre><code>cd jcrgm
-node test/jcrgm-engine.test.js   # 173 assertions - logic + SQL integrity
+node test/jcrgm-engine.test.js   # 221 assertions - logic + SQL integrity
 node .t/sql-check.js             #  14 checks  - the schema, parsed by Postgres’ own grammar
 node .t/html-check.js            # markup, ids, links, and the platform wiring
 node .t/ui-e2e.js                # 145 assertions - the real page, clicked through
@@ -296,8 +296,12 @@ before the file is removed from the device. If the database did not accept it, y
 <li>a red toast headed <b>“Not written to the database”</b> (or <b>“Not deleted”</b>) that names the reason;</li>
 <li>the attempted change <b>stays visible on the row</b>, marked <b>Not written</b>, instead of reverting,
 so the desk never loses track of what it typed;</li>
-<li>a banner above the register — <i>“n change(s) are on this phone only, the database did not accept them”</i>
-— with a <b>Retry</b> button that re-sends them the moment access is fixed. No re-typing.</li>
+<li>a banner above the register — <i>“n change(s) are on this phone only, the database did not accept them”</i> —
+that quotes <b>each stuck case by reference number with the reason the database gave for that row</b>, never a
+generic sentence. The reason lives in a ledger on the device, so a reload cannot lose it;</li>
+<li>two buttons under it. <b>Retry</b> re-sends the changes as soon as access is fixed — and a case the server has
+never seen is re-sent as a new record rather than as an update that could not match a row that is not there.
+<b>Check the connection</b> finds out which half is broken, below. Either way, nothing has to be re-typed.</li>
 </ul>
 <p>If the register itself cannot be read, the banner says so plainly
 (<i>“This is the copy on this phone”</i>) instead of showing a stale list as though it were live.</p>
@@ -315,7 +319,27 @@ Postgres and echoed back at a volunteer.</p>
 <p>The same pass put one more guard on the money side: marking assistance as <i>given</i> with no amount used to
 write a <code>null</code> into a numeric column, so the register would read “released, K0.00”. The desk now
 refuses that save and leaves the reason beside the amount box, next to the receipt rule it already had.</p>
-<h3>The two causes, and how to tell which one you have</h3>
+<h3>“Check the connection”, and the causes it tells apart</h3>
+<p>Tap <b>Check the connection</b> under the banner. It makes two <i>read-only</i> calls —
+<code>jcrgm_is_desk()</code> and <code>jcrgm_is_leader()</code> — over exactly the connection that the failed write
+used, so the answer is what the database thinks of this session rather than a guess about it. Nothing is written, and
+the answer stays on the banner while it is showing. It says one of:</p>
+<ul>
+<li><b>Sign in first</b> — nobody is signed in with a church account; the team code alone does not open the register.</li>
+<li><b>Schema missing</b> — the welfare functions are not in this project: <code>supabase-schema.sql</code> was never
+run, or stopped part-way. Re-running it is safe.</li>
+<li><b>Grants missing</b> — even the read-only call is refused, so the <code>GRANT</code> lines did not apply.</li>
+<li><b>Not a Support Team member</b> — the church sees the account but not as approved staff: set the role in
+<i>Announcements → Manage member access</i>, then Reload this page.</li>
+<li><b>Clear</b> — the database accepts this connection as Support Team, so any further refusal is about that one
+row; Retry, and the exact Postgres words are shown beside it.</li>
+</ul>
+<p>A third cause used to hide behind both of these, and re-running the SQL could never fix it: the page had grabbed
+its <i>own</i> connection — project key, no user token — while the church app was still restoring the session, and
+kept it for the whole session. Row-level security reads the token, so every write was filtered out politely. The
+engine now waits for the church app's client and re-attaches to it the moment one exists, and
+<i>Check the connection</i> reports whether your sign-in is the connection being used.</p>
+<p>The two causes, for reference:</p>
 <ol>
 <li><b>The signed-in account is not on the Support Team.</b> Roles come from <code>church_members.role</code>, which the
 church app sets in <i>Announcements → Manage member access</i>. A <code>member</code> or an unapproved account can file an
@@ -351,6 +375,31 @@ the database:</p>
 <p><code>CONFIG.deskRoles</code> and <code>CONFIG.leaderRoles</code> in <code>jcrgm-config.js</code> mirror them, and
 <code>test/jcrgm-engine.test.js</code> compares the JS arrays with the schema text and fails if they drift — which
 matters, because a role the door lets in and the database then refuses is itself a “nothing happened” report.</p>
+<h3>“Send these details to the church WhatsApp” — 0979554970</h3>
+<p>Whenever the desk is stuck, the banner offers a third button beside <b>Retry</b> and <b>Check the connection</b>.
+It opens <code>wa.me/260979554970</code> with the whole situation already typed out: the app version and the page it
+is on, whether a church account is signed in and with which role, which project the page is talking to and whether
+that connection carries the member's token, how many records are still queued, <b>each refused change with its
+reference and its reason</b>, the register's last read error, and what the checks concluded. Whoever is helping sees
+the same facts the desk does, instead of being told “it doesn't save”.</p>
+<p>Two choices are deliberate. <b>Nothing sensitive travels in a link.</b> A WhatsApp thread is a chat log the church
+does not control, so a support report never contains an applicant's phone number, address, NRC, bank or mobile-money
+detail, email, vulnerability flags or <code>admin_notes</code> — and never a project key. The per-file button in
+the drawer (<i>Send to church line</i>) carries the reference, name, status, urgency, category, the amounts, the desk
+note and — only when a number exists on file — the last four digits, enough to match a call-back without
+publishing the number. <b>Nothing is sent by itself.</b> WhatsApp opens on a draft so a person presses send; and when
+a browser refuses to open the window, the text goes to the clipboard and the toast says which of the two happened,
+because “nothing happened” is the very report this page exists to retire.</p>
+<p>The desk header carries a permanent <b>💬 WhatsApp 0979554970</b> pill, and it is aware of what it is being
+asked to do: with nothing wrong it opens an ordinary greeting to the church line, but the moment the register is
+unreadable or a change is stuck, the same pill sends the report above instead — one tap, and the person on the other
+end already knows what the page knows. If the support number in the config is blank or unusable, the pill hides
+itself rather than offering a chat that could not be delivered.</p>
+<p>The destination is one line in <code>jcrgm-config.js</code>: <code>supportWhatsapp</code>. Blank means “the
+church line above”. Any shape works — <code>0979554970</code>, <code>+260 97 955 4970</code>,
+<code>260979554970</code> — the app reduces it to the digits WhatsApp needs, and refuses to build a link at all if
+what it finds is not a number, rather than opening a chat that could never be delivered. A message longer than a URL
+can carry is trimmed and <b>says so</b>, never silently cut.</p>
 <p><b>After re-running the SQL, sign out and back in</b> (or tap ↻ Sync on the desk): the page keeps the PostgREST
 response for the session, and <b>Retry</b> in the banner will then flush everything it had marked
 <b>Not written</b> — the unsaved changes are kept in the browser, not lost with the failed attempt.</p>

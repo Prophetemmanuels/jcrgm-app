@@ -79,6 +79,23 @@
     var call = $("#pillCall"); call.href = "tel:+" + W.normalisePhone(CONFIG.phone);
     $("#pillCall span").textContent = CONFIG.phone;
     $("#pillMap").href = CONFIG.mapLink;
+    var waPill = $("#pillWa");
+    if (waPill) {
+      /* A permanent way to reach the church line. When something on this page
+         is actually refusing to work, the click sends what the page can see
+         instead of an empty "it does not save", so the desk never has to
+         describe the fault from memory. */
+      var gj = W.waHref(J.supabase.supportNumber ? J.supabase.supportNumber() : CONFIG.whatsapp,
+                        "Greetings. I am at the " + CONFIG.teamName + " desk and would like help with the welfare portal.");
+      if (gj.ok) {
+        waPill.href = gj.url;
+        waPill.querySelector("span").textContent = "WhatsApp " + CONFIG.phone;
+        waPill.addEventListener("click", function (e) {
+          var stuck = (J.supabase.unsavedIds() || []).length + (J.db.queueSize ? J.db.queueSize() : 0) + (J.supabase.lastListError ? 1 : 0);
+          if (stuck > 0) { e.preventDefault(); supportReport(); }
+        });
+      } else waPill.hidden = true;
+    }
     var hv = $("#homeVerse");
     hv.innerHTML = "<span>" + esc(CONFIG.verseTextAlt) + "</span><cite>" + esc(CONFIG.verseRefAlt) + "</cite>";
     $("#footChurch").textContent = CONFIG.fullName;
@@ -482,7 +499,38 @@
   }
 
   function waLink(text) {
-    return "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(text);
+    return W.waHref(CONFIG.whatsapp, text).url;
+  }
+  /** The support line, with the details already typed out. If the browser
+      refuses to open a window - which every locked-down webview does sometimes -
+      the text goes to the clipboard instead of nowhere, and the desk is told
+      which of the two happened. */
+  function handToClipboard(text) {
+    /* the clipboard is the last resort, so a browser that has none must not
+       turn a click on "send this to support" into a thrown error */
+    try { copy(text); } catch (e) {}
+  }
+  function sendToSupport(text) {
+    var j = W.waHref(J.supabase.supportNumber ? J.supabase.supportNumber() : CONFIG.whatsapp, text);
+    if (!j.ok) {
+      if (j.text) handToClipboard(j.text);
+      toast("There is no usable support number in jcrgm-config.js (CONFIG.whatsapp / supportWhatsapp), so WhatsApp cannot be opened. The text is copied - paste it to the church line by hand.",
+            "warn", "No support number set", 14000);
+      return;
+    }
+    var w = null;
+    try { w = window.open(j.url, "_blank", "noopener"); } catch (e) {}
+    if (!w || w.closed) {
+      if (j.text) handToClipboard(j.text);
+      toast("WhatsApp would not open from this page, so the message is copied: open WhatsApp, choose " +
+            CONFIG.phone + " and paste. Nothing was lost.", "warn", "Copied for WhatsApp", 15000);
+      return;
+    }
+    if (j.truncated) toast("The message was shortened to fit a link; the full detail stays on this page.",
+                           "warn", "Shortened for WhatsApp", 9000);
+  }
+  function supportReport() {
+    sendToSupport(J.supabase.supportReport ? J.supabase.supportReport() : "Welfare desk needs help, and the app could not describe why.");
   }
 
   function showReceipt(rec) {
@@ -622,7 +670,7 @@
           (rec.receipt_ref ? " · proof ref " + esc(rec.receipt_ref) : "") + ". Give the reference above if anything is unclear.</div></div>" : "") +
         (rec.review_date ? '<div class="note" style="margin-top:9px"><span class="ni" aria-hidden="true">📅</span><div>A follow-up review is booked for <b>' + esc(nice(rec.review_date)) + "</b>.</div></div>" : "") +
         '<div class="row" style="margin-top:14px">' +
-          '<a class="btn ghost sm" target="_blank" rel="noopener" href="' + esc(waLink("Greetings. I am following up on welfare case " + rec.ref_no + ".")) + '">💬 Ask about it on WhatsApp</a>' +
+          '<a class="btn ghost sm" target="_blank" rel="noopener" href="' + esc(waLink("Greetings. I am following up on welfare case " + (rec.ref_no || "") + ". My reference is " + (rec.ref_no || "") + ", and I would like an update.")) + '">💬 Ask about it on WhatsApp</a>' +
           '<a class="btn ghost sm" href="tel:+' + esc(W.normalisePhone(CONFIG.phone)) + '">📞 Call ' + esc(CONFIG.phone) + "</a>" +
           '<button class="btn ghost sm" type="button" onclick="document.getElementById(\'lkRef\').value=\'\'">🔍 Search another</button>' +
         "</div>" +
@@ -866,7 +914,8 @@
           return '<li><span class="mono">' + esc(w.ref) + '</span>: ' + esc(w.why) + '</li>';
         }).join("") + (why.length > 4 ? '<li>…and ' + (why.length - 4) + ' more</li>' : "") + '</ul>' +
         '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap"><button class="btn ghost xs" type="button" id="btnReplay">Retry the ' + pending.length +
-        ' change(s)</button><button class="btn ghost xs" type="button" id="btnDiag">Check the connection</button></div>' +
+        ' change(s)</button><button class="btn ghost xs" type="button" id="btnDiag">Check the connection</button>' +
+        '<button class="btn ghost xs" type="button" data-support="1">\u2709 Send these details to the church WhatsApp</button></div>' +
         '<div id="diagOut" class="sub" style="margin-top:6px"></div></div></div>');
     }
     var stale = records.filter(function (r) { return W.isAwaitingAdmin(r) && (W.daysSince(r.created_at) || 0) > 7; });
@@ -882,6 +931,31 @@
     if (J.supabase.lastSelfTest) {
       var dgo = $("#diagOut");
       if (dgo) { dgo.innerHTML = diagHtml(J.supabase.lastSelfTest); dgo.setAttribute("data-verdict", J.supabase.lastSelfTest.verdict || ""); }
+    }
+    if (!n.dataset.supportWired) {
+      n.dataset.supportWired = "1";
+      n.addEventListener("click", function (e) {
+        var b = e.target.closest ? e.target.closest("[data-support]") : null;
+        if (!b) return;
+        e.preventDefault();
+        supportReport();
+      });
+    }
+    /* A trouble note of any kind gets one route to a person, so nobody has to
+       retype a diagnosis into a chat. The banner is re-rendered on every sync,
+       so the button is added after the paint, not baked into each branch. */
+    var dangers = n.querySelectorAll(".note.danger");
+    if (dangers.length) {
+      var lastBox = dangers[dangers.length - 1].querySelector("div > div") || dangers[dangers.length - 1];
+      /* the refused-changes banner already carries its own button beside Retry,
+         and it sits deeper than the node we picked - look at the whole note */
+      if (!dangers[dangers.length - 1].querySelector("[data-support]")) {
+        var sb = el("button", "btn ghost xs");
+        sb.type = "button"; sb.setAttribute("data-support", "1");
+        sb.style.marginTop = "6px";
+        sb.textContent = "✉ Send these details to the church WhatsApp";
+        lastBox.appendChild(sb);
+      }
     }
     var dg = $("#btnDiag");
     if (dg) dg.addEventListener("click", function () {
@@ -1124,6 +1198,7 @@
         "</div>" +
         '<div class="row" style="margin-top:12px"><button class="btn primary sm" type="button" id="dSave"><span class="sp"></span><span class="lb">💾 Save this case</span></button>' +
         '<button class="btn ghost sm" type="button" id="dWa">💬 WhatsApp applicant</button>' +
+        '<button class="btn ghost sm" type="button" id="dSup" title="Sends the case summary to the church line - not the applicant\u2019s number, address or bank details">\u2709 Send to church line</button>' +
         '<button class="btn ghost sm" type="button" id="dCall">📞 Call</button>' +
         '<button class="btn ghost sm" type="button" id="dPrint">🖨 Print file</button>' +
         '<span class="grow"></span><button class="btn danger xs" type="button" id="dDel"' +
@@ -1253,6 +1328,10 @@
       if (!to) { toast("There is no phone number on this file.", "warn"); return; }
       window.open(waLink("Greetings " + (r.beneficiary_name || "") + ", this is the " + CONFIG.teamName + " about case " + r.ref_no +
         ".\nStatus: " + W.status(r.status).label + ".\n" + (r.decision_notes || "")), "_blank", "noopener");
+    });
+    $("#dSup").addEventListener("click", function () {
+      var withContact = /\d/.test(String(r.phone || ""));
+      sendToSupport(W.supportCaseText(r, { withContact: withContact }));
     });
     $("#dCall").addEventListener("click", function () {
       var to = W.normalisePhone(r.phone);
