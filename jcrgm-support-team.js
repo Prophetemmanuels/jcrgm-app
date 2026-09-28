@@ -858,15 +858,53 @@
       esc(J.supabase.lastListError) +
       '<br>A Support Team member who cannot read the register cannot write to it either: check that this account is approved and holds one of the roles in <span class="mono">' + esc(CONFIG.deskRoles.join(", ")) +
       '</span> (Announcements → Manage member access), and that <span class="mono">supabase-schema.sql</span> has been run whole in this project.</div></div>');
-    if (pending.length) bits.push('<div class="note danger" style="flex:1 1 320px"><span class="ni" aria-hidden="true">⛔</span><div><b>' + pending.length +
-      " change(s) are on this phone only — the database did not accept them.</b> " +
-      esc(pending[0]._syncError || "no row was updated") +
-      "<br>This is nearly always one of two things: the signed-in account is not an approved <b>Support Team</b> member in Announcements → Manage member access, or <span class='mono'>supabase-schema.sql</span> has not been run (or was run only partly) in this project." +
-      ' <button class="btn ghost xs" type="button" id="btnReplay" style="margin-top:6px">Retry the ' + pending.length + ' change(s)</button></div></div>');
+    if (pending.length) {
+      var why = pending.map(function (r) { return { ref: r.ref_no, why: r._syncError || (J.supabase.unsavedReason ? J.supabase.unsavedReason(r.id) : "") || "no row was updated" }; });
+      bits.push('<div class="note danger" style="flex:1 1 320px"><span class="ni" aria-hidden="true">⛔</span><div><b>' + pending.length +
+        " change(s) are on this phone only — the database did not accept them.</b>" +
+        '<ul style="margin:6px 0 0;padding-left:18px">' + why.slice(0, 4).map(function (w) {
+          return '<li><span class="mono">' + esc(w.ref) + '</span>: ' + esc(w.why) + '</li>';
+        }).join("") + (why.length > 4 ? '<li>…and ' + (why.length - 4) + ' more</li>' : "") + '</ul>' +
+        '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap"><button class="btn ghost xs" type="button" id="btnReplay">Retry the ' + pending.length +
+        ' change(s)</button><button class="btn ghost xs" type="button" id="btnDiag">Check the connection</button></div>' +
+        '<div id="diagOut" class="sub" style="margin-top:6px"></div></div></div>');
+    }
     var stale = records.filter(function (r) { return W.isAwaitingAdmin(r) && (W.daysSince(r.created_at) || 0) > 7; });
     if (stale.length) bits.push('<div class="note danger" style="flex:1 1 320px"><span class="ni" aria-hidden="true">⏰</span><div><b>' + stale.length +
       " case(s) have waited over a week.</b> Someone should ring those families this week — a delay is its own kind of answer.</div></div>");
     n.innerHTML = bits.join("");
+    function diagHtml(r) {
+      return (r.checks || []).map(function (k) {
+        return '<div>' + (k.pass ? "✓ " : "✗ ") + esc(k.name) + (!k.pass && k.fix ? " (" + esc(k.fix) + ")" : "") + '</div>';
+      }).join("") + (r.advice ? '<div><b>' + esc(r.advice) + '</b></div>' : "");
+    }
+    /* a diagnosis must outlive the repaint that a Sync or a Retry triggers */
+    if (J.supabase.lastSelfTest) {
+      var dgo = $("#diagOut");
+      if (dgo) { dgo.innerHTML = diagHtml(J.supabase.lastSelfTest); dgo.setAttribute("data-verdict", J.supabase.lastSelfTest.verdict || ""); }
+    }
+    var dg = $("#btnDiag");
+    if (dg) dg.addEventListener("click", function () {
+      dg.disabled = true; dg.textContent = "Checking…";
+      var undo = function () { dg.disabled = false; dg.textContent = "Check the connection"; };
+      (J.supabase.selfTest ? J.supabase.selfTest() : Promise.resolve({ verdict: "unknown", advice: "", checks: [] }))
+        .then(function (r) {
+          undo();
+          var o = $("#diagOut");
+          if (o) o.innerHTML = diagHtml(r);
+          if (r.ok) {
+            toast("Everything checks out: the database counts this connection as Support Team. Retry should now write.",
+                  "ok", "Connection is fine", 11000);
+            loadRegister();
+          } else {
+            toast(r.advice || "The check found nothing to report.", "err", "Found: " + r.verdict, 16000);
+          }
+        }, function (e) {
+          /* the button must never be left spinning because a check went wrong */
+          undo();
+          toast("The check itself could not finish: " + ((e && e.message) || e) + ". Nothing on this page was changed.", "err", "Check failed", 12000);
+        });
+    });
     var rp = $("#btnReplay");
     if (rp) rp.addEventListener("click", function () {
       rp.disabled = true; rp.textContent = "Retrying…";

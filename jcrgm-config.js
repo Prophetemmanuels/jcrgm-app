@@ -725,6 +725,9 @@ var JCRGM = (function () {
       // configured we wait for it instead of opening a rival connection.
       if (c && c.client) { client = c.client; S.usingPlatformClient = true; return client; }
       S.usingPlatformClient = false;
+      /* No client yet, but the church layer exists and may still be restoring
+         the session: wait for it instead of opening a key-only connection that
+         would then be cached and used for every write. */
       if (c && c.ready === false && typeof window !== "undefined" && window.supabase) return null;
       if (typeof window !== "undefined" && window.supabase && window.supabase.createClient) {
         client = window.supabase.createClient(st.url, st.key, {
@@ -741,6 +744,75 @@ var JCRGM = (function () {
 
   /** Called on every church-identity event: once the platform has built its
       client, drop ours and share theirs (so the RLS policies see the member). */
+  /**
+   * Read-only checks, made with the same connection the failing write used, so
+   * the answer describes reality instead of a guess. Nothing here can change a
+   * record: the two calls are the schema's own `select` helpers.
+   */
+  S.selfTest = function () {
+    var out = { ok: false, verdict: "", checks: [], advice: "" };
+    /* the desk re-reads the register while this runs, which repaints the banner: the
+       answer has to live on the engine, not only in the DOM node it filled */
+    var finished = function (o) { S.lastSelfTest = o; return o; };
+    var st = S.settings();
+    if (!st) {
+      out.verdict = "no-project";
+      out.advice = "supabase-config.js is not beside these pages, or its URL/key are blank, so there is nothing to write to yet.";
+      return Promise.resolve(finished(out));
+    }
+    var p = CH();
+    var signedIn = !!(p && p.user && p.user.id);
+    out.checks.push({ name: "signed in with a church account", pass: signedIn });
+    if (!signedIn) { out.verdict = "signed-out"; out.advice = "Sign in with the church account first - the register is not opened by the team code alone."; return Promise.resolve(finished(out)); }
+    var wasOwn = S.usingPlatformClient === false;
+    var c = S.client();                       // re-attaches to the church client if one appeared
+    var reattached = wasOwn && S.usingPlatformClient !== false;
+    if (!c) {
+      out.verdict = "no-client";
+      out.advice = "The project is configured but no connection could be opened with that key (check supabase-config.js).";
+      return Promise.resolve(finished(out));
+    }
+    out.checks.push({ name: "your church sign-in is the connection being used",
+                      pass: S.usingPlatformClient !== false || !(p && p.client),
+                      fix: reattached ? "re-attached just now" : "" });
+    return Promise.all([
+      c.rpc("jcrgm_is_desk").then(function (r) { return r; }, function (e) { return { error: e }; }),
+      c.rpc("jcrgm_is_leader").then(function (r) { return r; }, function (e) { return { error: e }; })
+    ]).then(function (both) {
+      var d = both[0], l = both[1];
+      var missing = function (r) { return r && r.error && /PGRST202|PGRST205|not find/.test((r.error.message || "") + " " + (r.error.code || "")); };
+      var denied = function (r) { return r && r.error && /permission denied|42501/.test(r.error.message || ""); };
+      var truthy = function (r) { var v = r && r.data; return Array.isArray(v) ? v[0] === true : v === true; };
+      if (missing(d) || missing(l)) {
+        out.verdict = "schema-missing";
+        out.checks.push({ name: "the welfare schema is present", pass: false });
+        out.advice = "supabase-schema.sql has not been run in this project, or stopped part-way. Run the whole file again - it is safe to re-run.";
+        return finished(out);
+      }
+      if (denied(d)) {
+        out.verdict = "not-granted";
+        out.checks.push({ name: "this key may call the welfare functions", pass: false });
+        out.advice = "The database refuses even the read-only check, so the grants are missing: re-run supabase-schema.sql.";
+        return finished(out);
+      }
+      out.checks.push({ name: "the database counts you as Support Team", pass: truthy(d) });
+      out.checks.push({ name: "the database counts you as a leader (needed to delete)", pass: truthy(l) });
+      if (!truthy(d)) {
+        out.verdict = "not-desk-member";
+        out.advice = "The church sees your account, but not as an approved Support Team member. In Announcements → Manage member access, approve this account and set its role to one of: "
+          + CONFIG.deskRoles.join(", ") + ". Then Reload.";
+        return finished(out);
+      }
+      out.ok = true; out.verdict = "clear";
+      if (reattached) out.advice = "This page had been talking to the database with the project key instead of your sign-in; it is using your church session now, so Retry should write.";
+      out.advice = "The database accepts this connection as a Support Team member. If a write still says Not written, the row itself is the problem - Retry, and if it refuses again the exact Postgres text is shown beside it.";
+      return finished(out);
+    }).catch(function (e) {
+      out.verdict = "unreachable";
+      out.advice = "The check itself could not reach the project (" + ((e && e.message) || e) + "). On a phone with no signal this is normal - try again when you have bars.";
+      return finished(out);
+    });
+  };
   S.bindPlatformClient = function () {
     var c = CH();
     if (!c) return false;
@@ -749,7 +821,16 @@ var JCRGM = (function () {
     return false;
   };
 
-  S.client = function () { return client || S.init(); };
+  S.client = function () {
+    /* RLS reads the user's JWT, not the publishable key. If the platform has
+       since produced its client - it starts asynchronously, and this page used
+       to grab a rival key-only connection and keep it for the whole session -
+       every write would run as `anon`, be filtered by policy, and look exactly
+       like a half-installed schema. So the binding is re-checked on every use. */
+    var c0 = CH();
+    if (c0 && c0.client && client !== c0.client) { client = c0.client; S.usingPlatformClient = true; }
+    return client || S.init();
+  };
   /** whether a write right now would reach the database at all */
   S.live = function () { return !!S.client(); };
   S.lastListError = null;
@@ -779,17 +860,37 @@ var JCRGM = (function () {
      not accepted, and stamps that on the row every time the list is re-read
      from the server. Without this, the next reload paints the server's stale
      copy and the desk sees its click disappear. */
-  S.unsavedIds = function () {
-    try { return JSON.parse(localStorage.getItem(LS_UNSAVED) || "[]") || []; } catch (e) { return []; }
+  S.unsavedMap = function () {
+    var raw = null;
+    try { raw = JSON.parse(localStorage.getItem(LS_UNSAVED) || "null"); } catch (e) { return {}; }
+    if (!raw) return {};
+    var out = {};
+    if (Array.isArray(raw)) {                       // the shape before reasons existed
+      raw.forEach(function (x) {
+        if (typeof x === "string") out[x] = "";
+        else if (x && x.id) out[x.id] = x.why || "";
+      });
+      return out;
+    }
+    if (typeof raw === "object") { Object.keys(raw).forEach(function (k) { out[k] = String(raw[k] || ""); }); }
+    return out;
   };
-  S.markUnsaved = function (id) {
+  S.unsavedIds = function () { return Object.keys(S.unsavedMap()); };
+  S.unsavedReason = function (id) { return S.unsavedMap()[id] || ""; };
+  /** Remembered per case, because the desk reads the register again after a
+      refused write: without this the row's own reason is lost and all that is
+      left to say is "the database refused the change". */
+  S.markUnsaved = function (id, why) {
     if (!id) return;
-    var u = S.unsavedIds();
-    if (u.indexOf(id) < 0) { u.push(id); try { localStorage.setItem(LS_UNSAVED, JSON.stringify(u)); } catch (e) {} }
+    var m = S.unsavedMap();
+    m[id] = String(why || m[id] || "").slice(0, 400);
+    try { localStorage.setItem(LS_UNSAVED, JSON.stringify(m)); } catch (e) {}
   };
   S.clearUnsaved = function (id) {
-    var u = S.unsavedIds().filter(function (x) { return x !== id; });
-    try { if (u.length) localStorage.setItem(LS_UNSAVED, JSON.stringify(u)); else localStorage.removeItem(LS_UNSAVED); } catch (e) {}
+    var m = S.unsavedMap();
+    if (!(id in m)) return;
+    delete m[id];
+    try { if (Object.keys(m).length) localStorage.setItem(LS_UNSAVED, JSON.stringify(m)); else localStorage.removeItem(LS_UNSAVED); } catch (e) {}
   };
   S.localUpsert = function (rec) {
     var all = readLS(LS_RECORDS), found = false;
@@ -855,7 +956,10 @@ var JCRGM = (function () {
             // what is waiting to be written, and the row cannot revert.
             if (m) { Object.keys(m).forEach(function (k) { if (k.charAt(0) === "_") return; r[k] = m[k]; }); }
             r._pending = true;
-            if (!r._syncError) r._syncError = "written on this device only — the database refused the change";
+            // The reason the desk deserves is the one the server gave for THIS
+            // row, kept in the ledger - not a generic restatement.
+            r._syncError = S.unsavedReason(r.id) || (m && m._syncError) ||
+                           "written on this device only - the database refused the change";
             return r;
           });
           // merge any not-yet-synced local records so nothing is ever lost
@@ -940,7 +1044,7 @@ var JCRGM = (function () {
         var bad = (W.fieldLabels[e.field] || e.field || "a field") + " - \"" + e.value + "\" is not a date.";
         target._syncError = bad;
         target._pending = true;
-        S.localUpsert(target); S.markUnsaved(id);
+        S.localUpsert(target); S.markUnsaved(id, "Fix that before it can be saved: " + bad);
         return Promise.resolve({ record: target, synced: false, refused: true, badField: true,
                                  reason: "Fix that before it can be saved: " + bad });
       }
@@ -948,11 +1052,11 @@ var JCRGM = (function () {
         if (res.error) throw res.error;
         var row = Array.isArray(res.data) ? res.data[0] : res.data;
         if (!row) {                                    // 204 / [] : the write was dropped
-          target._syncError = "The database did not accept this change (no matching row was writable).";
+          var refusedWhy = "no row was updated — this connection is not allowed to change that row. Run “Check the connection” under the banner: it will say whether the account or the schema is at fault.";
+          target._syncError = refusedWhy;
           target._pending = true;
-          S.localUpsert(target); S.markUnsaved(id);
-          return { record: target, synced: false, refused: true,
-                   reason: "no row was updated — your account may not hold a Support Team role, or supabase-schema.sql has not been run in this project" };
+          S.localUpsert(target); S.markUnsaved(id, refusedWhy);
+          return { record: target, synced: false, refused: true, reason: refusedWhy };
         }
         var done = W.cleanRecord(row);
         done._syncError = ""; done._pending = false; done._synced = true;
@@ -961,7 +1065,7 @@ var JCRGM = (function () {
       }).catch(function (e) {
         target._syncError = (e && (e.message || e.code)) || "the server rejected the change";
         target._pending = true;
-        S.localUpsert(target); S.markUnsaved(id);
+        S.localUpsert(target); S.markUnsaved(id, W.explainError(e, W.fieldLabels));
         // The raw Postgres text stays on the record for the log; the desk gets
         // a sentence that names the box to fix.
         return { record: target, synced: false, reason: W.explainError(e, W.fieldLabels),
@@ -1031,12 +1135,22 @@ var JCRGM = (function () {
       var done = 0, still = 0, firstErr = "";
       var chain = list.reduce(function (pr, rec) {
         return pr.then(function () {
-          var patch = {};
-          Object.keys(rec).forEach(function (k) { if (k.charAt(0) !== "_" && k !== "id") patch[k] = rec[k]; });
-          return DB.update(rec.id, patch).then(function (res) {
+          var queued = readLS(LS_QUEUE).some(function (q) { return q.id === rec.id; });
+          /* A case the server has never seen cannot be UPDATEd - a patch would
+             match zero rows and be reported as refused forever. Those go through
+             the insert function, which mints the reference as usual. */
+          var send = queued ? DB.create(rec).then(function (row) {
+            var oki = row && !row._offline && row._synced !== false && !row._syncError;
+            return { synced: !!oki, reason: oki ? "" : ((row && row._syncError) || "the insert was refused") };
+          }) : (function () {
+            var patch = {};
+            Object.keys(rec).forEach(function (k) { if (k.charAt(0) !== "_" && k !== "id") patch[k] = rec[k]; });
+            return DB.update(rec.id, patch);
+          })();
+          return send.then(function (res) {
             if (res && res.synced) {
-              var all = readLS(LS_QUEUE).filter(function (q) { return q.id !== rec.id; });
-              writeLS(LS_QUEUE, all);
+              writeLS(LS_QUEUE, readLS(LS_QUEUE).filter(function (q) { return q.id !== rec.id; }));
+              S.clearUnsaved(rec.id);            // the ledger note is paid off too
               done++;
             } else { still++; firstErr = firstErr || ((res && res.reason) || "still refused"); }
           });
