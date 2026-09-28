@@ -647,7 +647,6 @@ tr:hover td{background:#eef3fc;}
   font-weight:700;
   color:#7a4c00;
   border-left:6px solid #e67e22;
-  animation:fadeIn .5s ease both;
 }
 .next-program td{
   background:linear-gradient(90deg,#dcf3f8,#eafafc) !important;
@@ -790,7 +789,10 @@ animation:goldSweep 5s linear infinite;}
 .wg-verse{margin:0 0 26px;font-size:14.5px;font-style:italic;color:#cfd9f5;line-height:1.7;}
 .wg-enter{display:inline-block;padding:13px 30px;border-radius:999px;font-weight:800;font-size:15px;
 letter-spacing:.4px;color:#3a2a00;background:linear-gradient(135deg,#ffe38a,#ffd700 55%,#e0a800);
-animation:wgPulse 1.8s ease-in-out infinite;}
+border:none;cursor:pointer;font-family:inherit;appearance:none;-webkit-appearance:none;
+animation:none;opacity:.55;pointer-events:none;}
+#welcomeGate.wg-ready .wg-enter{opacity:1;pointer-events:auto;animation:wgPulse 1.8s ease-in-out infinite;}
+.wg-enter:disabled{opacity:.55;cursor:default;animation:none;pointer-events:none;}
 @keyframes wgPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,215,0,.5);}
 50%{transform:scale(1.045);box-shadow:0 0 0 16px rgba(255,215,0,0);}}
 @media (max-width:640px){.wg-logo{width:88px;height:88px;}}
@@ -814,9 +816,9 @@ animation:wgPulse 1.8s ease-in-out infinite;}
    ============================================================ */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{
-    animation-duration:.01ms !important;
-    animation-iteration-count:1 !important;
-    transition-duration:.01ms !important;
+    animation:none !important;
+    transition:none !important;
+    scroll-behavior:auto !important;
   }
 }
 
@@ -848,14 +850,14 @@ animation:wgPulse 1.8s ease-in-out infinite;}
 <div id="vignette" aria-hidden="true"></div>
 
 <!-- 🙏 WELCOME GATE — tap to enter as heaven sounds -->
-<div id="welcomeGate" role="button" tabindex="0" aria-label="Tap to enter">
+<div id="welcomeGate" role="dialog" aria-modal="true" aria-label="Welcome to JCRGM">
   <div class="wg-rays" aria-hidden="true"></div>
   <div class="wg-inner">
     <div class="wg-logo"><img src="data:image/jpeg;base64,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" alt="JCRGM logo"></div>
     <div class="wg-kicker">✝ Welcome to the House of the Lord</div>
     <h1 class="wg-title">Jesus Christ Redeems<br><span>Global Ministries</span></h1>
     <p class="wg-verse">"I was glad when they said unto me, Let us go into the house of the Lord."<br>— Psalm 122:1</p>
-    <div class="wg-enter">✨ Tap Anywhere to Enter ✨</div>
+    <button type="button" class="wg-enter" id="welcomeEnter" disabled>✨ Tap to Enter ✨</button>
   </div>
 </div>
 
@@ -1001,7 +1003,7 @@ animation:wgPulse 1.8s ease-in-out infinite;}
 </div>
 
 <footer>
-📞 <strong>Phone:</strong> 0979554970 &nbsp;|&nbsp; ✉ <strong>Email:</strong> <a href="/cdn-cgi/l/email-protection#c0b0a5a4a1a8bab5b2ada9aea9b3b4b2a9a5b380a7ada1a9aceea3afad" class="map-link"><span class="__cf_email__" data-cfemail="e2928786838a9897908f8b8c8b9196908b8791a2858f838b8ecc818d8f">[email&#160;protected]</span></a><br>
+📞 <strong>Phone:</strong> 0979554970 &nbsp;|&nbsp; ✉ <strong>Email:</strong> <a href="/cdn-cgi/l/email-protection#81f1e4e5e0e9fbf4f3ece8efe8f2f5f3e8e4f2c1e6ece0e8edafe2eeec" class="map-link"><span class="__cf_email__" data-cfemail="64140100050c1e1116090d0a0d1710160d0117240309050d084a070b09">[email&#160;protected]</span></a><br>
 📍 <strong>Location:</strong> <a id="footerMapLink" href="#" target="_blank" rel="noopener" class="map-link">Find Our Church on Google Maps</a><br>
 © <span id="year"></span> Jesus Christ Redeems Global Ministries — All Rights Reserved
 </footer>
@@ -1032,13 +1034,23 @@ function venueCell(venue){
 }
 
 // Display date & year
-const today = new Date();
-const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-document.getElementById("serviceDate").innerText = "Today: " + today.toLocaleDateString('en-GB', options);
-document.getElementById("year").innerText=new Date().getFullYear();
+(function(){
+  const dateEl=document.getElementById("serviceDate");
+  const yearEl=document.getElementById("year");
+  try{
+    const now=new Date();
+    if(dateEl) dateEl.innerText = "Today: " + now.toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"long", year:"numeric", timeZone:"Africa/Lusaka" });
+    if(yearEl) yearEl.innerText = now.toLocaleString("en-GB", { year:"numeric", timeZone:"Africa/Lusaka" });
+  }catch(e){
+    const today=new Date();
+    if(dateEl) dateEl.innerText = "Today: " + today.toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+    if(yearEl) yearEl.innerText = String(today.getFullYear());
+  }
+})();
 
 // Inject map link into footer (single source: CHURCH_CONFIG)
-document.getElementById("footerMapLink").href = CHURCH_CONFIG.mapLink;
+const footerMap=document.getElementById("footerMapLink");
+if(footerMap) footerMap.href = CHURCH_CONFIG.mapLink;
 
 // Projector toggle
 function toggleProjector(){document.documentElement.classList.toggle("projector");}
@@ -1048,7 +1060,7 @@ function showMembership(){window.location.href='membership.html';}
 function openJCRGMChurchManagementPrayerCenter(){ window.location.href = "JCRGM_Church_Management_Prayer_Center.html";}
 function openJCRGMCompleteBiblicalPropheticTrainingGuide(){ window.location.href = "JCRGM_Complete_Biblical_Prophetic_Training_Guide.html";}
 function viewMembers() {window.location.href = "images.html";}
-function showTithes(){document.getElementById('tithesContent').style.display='block';document.getElementById('tithesContent').scrollIntoView({behavior:'smooth'});}
+function showTithes(){const el=document.getElementById("tithesContent"); if(!el) return; el.style.display="block"; try{ el.scrollIntoView({behavior:"smooth"}); }catch(e){ el.scrollIntoView(); }}
 function openChurchConstitution() { window.location.href = "JCRGM_Church_Constitution.html"; }
 function openprophetsprayer() {window.location.href = "./prophets_daily_prayer.html";}
 function openMasterStudy(){window.location.href='JCRGM%20MASTER%20STUDY.html';}
@@ -1062,15 +1074,44 @@ function openSupportTeam(section){ window.location.href = "jcrgm-support-team.ht
 // Payments via USSD
 function makePayment(){ window.location.href = "tel:*115%23"; }
 
-// Timer Helpers
-function parseTime(t){const [h,m]=t.split(":"); const d=new Date(); return new Date(d.getFullYear(),d.getMonth(),d.getDate(),h,m,0);}
+// Timer Helpers — Lusaka wall clock (service times are Zambia time)
+const CHURCH_TZ = "Africa/Lusaka";
+function churchNow(){
+  try{
+    const parts = new Intl.DateTimeFormat("en-GB",{
+      timeZone: CHURCH_TZ, hourCycle:"h23",
+      year:"numeric", month:"2-digit", day:"2-digit",
+      hour:"2-digit", minute:"2-digit", second:"2-digit"
+    }).formatToParts(new Date());
+    const g = function(t){ const x=parts.find(function(p){ return p.type===t; }); return x ? x.value : "0"; };
+    let h = parseInt(g("hour"),10); if(h===24) h=0;
+    return new Date(+g("year"), +g("month")-1, +g("day"), h, +g("minute"), +g("second"));
+  }catch(e){ return new Date(); }
+}
+function parseTime(t, base){
+  const parts=String(t||"").split(":");
+  const h=parseInt(parts[0],10)||0, m=parseInt(parts[1],10)||0;
+  const d=base||churchNow();
+  return new Date(d.getFullYear(),d.getMonth(),d.getDate(),h,m,0);
+}
 function formatDHMS(sec){
+    if(!isFinite(sec) || sec<0) sec=0;
     const d=Math.floor(sec/86400); sec%=86400;
     const h=Math.floor(sec/3600); sec%=3600;
     const m=Math.floor(sec/60); const s=sec%60;
-    return `${d}d ${h}h ${m}m ${s}s`;
+    return d+"d "+h+"h "+m+"m "+s+"s";
 }
-function formatMS(sec){const h=Math.floor(sec/3600); const m=Math.floor(sec%3600/60); const s=sec%60; return h>0?`${h}h ${m}m ${s}s`:`${m}m ${s}s`;}
+function formatMS(sec){
+    if(!isFinite(sec) || sec<0) sec=0;
+    const h=Math.floor(sec/3600); const m=Math.floor(sec%3600/60); const s=sec%60;
+    return h>0?h+"h "+m+"m "+s+"s":m+"m "+s+"s";
+}
+function setTimerHTML(html){
+  const box=document.getElementById("timerBox");
+  if(!box || box.dataset.html===html) return;
+  box.dataset.html=html;
+  box.innerHTML=html;
+}
 
 // Sunday Check
 let lastProgramKey="";
@@ -1083,10 +1124,10 @@ const scriptures = [
   "Hebrews 4:12 – For the word of God is quick, and powerful, and sharper than any two-edged sword.",
   "John 8:32 – And ye shall know the truth, and the truth shall make you free."
 ];
-function getTodayScripture(){return scriptures[new Date().getDay()%scriptures.length];}
+function getTodayScripture(){return scriptures[churchNow().getDay()%scriptures.length];}
 
 function nextSunday(){
-    const d=new Date();
+    const d=churchNow();
     d.setDate(d.getDate()+((7-d.getDay())%7||7));
     d.setHours(9,0,0,0);
     return d;
@@ -1107,71 +1148,93 @@ function heavenCtx(){
   if(Heaven.ctx) return Heaven.ctx;
   const AC = window.AudioContext || window.webkitAudioContext;
   if(!AC) return null;
-  const ctx = Heaven.ctx = new AC();
+  let ctx;
+  try{ ctx = Heaven.ctx = new AC(); }catch(e){ return null; }
   Heaven.master = ctx.createGain();
   Heaven.master.gain.value = 0.55;
-  // generated cathedral impulse (reverb)
-  const len = Math.floor(ctx.sampleRate * 2.8);
-  const imp = ctx.createBuffer(2, len, ctx.sampleRate);
-  for(let ch=0; ch<2; ch++){
-    const d = imp.getChannelData(ch);
-    for(let i=0;i<len;i++){ d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 2.4); }
+  try{
+    const dry = ctx.createGain(); dry.gain.value = 0.7;
+    Heaven.master.connect(dry); dry.connect(ctx.destination);
+    const len = Math.floor(ctx.sampleRate * 1.6);
+    const imp = ctx.createBuffer(2, len, ctx.sampleRate);
+    for(let ch=0; ch<2; ch++){
+      const d = imp.getChannelData(ch);
+      for(let i=0;i<len;i++){ d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 2.4); }
+    }
+    const verb = ctx.createConvolver();
+    verb.buffer = imp;
+    const wet = ctx.createGain(); wet.gain.value = 0.35;
+    Heaven.master.connect(verb); verb.connect(wet); wet.connect(ctx.destination);
+  }catch(e){
+    try{ Heaven.master.connect(ctx.destination); }catch(e2){}
   }
-  const verb = ctx.createConvolver();
-  verb.buffer = imp;
-  const wet = ctx.createGain(); wet.gain.value = 0.5;
-  const dry = ctx.createGain(); dry.gain.value = 0.6;
-  Heaven.master.connect(dry); dry.connect(ctx.destination);
-  Heaven.master.connect(verb); verb.connect(wet); wet.connect(ctx.destination);
   return ctx;
 }
 function heavenBell(when, freq, vol, decay){
-  const ctx = Heaven.ctx; if(!ctx) return;
-  const parts = [[1,1],[2,0.22],[2.99,0.09],[4.2,0.05]];
-  parts.forEach(function(p){
-    const o = ctx.createOscillator(), g = ctx.createGain();
-    o.type='sine'; o.frequency.value = freq*p[0];
-    g.gain.setValueAtTime(0.0001, when);
-    g.gain.exponentialRampToValueAtTime(Math.max(0.0002, vol*p[1]), when+0.02);
-    g.gain.exponentialRampToValueAtTime(0.0001, when+decay);
-    o.connect(g); g.connect(Heaven.master);
-    o.start(when); o.stop(when+decay+0.1);
-  });
+  const ctx = Heaven.ctx; if(!ctx || !Heaven.master) return;
+  try{
+    const parts = [[1,1],[2,0.22],[2.99,0.09],[4.2,0.05]];
+    parts.forEach(function(p){
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type="sine"; o.frequency.value = freq*p[0];
+      g.gain.setValueAtTime(0.0001, when);
+      g.gain.exponentialRampToValueAtTime(Math.max(0.0002, vol*p[1]), when+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, when+decay);
+      o.connect(g); g.connect(Heaven.master);
+      o.start(when); o.stop(when+decay+0.1);
+    });
+  }catch(e){}
 }
 function heavenPad(when, freqs, vol, attack, hold, release){
-  const ctx = Heaven.ctx; if(!ctx) return;
-  freqs.forEach(function(f){
-    const o = ctx.createOscillator(), o2 = ctx.createOscillator();
-    const g = ctx.createGain(), fl = ctx.createBiquadFilter();
-    o.type='triangle'; o2.type='sine'; o.frequency.value=f; o2.frequency.value=f*1.003;
-    fl.type='lowpass'; fl.frequency.value=1400;
-    g.gain.setValueAtTime(0.0001, when);
-    g.gain.exponentialRampToValueAtTime(vol, when+attack);
-    g.gain.setValueAtTime(vol, when+attack+hold);
-    g.gain.exponentialRampToValueAtTime(0.0001, when+attack+hold+release);
-    o.connect(fl); o2.connect(fl); fl.connect(g); g.connect(Heaven.master);
-    o.start(when); o2.start(when);
-    o.stop(when+attack+hold+release+0.1); o2.stop(when+attack+hold+release+0.1);
-  });
+  const ctx = Heaven.ctx; if(!ctx || !Heaven.master) return;
+  try{
+    freqs.forEach(function(f){
+      const o = ctx.createOscillator(), o2 = ctx.createOscillator();
+      const g = ctx.createGain(), fl = ctx.createBiquadFilter();
+      o.type="triangle"; o2.type="sine"; o.frequency.value=f; o2.frequency.value=f*1.003;
+      fl.type="lowpass"; fl.frequency.value=1400;
+      const v=Math.max(0.0002, vol);
+      g.gain.setValueAtTime(0.0001, when);
+      g.gain.exponentialRampToValueAtTime(v, when+attack);
+      g.gain.setValueAtTime(v, when+attack+hold);
+      g.gain.exponentialRampToValueAtTime(0.0001, when+attack+hold+release);
+      o.connect(fl); o2.connect(fl); fl.connect(g); g.connect(Heaven.master);
+      o.start(when); o2.start(when);
+      o.stop(when+attack+hold+release+0.1); o2.stop(when+attack+hold+release+0.1);
+    });
+  }catch(e){}
 }
 function playHeavenlyWelcome(){
   if(Heaven.played || !Heaven.enabled) return;
-  const ctx = heavenCtx(); if(!ctx) return;
-  if(ctx.state==='suspended'){ try{ const pr=ctx.resume(); if(pr&&pr.catch) pr.catch(function(){}); }catch(e){} }
-  if(ctx.state!=='running' && ctx.state!=='suspended') return;
-  Heaven.played = true;
-  const t = ctx.currentTime + 0.1;
-  heavenPad(t, [130.81,196.00,246.94,329.63], 0.05, 2.0, 2.6, 3.2);
-  const arp = [659.25,783.99,1046.50,1318.51,1567.98];
-  arp.forEach(function(f,i){ heavenBell(t+0.5+i*0.42, f, 0.16, 4.2); });
-  heavenBell(t+3.1, 2093.00, 0.05, 5.0);
+  let ctx;
+  try{ ctx = heavenCtx(); }catch(e){ return; }
+  if(!ctx) return;
+  function start(){
+    if(Heaven.played || !Heaven.enabled) return;
+    if(ctx.state!=="running") return;
+    Heaven.played = true;
+    try{
+      const t = ctx.currentTime + 0.1;
+      heavenPad(t, [130.81,196.00,246.94,329.63], 0.05, 2.0, 2.6, 3.2);
+      const arp = [659.25,783.99,1046.50,1318.51,1567.98];
+      arp.forEach(function(f,i){ heavenBell(t+0.5+i*0.42, f, 0.16, 4.2); });
+      heavenBell(t+3.1, 2093.00, 0.05, 5.0);
+    }catch(e){ Heaven.played = false; }
+  }
+  if(ctx.state==="suspended"){
+    try{ const pr=ctx.resume(); if(pr&&pr.then) pr.then(start).catch(function(){}); else start(); }catch(e){}
+    return;
+  }
+  start();
 }
 function playHeavenChime(){
   if(!Heaven.enabled) return;
-  const ctx = heavenCtx(); if(!ctx || ctx.state!=='running') return;
-  const t = ctx.currentTime + 0.05;
-  heavenBell(t, 1046.50, 0.12, 3.0);
-  heavenBell(t+0.35, 1318.51, 0.10, 3.4);
+  try{
+    const ctx = heavenCtx(); if(!ctx || ctx.state!=="running") return;
+    const t = ctx.currentTime + 0.05;
+    heavenBell(t, 1046.50, 0.12, 3.0);
+    heavenBell(t+0.35, 1318.51, 0.10, 3.4);
+  }catch(e){}
 }
 function toggleHeavenSound(){
   Heaven.enabled = !Heaven.enabled;
@@ -1184,72 +1247,119 @@ function toggleHeavenSound(){
   const b = document.getElementById('soundToggle');
   if(b && !Heaven.enabled) b.innerHTML = '🔕 Heavenly Tone: Off';
 })();
-playHeavenlyWelcome();
-['pointerdown','keydown'].forEach(function(ev){
+['pointerdown','keydown','touchend'].forEach(function(ev){
   document.addEventListener(ev, function once(){
     document.removeEventListener(ev, once);
     if(!Heaven.played) playHeavenlyWelcome();
-  });
+  }, {passive:true});
 });
 
-/* Welcome gate: sound + entrance */
+/* Welcome gate: wait for a real press (ignore the tap that opened the app) */
 (function(){
-  const gate = document.getElementById('welcomeGate');
+  const gate = document.getElementById("welcomeGate");
+  const btn = document.getElementById("welcomeEnter");
   if(!gate) return;
   let gone = false;
+  let armed = false;
   function dismiss(){
     if(gone) return; gone = true;
-    gate.classList.add('hide');
-    setTimeout(function(){ gate.style.display='none'; }, 900);
+    gate.classList.add("hide");
+    gate.setAttribute("aria-hidden","true");
+    setTimeout(function(){ gate.style.display="none"; }, 900);
   }
-  function enter(){
+  function enter(e){
+    if(!armed || gone) return;
+    if(e){ e.preventDefault(); e.stopPropagation(); }
     try{
       const ctx = heavenCtx();
-      if(ctx && ctx.state==='suspended'){ const p=ctx.resume(); if(p&&p.catch) p.catch(function(){}); }
-    }catch(e){}
-    if(!Heaven.played) playHeavenlyWelcome();
+      if(ctx && ctx.state==="suspended"){ const p=ctx.resume(); if(p&&p.catch) p.catch(function(){}); }
+    }catch(err){}
+    if(Heaven.enabled && !Heaven.played) playHeavenlyWelcome();
     dismiss();
   }
-  gate.addEventListener('pointerdown', enter);
-  gate.addEventListener('keydown', function(e){
-    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); enter(); }
+  /* Swallow leftover taps from launching the app */
+  function swallow(e){
+    if(armed || gone) return;
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  ["pointerdown","pointerup","click","touchstart","touchend"].forEach(function(ev){
+    gate.addEventListener(ev, swallow, true);
   });
-  /* Sound already allowed (or muted by preference)? Don't hold the door. */
+  if(btn){
+    btn.disabled = true;
+    btn.addEventListener("click", enter);
+  }
   setTimeout(function(){
-    if(gone) return;
-    if(!Heaven.enabled){ dismiss(); return; }
-    if(Heaven.ctx && Heaven.ctx.state==='running'){ setTimeout(dismiss, 1200); }
-  }, 700);
+    armed = true;
+    gate.classList.add("wg-ready");
+    if(btn){
+      btn.disabled = false;
+      btn.focus();
+    }
+  }, 900);
 })();
 
-// ✅ UPDATE TIMER
+// ✅ UPDATE TIMER (stable — no class/innerHTML thrash)
+let lastCurrentRow=null, lastNextRow=null, lastSunday=null, programsCache=null;
+function setShown(el, show){
+  if(!el) return;
+  const next=show?"block":"none";
+  if(el.style.display!==next) el.style.display=next;
+}
 function update(){
-    const now=new Date();
+  try{
+    const now=churchNow();
     const isSunday=now.getDay()===0;
+    const sundayEl=document.getElementById("sundayContent");
+    const scriptureBox=document.getElementById("scriptureBox");
+    const scriptureText=document.getElementById("scriptureText");
 
     if(!isSunday){
-        document.getElementById("sundayContent").style.display="none";
+        setShown(sundayEl, false);
         const diff=Math.floor((nextSunday()-now)/1000);
-        document.getElementById("timerBox").innerHTML=`📖 Scripture<br>⏳ Countdown to Sunday: <span>${formatDHMS(diff)}</span>`;
-        document.getElementById("scriptureBox").style.display="block";
-        document.getElementById("scriptureText").innerText = getTodayScripture();
+        setTimerHTML("📖 Scripture<br>⏳ Countdown to Sunday: <span>"+formatDHMS(diff)+"</span>");
+        setShown(scriptureBox, true);
+        if(scriptureText){
+          const verse=getTodayScripture();
+          if(scriptureText.innerText!==verse) scriptureText.innerText=verse;
+        }
+        lastSunday=false;
+        lastCurrentRow=null; lastNextRow=null;
         return;
     }
 
-    document.getElementById("sundayContent").style.display="block";
-    const programs=document.querySelectorAll("#sundayContent table tr[data-start]");
+    setShown(sundayEl, true);
+    setShown(scriptureBox, false);
+    if(!programsCache || lastSunday===false){
+      programsCache=sundayEl ? sundayEl.querySelectorAll("table tr[data-start]") : [];
+    }
+    lastSunday=true;
+
     let current=null, next=null;
-
-    programs.forEach(row=>{
-        const start=parseTime(row.dataset.start);
-        const end=parseTime(row.dataset.end);
-        row.classList.remove("current-program","next-program");
-
-        if(now>=start && now<=end){ current={row,end}; row.classList.add("current-program"); }
-        else if(!next && now<start){ next={row,start}; }
+    programsCache.forEach(function(row){
+        const start=parseTime(row.dataset.start, now);
+        const end=parseTime(row.dataset.end, now);
+        if(now>=start && now<=end){ current={row:row,end:end}; }
+        else if(!next && now<start){ next={row:row,start:start}; }
     });
 
-    if(next) next.row.classList.add("next-program");
+    if(lastCurrentRow && (!current || lastCurrentRow!==current.row)){
+      lastCurrentRow.classList.remove("current-program");
+      lastCurrentRow=null;
+    }
+    if(lastNextRow && (!next || lastNextRow!==next.row)){
+      lastNextRow.classList.remove("next-program");
+      lastNextRow=null;
+    }
+    if(current && lastCurrentRow!==current.row){
+      current.row.classList.add("current-program");
+      lastCurrentRow=current.row;
+    }
+    if(next && lastNextRow!==next.row){
+      next.row.classList.add("next-program");
+      lastNextRow=next.row;
+    }
 
     if(current){
         const programKey=current.row.cells[1].innerText;
@@ -1257,17 +1367,20 @@ function update(){
         lastProgramKey=programKey;
         const remaining=Math.floor((current.end-now)/1000);
         const nextText=next? next.row.cells[1].innerText+" ("+next.row.cells[0].innerText+")":"None";
-        document.getElementById("timerBox").innerHTML=`⏱ Current Program Remaining: <span>${formatMS(remaining)}</span><br>▶ Next Program: <span>${nextText}</span>`;
+        setTimerHTML("⏱ Current Program Remaining: <span>"+formatMS(remaining)+"</span><br>▶ Next Program: <span>"+nextText+"</span>");
     } else if(next){
         const wait=Math.floor((next.start-now)/1000);
-        document.getElementById("timerBox").innerHTML=`⏳ Next Program Starts In: <span>${formatMS(wait)}</span><br>▶ ${next.row.cells[1].innerText}`;
+        setTimerHTML("⏳ Next Program Starts In: <span>"+formatMS(wait)+"</span><br>▶ "+next.row.cells[1].innerText);
     } else {
-        document.getElementById("timerBox").innerText="All programs completed.";
+        setTimerHTML("All programs completed.");
     }
+  }catch(e){}
 }
 
 update();
-setInterval(update,1000);
+if(window.__jcrgmTimer) clearInterval(window.__jcrgmTimer);
+window.__jcrgmTimer=setInterval(update,1000);
+document.addEventListener("visibilitychange", function(){ if(!document.hidden) update(); });
 
 /* ============================================================
    ✨ GOLD DUST FLARE ENGINE — floating embers & sparkles
@@ -1283,7 +1396,7 @@ setInterval(update,1000);
   let W, H, particles = [], sparkles = [], running = true;
 
   function seed(){
-    const count = Math.min(70, Math.floor(window.innerWidth / 16));
+    const count = Math.min(36, Math.max(12, Math.floor(window.innerWidth / 28)));
     particles = Array.from({length: count}, () => ({
       x: Math.random() * W,
       y: Math.random() * H,
@@ -1353,8 +1466,14 @@ setInterval(update,1000);
     }
   }
 
-  window.addEventListener('resize', resize);
-  document.addEventListener('visibilitychange', () => { running = !document.hidden; });
+  let resizeTimer=null;
+  window.addEventListener("resize", function(){
+    clearTimeout(resizeTimer);
+    resizeTimer=setTimeout(resize, 180);
+  });
+  document.addEventListener("visibilitychange", function(){
+    running = !document.hidden;
+  });
   resize();
   requestAnimationFrame(frame);
 })();
@@ -1372,5 +1491,5 @@ setInterval(update,1000);
   });
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39cb889fec9b575',t:'MTc4OTE5MzEzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42297c1dfdd73e1',t:'MTc5MDU5Njg3OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4245270bcb04ebe',t:'MTc5MDYxNTAxMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
