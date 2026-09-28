@@ -38,6 +38,25 @@ textarea,input,select{width:100%;background:#081523;border:1px solid var(--line)
 .light .guidedPanel{background:#f4f1ff}
 .guidedStep{margin-top:12px;border:1px dashed var(--line);border-radius:12px;padding:16px;min-height:120px}
 .guidedStep .gTitle{font-weight:900;color:var(--gold2);font-size:19px}
+.scapeGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:8px;margin:8px 0 12px}
+.scapeBtn{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;padding:11px 12px;min-height:64px;width:100%;margin:0}
+.scapeBtn small{color:var(--muted);font-weight:400;font-size:11px;line-height:1.35}
+.scapeBtn.activeScape{border-color:var(--gold);box-shadow:0 0 0 2px #e7bd6233 inset;color:var(--gold2)}
+.scapeGroupTitle{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:800;margin:14px 0 6px}
+.themeGroup{margin:18px 0 8px}
+.themeGroup h3{margin:0 0 8px;color:var(--gold2);font-size:17px}
+.planCard{border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0;background:#0b1829}
+.light .planCard{background:#f7f9fb}
+.planCard h3{margin:0 0 4px;color:var(--gold2)}
+.planMeta{font-size:12px;color:var(--muted);margin-bottom:8px}
+.propheticStage{border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0;background:#0b1829}
+.light .propheticStage{background:#f7f9fb}
+.propheticStage h3{margin:0 0 4px;color:var(--gold2)}
+.verseRow{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.verseRow:last-child{border-bottom:0}
+.verseRow .vnote{color:var(--muted);font-size:13px;margin:3px 0 0}
+.guidedLength{margin-top:10px;padding:10px 12px;border-radius:10px;border:1px dashed var(--gold);background:#141f31;color:var(--gold2);font-size:13px}
+.light .guidedLength{background:#fff8e6;color:#7a5a12}
 
 .sermonBuilder{margin-top:18px;border:1px solid var(--gold);border-radius:16px;padding:18px;background:linear-gradient(145deg,#111f31,#091522);box-shadow:0 10px 30px #0002}.light .sermonBuilder{background:var(--panel)}.sermonBuilderHead{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.sermonTargets{margin-top:14px}.targetCard{border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0;background:#0b1829}.light .targetCard{background:#f7f9fb}.targetNum{display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;background:var(--gold);color:#17120a;font-weight:900;margin-right:8px}.targetTitle{font-weight:900;color:var(--gold2);font-size:17px}.targetText{margin:7px 0}.relatedBox{margin-top:16px;border-top:1px solid var(--line);padding-top:16px}.relatedGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}.relatedItem{border:1px solid var(--line);border-radius:10px;padding:11px;background:#0b1829}.light .relatedItem{background:#f7f9fb}.relatedItem b{color:var(--gold2)}.relatedItem small{display:block;color:var(--muted);margin-top:4px}.sermonOrder{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sermonOrder .targetCard{margin:0}.relatedActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.relatedActions a.btn{ text-decoration:none !important; } .relatedActions a.btn:hover{ text-decoration:none !important; }
 .referencePanel,.fullSermonPanel{margin-top:18px;border:1px solid var(--line);border-radius:16px;padding:18px;background:linear-gradient(145deg,#101f32,#091522)}
@@ -125,6 +144,68 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 @media(max-width:560px){.kpiGrid{grid-template-columns:1fr 1fr}.title{font-size:31px}.subtitle{font-size:14px}}
 
 @media print{.side,.top,.appShellTop,.bottomNav,.actions,.studyToolbar,.toast,.commandPalette{display:none!important}.main{padding:0;max-width:none}.section{display:none!important}.section.show{display:block!important}.card{box-shadow:none;border:0;background:white;color:#111}.sermonOutput,.scriptureBox{background:white!important;color:#111}}
+/* Opening Sight cinema + Academy */
+.cinema{position:relative;overflow:hidden;border-radius:20px;min-height:440px;padding:26px 26px 18px;color:#f6f0e4;isolation:isolate;box-shadow:inset 0 0 80px rgba(0,0,0,.35);border:1px solid rgba(231,189,98,.28);--c1:#070b18;--c2:#1a1230;--c3:#c9a46a;background:radial-gradient(1200px 520px at 18% -12%,rgba(231,189,98,.28),transparent 58%),radial-gradient(900px 620px at 110% 90%,rgba(40,20,70,.55),transparent 52%),linear-gradient(165deg,var(--c1),var(--c2) 58%,#05070e)}
+.light .cinema{color:#f6f0e4}
+.cinema::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,transparent 0 2px,rgba(0,0,0,.07) 3px),radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.45) 100%);opacity:.7;z-index:1}
+.cinema::after{content:"";position:absolute;inset:-8%;background:radial-gradient(circle at 30% 20%,rgba(255,220,150,.12),transparent 36%);animation:cinemaKen 28s ease-in-out infinite alternate;z-index:0;pointer-events:none}
+@keyframes cinemaKen{from{transform:scale(1)}to{transform:scale(1.08) translate3d(2%,1%,0)}}
+.mood-dawn{--c1:#140e08;--c2:#3a2210;--c3:#e7bd62}
+.mood-night{--c1:#04060d;--c2:#10182c;--c3:#8fb7ff}
+.mood-sea{--c1:#04141c;--c2:#0b3a44;--c3:#7ad4c8}
+.mood-desert{--c1:#1a1208;--c2:#5a3a16;--c3:#e0b066}
+.mood-garden{--c1:#07140c;--c2:#1b3d24;--c3:#b7d48a}
+.mood-storm{--c1:#0b1018;--c2:#243044;--c3:#c5d2e6}
+.mood-temple{--c1:#16100a;--c2:#3d2a12;--c3:#f0d59a}
+.mood-fire{--c1:#1a0804;--c2:#5a1c0c;--c3:#ff8a4a}
+.mood-throne{--c1:#12081c;--c2:#3a1a58;--c3:#e7bd62}
+.mood-cross{--c1:#140606;--c2:#3a1014;--c3:#e08a8a}
+.mood-glory{--c1:#1a1408;--c2:#5a4718;--c3:#ffe7a0}
+.mood-pasture{--c1:#0c1408;--c2:#2a4418;--c3:#d4e07a}
+.mood-wisdom{--c1:#12100c;--c2:#2c261c;--c3:#e6d2a8}
+.mood-prison{--c1:#0c0e12;--c2:#232830;--c3:#a8b0bc}
+.mood-king{--c1:#140c1c;--c2:#3a2048;--c3:#d4b06a}
+.mood-lament{--c1:#0c1018;--c2:#1c2838;--c3:#9bb0c8}
+.mood-still{--c1:#081018;--c2:#163040;--c3:#b8d8e8}
+.mood-heaven{--c1:#10141c;--c2:#2a3860;--c3:#f0e6c8}
+.cinemaDust{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.cinemaDust span{position:absolute;bottom:-12px;width:3px;height:3px;border-radius:50%;background:rgba(255,236,190,.55);animation:cinemaDust linear infinite;opacity:.0}
+@keyframes cinemaDust{0%{transform:translateY(0) scale(.6);opacity:0}12%{opacity:.7}100%{transform:translateY(-460px) scale(1);opacity:0}}
+.cinemaTop,.cinemaRef,.cinemaVerse,.cinemaLead,.cinemaSenses,.cinemaBar,.cinemaKicker{position:relative;z-index:3}
+.cinemaTop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.cinemaKicker{letter-spacing:.18em;text-transform:uppercase;font-size:11px;color:var(--c3,#e7bd62);font-weight:800}
+.cinemaRef{margin:14px 0 6px;font-size:13px;color:rgba(246,240,228,.72)}
+.cinemaVerse{font-size:clamp(22px,3.1vw,42px);line-height:1.32;font-weight:650;margin:0 0 14px;max-height:38vh;overflow:auto;text-shadow:0 2px 24px rgba(0,0,0,.45);font-family:Georgia,"Times New Roman",serif}
+.cinemaLead{font-size:16px;line-height:1.55;color:rgba(246,240,228,.9);margin:0 0 16px;max-width:70ch}
+.cinemaSenses{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:800px){.cinemaSenses{grid-template-columns:1fr}.cinema{min-height:0;padding:18px}}
+.sense{background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px 14px}
+.sense b{display:block;color:var(--c3,#e7bd62);font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.sense p{margin:0;font-size:13.5px;line-height:1.45;color:rgba(246,240,228,.92)}
+.cinemaBar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding-top:6px}
+.cinemaBar .btn{background:rgba(255,255,255,.08);color:#f6f0e4;border-color:rgba(255,255,255,.18)}
+.cinemaBar .btn.primary{background:linear-gradient(180deg,#e7bd62,#c4922e);color:#1a1206;border:0;font-weight:800}
+body.theaterOn{overflow:hidden}
+body.theaterOn .side,body.theaterOn .top,body.theaterOn .appShellTop,body.theaterOn .bottomNav{visibility:hidden}
+body.theaterOn .cinema, .cinema.theater{position:fixed;inset:0;z-index:80;border-radius:0;min-height:100vh;padding:42px 8vw 28px}
+.chapterNav{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0 8px;max-height:220px;overflow:auto}
+.chBtn{width:38px;height:32px;padding:0;font-size:11px;margin:0}
+.chBtn.done{background:#1e6b45;color:#e9fff4;border-color:transparent}
+.chBtn.on{box-shadow:0 0 0 2px var(--gold)}
+.compareGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.compareCol{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:12px;max-height:380px;overflow:auto}
+.compareCol h4{margin:0 0 8px;color:var(--gold2)}
+.academyGrid,.guideGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.methodCard h3{margin-top:0}
+.syllabus ol{padding-left:18px}
+.syllabus li{margin:6px 0}
+.pathBtn,.charBtn,.keyPass{display:block;width:100%;text-align:left;margin:0}
+.briefMeta{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
+.wordRow{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
+.guideHero{border:1px solid var(--gold);border-radius:16px;padding:16px;background:linear-gradient(145deg,#141b33,#081522)}
+.light .guideHero{background:#f7f3e8}
+.guideKey{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+
 </style>
 </head>
 <body>
@@ -143,6 +224,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
     <button data-go="journal">✍ Journal & Prayer</button>
     <button data-go="topics">✦ Topics & Themes</button>
     <button data-go="plans">◷ Reading Plans</button>
+    <button data-go="academy">🏛 Study Academy</button>
+    <button data-go="guides">📚 Book Guides</button>
     <button data-go="resources">🔗 Study Resources</button>
     <button data-go="settings">⚙ Settings & Data</button>
   </nav>
@@ -154,7 +237,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
     <button class="btn menu mobile" onclick="toggleSide()">☰</button>
     <div class="eyebrow">Advanced discipleship & Bible study workspace</div>
     <div class="title">JCRGM MASTER STUDY</div>
-    <div class="subtitle">A structured environment for Scripture reading, observation, interpretation, meditation, prayer, memorization, review and teaching preparation.</div>
+    <div class="subtitle">A master house for Scripture: Opening Sight walks the selected passage as living scenes you see, hear and stand inside; then O-I-C-T-A-P, academy methods, 66 book guides, memory, meditation, prayer and teaching.</div>
   </div>
   <div class="actions">
     <button class="btn" onclick="toggleTheme()">◐ Theme</button>
@@ -177,10 +260,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
   <div class="kpi"><b id="kpiMeditations">0</b><small>Meditation sessions</small></div>
   <div class="kpi"><b id="kpiReviews">0</b><small>Memory reviews</small></div>
 </div>
+<div class="card wide" id="dailyBriefing"><h2>Today's Briefing</h2><div id="briefingBody"></div></div>
 <div class="grid">
   <div class="card wide"><h2>Today's Mission</h2>
     <p class="muted">Do not merely finish chapters. Seek understanding, obedience, remembrance and transformation.</p>
-    <div class="verse">“Your word is a lamp to my feet and a light to my path.” <span class="ref">— Psalm 119:105</span></div><div class="scriptureBox" style="margin-top:14px"><h3>📜 Scripture for Today</h3><p class="muted">Choose your main Scripture for today.</p><div class="row3"><div><label>Book</label><select id="todayBook"></select></div><div><label>Chapter</label><input id="todayChapter" type="number" min="1" value="1"></div><div><label>Verse (optional)</label><input id="todayVerse" placeholder="e.g. 1-10"></div></div><br><div style="margin:10px 0"><label>Bible version</label><select class="verSelect" onchange="setBibleVersion(this.value)"></select></div><div class="actions"><button class="btn primary" onclick="generateTodayScripture()">Generate Scripture</button><button class="btn" onclick="openTodayLogos()">Open in Logos</button><button class="btn" onclick="studyTodayScripture()">Study This</button></div><div id="todayScriptureResult" style="margin-top:12px"><div class="muted">No Scripture selected for today yet.</div></div></div>
+    <div class="verse">“Your word is a lamp to my feet and a light to my path.” <span class="ref">— Psalm 119:105</span></div><div class="scriptureBox" style="margin-top:14px"><h3>📜 Scripture for Today</h3><p class="muted">Choose your main Scripture for today.</p><div class="row3"><div><label>Book</label><select id="todayBook"></select></div><div><label>Chapter</label><input id="todayChapter" type="number" min="1" value="1"></div><div><label>Verse (optional)</label><input id="todayVerse" placeholder="e.g. 1-10"></div></div><br><div style="margin:10px 0"><label>Bible version</label><select class="verSelect" onchange="setBibleVersion(this.value)"></select></div><div class="actions"><button class="btn primary" onclick="generateTodayScripture()">Generate Scripture</button><button class="btn" onclick="openTodayLogos()">Open in Logos</button><button class="btn" onclick="studyTodayScripture()">Study This</button><button class="btn primary" onclick="todaySight()">👁 Opening Sight</button></div><div id="todayScriptureResult" style="margin-top:12px"><div class="muted">No Scripture selected for today yet.</div></div></div>
     <div class="progress"><div class="bar" id="daybar"></div></div>
     <small class="muted"><span id="daypct">0</span>% of today's rhythm completed</small>
   </div>
@@ -207,6 +291,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 
 <section id="read" class="section">
 <div class="card full"><h2>Bible Journey — 66 Books</h2><p class="muted">Select a book to open it in the Scripture Reader, mark it studied, and send the reference to Logos.</p><div id="books" class="bookgrid"></div></div>
+<div class="card full">
+  <h2>🕊 Prophetic Ministry — Scriptures to Meditate</h2>
+  <p class="muted">A Scripture path to grow in hearing God, testing revelation, Christlike character, and the testimony of Jesus — “for the testimony of Jesus is the spirit of prophecy” (Revelation 19:10). Press Meditate to open the passage in the Reader.</p>
+  <div id="propheticPath"></div>
+</div>
 </section>
 
 <section id="scripture" class="section">
@@ -224,7 +313,12 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <button class="btn primary" onclick="loadScripture()">Show Scripture</button>
 <button class="btn" onclick="openCurrentLogos()">Open in Logos</button>
 <button class="btn" onclick="openBible(currentRef)">Open in Bible.com</button>
+<button class="btn primary" onclick="beginSightFromReader()">👁 Opening Sight</button>
+<button class="btn" onclick="startLectioFromReader()">✝ Lectio</button>
+<button class="btn" onclick="compareTranslations()">Compare translations</button>
 </div>
+<div id="chapterNav"></div>
+<div id="compareBox" style="margin-top:12px"></div>
 <div id="scriptureResult" class="scriptureBox">
   <div class="muted">Choose a passage and select “Show Scripture”.</div>
 </div>
@@ -236,6 +330,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <button class="btn" onclick="sendPassageToStudy()">Send reference to Study Canvas</button>
 <button class="btn" onclick="sendPassageToMemory()">Send reference to Memory Lab</button>
 <button class="btn" onclick="sendPassageToMeditation()">Send reference to Meditation</button>
+<button class="btn primary" onclick="sendPassageToSight()">Send to Opening Sight</button>
 <h3 style="margin-top:20px">Context checklist</h3>
 <div class="check"><input type="checkbox"> Before the passage</div>
 <div class="check"><input type="checkbox"> After the passage</div>
@@ -444,28 +539,14 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <div class="timer" id="timer">25:00</div><div class="timerSub" id="timerSub">Study focus session</div>
 <div class="timerBtns"><button class="btn primary" onclick="startTimer()">Start</button><button class="btn" onclick="pauseTimer()">Pause</button><button class="btn" onclick="resetTimer()">Reset</button></div>
 <div class="row3" style="margin-top:18px"><div><label>Focus minutes</label><input id="focusMin" type="number" min="1" max="180" value="25"></div><div><label>Break minutes</label><input id="breakMin" type="number" min="1" max="60" value="5"></div><div><label>Volume</label><input id="volume" class="range" type="range" min="0" max="100" value="18" oninput="setVolume(this.value)"></div></div>
-<h3>Atmosphere</h3>
-<div class="actions">
-<button class="btn" onclick="ambient('rain')">🌧 Rain</button>
-<button class="btn" onclick="ambient('brown')">〰 Brown Noise</button>
-<button class="btn" onclick="ambient('tone')">♪ Soft Tone</button>
-<button class="btn" onclick="stopAmbient()">■ Stop</button>
-</div>
 <h3>🌌 Meditation Soundscapes</h3>
-<div class="actions">
-<button class="btn" onclick="ambient('wind')">🌬 Breath of Wind</button>
-<button class="btn" onclick="ambient('drone')">🌌 Deep Stillness</button>
-<button class="btn" onclick="ambient('chimes')">🔔 Soft Chimes</button>
-</div>
-<h3>🌿 Nature</h3>
-<div class="actions">
-<button class="btn" onclick="ambient('ocean')">🌊 Ocean Waves</button>
-<button class="btn" onclick="ambient('birds')">🐦 Distant Birds</button>
-<button class="btn" onclick="ambient('shore')">🌅 Ocean & Birds</button>
-</div>
+<p class="small muted">Atmospheres generated on this device. Nature and sanctuary, then the Throne Room: angelic voices worshipping and singing, seraphim, many waters, shofar, opened heaven — sounds that draw the heart toward spiritual sight. Choose one before you begin. If you start Opening Sight with no sound playing, <b>Open My Eyes</b> begins on its own. Volume is above.</p>
+<div id="soundscapeMount"></div>
+<div class="actions"><button class="btn danger" onclick="stopAmbient()">■ Stop sound</button></div>
 <div class="guidedPanel">
-  <h3>👁 Guided Meditation — Opening Sight into the Spirit Realm</h3>
-  <p class="muted">A Scripture-led journey: be still, fix your eyes on Jesus, ask for opened eyes, watch, record — and test everything by the Word.</p>
+  <h3>👁 Opening Sight — walk the selected Scripture</h3>
+  <p class="muted">Begin Journey now leads you visually through the <b>Journey Scripture</b> below — verse by verse as living scenes (see, hear, be there), then watch, observe, interpret, apply, pray and test. The whole walk lasts your <b>Focus minutes</b>. Theater mode fills the screen. Arrow keys move between scenes.</p>
+  <div class="guidedLength" id="guidedLengthHint">This journey will last 25 minutes — Opening Sight will walk your selected Scripture as living scenes, scaled to your Focus session.</div>
   <div class="row">
     <div><label>Journey Scripture</label><input id="guidedRef" value="Ephesians 1:17-18"></div>
     <div><label>Spoken guidance</label><select id="guidedVoice"><option value="on" selected>Voice on</option><option value="off">Silent (text only)</option></select></div>
@@ -482,12 +563,14 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
   <br>
   <div class="actions">
     <button class="btn primary" onclick="startGuided()">▶ Begin Journey</button>
+    <button class="btn" onclick="startLectioJourney()">✝ Lectio Divina</button>
     <button class="btn" onclick="testGuidedVoice()">🔊 Test Voice</button>
+    <button class="btn" onclick="prevGuidedStep()">← Back</button>
     <button class="btn" onclick="nextGuidedStep(true)">Next Step →</button>
     <button class="btn danger" onclick="stopGuided()">■ End Journey</button>
     <button class="btn" onclick="guidedToMeditation()">✍ Record in Meditation Room</button>
   </div>
-  <div id="guidedStep" class="guidedStep"><div class="muted">Press “Begin Journey” — each step appears here and is spoken aloud. Headphones and low light recommended.</div></div>
+  <div id="guidedStep" class="guidedStep"><div class="muted">Enter a Journey Scripture, then press Begin Journey. Opening Sight will fetch the passage and walk it as living scenes — see, hear, be there — then observation, prayer and testing. Headphones and low light recommended. Press ⛶ Theater once it begins.</div></div>
   <div class="small muted" id="guidedProgress" style="margin-top:8px"></div>
 </div>
 <div class="guidedPanel" style="border-color:var(--green)">
@@ -523,16 +606,130 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 </section>
 
 <section id="topics" class="section">
-<div class="card full"><h2>Topics & Themes</h2><p class="muted">Select a theme to search it in Bible.com, Blue Letter Bible and Logos.</p><div id="topicsList"></div></div>
+<div class="card full"><h2>Topics & Themes</h2><p class="muted">Choose a theme to search it in Blue Letter Bible. Prophetic, discipleship, prayer and character themes are grouped so you can study with direction.</p><div id="topicsList"></div></div>
 </section>
 
 <section id="plans" class="section">
 <div class="grid">
-<div class="card wide"><h2>Reading Plans</h2><div class="pill">365 days — whole Bible</div><div class="pill">180 days — intensive</div><div class="pill">90 days — focused</div><div class="pill">NT — 1 year</div><div class="pill">OT — 1 year</div><div class="pill">Book-by-book</div>
+<div class="card wide"><h2>Reading Plans</h2>
+<p class="muted">Each plan now carries its study topics so you know what you are pursuing, not only how many days you will read.</p>
+<div id="plansList"></div>
 <h3>Recommended study cycle</h3><ol class="muted"><li>Read the assigned passage.</li><li>Study context.</li><li>Write O-I-C-T-A-P.</li><li>Memorize one key verse.</li><li>Pray the passage.</li><li>Review after 1, 3, 7, 14 and 30 days.</li></ol>
 <div class="actions"><button class="btn primary" onclick="openLink('https://bibleproject.com/reading-plans/')">BibleProject Plans</button><button class="btn" onclick="openLink('https://www.bible.com/reading-plans')">YouVersion Plans</button></div>
 </div>
-<div class="card"><h3>Study intensity</h3><select id="studyIntensity"><option>30 min — devotional</option><option selected>60 min — balanced</option><option>90 min — deep study</option><option>120 min — academic / teaching</option></select><p class="muted">Depth matters more than speed. Keep a sustainable rhythm.</p></div>
+<div class="card"><h3>Study intensity</h3><select id="studyIntensity"><option>30 min — devotional</option><option selected>60 min — balanced</option><option>90 min — deep study</option><option>120 min — academic / teaching</option></select><p class="muted">Depth matters more than speed. Keep a sustainable rhythm. Match Focus minutes in the Focus Room to this intensity.</p></div>
+</div>
+</section>
+
+<section id="academy" class="section">
+<div class="grid">
+<div class="card wide">
+  <h2>Study Academy — how this house reads the Word</h2>
+  <p class="muted">Methods are servants. The aim is not a notebook. The aim is to see, to obey, to become like Christ, and to feed His people. Opening Sight walks the selected Scripture as living scenes; this Academy keeps that sight honest.</p>
+  <div class="academyGrid">
+    <div class="card methodCard"><h3>O — Observation</h3><p>What does the text actually say? Mark repeating words, verbs, contrasts, lists, connecting words (therefore, but, so that). Name the people, places, and time. Do not interpret yet.</p></div>
+    <div class="card methodCard"><h3>I — Interpretation</h3><p>What did it mean to the first hearers? Genre, context, argument, and the book’s own purpose govern you. Scripture interprets Scripture. The obscure bows to the clear.</p></div>
+    <div class="card methodCard"><h3>C — Context</h3><p>Read the paragraph, the book, the covenant, and the whole canon. A verse cut from its soil can be made to say anything. Refuse isolated slogans.</p></div>
+    <div class="card methodCard"><h3>T — Theology</h3><p>What is here revealed of the Father, the Son, the Spirit, salvation, the church, the kingdom? Distill one true sentence you could preach without blushing.</p></div>
+    <div class="card methodCard"><h3>A — Application</h3><p>What must I believe, confess, start, stop, or suffer? Application is a decision with a weekday, not a mist of admiration.</p></div>
+    <div class="card methodCard"><h3>P — Prayer</h3><p>Pray the text back. Worship, confession, petition, intercession. Study that does not pray is anatomy without breath.</p></div>
+  </div>
+</div>
+<div class="card wide">
+  <h3>Genre map — do not read every book the same way</h3>
+  <ul>
+    <li><b>Narrative</b> — plot, characters, God as the main actor. Meaning is in the whole scene, not a moral taped to one verse.</li>
+    <li><b>Law</b> — covenant, holiness, how a redeemed people live near God. Ask how Christ fulfills and how the church now walks.</li>
+    <li><b>Poetry / Wisdom</b> — image, parallelism, proverb as general truth not mechanical promise. Fear of the Lord is the gate.</li>
+    <li><b>Psalm</b> — pray it. Notice address, complaint, trust, vow. The Psalter trains the affections.</li>
+    <li><b>Prophet</b> — covenant lawsuit, warning, promise. The near event and the farther horizon. Christ is the Yes.</li>
+    <li><b>Gospel</b> — Jesus in action. Follow the question: who is this Man? Read whole scenes. The cross and resurrection interpret everything.</li>
+    <li><b>Epistle</b> — argument. Track therefore. Indicative before imperative (what God has done, then what we do).</li>
+    <li><b>Apocalypse</b> — images that unveil, not a codebook for panic. Worship is the center. The Lamb wins.</li>
+  </ul>
+</div>
+<div class="card">
+  <h3>Christ in all the Scriptures</h3>
+  <p>Beginning at Moses and all the prophets, He expounded the things concerning Himself (Luke 24:27). Promise, pattern, presence: the Seed, the Lamb, the Priest, the King, the Servant, the Son. Never flatten the Old Testament into mere example, and never treat the New as if Christ arrived unannounced.</p>
+</div>
+<div class="card">
+  <h3>Prophetic guardrails</h3>
+  <p>Sight is tested, not displayed. Does it agree with Scripture? Does it honor Christ crucified and risen? Does it produce His humility? The testimony of Jesus is the spirit of prophecy. Impression that cannot be laid beside the Word must wait. Pedahzur Ministries: hold fast what is good.</p>
+</div>
+<div class="card wide syllabus">
+  <h3>Weekly formation — a simple master rhythm</h3>
+  <ol>
+    <li><b>Lord’s Day</b> — Worship with the church. One psalm prayed. Opening Sight on the preached text or Psalm 27:4.</li>
+    <li><b>Monday</b> — Gospel scene from the Life of Christ path. Observe the scene; do not skip to a slogan.</li>
+    <li><b>Tuesday</b> — Wisdom or Torah. Fear of the Lord. Copy one proverb by hand into the journal.</li>
+    <li><b>Wednesday</b> — Psalm + prayer. Lectio Divina on a short psalm.</li>
+    <li><b>Thursday</b> — Prophet. Warning and hope. Ask what God is saying to His people, not only to your feelings.</li>
+    <li><b>Friday</b> — Epistle. Track the argument. Fill O-I-C-T-A-P on the Deep Study Canvas. Memory Lab: one verse.</li>
+    <li><b>Saturday</b> — Review the week’s verse. Mark chapters read. Prepare Sunday. Rest without guilt.</li>
+  </ol>
+</div>
+<div class="card wide">
+  <h3>Life of Christ — twelve stations</h3>
+  <p class="muted">Press a station. Opening Sight will walk that Scripture as a scene.</p>
+  <div class="academyGrid" id="christPath">
+    <button class="btn pathBtn" onclick="launchChristStation('Luke 1:26-38')">1. Annunciation — Luke 1:26-38</button>
+    <button class="btn pathBtn" onclick="launchChristStation('Luke 2:1-20')">2. Nativity — Luke 2:1-20</button>
+    <button class="btn pathBtn" onclick="launchChristStation('Matthew 3:13-17')">3. Baptism — Matthew 3:13-17</button>
+    <button class="btn pathBtn" onclick="launchChristStation('Matthew 4:1-11')">4. Wilderness — Matthew 4:1-11</button>
+    <button class="btn pathBtn" onclick="launchChristStation('Luke 4:16-21')">5. Anointed preaching — Luke 4:16-21</button>
+    <button class="btn pathBtn" onclick="launchChristStation('Matthew 5:1-12')">6. Kingdom teaching — Matthew 5:1-12</button>
+    <button class="btn pathBtn" onclick="launchChristStation('Mark 5:1-20')">7. Authority — Mark 5:1-20</button>
+    <button class="btn pathBtn" onclick="launchChristStation('Matthew 17:1-8')">8. Transfiguration — Matthew 17:1-8</button>
+    <button class="btn pathBtn" onclick="launchChristStation('Luke 22:39-46')">9. Gethsemane — Luke 22:39-46</button>
+    <button class="btn pathBtn" onclick="launchChristStation('John 19:16-30')">10. The cross — John 19:16-30</button>
+    <button class="btn pathBtn" onclick="launchChristStation('John 20:1-18')">11. Resurrection — John 20:1-18</button>
+    <button class="btn pathBtn" onclick="launchChristStation('Matthew 28:16-20')">12. Commission — Matthew 28:16-20</button>
+  </div>
+</div>
+<div class="card">
+  <h3>Character studies</h3>
+  <p class="muted">Open the Reader on the key passage, then send it to Opening Sight.</p>
+  <div class="actions">
+    <button class="btn charBtn" onclick="openGuidePass('Genesis 12:1-4')">Abraham — called</button>
+    <button class="btn charBtn" onclick="openGuidePass('Genesis 50:15-21')">Joseph — providence</button>
+    <button class="btn charBtn" onclick="openGuidePass('Exodus 3:1-15')">Moses — the Name</button>
+    <button class="btn charBtn" onclick="openGuidePass('1 Samuel 16:1-13')">David — the heart</button>
+    <button class="btn charBtn" onclick="openGuidePass('1 Kings 18:20-39')">Elijah — the fire</button>
+    <button class="btn charBtn" onclick="openGuidePass('Daniel 6:10-23')">Daniel — the window</button>
+    <button class="btn charBtn" onclick="openGuidePass('Luke 1:46-55')">Mary — the Magnificat</button>
+    <button class="btn charBtn" onclick="openGuidePass('John 21:15-19')">Peter — restored</button>
+    <button class="btn charBtn" onclick="openGuidePass('Acts 9:1-19')">Paul — the light</button>
+    <button class="btn charBtn" onclick="openGuidePass('Acts 16:13-15')">Lydia — the opened heart</button>
+  </div>
+</div>
+<div class="card">
+  <h3>Word study</h3>
+  <p class="muted">Look up a key English word or Strong’s number in a trusted lexicon. Then return and put the meaning back in the sentence — never replace the sentence with a dictionary.</p>
+  <div class="wordRow">
+    <div style="flex:1;min-width:160px"><label>Word or Strong’s #</label><input id="wordStudyInput" placeholder="e.g. revelation, G602"></div>
+    <button class="btn primary" onclick="launchWordStudy()">Open Blue Letter Bible</button>
+  </div>
+</div>
+<div class="card wide">
+  <h3>From seeing to teaching</h3>
+  <p>When a passage has been walked in Opening Sight and written in O-I-C-T-A-P, send it to the sermon builder. One central truth. One clear command of grace. One honest illustration from the text itself. Teach so that people see Christ, not you.</p>
+  <div class="actions">
+    <button class="btn primary" onclick="go('study')">Open Deep Study Canvas</button>
+    <button class="btn" onclick="go('focus')">Open Focus Room</button>
+    <button class="btn" onclick="go('guides')">Open Book Guides</button>
+  </div>
+</div>
+</div>
+</section>
+
+<section id="guides" class="section">
+<div class="grid">
+<div class="card wide">
+  <h2>66 Book Guides</h2>
+  <p class="muted">A compact master-guide for every book: purpose, shape, Christ, a caution, and key passages that open in the Reader or in Opening Sight.</p>
+  <div><label>Book</label><select id="guideBook"></select></div>
+  <div id="bookGuideView" style="margin-top:14px"></div>
+</div>
 </div>
 </section>
 
@@ -554,7 +751,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 </div>
 </section>
 
-<div class="footer">JCRGM MASTER STUDY WORLD CLASS • Personal Bible-study workspace • Scripture text shown by the built-in reader is free API output (KJV, WEB, BSB, ASV, YLT) plus licensed NKJV & AMPC via open & paste; use licensed translations in Logos or your Bible app.</div>
+<div class="footer">JCRGM MASTER STUDY • Jesus Christ Redeems Global Ministries • <a href="/cdn-cgi/l/email-protection#37475253565f4d42455a5e595e4443455e524477505a565e5b1954585a" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="f4849190959c8e8186999d9a9d8780869d9187b49399959d98da979b99">[email&#160;protected]</span></a><br>Personal Bible-study workspace • Scripture text shown by the built-in reader is free API output (KJV, WEB, BSB, ASV, YLT) plus licensed NKJV &amp; AMPC via open &amp; paste.</div>
 </main></div>
 
 
@@ -580,11 +777,87 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <div id="toast" class="toast"></div>
 <input id="file" type="file" accept=".json" class="hidden">
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const OT=['Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua','Judges','Ruth','1 Samuel','2 Samuel','1 Kings','2 Kings','1 Chronicles','2 Chronicles','Ezra','Nehemiah','Esther','Job','Psalms','Proverbs','Ecclesiastes','Song of Solomon','Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel','Hosea','Joel','Amos','Obadiah','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi'];
 const NT=['Matthew','Mark','Luke','John','Acts','Romans','1 Corinthians','2 Corinthians','Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians','1 Timothy','2 Timothy','Titus','Philemon','Hebrews','James','1 Peter','2 Peter','1 John','2 John','3 John','Jude','Revelation'];
 const BOOKS=[...OT,...NT];
-const TOPICS=['God','Jesus Christ','Holy Spirit','Faith','Grace','Salvation','Prayer','Holiness','Love','Wisdom','Fear of the Lord','Kingdom of God','Discipleship','Forgiveness','Repentance','Covenant','Worship','Justice','Suffering','Hope','Resurrection','Church','Mission','Spiritual warfare','Money & stewardship','Marriage & family','Leadership','Temptation','Identity in Christ','Eternal life'];
+const CHAPTERS={"Genesis":50,"Exodus":40,"Leviticus":27,"Numbers":36,"Deuteronomy":34,"Joshua":24,"Judges":21,"Ruth":4,"1 Samuel":31,"2 Samuel":24,"1 Kings":22,"2 Kings":25,"1 Chronicles":29,"2 Chronicles":36,"Ezra":10,"Nehemiah":13,"Esther":10,"Job":42,"Psalms":150,"Proverbs":31,"Ecclesiastes":12,"Song of Solomon":8,"Isaiah":66,"Jeremiah":52,"Lamentations":5,"Ezekiel":48,"Daniel":12,"Hosea":14,"Joel":3,"Amos":9,"Obadiah":1,"Jonah":4,"Micah":7,"Nahum":3,"Habakkuk":3,"Zephaniah":3,"Haggai":2,"Zechariah":14,"Malachi":4,"Matthew":28,"Mark":16,"Luke":24,"John":21,"Acts":28,"Romans":16,"1 Corinthians":16,"2 Corinthians":13,"Galatians":6,"Ephesians":6,"Philippians":4,"Colossians":4,"1 Thessalonians":5,"2 Thessalonians":3,"1 Timothy":6,"2 Timothy":4,"Titus":3,"Philemon":1,"Hebrews":13,"James":5,"1 Peter":5,"2 Peter":3,"1 John":5,"2 John":1,"3 John":1,"Jude":1,"Revelation":22};
+const BOOK_GUIDES={"Genesis":{"title":"Beginnings","purpose":"God creates, judges, chooses, and covenants; the family of promise is born.","outline":"Creation & fall (1–11) · Abraham (12–25) · Isaac & Jacob (25–36) · Joseph (37–50)","christ":"Seed of the woman; Melchizedek; Isaac offered; Judah’s sceptre; Joseph as the rejected brother who saves.","key":["Genesis 1:1-5","Genesis 3:14-15","Genesis 12:1-3","Genesis 22:1-14","Genesis 50:20"],"watch":"Do not treat Genesis as a quarry of origins trivia. It is theological history that grounds the gospel."},"Exodus":{"title":"Redemption and presence","purpose":"The LORD redeems a people by blood and power, then dwells among them.","outline":"Bondage · plagues & Passover · sea · Sinai · tabernacle","christ":"Passover lamb; manna; water from the rock; the tabernacle as God-with-us.","key":["Exodus 3:13-15","Exodus 12:1-13","Exodus 20:1-17","Exodus 33:12-23","Exodus 40:34-38"],"watch":"Law follows grace. They are redeemed, then instructed. Do not reverse the order."},"Leviticus":{"title":"Holiness near God","purpose":"How a redeemed people live with a holy God in their midst.","outline":"Offerings · priesthood · purity · Day of Atonement · holy living","christ":"Every sacrifice leans toward the one offering; the scapegoat; our High Priest.","key":["Leviticus 16:1-22","Leviticus 17:11","Leviticus 19:1-4","Leviticus 26:11-13"],"watch":"Do not skip Leviticus. Holiness is not mood; it is nearness with blood."},"Numbers":{"title":"Wilderness formation","purpose":"A holy people is trained between redemption and rest — and unbelief is exposed.","outline":"Census & camp · journey · rebellion · new generation","christ":"The lifted serpent (John 3); the rock; the star of Jacob.","key":["Numbers 6:22-27","Numbers 13:30-14:11","Numbers 21:4-9","Numbers 24:15-19"],"watch":"The wilderness is not delay only. It is the school of trust."},"Deuteronomy":{"title":"Covenant remembered","purpose":"Moses preaches the covenant to a new generation on the edge of the land.","outline":"Remember · the law restated · blessings & curses · song & death of Moses","christ":"The Prophet like Moses (18:15); the love of the LORD; the curse borne.","key":["Deuteronomy 6:4-9","Deuteronomy 8:1-10","Deuteronomy 18:15-19","Deuteronomy 30:11-20"],"watch":"Hear sermons, not a second rulebook. Heart, memory, and love are the point."},"Joshua":{"title":"The land by promise","purpose":"God keeps His word: the people enter, fight, and inherit.","outline":"Enter · conquer · divide · covenant renewal","christ":"Joshua/Jesus the namesake who brings into rest; Rahab in the genealogy.","key":["Joshua 1:1-9","Joshua 6:1-5","Joshua 24:14-24"],"watch":"Herem-war is not a modern crusade charter. Read it as holy judgment and fulfilled promise."},"Judges":{"title":"Everyone did what was right in his own eyes","purpose":"Without a true king, the people cycle through sin, oppression, cry, and deliverance.","outline":"Failure to finish · the judges · the terrible end (17–21)","christ":"The need for a righteous King; unlikely deliverers point beyond themselves.","key":["Judges 2:11-19","Judges 6:11-16","Judges 21:25"],"watch":"Do not moralize every judge as a hero. The book is diagnosis."},"Ruth":{"title":"Kindness in the dark days","purpose":"Covenant kindness writes a Gentile woman into David’s line.","outline":"Emptiness · gleaning · redemption · a son","christ":"Kinsman-redeemer; Moab in the genealogy of Jesus.","key":["Ruth 1:16-17","Ruth 2:10-12","Ruth 4:13-17"],"watch":"A quiet book in the age of Judges — providence wears ordinary clothes."},"1 Samuel":{"title":"The king the people wanted","purpose":"From Hannah’s prayer to Saul’s fall: kingship is born, and the heart is weighed.","outline":"Samuel · Saul · David anointed and hunted","christ":"The rejected anointed; a king after God’s heart.","key":["1 Samuel 3:1-10","1 Samuel 16:1-13","1 Samuel 17:45-47"],"watch":"Gifts without obedience (Saul) are not the same as a heart God can use."},"2 Samuel":{"title":"The throne and the fall","purpose":"David’s kingdom established, then broken by sin, yet covenant stands.","outline":"Throne · ark · promise (7) · sin · aftermath","christ":"The Davidic covenant: an everlasting throne.","key":["2 Samuel 7:8-16","2 Samuel 11:1-5","2 Samuel 12:1-13"],"watch":"Do not skip Bathsheba to keep a stained-glass David."},"1 Kings":{"title":"Glory, then split","purpose":"Solomon’s wisdom and temple, then idolatry, then a divided kingdom.","outline":"Solomon · temple · the split · Elijah","christ":"A greater than Solomon; the true Temple.","key":["1 Kings 3:5-12","1 Kings 8:22-30","1 Kings 18:36-39"],"watch":"Wisdom that does not guard the heart will still bow to other gods."},"2 Kings":{"title":"The long collapse","purpose":"Israel and Judah spiral toward exile; God still sends prophets.","outline":"Elisha · kings · Israel falls · Judah falls","christ":"The failed sons of David make us wait for the faithful Son.","key":["2 Kings 5:1-14","2 Kings 17:7-18","2 Kings 22:8-13"],"watch":"Exile is theology, not only politics."},"1 Chronicles":{"title":"Hope after ruin","purpose":"A post-exilic retelling: genealogy, David, worship — identity rebuilt.","outline":"Names · David’s throne · preparations for the temple","christ":"The line that must not be lost.","key":["1 Chronicles 16:23-31","1 Chronicles 29:10-14"],"watch":"The genealogies are not filler. They are how hope keeps a name."},"2 Chronicles":{"title":"Temple and reform","purpose":"Judah’s story around the house of God: seek, stray, return.","outline":"Solomon · reformers · fall · a decree to go home","christ":"The house God fills; the King who rebuilds.","key":["2 Chronicles 7:12-14","2 Chronicles 20:12-22","2 Chronicles 36:22-23"],"watch":"‘If my people’ is covenant speech, not a slogan detached from Christ."},"Ezra":{"title":"Return and rebuild","purpose":"God stirs kings and remnant to restore worship and the Word.","outline":"Temple rebuilt · Ezra’s reform","christ":"Restoration after judgment; the scribe of the Word.","key":["Ezra 1:1-4","Ezra 7:9-10","Ezra 9:5-9"],"watch":"Rebuilding walls without rebuilding holiness repeats the fall."},"Nehemiah":{"title":"Walls and the book","purpose":"A people secure enough to hear the law and confess.","outline":"Wall · opposition · the book read · covenant","christ":"The restorer of the broken place.","key":["Nehemiah 1:4-11","Nehemiah 4:14-20","Nehemiah 8:1-12"],"watch":"Strategy without prayer is Nehemiah with the pages torn out."},"Esther":{"title":"Providence unnamed","purpose":"God saves His people when His name is never mentioned.","outline":"Threat · courage · reversal · feast","christ":"The hidden hand; a people preserved for the promise.","key":["Esther 4:13-16","Esther 9:20-22"],"watch":"Silence of the Name is not absence of God."},"Job":{"title":"The friend who is God","purpose":"Innocent suffering, bad counsel, and a God too large for our systems.","outline":"Prologue · debates · wisdom · the LORD speaks · restoration","christ":"The innocent sufferer; the daysman Job longed for.","key":["Job 1:20-22","Job 19:23-27","Job 38:1-7","Job 42:1-6"],"watch":"Do not preach Job’s friends. Sit in the ash before you explain it."},"Psalms":{"title":"The school of the heart","purpose":"Every human cry trained into worship, from lament to new song.","outline":"Five books · lament · trust · kingship · praise","christ":"The Blessed Man (1–2); the suffering king; the songs Jesus sang and fulfilled.","key":["Psalm 1","Psalm 22","Psalm 23","Psalm 51","Psalm 103","Psalm 119:105"],"watch":"Pray them. A psalm explained but not prayed is a letter unopened."},"Proverbs":{"title":"Wisdom in the street","purpose":"The fear of the LORD trains skill for everyday life.","outline":"Speeches of wisdom · Solomon’s proverbs · other collections","christ":"Christ the wisdom of God; Lady Wisdom’s call.","key":["Proverbs 1:7","Proverbs 3:5-12","Proverbs 8:22-31","Proverbs 31:10-12"],"watch":"Proverbs are generally true, not vending-machine promises."},"Ecclesiastes":{"title":"Under the sun","purpose":"Life without the fear of God is vapour; joy is gift, not grasp.","outline":"Vapour · experiments · counsel · remember your Creator","christ":"The greater than Solomon who is not under the sun only.","key":["Ecclesiastes 1:2-11","Ecclesiastes 3:1-14","Ecclesiastes 12:1-14"],"watch":"Do not baptize cynicism. The end of the book is the key to the middle."},"Song of Solomon":{"title":"Covenant delight","purpose":"Holy desire, faithful love, and a fire that many waters cannot quench.","outline":"Longing · union · seeking · sealed love","christ":"The love of Bridegroom and bride — read with both honour to marriage and the greater mystery.","key":["Song of Solomon 2:10-13","Song of Solomon 8:6-7"],"watch":"Neither crude nor so allegorical that bodies disappear. Honour the poem."},"Isaiah":{"title":"The Holy One of Israel","purpose":"Judgment and comfort; a Holy King and a suffering Servant.","outline":"1–39 indictment · 40–55 comfort · 56–66 the new city","christ":"Virgin son; Immanuel; Servant songs; the Anointed preacher.","key":["Isaiah 6:1-8","Isaiah 9:2-7","Isaiah 40:1-11","Isaiah 53","Isaiah 61:1-3"],"watch":"Do not loot verses of comfort while ignoring the Holy, holy, holy."},"Jeremiah":{"title":"The weeping prophet","purpose":"The word against a hard people, and a new covenant written on the heart.","outline":"Call · sermons · suffering · fall · hope","christ":"The new covenant (31); the rejected word-made-flesh prophet.","key":["Jeremiah 1:4-10","Jeremiah 9:23-24","Jeremiah 17:5-10","Jeremiah 31:31-34"],"watch":"Faithfulness may look like failure. Measure by the word, not by crowds."},"Lamentations":{"title":"How the city sits alone","purpose":"Grief given liturgy after the fall of Jerusalem.","outline":"Five poems · acrostic sorrow · a mercies verse in the middle","christ":"The Man of sorrows walking the ruined city.","key":["Lamentations 1:1","Lamentations 3:21-26"],"watch":"Do not rush to hope until you have sat in the ashes with the poet."},"Ezekiel":{"title":"The glory and the valley","purpose":"God is present even in exile; He will give a new heart and a new temple.","outline":"Call · woe · the fall · restoration · the temple vision","christ":"The shepherd-prince; water from the temple; the glory returning.","key":["Ezekiel 1:26-28","Ezekiel 36:24-28","Ezekiel 37:1-14"],"watch":"Vision is for holiness and hope, not for charts that forget the glory."},"Daniel":{"title":"The kingdom that outlasts beasts","purpose":"God rules history; His saints endure; the Son of Man receives dominion.","outline":"Stories (1–6) · visions (7–12)","christ":"Stone not cut by hand; Son of Man; the fourth man in the fire.","key":["Daniel 2:44-45","Daniel 6:10","Daniel 7:9-14","Daniel 9:20-27"],"watch":"Read beasts as theology of empire, not only as a puzzle."},"Hosea":{"title":"Faithful love to the faithless","purpose":"God’s marriage to a wandering people.","outline":"Hosea and Gomer · oracles · return","christ":"Out of Egypt I called my son; the bride-price of mercy.","key":["Hosea 2:14-23","Hosea 6:1-6","Hosea 11:1-9"],"watch":"The prophet’s marriage is the message. Do not tame it."},"Joel":{"title":"The locust and the Spirit","purpose":"A present disaster becomes a window on the Day of the LORD.","outline":"Locust · repent · Spirit poured out","christ":"Pentecost quotes Joel; the LORD in the midst.","key":["Joel 2:12-17","Joel 2:28-32"],"watch":"Rend the heart, not garments only."},"Amos":{"title":"Justice as worship","purpose":"The LORD roars against religious ease that crushes the poor.","outline":"Nations · Israel · visions · remnant hope","christ":"The booth of David rebuilt (9:11).","key":["Amos 5:21-24","Amos 8:11-12","Amos 9:11-15"],"watch":"Worship without justice is noise to God."},"Obadiah":{"title":"Edom and the kingdom","purpose":"Pride against a brother will be judged; the kingdom shall be the LORD’s.","outline":"Edom’s crime · the Day · the LORD’s mount","christ":"The kingdom is the LORD’s.","key":["Obadiah 1:15-21"],"watch":"A short book is not a small word."},"Jonah":{"title":"The reluctant missionary","purpose":"God’s compassion for enemies, and a prophet who hates it.","outline":"Flight · fish · preaching · the plant","christ":"The sign of Jonah — death, three days, preaching to Gentiles.","key":["Jonah 1:1-4","Jonah 2:1-9","Jonah 4:1-11"],"watch":"The punchline is God’s question to Jonah — and to you."},"Micah":{"title":"Do justice, love mercy","purpose":"Indictment of leaders, a ruler from Bethlehem, and what the LORD requires.","outline":"Hear · Bethlehem · lawsuit · who is like God","christ":"Bethlehem Ephrathah (5:2).","key":["Micah 5:2-5","Micah 6:6-8","Micah 7:18-20"],"watch":"Micah 6:8 is covenant ethics, not a generic motto."},"Nahum":{"title":"Nineveh falls","purpose":"The oppressor’s city is not immortal.","outline":"The LORD’s character · siege · end of Nineveh","christ":"The good news on the mountains; evil empires do not get the last word.","key":["Nahum 1:2-8"],"watch":"Comfort for the crushed can sound like severity to the cruel."},"Habakkuk":{"title":"The watchtower","purpose":"A prophet argues with God, then waits, then worships.","outline":"Complaint · answer · the just shall live by faith · psalm","christ":"The righteous live by faith — Paul and the gospel.","key":["Habakkuk 1:2-5","Habakkuk 2:1-4","Habakkuk 3:17-19"],"watch":"Watching is not manufacturing a word. Write what you are given, then wait."},"Zephaniah":{"title":"The Day of the LORD","purpose":"A sweeping judgment, then a singing God in the midst of a meek remnant.","outline":"Day of wrath · nations · the LORD sings","christ":"He will quiet you with His love.","key":["Zephaniah 3:9-17"],"watch":"Do not quote 3:17 without the fire that precedes it."},"Haggai":{"title":"Rebuild the house","purpose":"Consider your ways. Panelled houses and a ruined temple.","outline":"Four dated words · glory of the latter house","christ":"The Desire of nations; the filled house.","key":["Haggai 1:5-8","Haggai 2:6-9"],"watch":"Priorities are theology you can walk through."},"Zechariah":{"title":"Night visions and a pierced King","purpose":"Encouragement to rebuild, and a future of a smitten Shepherd and an opened fountain.","outline":"Visions · signs · oracles of the King","christ":"Humble King on a donkey; thirty pieces; the pierced One.","key":["Zechariah 3:1-5","Zechariah 4:6","Zechariah 9:9","Zechariah 12:10"],"watch":"Apocalyptic comfort for tired builders — not a toy for date-setters."},"Malachi":{"title":"The last word before the silence","purpose":"A weary priesthood, a coming messenger, and the sun of righteousness.","outline":"Disputations · messenger · the day","christ":"My messenger; Elijah; the Lord suddenly in His temple.","key":["Malachi 1:6-11","Malachi 3:1-4","Malachi 4:1-6"],"watch":"Cheap worship is the first sign of a cheap God in the heart."},"Matthew":{"title":"The King and His kingdom","purpose":"Jesus the Son of David, fulfilling the Scriptures, teaching the kingdom.","outline":"Birth · sermon · miracles · parables · Jerusalem · passion · commission","christ":"Emmanuel; the new Moses; the crucified King.","key":["Matthew 1:18-23","Matthew 5:1-12","Matthew 16:13-28","Matthew 28:16-20"],"watch":"Read the discourses as kingdoms sermons, not isolated quotes."},"Mark":{"title":"The Gospel in motion","purpose":"The strong Son of God serving, suffering, and not staying silent.","outline":"Galilee · the road · Jerusalem · the empty tomb","christ":"The Servant-King; the riddle of the Messiah who must die.","key":["Mark 1:14-20","Mark 8:27-38","Mark 15:33-39","Mark 16:1-8"],"watch":"Mark is breathless on purpose. Follow the ‘immediately’ to the cross."},"Luke":{"title":"The Saviour of the lowly","purpose":"An orderly account: mercy for the outsider, the poor, the lost.","outline":"Promise · Galilee · the road · passion · promise of the Spirit","christ":"Son of Man seeking the lost; table-fellowship; the risen expositor of Moses.","key":["Luke 1:46-55","Luke 4:16-21","Luke 15:1-7","Luke 24:13-35"],"watch":"Meals, journeys, and songs are theology in Luke."},"John":{"title":"The Son, that you may believe","purpose":"Signs and ‘I AM’ so that you believe and have life in His name.","outline":"Prologue · signs · the hour · upper room · passion · resurrection","christ":"The Word made flesh; the Lamb; the risen Lord.","key":["John 1:1-18","John 3:1-21","John 10:7-18","John 14:1-6","John 20:24-31"],"watch":"Follow the signs to the hour. Do not harvest verses without the plot."},"Acts":{"title":"The Spirit and the witness","purpose":"Jesus continues His work by the Spirit through the church to the ends of the earth.","outline":"Jerusalem · Judea & Samaria · the nations · Rome","christ":"The risen Lord directing mission; the Name.","key":["Acts 1:8","Acts 2:1-4","Acts 9:1-19","Acts 16:25-34"],"watch":"Acts is description with direction, not a menu of techniques."},"Romans":{"title":"The gospel of God","purpose":"The righteousness of God revealed: Jew and Gentile justified by faith, living as one body.","outline":"Guilt · justification · sanctification · Israel · living sacrifice","christ":"The second Adam; propitiation; union with Christ.","key":["Romans 1:16-17","Romans 3:21-26","Romans 5:1-11","Romans 8:1-17","Romans 12:1-2"],"watch":"Do not jump to chapter 12 before 1–11 have landed."},"1 Corinthians":{"title":"The cross and a messy church","purpose":"A gifted, divided church is called back under the word of the cross.","outline":"Divisions · holiness · gatherings · resurrection","christ":"Christ crucified; the last Adam; love as the more excellent way.","key":["1 Corinthians 1:18-25","1 Corinthians 13","1 Corinthians 15:1-11"],"watch":"Charisma without the cross becomes a show."},"2 Corinthians":{"title":"Power in weakness","purpose":"True ministry looks like the death and life of Jesus.","outline":"Comfort · the new covenant · collection · boasting in weakness","christ":"The yes of God; treasure in jars of clay.","key":["2 Corinthians 1:3-7","2 Corinthians 3:17-18","2 Corinthians 4:7-12","2 Corinthians 12:7-10"],"watch":"Do not use ‘strength in weakness’ to baptize burnout or pride."},"Galatians":{"title":"Freedom in the promise","purpose":"The gospel is not Christ-plus. Justification is by faith, and the Spirit produces the fruit.","outline":"Rebuke · Abraham · freedom · fruit","christ":"The Seed; crucified with Christ.","key":["Galatians 2:19-21","Galatians 3:1-14","Galatians 5:16-25"],"watch":"Legalism and license are both failures of the same gospel."},"Ephesians":{"title":"The church in the heavenly places","purpose":"The Father’s plan in Christ: one new man, filled with the Spirit, armoured for war.","outline":"Blessing · unity · new life · household · armour","christ":"Head of the body; the mystery revealed.","key":["Ephesians 1:3-23","Ephesians 2:1-10","Ephesians 3:14-21","Ephesians 6:10-18"],"watch":"Chapters 1–3 are the indicative ocean. Swim before you ‘do’ 4–6."},"Philippians":{"title":"Joy in chains","purpose":"Partnership in the gospel, the mind of Christ, and contentment in Him.","outline":"Advance of the gospel · humility · pressing on · peace","christ":"The hymn of descent and exaltation (2:5-11).","key":["Philippians 1:20-21","Philippians 2:5-11","Philippians 3:7-14","Philippians 4:4-9"],"watch":"Joy here is not cheerfulness. It is Christ prized in prison."},"Colossians":{"title":"Christ the fullness","purpose":"Against add-ons: all the fullness dwells in Him.","outline":"Supremacy · reconciliation · shadows · the new self","christ":"Image of the invisible God; firstborn from the dead.","key":["Colossians 1:15-20","Colossians 2:6-15","Colossians 3:1-17"],"watch":"Any spirituality that sidelines Christ’s sufficiency is the old error in new clothes."},"1 Thessalonians":{"title":"A young church and the coming Lord","purpose":"Faith, love, hope — and holiness while you wait.","outline":"Thanksgiving · ministry · holiness · the coming","christ":"The returning Lord; the dead in Christ.","key":["1 Thessalonians 1:2-10","1 Thessalonians 4:13-18","1 Thessalonians 5:16-24"],"watch":"Hope of His coming is fuel for work and purity, not for idleness."},"2 Thessalonians":{"title":"Steadfast under rumours","purpose":"Do not be shaken. The Day has not yet come. Work quietly.","outline":"Relief · the man of lawlessness · work","christ":"The Lord destroying the lawless one with the breath of His mouth.","key":["2 Thessalonians 2:1-8","2 Thessalonians 3:6-13"],"watch":"End-time heat must not melt ordinary faithfulness."},"1 Timothy":{"title":"Order in the household of God","purpose":"How a church should behave: gospel, prayer, leaders, widows, fight of faith.","outline":"Charge · worship · overseers · the good confession","christ":"The one Mediator; God manifest in the flesh.","key":["1 Timothy 1:12-17","1 Timothy 2:1-6","1 Timothy 3:14-16","1 Timothy 6:11-16"],"watch":"Church order serves the gospel; it is not a substitute for it."},"2 Timothy":{"title":"Fan the flame","purpose":"A last charge: unashamed, Scripture-soaked, finishing the race.","outline":"Gift · endurance · the Word · the crown","christ":"Jesus Christ raised from the dead, of the seed of David.","key":["2 Timothy 1:6-14","2 Timothy 2:1-13","2 Timothy 3:14-17","2 Timothy 4:6-8"],"watch":"This is succession, not celebrity. Entrust to faithful people."},"Titus":{"title":"Truth that produces goodness","purpose":"Sound doctrine in Crete must become sound lives.","outline":"Elders · grace that trains · good works","christ":"The grace of God has appeared, bringing salvation.","key":["Titus 2:11-14","Titus 3:3-7"],"watch":"Grace trains. It does not shrug."},"Philemon":{"title":"A brother, not a tool","purpose":"The gospel remakes a relationship of power into family.","outline":"Appeal for Onesimus","christ":"Charge that to my account — a small picture of substitution.","key":["Philemon 1:8-18"],"watch":"A postcard can carry the whole gospel’s social weight."},"Hebrews":{"title":"Better","purpose":"Do not drift. Christ is better — priest, covenant, sacrifice, rest.","outline":"The Son · the Priest · the warning · faith · endurance","christ":"The radiance of glory; once-for-all offering; the pioneer of faith.","key":["Hebrews 1:1-4","Hebrews 4:14-16","Hebrews 9:11-14","Hebrews 11:1-6","Hebrews 12:1-2"],"watch":"The warnings are real. So is the throne of grace. Hold both."},"James":{"title":"Faith that works","purpose":"Genuine faith looks like mercy, bridled speech, and patience in trial.","outline":"Trials · hearing & doing · tongue · wisdom · the Lord is coming","christ":"The implanted word; the Lord of glory; the Judge at the door.","key":["James 1:2-5","James 1:19-27","James 2:14-26","James 3:1-12"],"watch":"James does not contradict Paul. He contradicts dead confession."},"1 Peter":{"title":"Elect exiles","purpose":"Hope, holiness, and suffering like Christ in a hostile world.","outline":"New birth · holy people · household · fire","christ":"The living Stone; the Shepherd of souls; the example in suffering.","key":["1 Peter 1:3-9","1 Peter 2:9-12","1 Peter 4:12-19"],"watch":"Exile is identity, not a mood. Live visibly holy among the nations."},"2 Peter":{"title":"Remember, and beware","purpose":"True knowledge versus scoffers; grow in grace until the new creation.","outline":"Virtue · false teachers · the Day","christ":"The Majestic Glory; the promised new heavens and earth.","key":["2 Peter 1:3-11","2 Peter 1:16-21","2 Peter 3:8-13"],"watch":"Private interpretation that untethers from the Spirit’s public Word is the danger."},"1 John":{"title":"That you may know","purpose":"Tests of life: truth, obedience, and love — because God is light and love.","outline":"Fellowship · antichrists · love · confidence","christ":"The Word of life; the propitiation; we shall be like Him.","key":["1 John 1:1-9","1 John 3:1-3","1 John 4:7-16"],"watch":"Assurance is not a feeling hunt. It is walking in light."},"2 John":{"title":"Truth and love together","purpose":"Walk in love, but do not partner with a Christ-denying teaching.","outline":"The elect lady · the deceiver","christ":"Jesus Christ come in the flesh.","key":["2 John 1:4-11"],"watch":"Hospitality is not naivety."},"3 John":{"title":"Fellow helpers to the truth","purpose":"Receive missionaries; do not imitate the church bully.","outline":"Gaius · Diotrephes · Demetrius","christ":"For the Name they went forth.","key":["3 John 1:5-12"],"watch":"Love of first place can wear church clothes."},"Jude":{"title":"Contend for the faith","purpose":"Grace is not a cloak for license. Keep yourselves in the love of God.","outline":"Intruders · examples · doxology","christ":"The only wise God our Saviour.","key":["Jude 1:3-4","Jude 1:20-25"],"watch":"Contending is not cruelty. Mercy on some; fear on others."},"Revelation":{"title":"The unveiling of Jesus Christ","purpose":"To show servants what must soon take place, and to keep a suffering church worshipping the Lamb who wins.","outline":"Christ among the lamps · seals, trumpets, bowls · Babylon falls · new creation","christ":"The slain Lamb standing; Alpha and Omega; the Rider called Faithful and True.","key":["Revelation 1:12-18","Revelation 4:1-11","Revelation 5:1-14","Revelation 19:11-16","Revelation 21:1-5"],"watch":"This book is a unveiling for worship and endurance, not a codebook for panic. The Lamb is the centre."}};
+const THEME_GROUPS=[
+{title:'God, Christ & the Spirit',items:['God the Father','Jesus Christ','Holy Spirit','The Trinity','The glory of God','The presence of God','The name of Jesus','The blood of Jesus','The cross','Resurrection power','The throne of God']},
+{title:'The Word & Discipleship',items:['The Word of God','Faith','Grace','Salvation','Repentance','Justification','Sanctification','Holiness','Discipleship','Obedience','Identity in Christ','New creation','Eternal life']},
+{title:'Prayer, Worship & the Secret Place',items:['Prayer','Worship','Thanksgiving','The secret place','Waiting on God','Fasting','Consecration','First love','Brokenness','Humility']},
+{title:'Prophetic Ministry & Revelation',items:['Prophecy','Prophetic calling','Revelation','Dreams and visions','The still small voice','Opened eyes','The watchman','Word of knowledge','Word of wisdom','Discernment of spirits','Testing the spirits','The testimony of Jesus','False prophets','Open heavens','Burden of the Lord']},
+{title:'Character of the Vessel',items:['Love','The fruit of the Spirit','Integrity','The tongue','Patience','Compassion','Mercy','Fear of the Lord','Wisdom','Purity']},
+{title:'Church, Gifts & Mission',items:['Church','Fivefold ministry','Gifts of the Spirit','Spiritual authority','Unity of the Spirit','Mission','Witness','Healing','Deliverance','Revival','The remnant','The Bride']},
+{title:'Warfare, Hope & the End',items:['Spiritual warfare','Binding and loosing','Angels','The wilderness','Suffering','Hope','Second coming','Judgment seat','Kingdom of God']},
+{title:'Covenant Life',items:['Covenant','Justice','The poor','Money & stewardship','Marriage & family','Leadership','Temptation','Forgiveness','Generational blessing']}
+];
+const TOPICS=THEME_GROUPS.reduce(function(a,g){return a.concat(g.items);},[]);
+const READING_PLANS=[
+{name:'365 Days — Whole Bible',length:'365 days',pace:'About 3–4 chapters a day',aim:'Read the entire counsel of God in a year.',topics:['Creation & Fall','Covenant & Promise','Law & Holiness','Kingdom & Exile','The Prophets','The Gospel of the Kingdom','The Church & Mission','Hope & the End']},
+{name:'180 Days — Intensive Bible',length:'180 days',pace:'Faster whole-Bible reading',aim:'Cover Scripture with momentum while keeping weekly themes.',topics:['The God who speaks','Redemption story','Wisdom for living','Messiah promised','Christ revealed','Life in the Spirit']},
+{name:'90 Days — Gospels & Acts',length:'90 days',pace:'Slower, deeper NT focus',aim:'Know Jesus and the birth of the Church.',topics:['The Kingdom','The Cross','The Resurrection','The Spirit poured out','Witness','Making disciples']},
+{name:'New Testament in 1 Year',length:'365 days',pace:'About one chapter a day',aim:'Live in the apostolic word all year.',topics:['Jesus the Son','Grace and faith','The local church','Holy living','Gifts and ministry','Hope of glory']},
+{name:'Old Testament in 1 Year',length:'365 days',pace:'Law, writings and prophets',aim:'See Christ hidden in the former things.',topics:['Covenant','Priesthood','Kingship','The remnant','Justice','The coming Messiah']},
+{name:'Book-by-book Deep Study',length:'Flexible',pace:'One book until it yields',aim:'Stay in a book with O-I-C-T-A-P until you can teach it.',topics:['Author and setting','Repeated words','Central truth','Cross-references','Personal obedience']},
+{name:'40 Days — Prophetic Formation',length:'40 days',pace:'One meditation scripture a day',aim:'Advance in hearing God, testing revelation, and Christlike character.',topics:['Fear of the Lord','The Word first','Hearing God','Opened eyes','Testing the spirits','The watchman','Intercession','The testimony of Jesus']},
+{name:'21 Days — Prayer & Fasting',length:'21 days',pace:'One theme a day with prayer',aim:'Consecrate the vessel before ministry.',topics:['Repentance','The secret place','The Word','Waiting','Compassion','Authority in Christ','Commission']}
+];
+const PROPHETIC_PATH=[
+{stage:'1. The Fear of the Lord',aim:'Prophetic ministry begins with holy reverence, not giftedness.',verses:[
+{ref:'Proverbs 9:10',note:'The fear of the Lord is the beginning of wisdom.'},
+{ref:'Isaiah 6:1-8',note:'See the Lord high and lifted up, then say: here am I, send me.'},
+{ref:'Jeremiah 1:4-10',note:'The call is God’s idea. He touches the mouth and sends the word.'}
+]},
+{stage:'2. The Word Comes First',aim:'No vision outruns Scripture. The written Word trains the prophet.',verses:[
+{ref:'2 Timothy 3:16-17',note:'All Scripture is God-breathed and equips you for every good work.'},
+{ref:'2 Peter 1:19-21',note:'The prophetic word is more sure; holy men spoke as the Spirit moved.'},
+{ref:'Deuteronomy 18:18-22',note:'God puts His words in the mouth. Test the word that is spoken.'}
+]},
+{stage:'3. Hearing the Shepherd',aim:'Learn the voice of Jesus. His sheep follow Him, not a stranger.',verses:[
+{ref:'John 10:27',note:'My sheep hear My voice, and I know them, and they follow Me.'},
+{ref:'1 Samuel 3:1-10',note:'Speak, Lord, for Your servant is listening.'},
+{ref:'Isaiah 50:4-5',note:'He wakens my ear morning by morning to hear as the learned.'}
+]},
+{stage:'4. Spirit of Wisdom and Revelation',aim:'Ask for opened understanding. Revelation is given to reveal Christ.',verses:[
+{ref:'Ephesians 1:17-18',note:'Pray for the Spirit of wisdom and revelation in the knowledge of Him.'},
+{ref:'1 Corinthians 2:9-13',note:'The Spirit searches the deep things of God and teaches us.'},
+{ref:'John 16:13-14',note:'The Spirit of truth will glorify Jesus and show you things to come.'}
+]},
+{stage:'5. Opened Eyes and the Watch',aim:'Become a watcher. Stand on your post and wait for what He will say.',verses:[
+{ref:'2 Kings 6:17',note:'Lord, open his eyes, that he may see.'},
+{ref:'Habakkuk 2:1-3',note:'I will stand upon my watch… write the vision and make it plain.'},
+{ref:'Colossians 3:1-2',note:'Set your affection on things above, where Christ sits.'}
+]},
+{stage:'6. Test Everything',aim:'True prophetic ministry loves the test. Hold fast what is good.',verses:[
+{ref:'1 Thessalonians 5:19-21',note:'Do not quench the Spirit. Prove all things; hold fast that which is good.'},
+{ref:'1 John 4:1-3',note:'Test the spirits. Every spirit that confesses Jesus Christ come in the flesh is of God.'},
+{ref:'Acts 17:11',note:'The Bereans received the word and searched the Scriptures daily.'}
+]},
+{stage:'7. Character of the Vessel',aim:'The gift without love is noise. Fruit outranks fireworks.',verses:[
+{ref:'1 Corinthians 13:1-2',note:'Without love, prophecy profits nothing.'},
+{ref:'Galatians 5:22-23',note:'The fruit of the Spirit is the atmosphere of true ministry.'},
+{ref:'Matthew 7:15-20',note:'By their fruits you shall know them — not by their gifts.'},
+{ref:'James 3:17-18',note:'The wisdom from above is pure, peaceable, gentle, full of mercy.'}
+]},
+{stage:'8. Intercession and the Gap',aim:'Prophets do not only speak — they stand in the gap until God answers.',verses:[
+{ref:'Ezekiel 22:30',note:'I sought a man to stand in the gap before Me for the land.'},
+{ref:'Isaiah 62:6-7',note:'Watchmen on the walls — give Him no rest until He establishes Jerusalem.'},
+{ref:'Romans 8:26-27',note:'The Spirit Himself helps our infirmities and intercedes through us.'}
+]},
+{stage:'9. The Testimony of Jesus',aim:'The spirit of prophecy is not information — it is the testimony of Jesus.',verses:[
+{ref:'Revelation 19:10',note:'The testimony of Jesus is the spirit of prophecy.'},
+{ref:'John 15:26-27',note:'The Spirit of truth testifies of Jesus, and you also bear witness.'},
+{ref:'Acts 2:17-18',note:'In the last days I will pour out My Spirit… your sons and daughters shall prophesy.'}
+]},
+{stage:'10. The Cross, Humility and Commission',aim:'Stay small. Carry the cross. Then go when He sends you.',verses:[
+{ref:'Philippians 2:5-8',note:'Let this mind be in you, which was also in Christ Jesus.'},
+{ref:'2 Corinthians 12:7-10',note:'My grace is sufficient. Strength is made perfect in weakness.'},
+{ref:'Luke 9:23',note:'If any man will come after Me, let him deny himself, take up his cross daily, and follow Me.'},
+{ref:'Matthew 28:18-20',note:'All authority is His. Go, make disciples, and teach them to obey.'}
+]}
+];
 let state=JSON.parse(localStorage.getItem('jcrgmMasterAdvanced')||'{"done":[],"journal":[],"memory":[],"studies":[],"meditations":[],"dark":true,"streak":0}');
 let currentRef='Genesis 1', currentMemory=-1, timer=null, seconds=1500, timerMode='focus', audioCtx=null, audioNode=null, memoryHintLevel=0;
 
@@ -629,7 +902,7 @@ function renderSearchResults(q){
     ['Scripture Reader','Open Scripture Reader','scripture'],['Deep Study Canvas','Open Study Canvas','study'],
     ['Memory Lab','Open Memory Lab','memory'],['Prophetic Meditation','Open Meditation','meditation'],
     ['Focus Room','Open Focus Room','focus'],['Journal & Prayer','Open Journal','journal'],
-    ['Topics & Themes','Open Topics','topics'],['Reading Plans','Open Plans','plans'],['Settings & Data','Open Settings','settings']
+    ['Topics & Themes','Open Topics','topics'],['Reading Plans','Open Plans','plans'],['Study Academy','Open Academy','academy'],['Book Guides','Open 66 Book Guides','guides'],['Study Resources','Open Resources','resources'],['Settings & Data','Open Settings','settings']
   ];
   let html='';
   if(q){
@@ -721,7 +994,7 @@ function loadDraftStudy(){
 }
 
 function toast(t){let x=document.getElementById('toast');x.textContent=t;x.style.display='block';setTimeout(()=>x.style.display='none',2200)}
-function go(id){document.querySelectorAll('.section').forEach(x=>x.classList.remove('show'));document.getElementById(id).classList.add('show');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===id));if(id==='read')renderBooks();if(id==='journal')renderJournal();if(id==='memory')renderMemory();if(id==='topics')renderTopics();if(id==='study')renderStudies();if(id==='meditation')renderMeditations();if(innerWidth<900)document.getElementById('side').classList.remove('open');scrollTo(0,0)}
+function go(id){document.querySelectorAll('.section').forEach(x=>x.classList.remove('show'));document.getElementById(id).classList.add('show');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===id));if(id==='read'){renderBooks();renderPropheticPath()}if(id==='journal')renderJournal();if(id==='memory')renderMemory();if(id==='topics')renderTopics();if(id==='plans')renderPlans();if(id==='study')renderStudies();if(id==='meditation')renderMeditations();if(id==='scripture')renderChapterNav();if(id==='guides'){renderGuidePicker();renderBookGuide((document.getElementById('guideBook')||{}).value)}if(id==='dashboard')renderBriefing();if(innerWidth<900)document.getElementById('side').classList.remove('open');scrollTo(0,0)}
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.go));
 function toggleSide(){document.getElementById('side').classList.toggle('open')}
 function update(){let ds=[...document.querySelectorAll('.daily')],c=ds.filter(x=>x.checked).length;document.getElementById('daypct').textContent=ds.length?Math.round(c/ds.length*100):0;document.getElementById('daybar').style.width=(ds.length?c/ds.length*100:0)+'%';document.getElementById('booksDone').textContent=state.done.length+' / 66';document.getElementById('bookbar').style.width=(state.done.length/66*100)+'%';document.getElementById('streak').textContent=(state.streak||0)+' days';document.getElementById('memCount').textContent=state.memory.length;let r=document.getElementById('todayReview');r.textContent=state.memory.length?state.memory[0].ref:'Add a memory verse to begin.';
@@ -1202,14 +1475,14 @@ function bookNumber(name){const i=BOOKS.indexOf(name);return i>=0?i+1:0}
 function parseRef(ref){const m=String(ref||'').match(/^(.+?)\s+(\d+)(?::(.+))?$/);if(!m)return null;return{book:m[1].trim(),chapter:+m[2],verses:(m[3]||'').trim()}}
 function verseInRange(v,spec){if(!spec)return true;const parts=String(spec).split(/[,\s]+/);for(const p of parts){const m=p.match(/(\d+)(?:\s*[\u2013\u2014\-]\s*(\d+))?/);if(!m)continue;const a=+m[1],b=m[2]?+m[2]:a;if(v>=a&&v<=b)return true}return false}
 function cleanVerseText(s){return String(s||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim()}
-async function fetchPassage(ref){
-  const ver=getBibleVersion();
+async function fetchPassage(ref, verOverride){
+  const ver=verOverride||getBibleVersion();
   const vinfo=BIBLE_VERSIONS.find(v=>v.id===ver);
   if(vinfo&&vinfo.licensed){const le=new Error('licensed');le.code='LICENSED';throw le}
   if(ver==='KJV'||ver==='WEB'){
     try{
       const r=await fetch('https://bible-api.com/'+encodeURIComponent(ref)+'?translation='+ver.toLowerCase());
-      if(r.ok){const d=await r.json();const txt=(d.verses||[]).map(x=>cleanVerseText(x.text)).join(' ').trim();if(txt)return{text:txt,ref:d.reference||ref,ver:ver}}
+      if(r.ok){const d=await r.json();const verses=(d.verses||[]).map(x=>({n:String(x.verse),text:cleanVerseText(x.text)}));const txt=verses.map(x=>x.text).join(' ').trim();if(txt)return{text:txt,ref:d.reference||ref,ver:ver,verses}}
     }catch(e){}
   }
   const pr=parseRef(ref);if(!pr)throw Error('badref');
@@ -1218,9 +1491,11 @@ async function fetchPassage(ref){
   if(!r.ok)throw Error('net');
   const d=await r.json(),arr=Array.isArray(d)?d:[];
   const picked=arr.filter(v=>verseInRange(+v.verse,pr.verses));
-  const txt=(picked.length?picked:arr).map(v=>cleanVerseText(v.text)).join(' ').trim();
+  const raw=picked.length?picked:arr;
+  const verses=raw.map(v=>({n:String(v.verse),text:cleanVerseText(v.text)}));
+  const txt=verses.map(v=>v.text).join(' ').trim();
   if(!txt)throw Error('empty');
-  return{text:txt,ref:ref,ver:ver};
+  return{text:txt,ref:ref,ver:ver,verses};
 }
 function unfetchedNote(){const v=getBibleVersion(),vi=BIBLE_VERSIONS.find(x=>x.id===v);if(vi&&vi.licensed)return '('+v+' is licensed \u2014 tap Read in YouVersion/BibleGateway below to read it, or switch to KJV, WEB, BSB, ASV or YLT for auto-quoted text.)';return '(Text could not be fetched \u2014 open in YouVersion/Logos to read it.)'}
 async function fetchScriptureText(ref){try{const d=await fetchPassage(ref);return d.text||''}catch(e){return ''}}
@@ -1554,7 +1829,32 @@ function renderMeditations(){document.getElementById('medList').innerHTML=state.
 function clearMeditation(){['medRef','medFocus','medStill','medScripture','medReflection','medImpression','medTest','medResponse'].forEach(id=>document.getElementById(id).value='')}
 function saveJournal(){if(!journalText.value.trim())return toast('Write something first');state.journal.unshift({date:new Date().toLocaleString(),title:jtitle.value||'Prayer / Study Entry',text:journalText.value});save();jtitle.value='';journalText.value='';renderJournal();toast('Journal entry saved')}
 function renderJournal(){let e=document.getElementById('journalList');e.innerHTML=state.journal.length?state.journal.map(x=>`<div class="listItem"><b>${esc(x.title)}</b><small class="muted"> ${esc(x.date)}</small><p>${esc(x.text).replace(/\n/g,'<br>')}</p></div>`).join(''):'No entries yet.'}
-function renderTopics(){document.getElementById('topicsList').innerHTML=TOPICS.map(t=>`<button class="btn tagbtn" onclick="topicSearch('${esc(t)}')">${esc(t)}</button>`).join('')}
+function renderTopics(){const el=document.getElementById('topicsList');if(!el)return;el.innerHTML=(THEME_GROUPS||[]).map(g=>'<div class="themeGroup"><h3>'+esc(g.title)+'</h3>'+g.items.map(t=>'<button class="btn tagbtn" data-t="'+esc(t)+'" onclick="topicSearch(this.dataset.t)">'+esc(t)+'</button>').join('')+'</div>').join('')}
+function renderPlans(){const el=document.getElementById('plansList');if(!el)return;el.innerHTML=READING_PLANS.map(p=>'<div class="planCard"><h3>'+esc(p.name)+'</h3><div class="planMeta">'+esc(p.length)+' • '+esc(p.pace)+'</div><p>'+esc(p.aim)+'</p><div>'+p.topics.map(t=>'<span class="pill">'+esc(t)+'</span>').join('')+'</div></div>').join('')}
+function openMeditationRef(ref){
+  currentRef=ref;
+  const m=String(ref).match(/^(.+?)\s+(\d+)(?::(.+))?$/);
+  if(m){
+    const sb=document.getElementById('sBook'), sc=document.getElementById('sChapter'), sv=document.getElementById('sVerse');
+    if(sb) sb.value=m[1]; if(sc) sc.value=m[2]; if(sv) sv.value=m[3]||'';
+  }
+  const gr=document.getElementById('guidedRef'); if(gr) gr.value=ref;
+  const mr=document.getElementById('medRef'); if(mr) mr.value=ref;
+  const fr=document.getElementById('focusStudyRef'); if(fr) fr.value=ref;
+  go('scripture'); loadScripture();
+  toast('Opened '+ref+' — meditate slowly');
+}
+function sendPropheticToJourney(ref){
+  const gr=document.getElementById('guidedRef'); if(gr) gr.value=ref;
+  const fr=document.getElementById('focusStudyRef'); if(fr) fr.value=ref;
+  const mr=document.getElementById('medRef'); if(mr) mr.value=ref;
+  go('focus');
+  toast(ref+' loaded into Guided Meditation');
+}
+function renderPropheticPath(){
+  const el=document.getElementById('propheticPath'); if(!el) return;
+  el.innerHTML=PROPHETIC_PATH.map(st=>'<div class="propheticStage"><h3>'+esc(st.stage)+'</h3><p class="muted">'+esc(st.aim)+'</p>'+st.verses.map(v=>'<div class="verseRow"><div><span class="ref">'+esc(v.ref)+'</span><div class="vnote">'+esc(v.note)+'</div></div><div class="actions"><button class="btn primary" onclick="openMeditationRef(\''+esc(v.ref)+'\')">Meditate</button><button class="btn" onclick="sendPropheticToJourney(\''+esc(v.ref)+'\')">Guided</button></div></div>').join('')+'</div>').join('');
+}
 function topicSearch(t){openLink('https://www.blueletterbible.org/search/search.cfm?Criteria='+encodeURIComponent(t));toast('Opening topic search')}
 async function generateTodayScripture(){let b=todayBook.value,c=todayChapter.value||1,v=todayVerse.value.trim(),ref=b+' '+c+(v?':'+v:'');currentRef=ref;localStorage.setItem('jcrgmTodayScripture',ref);let box=todayScriptureResult;box.innerHTML='<div class="muted">Loading Scripture…</div>';try{let d=await fetchPassage(ref),txt=d.text;localStorage.setItem('jcrgmTodayScriptureText',txt);localStorage.setItem('jcrgmTodayScriptureVer',d.ver);box.innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(d.ref)+'</span><span class="pill">'+esc(d.ver)+'</span></div>';toast('Today’s Scripture selected')}catch(e){if(e&&e.code==='LICENSED'){licensedPendingRef=ref;box.innerHTML=licensedFallbackHTML(ref,getBibleVersion(),'today')}else{box.innerHTML='<b>Could not generate this passage.</b><p class="muted">Check your internet connection and try again, or open the reference in Logos.</p>'}}}
 function openTodayLogos(){let ref=localStorage.getItem('jcrgmTodayScripture')||'Genesis 1';openLink('https://app.logos.com/search?query='+encodeURIComponent(ref))}
@@ -1574,16 +1874,667 @@ function startTimer(){if(timer)return;timer=setInterval(()=>{seconds--;timerDisp
 function pauseTimer(){clearInterval(timer);timer=null}
 function resetTimer(){pauseTimer();timerMode='focus';seconds=(+document.getElementById('focusMin').value||25)*60;timerDisplay();document.getElementById('focusCard').classList.remove('sessionMode')}
 function beep(){try{let c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=660;g.gain.value=.08;o.start();setTimeout(()=>o.stop(),350)}catch{}}
-function setVolume(v){if(audioNode)audioNode.gain.value=(+v/100)*.12}
-function ambient(type){stopAmbient();audioCtx=new (window.AudioContext||window.webkitAudioContext)();let gain=audioCtx.createGain();gain.gain.value=(+document.getElementById('volume').value/100)*.12;gain.connect(audioCtx.destination);audioNode=gain;
-if(type==='tone'){let o=audioCtx.createOscillator();o.type='sine';o.frequency.value=220;o.connect(gain);o.start();audioNode.osc=o;return}
-if(type==='wind'){let len=audioCtx.sampleRate*3,buf=audioCtx.createBuffer(1,len,audioCtx.sampleRate),ch=buf.getChannelData(0);for(let i=0;i<len;i++)ch[i]=Math.random()*2-1;let wsrc=audioCtx.createBufferSource();wsrc.buffer=buf;wsrc.loop=true;let f=audioCtx.createBiquadFilter();f.type='bandpass';f.frequency.value=500;f.Q.value=.6;let lfo=audioCtx.createOscillator();lfo.type='sine';lfo.frequency.value=.08;let lg=audioCtx.createGain();lg.gain.value=320;lfo.connect(lg);lg.connect(f.frequency);wsrc.connect(f);f.connect(gain);wsrc.start();lfo.start();return}
-if(type==='drone'){[55,82.5,110,165].forEach(fr=>{let o=audioCtx.createOscillator();o.type='sine';o.frequency.value=fr;let og=audioCtx.createGain();og.gain.value=.22;o.connect(og);og.connect(gain);o.start()});return}
-if(type==='chimes'){const scale=[523.25,587.33,659.25,783.99,880,1046.5];const ring=()=>{try{const fr=scale[Math.floor(Math.random()*scale.length)];let o=audioCtx.createOscillator();o.type='sine';o.frequency.value=fr;let e=audioCtx.createGain();const t=audioCtx.currentTime;e.gain.setValueAtTime(.0001,t);e.gain.exponentialRampToValueAtTime(.5,t+.05);e.gain.exponentialRampToValueAtTime(.0001,t+3.2);o.connect(e);e.connect(gain);o.start(t);o.stop(t+3.4)}catch(e){}};ring();audioNode._timers=[setInterval(()=>{if(Math.random()<.8)ring()},4200)];return}
-if(type==='birds'||type==='shore'){let alen=audioCtx.sampleRate*3,abuf=audioCtx.createBuffer(1,alen,audioCtx.sampleRate),achd=abuf.getChannelData(0);for(let i=0;i<alen;i++)achd[i]=(Math.random()*2-1)*.5;let asrc=audioCtx.createBufferSource();asrc.buffer=abuf;asrc.loop=true;let ahp=audioCtx.createBiquadFilter();ahp.type='highpass';ahp.frequency.value=4000;let ag=audioCtx.createGain();ag.gain.value=.02;asrc.connect(ahp);ahp.connect(ag);ag.connect(gain);asrc.start();let delay=audioCtx.createDelay(1);delay.delayTime.value=.31;let fb=audioCtx.createGain();fb.gain.value=.35;let wet=audioCtx.createGain();wet.gain.value=.5;delay.connect(fb);fb.connect(delay);delay.connect(wet);wet.connect(gain);const chirp=()=>{try{const t0=audioCtx.currentTime+.05,base=2200+Math.random()*1800,n=2+Math.floor(Math.random()*3);for(let k=0;k<n;k++){let o=audioCtx.createOscillator();o.type='sine';let e=audioCtx.createGain();const st=t0+k*(.12+Math.random()*.1),dur=.09+Math.random()*.16,f1=base*(0.9+Math.random()*.3),f2=base*(0.8+Math.random()*.5);o.frequency.setValueAtTime(f1,st);o.frequency.exponentialRampToValueAtTime(f2,st+dur*.5);o.frequency.exponentialRampToValueAtTime(f1*.92,st+dur);e.gain.setValueAtTime(.0001,st);e.gain.exponentialRampToValueAtTime(.1+Math.random()*.07,st+.02);e.gain.exponentialRampToValueAtTime(.0001,st+dur);o.connect(e);e.connect(gain);e.connect(delay);o.start(st);o.stop(st+dur+.05)}}catch(e){}};chirp();const schedule=()=>{const tm=setTimeout(()=>{if(Math.random()<.85)chirp();schedule()},2200+Math.random()*4200);(audioNode._timers=audioNode._timers||[]).push(tm)};schedule();if(type==='birds')return}
-if(type==='ocean'||type==='shore'){let len=audioCtx.sampleRate*4,buf=audioCtx.createBuffer(1,len,audioCtx.sampleRate),ch=buf.getChannelData(0),last=0;for(let i=0;i<len;i++){let w=Math.random()*2-1;last=(last+.03*w)/1.03;ch[i]=last*3.2}let osrc=audioCtx.createBufferSource();osrc.buffer=buf;osrc.loop=true;let of=audioCtx.createBiquadFilter();of.type='lowpass';of.frequency.value=700;of.Q.value=.4;let swell=audioCtx.createGain();swell.gain.value=.6;let lfo=audioCtx.createOscillator();lfo.type='sine';lfo.frequency.value=.09;let lg=audioCtx.createGain();lg.gain.value=380;lfo.connect(lg);lg.connect(of.frequency);let lfo2=audioCtx.createOscillator();lfo2.type='sine';lfo2.frequency.value=.06;let lg2=audioCtx.createGain();lg2.gain.value=.3;lfo2.connect(lg2);lg2.connect(swell.gain);osrc.connect(of);of.connect(swell);swell.connect(gain);osrc.start();lfo.start();lfo2.start();return}
-let buffer=audioCtx.createBuffer(1,audioCtx.sampleRate*2,audioCtx.sampleRate),data=buffer.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1;
-let src=audioCtx.createBufferSource();src.buffer=buffer;src.loop=true;src.connect(gain);src.start();if(type==='brown'){let last=0;let proc=audioCtx.createScriptProcessor(4096,1,1);proc.onaudioprocess=e=>{let o=e.outputBuffer.getChannelData(0);for(let i=0;i<o.length;i++){let w=data[Math.floor(Math.random()*data.length)];last=(last+.02*w)/1.02;o[i]=last*3.5}};proc.connect(gain);audioNode.proc=proc}}
+function setVolume(v){if(audioNode)audioNode.gain.value=(+v/100)*.16}
+function noiseBuf(ctx,secs,kind){
+  const n=Math.floor(ctx.sampleRate*(secs||2.4));
+  const buf=ctx.createBuffer(1,n,ctx.sampleRate), d=buf.getChannelData(0);
+  let last=0,b0=0,b1=0,b2=0;
+  for(let i=0;i<n;i++){
+    const w=Math.random()*2-1;
+    if(kind==='brown'){ last=(last+0.02*w)/1.02; d[i]=Math.max(-1,Math.min(1,last*3.2)); }
+    else if(kind==='pink'){ b0=0.99886*b0+w*0.0555179; b1=0.99332*b1+w*0.0750759; b2=0.96900*b2+w*0.1538520; d[i]=(b0+b1+b2+w*0.184)*0.22; }
+    else d[i]=w;
+  }
+  return buf;
+}
+function loopSrc(ctx,buf,dest){const s=ctx.createBufferSource();s.buffer=buf;s.loop=true;s.connect(dest);s.start();return s}
+function markScape(type){document.querySelectorAll('.scapeBtn').forEach(b=>b.classList.toggle('activeScape',b.dataset.scape===type))}
+function ambient(type){
+  stopAmbient();
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC) return toast('Audio not supported on this device');
+  audioCtx=new AC();
+  try{if(audioCtx.state==='suspended') audioCtx.resume()}catch(e){}
+  const ctx=audioCtx;
+  const master=ctx.createGain();
+  master.gain.value=(+document.getElementById('volume').value/100)*.16;
+  master.connect(ctx.destination);
+  audioNode=master;
+  audioNode._timers=[];
+  const later=fn=>{const id=setTimeout(fn,0); audioNode._timers.push(id); return id};
+  const every=(fn,ms)=>{const id=setInterval(fn,ms); audioNode._timers.push(id); return id};
+  const filt=(type,freq,Q)=>{const f=ctx.createBiquadFilter();f.type=type;f.frequency.value=freq;if(Q)f.Q.value=Q;return f};
+  const g=(v)=>{const x=ctx.createGain();x.gain.value=v;return x};
+  const lfo=(freq,depth,target)=>{const o=ctx.createOscillator();o.type='sine';o.frequency.value=freq;const lg=ctx.createGain();lg.gain.value=depth;o.connect(lg);lg.connect(target);o.start();return o};
+  const brown=noiseBuf(ctx,3.2,'brown'), pink=noiseBuf(ctx,3.2,'pink'), white=noiseBuf(ctx,2,'white');
+
+  function rain(){
+    const f=filt('lowpass',900,.4), gg=g(.55);
+    loopSrc(ctx,pink,f); f.connect(gg); gg.connect(master);
+    lfo(.07,280,f.frequency);
+    const drip=()=>{try{const t=ctx.currentTime+.02,o=ctx.createOscillator(),e=g(.0001);o.type='sine';o.frequency.setValueAtTime(1400+Math.random()*900,t);o.frequency.exponentialRampToValueAtTime(420,t+.12);e.gain.setValueAtTime(.0001,t);e.gain.exponentialRampToValueAtTime(.08,t+.01);e.gain.exponentialRampToValueAtTime(.0001,t+.18);o.connect(e);e.connect(master);o.start(t);o.stop(t+.22)}catch(e){}};
+    every(()=>{if(Math.random()<.45)drip()},900);
+  }
+  function storm(){
+    rain();
+    const boom=()=>{try{
+      const t=ctx.currentTime+.05, src=ctx.createBufferSource(); src.buffer=brown;
+      const f=filt('lowpass',180,.7), e=g(.0001);
+      f.frequency.setValueAtTime(220,t); f.frequency.exponentialRampToValueAtTime(48,t+2.8);
+      e.gain.setValueAtTime(.0001,t); e.gain.exponentialRampToValueAtTime(.7,t+.12); e.gain.exponentialRampToValueAtTime(.0001,t+3.4);
+      src.connect(f); f.connect(e); e.connect(master); src.start(t); src.stop(t+3.5);
+    }catch(e){}};
+    const schedule=()=>{const wait=8000+Math.random()*14000; const tm=setTimeout(()=>{boom();schedule()},wait); audioNode._timers.push(tm)};
+    later(()=>setTimeout(boom,2500)); schedule();
+  }
+  function wind(){
+    const f=filt('bandpass',520,.55), gg=g(.7);
+    loopSrc(ctx,pink,f); f.connect(gg); gg.connect(master);
+    lfo(.08,340,f.frequency); lfo(.05,.18,gg.gain);
+  }
+  function ocean(){
+    const f=filt('lowpass',680,.45), swell=g(.65);
+    loopSrc(ctx,brown,f); f.connect(swell); swell.connect(master);
+    lfo(.09,360,f.frequency); lfo(.055,.28,swell.gain);
+  }
+  function stream(){
+    const f=filt('highpass',600,.4), f2=filt('lowpass',2400,.5), gg=g(.4);
+    loopSrc(ctx,white,f); f.connect(f2); f2.connect(gg); gg.connect(master);
+    lfo(.11,400,f2.frequency);
+    const pebble=()=>{try{const t=ctx.currentTime,o=ctx.createOscillator(),e=g(.0001);o.type='triangle';o.frequency.value=700+Math.random()*900;e.gain.setValueAtTime(.05,t);e.gain.exponentialRampToValueAtTime(.0001,t+.09);o.connect(e);e.connect(master);o.start(t);o.stop(t+.1)}catch(e){}};
+    every(()=>{if(Math.random()<.5)pebble()},700);
+  }
+  function birdsong(withOcean){
+    if(withOcean) ocean();
+    const air=filt('highpass',3800), ag=g(.03);
+    loopSrc(ctx,white,air); air.connect(ag); ag.connect(master);
+    const chirp=()=>{try{
+      const t0=ctx.currentTime+.04, base=1800+Math.random()*2000, n=2+Math.floor(Math.random()*3);
+      for(let k=0;k<n;k++){
+        const o=ctx.createOscillator(), e=g(.0001);
+        const st=t0+k*(.11+Math.random()*.1), dur=.08+Math.random()* .16;
+        const f1=base*(.9+Math.random()*.25), f2=base*(.75+Math.random()*.5);
+        o.type='sine'; o.frequency.setValueAtTime(f1,st); o.frequency.exponentialRampToValueAtTime(Math.max(300,f2),st+dur*.5); o.frequency.exponentialRampToValueAtTime(Math.max(280,f1*.9),st+dur);
+        e.gain.setValueAtTime(.0001,st); e.gain.exponentialRampToValueAtTime(.09+Math.random()*.05,st+.018); e.gain.exponentialRampToValueAtTime(.0001,st+dur);
+        o.connect(e); e.connect(master); o.start(st); o.stop(st+dur+.04);
+      }
+    }catch(e){}};
+    chirp();
+    const schedule=()=>{const tm=setTimeout(()=>{if(Math.random()<.88)chirp();schedule()},1800+Math.random()*3800); audioNode._timers.push(tm)};
+    schedule();
+  }
+  function forest(){
+    wind();
+    const leaves=filt('bandpass',1800,.3), lg=g(.12);
+    loopSrc(ctx,pink,leaves); leaves.connect(lg); lg.connect(master);
+    birdsong(false);
+  }
+  function night(){
+    const air=filt('lowpass',900,.3), ag=g(.18);
+    loopSrc(ctx,brown,air); air.connect(ag); ag.connect(master);
+    const cricket=()=>{try{
+      const t=ctx.currentTime, n=8+Math.floor(Math.random()*6), base=4200+Math.random()*900;
+      for(let i=0;i<n;i++){
+        const o=ctx.createOscillator(), e=g(.0001), st=t+i*.042;
+        o.type='square'; o.frequency.value=base;
+        const bp=filt('bandpass',base,14);
+        e.gain.setValueAtTime(.0001,st); e.gain.exponentialRampToValueAtTime(.035,st+.008); e.gain.exponentialRampToValueAtTime(.0001,st+.03);
+        o.connect(bp); bp.connect(e); e.connect(master); o.start(st); o.stop(st+.04);
+      }
+    }catch(e){}};
+    every(()=>{if(Math.random()<.7)cricket()},520);
+  }
+  function fire(){
+    const f=filt('lowpass',480,.5), gg=g(.35);
+    loopSrc(ctx,pink,f); f.connect(gg); gg.connect(master);
+    lfo(.07,90,f.frequency);
+    const pop=()=>{try{const t=ctx.currentTime,o=ctx.createOscillator(),e=g(.0001);o.type='sawtooth';o.frequency.setValueAtTime(180+Math.random()*220,t);o.frequency.exponentialRampToValueAtTime(60,t+.12);e.gain.setValueAtTime(.12,t);e.gain.exponentialRampToValueAtTime(.0001,t+.14);const lp=filt('lowpass',700);o.connect(lp);lp.connect(e);e.connect(master);o.start(t);o.stop(t+.16)}catch(e){}};
+    every(()=>{if(Math.random()<.55)pop()},380);
+  }
+  function bowls(){
+    const ring=(fr,at)=>{try{
+      const t=ctx.currentTime+at, partials=[1,2.01,2.76,4.07];
+      partials.forEach((p,i)=>{
+        const o=ctx.createOscillator(), e=g(.0001);
+        o.type='sine'; o.frequency.value=fr*p;
+        e.gain.setValueAtTime(.0001,t); e.gain.exponentialRampToValueAtTime(.18/(i+1),t+.4); e.gain.exponentialRampToValueAtTime(.0001,t+8);
+        o.connect(e); e.connect(master); o.start(t); o.stop(t+8.2);
+      });
+    }catch(e){}};
+    const scale=[174.61,196,220,261.63];
+    ring(scale[0],0);
+    every(()=>ring(scale[Math.floor(Math.random()*scale.length)],0),7000);
+  }
+  function chimes(){
+    const scale=[523.25,587.33,659.25,783.99,880,1046.5];
+    const ring=()=>{try{const fr=scale[Math.floor(Math.random()*scale.length)]; const t=ctx.currentTime; const o=ctx.createOscillator(), o2=ctx.createOscillator(), e=g(.0001); o.type='sine'; o2.type='sine'; o.frequency.value=fr; o2.frequency.value=fr*2.005; e.gain.setValueAtTime(.0001,t); e.gain.exponentialRampToValueAtTime(.28,t+.04); e.gain.exponentialRampToValueAtTime(.0001,t+3.4); o.connect(e); o2.connect(e); e.connect(master); o.start(t); o2.start(t); o.stop(t+3.5); o2.stop(t+3.5)}catch(e){}};
+    ring(); every(()=>{if(Math.random()<.75)ring()},3800);
+  }
+  function drone(){
+    [55,82.4,110,164.8].forEach((fr,i)=>{const o=ctx.createOscillator(), og=g(.16); o.type='sine'; o.frequency.value=fr; o.connect(og); og.connect(master); o.start(); lfo(.04+i*.01,.03,og.gain)});
+  }
+  function cathedral(){
+    drone();
+    const pad=[261.63,329.63,392,523.25];
+    pad.forEach((fr,i)=>{const o=ctx.createOscillator(), og=g(.04); o.type='triangle'; o.frequency.value=fr; o.connect(og); og.connect(master); o.start(); lfo(.03+i*.008,.015,og.gain)});
+    const verbDelay=ctx.createDelay(1.2); verbDelay.delayTime.value=.42; const fb=g(.35); const wet=g(.25); master.connect(verbDelay); verbDelay.connect(fb); fb.connect(verbDelay); verbDelay.connect(wet); wet.connect(ctx.destination);
+  }
+  function heaven(){
+    [523.25,659.25,783.99,987.77,1318.5].forEach((fr,i)=>{
+      const o=ctx.createOscillator(), o2=ctx.createOscillator(), og=g(.035);
+      o.type='sine'; o2.type='sine'; o.frequency.value=fr; o2.frequency.value=fr*1.003;
+      const fl=filt('lowpass',1800); o.connect(fl); o2.connect(fl); fl.connect(og); og.connect(master); o.start(); o2.start();
+      lfo(.025+i*.01,.012,og.gain);
+    });
+    chimes();
+  }
+  function verb(){
+    if(audioNode._verb) return audioNode._verb;
+    const conv=ctx.createConvolver();
+    const len=Math.floor(ctx.sampleRate*2.7);
+    const buf=ctx.createBuffer(2,len,ctx.sampleRate);
+    for(let c=0;c<2;c++){
+      const d=buf.getChannelData(c);
+      for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.15)*(c?1:.9);
+    }
+    conv.buffer=buf;
+    const wet=g(.42);
+    conv.connect(wet); wet.connect(master);
+    audioNode._verb=conv;
+    return conv;
+  }
+  function toVerb(node, dryAmt, wetAmt){
+    const dg=g(dryAmt==null?.7:dryAmt); node.connect(dg); dg.connect(master);
+    const wg=g(wetAmt==null?.5:wetAmt); node.connect(wg); wg.connect(verb());
+  }
+  function formantBus(freq, amp, vowel){
+    const o=ctx.createOscillator(), o2=ctx.createOscillator();
+    o.type='sawtooth'; o2.type='sine';
+    o.frequency.value=freq; o2.frequency.value=freq*1.003;
+    const og=g(amp||.03);
+    const F=vowel||[700,1200,2600];
+    const a=filt('bandpass',F[0],7), b=filt('bandpass',F[1],9), c=filt('bandpass',F[2],11);
+    o.connect(a); o.connect(b); o.connect(c); o2.connect(og);
+    a.connect(og); b.connect(og); c.connect(og);
+    toVerb(og,.55,.65);
+    try{lfo(5.1+Math.random()*.5, freq*0.0035, o.frequency)}catch(e){}
+    o.start(); o2.start();
+    return {o,og,a,b,c};
+  }
+  function choirBed(opts){
+    opts=opts||{};
+    const chord=opts.chord||[73.42,110,146.83,220,293.66,369.99,440];
+    const vowels=opts.ah?[[780,1220,2600],[450,850,2500],[300,870,2200]]:[[620,1050,2500],[400,800,2400],[780,1200,2550]];
+    const voices=chord.map((fr,i)=>formantBus(fr, (opts.amp||.028)*(i<2?.9:.7), vowels[i%vowels.length]));
+    voices.forEach((v,i)=>{
+      lfo(.03+i*.007, .008, v.og.gain);
+      const morph=()=>{try{
+        const t=ctx.currentTime, next=vowels[Math.floor(Math.random()*vowels.length)];
+        v.a.frequency.linearRampToValueAtTime(next[0], t+3.5);
+        v.b.frequency.linearRampToValueAtTime(next[1], t+3.5);
+      }catch(e){}};
+      every(morph, 5000+i*400);
+    });
+    const air=filt('bandpass',6200,.7), ag=g(.015);
+    loopSrc(ctx,white,air); air.connect(ag); toVerb(ag,.4,.6);
+    return voices;
+  }
+  function singPhrase(){
+    try{
+      const scale=[293.66,329.63,369.99,440,493.88,587.33,659.25];
+      const n=4+Math.floor(Math.random()*3);
+      let ix=2+Math.floor(Math.random()*3);
+      const notes=[];
+      for(let i=0;i<n;i++){ ix=Math.max(0,Math.min(scale.length-1,ix+[-2,-1,0,1,1,2][Math.floor(Math.random()*6)])); notes.push(scale[ix]); }
+      const start=ctx.currentTime+.05;
+      const make=(freqOff,amp)=>{
+        const o=ctx.createOscillator(); o.type='sawtooth';
+        const og=g(.0001);
+        const f1=filt('bandpass',520,7), f2=filt('bandpass',980,9), f3=filt('bandpass',2550,10);
+        o.connect(f1); o.connect(f2); o.connect(f3);
+        f1.connect(og); f2.connect(og); f3.connect(og); toVerb(og,.45,.7);
+        let t=start;
+        o.frequency.setValueAtTime(notes[0]*freqOff, t);
+        notes.forEach((fr,i)=>{
+          const dur=1.5+Math.random()*1.3;
+          o.frequency.linearRampToValueAtTime(fr*freqOff, t+.4);
+          t+=dur;
+        });
+        const end=t;
+        og.gain.setValueAtTime(.0001,start);
+        og.gain.exponentialRampToValueAtTime(amp, start+.7);
+        og.gain.setValueAtTime(amp*.85, end-1.1);
+        og.gain.exponentialRampToValueAtTime(.0001, end);
+        f1.frequency.setValueAtTime(500,start);
+        f1.frequency.linearRampToValueAtTime(780, start+(end-start)*.4);
+        f1.frequency.linearRampToValueAtTime(400, end);
+        f2.frequency.setValueAtTime(900,start);
+        f2.frequency.linearRampToValueAtTime(2100, start+(end-start)*.55);
+        f2.frequency.linearRampToValueAtTime(1200, end);
+        try{lfo(5.4, 5, o.frequency)}catch(e){}
+        o.start(start); o.stop(end+.05);
+      };
+      make(1,.07); make(.5,.035);
+    }catch(e){}
+  }
+  function syllableHoly(freq, t0){
+    try{
+      const o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=freq;
+      const ns=ctx.createBufferSource(); ns.buffer=white;
+      const ng=g(.0001), og=g(.0001);
+      const f1=filt('bandpass',430,8), f2=filt('bandpass',920,10);
+      const hp=filt('bandpass',1700,3);
+      ns.connect(hp); hp.connect(ng); toVerb(ng,.3,.4);
+      ng.gain.setValueAtTime(.0001,t0); ng.gain.exponentialRampToValueAtTime(.05,t0+.018); ng.gain.exponentialRampToValueAtTime(.0001,t0+.09);
+      o.connect(f1); o.connect(f2); f1.connect(og); f2.connect(og); toVerb(og,.5,.7);
+      og.gain.setValueAtTime(.0001,t0+.05); og.gain.exponentialRampToValueAtTime(.11,t0+.14); og.gain.exponentialRampToValueAtTime(.06,t0+.38);
+      f2.frequency.setValueAtTime(900,t0+.1); f2.frequency.linearRampToValueAtTime(2050,t0+.48);
+      og.gain.exponentialRampToValueAtTime(.0001,t0+.72);
+      o.start(t0); o.stop(t0+.78); ns.start(t0); ns.stop(t0+.12);
+    }catch(e){}
+  }
+  function cryHoly(){
+    const t=ctx.currentTime+.08;
+    const base=[293.66,293.66,440,369.99];
+    base.forEach((fr,i)=>syllableHoly(fr, t+i*.82));
+    later(()=>{});
+  }
+  function shofarOnce(){
+    try{
+      const t=ctx.currentTime+.04, dur=2.4+Math.random()*1.1;
+      const o=ctx.createOscillator(), o2=ctx.createOscillator(), e=g(.0001);
+      o.type='sawtooth'; o2.type='square';
+      o.frequency.setValueAtTime(310,t); o.frequency.linearRampToValueAtTime(265,t+.25); o.frequency.linearRampToValueAtTime(390,t+dur*.45); o.frequency.linearRampToValueAtTime(280,t+dur);
+      o2.frequency.value=155;
+      const bp=filt('bandpass',680,.8), lp=filt('lowpass',1600);
+      e.gain.setValueAtTime(.0001,t); e.gain.exponentialRampToValueAtTime(.22,t+.08); e.gain.setValueAtTime(.18,t+dur*.7); e.gain.exponentialRampToValueAtTime(.0001,t+dur);
+      o.connect(bp); o2.connect(bp); bp.connect(lp); lp.connect(e); toVerb(e,.6,.4);
+      o.start(t); o2.start(t); o.stop(t+dur+.05); o2.stop(t+dur+.05);
+    }catch(e){}
+  }
+  function trumpetOnce(){
+    try{
+      const t=ctx.currentTime+.03;
+      const notes=[392,523.25,659.25,784];
+      notes.forEach((fr,i)=>{
+        const st=t+i*.22, o=ctx.createOscillator(), e=g(.0001);
+        o.type='square'; o.frequency.value=fr;
+        const bp=filt('bandpass',900,2.5);
+        e.gain.setValueAtTime(.0001,st); e.gain.exponentialRampToValueAtTime(.1,st+.03); e.gain.exponentialRampToValueAtTime(.0001,st+.45);
+        o.connect(bp); bp.connect(e); toVerb(e,.55,.45);
+        o.start(st); o.stop(st+.5);
+      });
+    }catch(e){}
+  }
+  function harpOnce(){
+    try{
+      const t=ctx.currentTime;
+      const scale=[523.25,587.33,659.25,783.99,880,1046.5,1174.7];
+      const n=5+Math.floor(Math.random()*4);
+      let ix=Math.floor(Math.random()*3);
+      for(let i=0;i<n;i++){
+        ix=Math.max(0,Math.min(scale.length-1,ix+[-1,1,1,2][Math.floor(Math.random()*4)]));
+        const st=t+i*(.18+Math.random()*.08), fr=scale[ix];
+        const o=ctx.createOscillator(), o2=ctx.createOscillator(), e=g(.0001);
+        o.type='triangle'; o2.type='sine'; o.frequency.value=fr; o2.frequency.value=fr*2.01;
+        e.gain.setValueAtTime(.0001,st); e.gain.exponentialRampToValueAtTime(.12,st+.01); e.gain.exponentialRampToValueAtTime(.0001,st+2.4);
+        o.connect(e); o2.connect(e); toVerb(e,.4,.7);
+        o.start(st); o2.start(st); o.stop(st+2.5); o2.stop(st+2.5);
+      }
+    }catch(e){}
+  }
+  function whoosh(){
+    try{
+      const t=ctx.currentTime, src=ctx.createBufferSource(); src.buffer=pink;
+      const f=filt('bandpass', 1400+Math.random()*1800, .7), e=g(.0001);
+      f.frequency.setValueAtTime(600,t); f.frequency.exponentialRampToValueAtTime(2800,t+.45); f.frequency.exponentialRampToValueAtTime(500,t+1.3);
+      e.gain.setValueAtTime(.0001,t); e.gain.exponentialRampToValueAtTime(.28,t+.12); e.gain.exponentialRampToValueAtTime(.0001,t+1.4);
+      src.connect(f); f.connect(e); toVerb(e,.5,.4);
+      src.start(t); src.stop(t+1.5);
+    }catch(e){}
+  }
+  function thunderOnce(){
+    try{
+      const t=ctx.currentTime+.05, src=ctx.createBufferSource(); src.buffer=brown;
+      const f=filt('lowpass',200,.7), e=g(.0001);
+      f.frequency.setValueAtTime(280,t); f.frequency.exponentialRampToValueAtTime(42,t+3);
+      e.gain.setValueAtTime(.0001,t); e.gain.exponentialRampToValueAtTime(.75,t+.14); e.gain.exponentialRampToValueAtTime(.0001,t+3.6);
+      src.connect(f); f.connect(e); e.connect(master);
+      src.start(t); src.stop(t+3.7);
+      if(Math.random()<.55){
+        const o=ctx.createOscillator(), eg=g(.0001);
+        o.type='square'; o.frequency.setValueAtTime(1800,t+.02); o.frequency.exponentialRampToValueAtTime(220,t+.09);
+        eg.gain.setValueAtTime(.08,t+.02); eg.gain.exponentialRampToValueAtTime(.0001,t+.12);
+        const hp=filt('highpass',900); o.connect(hp); hp.connect(eg); eg.connect(master);
+        o.start(t+.02); o.stop(t+.14);
+      }
+    }catch(e){}
+  }
+  function crackHeaven(){
+    try{
+      const t=ctx.currentTime;
+      const o=ctx.createOscillator(), e=g(.0001);
+      o.type='sine'; o.frequency.setValueAtTime(2400,t); o.frequency.exponentialRampToValueAtTime(880,t+1.8);
+      e.gain.setValueAtTime(.0001,t); e.gain.exponentialRampToValueAtTime(.1,t+.2); e.gain.exponentialRampToValueAtTime(.0001,t+2.2);
+      o.connect(e); toVerb(e,.3,.8);
+      o.start(t); o.stop(t+2.3);
+      whoosh();
+    }catch(e){}
+  }
+  function rumbleBed(){
+    const f=filt('lowpass',90,.4), gg=g(.55);
+    loopSrc(ctx,brown,f); f.connect(gg); gg.connect(master);
+    lfo(.07, 22, f.frequency);
+  }
+  function heartbeat(){
+    rumbleBed();
+    const beat=()=>{try{
+      const t=ctx.currentTime;
+      [0,.2].forEach((off,i)=>{
+        const o=ctx.createOscillator(), e=g(.0001);
+        o.type='sine'; o.frequency.setValueAtTime(i?48:64, t+off);
+        o.frequency.exponentialRampToValueAtTime(26, t+off+.17);
+        e.gain.setValueAtTime(.0001,t+off); e.gain.exponentialRampToValueAtTime(i?.32:.48, t+off+.018); e.gain.exponentialRampToValueAtTime(.0001, t+off+.18);
+        o.connect(e); e.connect(master); o.start(t+off); o.stop(t+off+.2);
+      });
+    }catch(e){}};
+    beat(); every(beat, 1680);
+  }
+  function lionOnce(){
+    try{
+      const t=ctx.currentTime, src=ctx.createBufferSource(); src.buffer=brown;
+      const f=filt('bandpass',380,.65), e=g(.0001);
+      f.frequency.setValueAtTime(540,t); f.frequency.exponentialRampToValueAtTime(85,t+1.9);
+      e.gain.setValueAtTime(.0001,t); e.gain.exponentialRampToValueAtTime(.65,t+.16); e.gain.exponentialRampToValueAtTime(.0001,t+2.5);
+      src.connect(f); f.connect(e); toVerb(e,.7,.25);
+      const o=ctx.createOscillator(), og=g(.0001);
+      o.type='sawtooth'; o.frequency.setValueAtTime(170,t); o.frequency.exponentialRampToValueAtTime(48,t+1.7);
+      og.gain.setValueAtTime(.0001,t); og.gain.exponentialRampToValueAtTime(.1,t+.1); og.gain.exponentialRampToValueAtTime(.0001,t+1.8);
+      const lp=filt('lowpass',520); o.connect(lp); lp.connect(og); og.connect(master);
+      src.start(t); src.stop(t+2.6); o.start(t); o.stop(t+1.9);
+    }catch(e){}
+  }
+
+  function angels(){ choirBed({amp:.03}); }
+  function singing(){
+    choirBed({amp:.024, ah:true});
+    later(()=>setTimeout(singPhrase, 1600));
+    const schedule=()=>{const tm=setTimeout(()=>{singPhrase();schedule()}, 9000+Math.random()*6000); audioNode._timers.push(tm)};
+    schedule();
+  }
+  function holyholy(){
+    choirBed({amp:.02, chord:[73.42,146.83,220,293.66,440]});
+    later(()=>setTimeout(cryHoly, 1800));
+    const schedule=()=>{const tm=setTimeout(()=>{cryHoly();schedule()}, 14000+Math.random()*5000); audioNode._timers.push(tm)};
+    schedule();
+  }
+  function seraphim(){
+    wind();
+    choirBed({amp:.012, chord:[146.83,220,293.66,440]});
+    later(()=>setTimeout(whoosh, 700));
+    const schedule=()=>{const tm=setTimeout(()=>{whoosh(); if(Math.random()<.4)whoosh(); schedule()}, 2200+Math.random()*1800); audioNode._timers.push(tm)};
+    schedule();
+  }
+  function waters(){
+    ocean();
+    rumbleBed();
+    const spray=filt('highpass', 3200), sg=g(.04);
+    loopSrc(ctx,white,spray); spray.connect(sg); sg.connect(master);
+    lfo(.08, .015, sg.gain);
+  }
+  function harps(){
+    choirBed({amp:.012, chord:[146.83,220,293.66]});
+    later(()=>setTimeout(harpOnce, 400));
+    const schedule=()=>{const tm=setTimeout(()=>{harpOnce();schedule()}, 5000+Math.random()*3500); audioNode._timers.push(tm)};
+    schedule();
+  }
+  function thronemix(){
+    choirBed({amp:.022, ah:true});
+    waters();
+    later(()=>setTimeout(singPhrase, 2500));
+    const s1=()=>{const tm=setTimeout(()=>{singPhrase();s1()}, 11000+Math.random()*5000); audioNode._timers.push(tm)}; s1();
+    const s2=()=>{const tm=setTimeout(()=>{whoosh();s2()}, 4000+Math.random()*3000); audioNode._timers.push(tm)}; s2();
+    const s3=()=>{const tm=setTimeout(()=>{if(Math.random()<.5)harpOnce(); else if(Math.random()<.4)cryHoly(); s3()}, 13000+Math.random()*7000); audioNode._timers.push(tm)}; s3();
+  }
+  function sightmix(){
+    choirBed({amp:.02, chord:[82.41,123.47,164.81,246.94,329.63,493.88]});
+    const air=filt('lowpass', 900,.3), ag=g(.12);
+    loopSrc(ctx,brown,air); air.connect(ag); ag.connect(master);
+    later(()=>setTimeout(crackHeaven, 900));
+    later(()=>setTimeout(singPhrase, 2800));
+    const s1=()=>{const tm=setTimeout(()=>{singPhrase();s1()}, 10000+Math.random()*5000); audioNode._timers.push(tm)}; s1();
+    const s2=()=>{const tm=setTimeout(()=>{if(Math.random()<.45)whoosh(); if(Math.random()<.25)shofarOnce(); s2()}, 9000+Math.random()*8000); audioNode._timers.push(tm)}; s2();
+  }
+  function opened(){
+    heaven();
+    choirBed({amp:.018});
+    later(()=>setTimeout(crackHeaven, 400));
+    later(()=>setTimeout(trumpetOnce, 2200));
+    const schedule=()=>{const tm=setTimeout(()=>{crackHeaven(); if(Math.random()<.5)trumpetOnce(); schedule()}, 12000+Math.random()*8000); audioNode._timers.push(tm)};
+    schedule();
+  }
+  function whisper(){
+    const air=filt('lowpass', 700,.35), ag=g(.1);
+    loopSrc(ctx,brown,air); air.connect(ag); ag.connect(master);
+    const breath=()=>{try{
+      const t=ctx.currentTime, o=ctx.createOscillator(), e=g(.0001);
+      o.type='sine'; o.frequency.value=880+Math.random()*990;
+      e.gain.setValueAtTime(.0001,t); e.gain.exponentialRampToValueAtTime(.045,t+.4); e.gain.exponentialRampToValueAtTime(.0001,t+2.8);
+      const bp=filt('bandpass', 1400+Math.random()*800, 8);
+      o.connect(bp); bp.connect(e); toVerb(e,.25,.8);
+      o.start(t); o.stop(t+3);
+    }catch(e){}};
+    later(()=>setTimeout(breath, 1800));
+    const schedule=()=>{const tm=setTimeout(()=>{breath();schedule()}, 5000+Math.random()*4000); audioNode._timers.push(tm)};
+    schedule();
+  }
+  function chariots(){
+    fire(); rumbleBed();
+    const metal=filt('bandpass', 1800, 2), mg=g(.05);
+    loopSrc(ctx,white,metal); metal.connect(mg); toVerb(mg,.4,.3);
+    lfo(.12, 700, metal.frequency);
+    later(()=>setTimeout(whoosh, 600));
+    const schedule=()=>{const tm=setTimeout(()=>{whoosh(); if(Math.random()<.3)thunderOnce(); schedule()}, 2800+Math.random()*2200); audioNode._timers.push(tm)};
+    schedule();
+  }
+  function pentecost(){
+    wind();
+    const rush=filt('bandpass', 900, .5), rg=g(.0001);
+    loopSrc(ctx,pink,rush); rush.connect(rg); rg.connect(master);
+    const t0=ctx.currentTime;
+    rg.gain.setValueAtTime(.05, t0); rg.gain.linearRampToValueAtTime(.45, t0+8);
+    lfo(.2, 400, rush.frequency);
+    choirBed({amp:.014, chord:[146.83,220,293.66,440]});
+    later(()=>setTimeout(singPhrase, 7000));
+    const tongues=()=>{try{
+      const t=ctx.currentTime, o=ctx.createOscillator(), e=g(.0001);
+      o.type='triangle'; o.frequency.setValueAtTime(1400+Math.random()*1800,t); o.frequency.exponentialRampToValueAtTime(500, t+.4);
+      e.gain.setValueAtTime(.07,t); e.gain.exponentialRampToValueAtTime(.0001,t+.45);
+      o.connect(e); e.connect(master); o.start(t); o.stop(t+.5);
+    }catch(e){}};
+    every(()=>{if(Math.random()<.4)tongues()}, 900);
+  }
+  function door(){
+    opened();
+    later(()=>setTimeout(()=>{
+      try{
+        const t=ctx.currentTime, src=ctx.createBufferSource(); src.buffer=brown;
+        const f=filt('bandpass', 900, 4), e=g(.0001);
+        f.frequency.setValueAtTime(400,t); f.frequency.linearRampToValueAtTime(1600,t+.6);
+        e.gain.setValueAtTime(.0001,t); e.gain.exponentialRampToValueAtTime(.3,t+.05); e.gain.exponentialRampToValueAtTime(.0001,t+1.2);
+        src.connect(f); f.connect(e); toVerb(e,.5,.4);
+        src.start(t); src.stop(t+1.3);
+      }catch(e){}
+    }, 300));
+  }
+  function watchman(){
+    night();
+    whisper();
+    const schedule=()=>{const tm=setTimeout(()=>{if(Math.random()<.55)trumpetOnce(); else shofarOnce(); schedule()}, 14000+Math.random()*10000); audioNode._timers.push(tm)};
+    later(()=>setTimeout(trumpetOnce, 4000));
+    schedule();
+  }
+  function shofar(){
+    drone();
+    later(()=>setTimeout(shofarOnce, 800));
+    const schedule=()=>{const tm=setTimeout(()=>{shofarOnce(); if(Math.random()<.4) setTimeout(shofarOnce, 900); schedule()}, 8000+Math.random()*7000); audioNode._timers.push(tm)};
+    schedule();
+  }
+  function trumpets(){
+    drone();
+    later(()=>setTimeout(trumpetOnce, 600));
+    const schedule=()=>{const tm=setTimeout(()=>{trumpetOnce(); schedule()}, 7000+Math.random()*5000); audioNode._timers.push(tm)};
+    schedule();
+  }
+  function shekinah(){
+    rumbleBed();
+    choirBed({amp:.025, chord:[55,82.41,110,164.81,220,329.63]});
+    [55,82.4,110].forEach((fr,i)=>{const o=ctx.createOscillator(), og=g(.12); o.type='sine'; o.frequency.value=fr; o.connect(og); og.connect(master); o.start(); lfo(.03+i*.01,.04,og.gain)});
+  }
+  function altar(){
+    fire(); bowls();
+    choirBed({amp:.012, chord:[110,164.81,220]});
+  }
+  function rumble(){
+    rumbleBed(); storm();
+    later(()=>setTimeout(thunderOnce, 1800));
+    const schedule=()=>{const tm=setTimeout(()=>{thunderOnce(); schedule()}, 7000+Math.random()*9000); audioNode._timers.push(tm)};
+    schedule();
+  }
+  function riverlife(){
+    stream(); waters();
+    choirBed({amp:.014, chord:[146.83,220,293.66,369.99]});
+    later(()=>setTimeout(harpOnce, 2000));
+    const schedule=()=>{const tm=setTimeout(()=>{if(Math.random()<.6)harpOnce(); schedule()}, 7000+Math.random()*4000); audioNode._timers.push(tm)};
+    schedule();
+  }
+  function oil(){
+    drone();
+    choirBed({amp:.022, chord:[98,146.83,196,293.66,392]});
+    const warm=filt('lowpass', 900), wg=g(.2);
+    loopSrc(ctx,pink,warm); warm.connect(wg); wg.connect(master);
+    lfo(.04, .06, wg.gain);
+  }
+  function lion(){
+    shekinah();
+    later(()=>setTimeout(lionOnce, 1500));
+    const schedule=()=>{const tm=setTimeout(()=>{lionOnce(); schedule()}, 14000+Math.random()*12000); audioNode._timers.push(tm)};
+    schedule();
+  }
+  function incense(){
+    bowls(); chimes();
+    const air=filt('highpass', 2400), ag=g(.02);
+    loopSrc(ctx,white,air); air.connect(ag); toVerb(ag,.3,.6);
+  }
+  function jerusalem(){
+    heaven();
+    choirBed({amp:.016, chord:[146.83,220,293.66,440]});
+    later(()=>setTimeout(harpOnce, 700));
+    later(()=>setTimeout(singPhrase, 2400));
+    const schedule=()=>{const tm=setTimeout(()=>{harpOnce(); if(Math.random()<.4)singPhrase(); schedule()}, 6000+Math.random()*4000); audioNode._timers.push(tm)};
+    schedule();
+  }
+  function crystal(){
+    waters();
+    [523.25,659.25,783.99,1046.5,1318.5].forEach((fr,i)=>{
+      const o=ctx.createOscillator(), og=g(.02);
+      o.type='sine'; o.frequency.value=fr;
+      o.connect(og); toVerb(og,.3,.7); o.start();
+      lfo(.02+i*.008, .008, og.gain);
+    });
+  }
+
+  function brownNoise(){ const f=filt('lowpass',400,.3), gg=g(.8); loopSrc(ctx,brown,f); f.connect(gg); gg.connect(master); }
+  function tone(){ const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=196; const og=g(.35); o.connect(og); og.connect(master); o.start(); lfo(.05,.04,og.gain); }
+
+  const run={
+    rain, storm, wind, ocean, stream, forest, night, fire, bowls, chimes, drone, cathedral, heaven, brown:brownNoise, tone,
+    birds:()=>birdsong(false), shore:()=>birdsong(true),
+    angels, singing, holyholy, seraphim, waters, harps, thronemix,
+    sightmix, opened, whisper, chariots, pentecost, door, watchman,
+    shofar, trumpets, shekinah, altar, rumble, riverlife, oil, lion, heartbeat, incense, jerusalem, crystal
+  };
+  (run[type]||rain)();
+  markScape(type);
+  let nice=type||'rain';
+  try{SOUNDSCAPES.forEach(g=>g.items.forEach(s=>{if(s.id===type)nice=s.label}))}catch(e){}
+  toast('Atmosphere: '+nice);
+}
+function stopAmbient(){
+  markScape('');
+  if(audioNode&&audioNode._timers)audioNode._timers.forEach(t=>{try{clearInterval(t);clearTimeout(t)}catch(e){}});
+  if(audioCtx){try{audioCtx.close()}catch(e){}}
+  audioCtx=null; audioNode=null;
+}
+const SOUNDSCAPES=[
+{group:'Weather',items:[
+  {id:'rain',label:'🌧 Gentle Rain',desc:'Soft rain on the roof'},
+  {id:'storm',label:'⛈ Distant Storm',desc:'Rain and far thunder'},
+  {id:'wind',label:'🌬 Breath of Wind',desc:'Slow wilderness wind'}
+]},
+{group:'Nature',items:[
+  {id:'ocean',label:'🌊 Ocean Shore',desc:'Waves rolling in'},
+  {id:'stream',label:'💧 Forest Stream',desc:'Brook over stones'},
+  {id:'birds',label:'🐦 Morning Birds',desc:'Distant dawn chorus'},
+  {id:'forest',label:'🌲 Deep Forest',desc:'Leaves, doves, hush'},
+  {id:'night',label:'🌙 Night Crickets',desc:'Warm evening field'},
+  {id:'shore',label:'🌅 Ocean & Birds',desc:'Coast at first light'}
+]},
+{group:'Sanctuary',items:[
+  {id:'fire',label:'🔥 Quiet Hearth',desc:'Soft crackling fire'},
+  {id:'bowls',label:'🕊 Singing Bowls',desc:'Warm overtones'},
+  {id:'chimes',label:'🔔 Soft Chimes',desc:'Sparse temple bells'},
+  {id:'drone',label:'🌌 Deep Stillness',desc:'Low sacred drone'},
+  {id:'cathedral',label:'⛪ Sanctuary Pad',desc:'Soft choir-like space'},
+  {id:'heaven',label:'✨ Heavenly Atmosphere',desc:'High airy pad'}
+]},
+{group:'Throne Room',items:[
+  {id:'angels',label:'👼 Angelic Choir',desc:'Voices around the throne — worshipping'},
+  {id:'singing',label:'🎶 Angelic Voices Singing',desc:'Choir phrases rising and falling in worship'},
+  {id:'holyholy',label:'✝️ Holy, Holy, Holy',desc:'The threefold cry of the seraphim'},
+  {id:'seraphim',label:'🪽 Seraphim Wings',desc:'The rushing of many wings'},
+  {id:'waters',label:'🌊 Many Waters',desc:'His voice as the sound of many waters'},
+  {id:'harps',label:'🎵 Harps of Heaven',desc:'Golden harp arpeggios before the throne'},
+  {id:'thronemix',label:'👑 The Throne Room',desc:'Choir, wings, waters and worship together'}
+]},
+{group:'Opened Sight',items:[
+  {id:'sightmix',label:'👁 Open My Eyes',desc:'The mix for spiritual sight — choir, whisper, heaven opening'},
+  {id:'opened',label:'🌌 Opened Heaven',desc:'A door standing open in heaven'},
+  {id:'whisper',label:'🌬️ Still Small Voice',desc:'After the wind and fire — a whisper'},
+  {id:'chariots',label:'🔥 Chariots of Fire',desc:'Elisha: those who are with us are more'},
+  {id:'pentecost',label:'💨 Rushing Mighty Wind',desc:'Upper room — the Spirit comes'},
+  {id:'door',label:'🚪 Door in Heaven',desc:'Come up here'},
+  {id:'watchman',label:'🕰️ The Watchman',desc:'Night watch — a distant call'}
+]},
+{group:'Power & Presence',items:[
+  {id:'shofar',label:'📯 The Shofar',desc:'Awake — the ram’s horn'},
+  {id:'trumpets',label:'🎺 Silver Trumpets',desc:'Call to assembly and to war'},
+  {id:'shekinah',label:'☁️ Weight of Glory',desc:'Heavy, holy presence'},
+  {id:'altar',label:'🔥 Fire on the Altar',desc:'Coals, incense, heat'},
+  {id:'rumble',label:'⚡ Thunder of His Voice',desc:'Throne thunder and far lightning'},
+  {id:'riverlife',label:'💎 River of Life',desc:'Crystal river from the throne'},
+  {id:'oil',label:'🕊️ Anointing',desc:'Warm oil — the Spirit rests'},
+  {id:'lion',label:'🦁 Lion of Judah',desc:'Distant roar of the King'},
+  {id:'heartbeat',label:'💓 Heart of Worship',desc:'Slow pulse under the hush'},
+  {id:'incense',label:'🕯️ Incense of Prayer',desc:'Temple bells and rising scent'},
+  {id:'jerusalem',label:'🏙️ New Jerusalem',desc:'City of light — choir and harps'},
+  {id:'crystal',label:'💎 Sea of Glass',desc:'Crystal sea before the throne'}
+]},
+{group:'Focus bed',items:[
+  {id:'brown',label:'〰 Brown Noise',desc:'Deep study bed'},
+  {id:'tone',label:'♪ Soft Tone',desc:'Single calm tone'}
+]}
+];
+function renderSoundscapes(){
+  const el=document.getElementById('soundscapeMount'); if(!el) return;
+  el.innerHTML=SOUNDSCAPES.map(g=>'<div class="scapeGroupTitle">'+esc(g.group)+'</div><div class="scapeGrid">'+g.items.map(s=>'<button type="button" class="btn scapeBtn" data-scape="'+s.id+'" onclick="ambient(this.dataset.scape)"><b>'+esc(s.label)+'</b><small>'+esc(s.desc)+'</small></button>').join('')+'</div>').join('');
+}
+
+function getFocusMinutes(){let n=parseInt((document.getElementById('focusMin')||{}).value,10);if(!n||n<1)n=25;if(n>180)n=180;return n}
+function scaleJourneyToFocus(steps){const target=getFocusMinutes()*60;const base=steps.reduce((a,s)=>a+(+s.baseD||+s.d||60),0)||1;return steps.map(s=>{const w=+s.baseD||+s.d||60;return Object.assign({},s,{baseD:w,d:Math.max(25,Math.round(target*w/base))})})}
+function updateGuidedLengthHint(){const el=document.getElementById('guidedLengthHint');if(!el)return;const m=getFocusMinutes();el.innerHTML='This journey will last <b>'+m+' minutes</b> — Opening Sight will walk <b>'+esc(((document.getElementById('guidedRef')||{}).value)||'your selected Scripture')+'</b> as living scenes, scaled to your Focus session.'}
+function fmtGuided(n){n=Math.max(0,n|0);return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
+let guidedRun=[];
 let GUIDED_STEPS=[
 {t:"Be Still",s:"Psalm 46:10",d:60,x:"Be still, and know that I am God. Let your breathing slow down. Release every distraction, every noise, every hurry. You are coming before the throne of grace. Quiet your heart. Be still."},
 {t:"Fix Your Eyes on Jesus",s:"Hebrews 12:1-2",d:75,x:"Lay aside every weight. Turn the eyes of your heart toward Jesus. See Him, high and lifted up, worthy of all honor. Let His face fill your inner vision as you worship Him softly."},
@@ -1594,6 +2545,7 @@ let GUIDED_STEPS=[
 {t:"Respond and Rest",s:"Psalm 27:4 • Jude 20-21",d:45,x:"Respond with worship and obedience. Thank Him for what He has shown you. Keep yourself in the love of God. Rest now. His presence goes with you, and He gives you rest."}
 ];
 const SIGHT_JOURNEY=GUIDED_STEPS;
+window._journeyName='Opening Sight into the Spirit Realm';
 let guidedIdx=-1,guidedTimer=null,guidedInt=null,guidedRemaining=0;
 function voiceScore(v){let s=0;const nm=((v.name||'')+' '+(v.voiceURI||''));if(/^en/i.test(v.lang||''))s+=10;if(/natural|neural/i.test(nm))s+=10;if(/online/i.test(nm))s+=8;if(/google uk english female|google us english/i.test(nm))s+=7;if(/google/i.test(nm))s+=4;if(/samantha|siri|zira|aria|jenny|sonia|serena|moira|tessa|kate|victoria|karen|fiona|david|guy|mark/i.test(nm))s+=3;if(v.localService===false)s+=2;return s}
 function refreshGuidedVoices(){try{if(!window.speechSynthesis)return;const sel=document.getElementById('guidedVoiceName');if(!sel)return;const vs=speechSynthesis.getVoices()||[];if(!vs.length){if(!sel.options.length)sel.innerHTML='<option>Loading voices…</option>';return}const saved=localStorage.getItem('jcrgmGuidedVoice')||'';const keep=((sel.dataset.touched==='1'&&sel.value)?sel.value:saved);const ranked=[...vs].sort((a,b)=>voiceScore(b)-voiceScore(a));sel.innerHTML=ranked.map(v=>'<option value="'+esc(guidedVoiceKey(v))+'">'+(voiceScore(v)>=15?'★ ':'')+esc(v.name)+' ('+esc(v.lang)+')</option>').join('');const vals=[...sel.options].map(o=>o.value);if(keep&&vals.includes(keep))sel.value=keep;else sel.selectedIndex=0;const pr=document.getElementById('guidedPace'),savedRate=localStorage.getItem('jcrgmGuidedRate');if(pr&&savedRate){pr.value=savedRate;const pl=document.getElementById('guidedPaceLabel');if(pl)pl.textContent=(+savedRate).toFixed(2)+'×'}const sr=document.getElementById('scriptureRate'),savedScr=localStorage.getItem('jcrgmScriptureRate');if(sr&&savedScr){sr.value=savedScr;const lb=document.getElementById('scriptureRateLabel');if(lb)lb.textContent=(+savedScr).toFixed(2)+'×'}}catch(e){}}
@@ -1608,31 +2560,458 @@ function scriptureRate(){let r=parseFloat(((document.getElementById('scriptureRa
 function speakGuided(text,scrText){try{if(!window.speechSynthesis)return;if(((document.getElementById('guidedVoice')||{}).value)==='off')return;try{speechSynthesis.cancel()}catch(e){}const tk=++speakToken;setTimeout(()=>{try{if(tk!==speakToken)return;try{speechSynthesis.resume()}catch(e){}const v=pickCalmVoice();let rate=parseFloat((((document.getElementById('guidedPace')||{}).value))||'.95')||.95;const sRate=scriptureRate();const queue=(String(text).match(/[^.!?]+[.!?]+/g)||[text]).map(s=>({p:s.trim(),r:rate})).filter(o=>o.p);if(scrText){(String(scrText).match(/[^.!?]+[.!?]+/g)||[scrText]).map(s=>s.trim()).filter(Boolean).forEach(q=>queue.push({p:q,r:sRate}))}if(!queue.length)queue.push({p:String(text),r:rate});queue.forEach(o=>{const u=new SpeechSynthesisUtterance(o.p);u.rate=o.r;u.pitch=1;if(v){u.voice=v;if(v.lang)u.lang=v.lang}speechSynthesis.speak(u)})}catch(e){}},90)}catch(e){}}
 function testGuidedVoice(){saveGuidedPrefs();if(!window.speechSynthesis)return toast('Voice not supported in this browser');if(((document.getElementById('guidedVoice')||{}).value)==='off')return toast('Spoken guidance is set to Silent');speakGuided('Be still, and know that I am God. Listen to the difference. First, my guiding voice. Now, the Scripture quoting speed.','Thy word is a lamp unto my feet, and a light unto my path.');toast('Playing sample — try different voices')}
 try{if(window.speechSynthesis){speechSynthesis.onvoiceschanged=refreshGuidedVoices;refreshGuidedVoices()}}catch(e){}
-function renderGuidedStep(){const st=GUIDED_STEPS[guidedIdx],ref=((document.getElementById('guidedRef')||{}).value)||'Ephesians 1:17-18';document.getElementById('guidedStep').innerHTML='<div><div class="gTitle">Step '+(guidedIdx+1)+' of '+GUIDED_STEPS.length+' — '+st.t+'</div><div style="margin:8px 0"><span class="pill">'+st.s+'</span> <span class="pill">Journey: '+ref+'</span></div><p class="verse" style="font-size:19px">'+st.x+'</p></div>';speakGuided('Step '+(guidedIdx+1)+'. '+st.t+'. '+(st.speak||st.x),st.scripture)}
-function startGuided(){if(guidedTimer){clearTimeout(guidedTimer);guidedTimer=null}if(guidedInt){clearInterval(guidedInt);guidedInt=null}try{speakToken++;if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}if(!audioCtx){try{ambient('wind')}catch(e){}}saveGuidedPrefs();try{const srr=document.getElementById('scriptureRate');if(srr&&srr.value)localStorage.setItem('jcrgmScriptureRate',srr.value)}catch(e){}guidedIdx=-1;nextGuidedStep();toast('Guided journey begun — headphones recommended')}
-function stopGuided(){if(guidedTimer){clearTimeout(guidedTimer);guidedTimer=null}if(guidedInt){clearInterval(guidedInt);guidedInt=null}try{speakToken++;if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}guidedIdx=-1;document.getElementById('guidedStep').innerHTML='<div class="muted">Journey ended. Record anything you received in the Meditation Room — and test it by Scripture.</div>';document.getElementById('guidedProgress').textContent='';toast('Journey ended')}
-function nextGuidedStep(manual){if(guidedTimer){clearTimeout(guidedTimer);guidedTimer=null}if(guidedInt){clearInterval(guidedInt);guidedInt=null}try{speakToken++;if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}if(manual&&guidedIdx<0)return toast('Press Begin Journey first');guidedIdx++;if(guidedIdx>=GUIDED_STEPS.length){guidedIdx=-1;document.getElementById('guidedStep').innerHTML='<div><div class="gTitle">Journey Complete</div><p>Remain quiet a moment longer. Then record what you received — press “Record in Meditation Room.” Test everything by Scripture.</p></div>';document.getElementById('guidedProgress').textContent='';speakGuided('Journey complete. Record what you received, and test everything by Scripture.');return toast('Journey complete — record what you received')}renderGuidedStep();guidedRemaining=GUIDED_STEPS[guidedIdx].d;const total=GUIDED_STEPS[guidedIdx].d;const prog=()=>{document.getElementById('guidedProgress').textContent='Step '+(guidedIdx+1)+' of '+GUIDED_STEPS.length+' • next step in '+guidedRemaining+'s (or press Next Step)'};prog();guidedInt=setInterval(()=>{guidedRemaining--;if(guidedRemaining<=0){clearInterval(guidedInt);guidedInt=null;return}prog()},1000);guidedTimer=setTimeout(()=>nextGuidedStep(),total*1000)}
+function verseMood(text, ref){
+  const t=String(text||'')+' '+String(ref||'');
+  const L=t.toLowerCase();
+  if(/crucif|calvary|golgotha|blood of|the cross|they crucified/.test(L)) return 'cross';
+  if(/resurr|he is risen|empty tomb|third day|alive for ever/.test(L)) return 'glory';
+  if(/holy,? holy|seraph|throne|right hand of|transfigur/.test(L)) return 'throne';
+  if(/heaven|new jerusalem|alpha and omega/.test(L)) return 'heaven';
+  if(/sea |waters|jordan|galilee|waves|flood|boat|fishermen/.test(L)) return 'sea';
+  if(/wilderness|desert|dust|thirst/.test(L)) return 'desert';
+  if(/midnight|by night|darkness|watchman/.test(L)) return 'night';
+  if(/garden|eden|olive|gethsemane|tree of/.test(L)) return 'garden';
+  if(/thunder|lightning|whirlwind|earthquake|tempest/.test(L)) return 'storm';
+  if(/temple|altar|priest|holy place|tabernacle/.test(L)) return 'temple';
+  if(/fire|flame|burning bush|tongues as of|pillar of fire/.test(L)) return 'fire';
+  if(/shepherd|psalm 23|green pasture|still waters/.test(L)) return 'pasture';
+  if(/proverb|wisdom|instruction|understanding/.test(L)) return 'wisdom';
+  if(/in the beginning|let there be light|created/.test(L)) return 'dawn';
+  if(/prison|chains|dungeon|captive/.test(L)) return 'prison';
+  if(/kingdom|anointed|reign|king of kings/.test(L)) return 'king';
+  if(/lament|weep|tears|mourn|woe unto/.test(L)) return 'lament';
+  if(/peace|be still|rest |quiet/.test(L)) return 'still';
+  return 'dawn';
+}
+function splitPassageVerses(text, verses){
+  if(Array.isArray(verses)&&verses.length){
+    return verses.filter(v=>v&&String(v.text||'').trim()).map(v=>({n:String(v.n||v.verse||''),text:String(v.text||'').trim()}));
+  }
+  const t=String(text||'').replace(/\s+/g,' ').trim();
+  if(!t) return [];
+  const parts=t.split(/\s+(?=\d+\s)/);
+  const out=[];
+  parts.forEach(p=>{
+    const m=p.match(/^(\d+)\s+([\s\S]+)$/);
+    if(m) out.push({n:m[1],text:m[2].trim()});
+    else if(p.trim()) out.push({n:'',text:p.trim()});
+  });
+  return out.length?out:[{n:'',text:t}];
+}
+function verseRef(base, n){
+  if(!n) return base;
+  const m=String(base||'').match(/^(.+?)\s+(\d+)(?::(.+))?$/);
+  if(!m) return base+':'+n;
+  return m[1]+' '+m[2]+':'+n;
+}
+function clusterVerses(verses, maxUnits){
+  maxUnits=Math.max(1, maxUnits|0);
+  if(verses.length<=maxUnits) return verses;
+  const size=Math.ceil(verses.length/maxUnits);
+  const out=[];
+  for(let i=0;i<verses.length;i+=size){
+    const chunk=verses.slice(i,i+size);
+    const a=chunk[0].n, b=chunk[chunk.length-1].n;
+    out.push({n: a&&b&&a!==b?(a+'–'+b):(a||''), text:chunk.map(c=>(c.n?c.n+' ':'')+c.text).join(' ')});
+  }
+  return out;
+}
+function seePrompt(t){
+  const L=String(t||'').toLowerCase();
+  const bits=[];
+  if(/eyes of your (understanding|heart)|spirit of wisdom/.test(L)) bits.push('Do not picture a classroom. Picture light entering the inner room of a person — the heart receiving sight.');
+  if(/be still/.test(L)) bits.push('See the striving fall out of your hands. The battlefield goes quiet because God is God.');
+  if(/light|lamp|enlighten/.test(L)) bits.push('See darkness giving way like dawn, not like a switch.');
+  if(/walk|path|way/.test(L)) bits.push('See a road under actual feet — the next step, not a slogan.');
+  if(/father/.test(L)) bits.push('See a Father, not a force.');
+  if(/jesus|christ|son of/.test(L)) bits.push('Let a face fill the frame. A Person, not an idea.');
+  if(/blood|cross|crucif/.test(L)) bits.push('See the cost. Wood, wounds, and love that would not come down.');
+  if(/water|sea|river|well/.test(L)) bits.push('See the water. Depth, thirst, or crossing.');
+  if(/kingdom/.test(L)) bits.push('Picture a reign landing on earth — God\'s will actually happening.');
+  if(/heart/.test(L)) bits.push('The heart as the control-room of the person, not a valentine.');
+  if(/word |scripture|commandment/.test(L)) bits.push('See the words as living, not ink only.');
+  if(!bits.length) bits.push('Look for nouns you can actually picture — people, places, objects, actions. Stay with what is on the page.');
+  return bits.slice(0,2).join(' ');
+}
+function hearPrompt(t){
+  const L=String(t||'').toLowerCase();
+  if(/pray|ask|beseech/.test(L)) return 'Hear this as address — someone speaking to God, or God answering. Read it aloud as prayer.';
+  if(/saith|said|spoke|spake|voice/.test(L)) return 'Hear the speaker. Who is talking, and to whom? Let the tone land before you explain it.';
+  if(/blessed|woe/.test(L)) return 'Hear blessing or warning as a voice across a hillside, not as a poster.';
+  if(/sing|psalm|praise/.test(L)) return 'Hear music in it. This was meant to be voiced, not only studied.';
+  return 'Read the verse aloud once, slowly. Then again, stressing the verbs. What is actually happening in the sentence?';
+}
+function bePrompt(t){
+  const L=String(t||'').toLowerCase();
+  if(/you |ye |thee |thou |your /.test(L)) return 'Receive the “you.” If this was first spoken to saints, stand among them. If it searches you, do not dodge.';
+  if(/i am |i will |i have/.test(L)) return 'Stand before the “I” of the text. Is this God speaking of Himself, or a psalmist? Stay in that place.';
+  return 'Do not watch the passage from the balcony. Step onto the floor of the scene and remain until it looks back at you.';
+}
+function visualizeLead(text, ref){
+  const L=String(text||'').toLowerCase();
+  if(/eyes of your (understanding|heart)|spirit of wisdom/.test(L))
+    return 'Do not treat this as a motto. Picture Paul on his knees for a church he loves. He is not asking for more information. He is asking for light inside the heart.';
+  if(/be still, and know/.test(L))
+    return 'God is not competing with the noise. Let the hands open. Be still long enough to know — not to manage Him.';
+  if(/in the beginning/.test(L))
+    return 'Before cities, before your name, there is God speaking. Hear the first word. Watch light happen.';
+  if(/the lord is my shepherd/.test(L))
+    return 'You are a sheep in a real valley, not a reader of a funeral poem. The Shepherd is present tense.';
+  if(/for god so loved/.test(L))
+    return 'Do not rush the famous sentence. Stay at “loved.” Stay at “gave.” Stay at “whosoever.”';
+  if(/i am the way/.test(L))
+    return 'A Person stands in the path. Not a system. Hear Him say it to troubled friends in a room.';
+  if(/let this mind/.test(L))
+    return 'Watch the descent: glory, servant, death. Then the Name above every name. Do not skip the valley.';
+  return 'Step into the scene these words create. Do not rush to application. First, see what is here.';
+}
+function cinemaDustHTML(){
+  let h='';
+  for(let i=0;i<18;i++) h+='<span style="left:'+(4+i*5.3)+'%;animation-duration:'+(8+i%6)+'s;animation-delay:'+(i*.35)+'s"></span>';
+  return h;
+}
+function toggleTheater(on){
+  const want=typeof on==='boolean'?on:!document.body.classList.contains('theaterOn');
+  document.body.classList.toggle('theaterOn', want);
+  const st=document.getElementById('cinemaStage');
+  if(st) st.classList.toggle('theater', want);
+}
+function cinemaHTML(st, idx, n, ref){
+  const mood=st.mood||verseMood(st.verse||st.x||'', st.s||ref);
+  const verse=st.verse||'';
+  return '<div class="cinema mood-'+mood+(document.body.classList.contains('theaterOn')?' theater':'')+'" id="cinemaStage">'
+    +'<div class="cinemaDust">'+cinemaDustHTML()+'</div>'
+    +'<div class="cinemaTop"><span class="cinemaKicker">Opening Sight · '+esc(st.t||'Scene')+' · '+(idx+1)+' / '+n+'</span>'
+    +'<button type="button" class="btn" onclick="toggleTheater()">⛶ Theater</button></div>'
+    +'<div class="cinemaRef">'+esc(st.s||ref)+'</div>'
+    +(verse?'<p class="cinemaVerse">'+esc(verse)+'</p>':'')
+    +'<p class="cinemaLead">'+esc(st.x||'')+'</p>'
+    +'<div class="cinemaSenses">'
+    +'<div class="sense"><b>See</b><p>'+esc(st.see||'Look at the scene the words actually give you.')+'</p></div>'
+    +'<div class="sense"><b>Hear</b><p>'+esc(st.hear||'Read the verse aloud. Let the verbs land.')+'</p></div>'
+    +'<div class="sense"><b>Be there</b><p>'+esc(st.be||'Stand inside the text until it looks back at you.')+'</p></div>'
+    +'</div>'
+    +'<div class="cinemaBar"><span class="muted" id="cinemaLeft"></span><div class="actions" style="margin:0">'
+    +(idx?'<button type="button" class="btn" onclick="prevGuidedStep()">← Back</button>':'')
+    +'<button type="button" class="btn primary" onclick="nextGuidedStep(true)">'+(idx>=n-1?'Amen — finish':'Continue →')+'</button>'
+    +'</div></div></div>';
+}
+function isSightJourney(){
+  if(window._forceLectio) return true;
+  const n=String(window._journeyName||'Opening Sight into the Spirit Realm');
+  return /opening sight/i.test(n);
+}
+function step(t,s,d,x,extra){
+  const o={t:t,s:s,d:d,x:x,speak:x};
+  if(extra) Object.assign(o, extra);
+  return o;
+}
+async function buildAliveSightJourney(ref){
+  ref=(ref||'').trim()||'Ephesians 1:17-18';
+  let text='', verses=[], ver=getBibleVersion();
+  try{
+    const d=await fetchPassage(ref);
+    text=d.text||'';
+    verses=d.verses||[];
+    ver=d.ver||ver;
+  }catch(e){
+    text='';
+  }
+  if(!text) text='Open '+ref+' in your Bible. Read it slowly. Then return your eyes here and walk it anyway.';
+  let units=splitPassageVerses(text, verses);
+  const focus=getFocusMinutes();
+  const lectio=!!window._forceLectio;
+  const frame=lectio?5:10;
+  const slots=Math.max(1, Math.min(units.length, Math.max(1, Math.floor((focus-frame*1.2)/2.2)||3)));
+  units=clusterVerses(units, slots);
+  const steps=[];
+  steps.push(step('Be Still','Psalm 46:10',55,'Be still, and know that I am God. Let breathing slow. Release hurry. You are not collecting information. You are coming to see.',{verse:'Be still, and know that I am God.',see:'See the noise of the day fall like a curtain.',hear:'Hear your own name grow quiet.',be:'Stand at the door of the text with empty hands.',mood:'still'}));
+  if(!lectio){
+    steps.push(step('Fix Your Eyes on Jesus','Hebrews 12:1-2',50,'Turn the eyes of your heart toward Jesus. See Him, high and lifted up. Let His face fill your inner vision before any other picture.',{verse:'Looking unto Jesus, the author and finisher of our faith.',see:'See a real Person at the center of the frame.',hear:'Let worship be quieter than performance.',be:'Lay aside the weight you carried in.',mood:'glory'}));
+    steps.push(step('Ask for Opened Eyes',ref,50,'Now pray with Elisha and with Paul. Lord, open my eyes. Give the Spirit of wisdom and revelation. Ask for light in the heart, not merely facts in the mind.',{verse:'The eyes of your understanding being enlightened.',see:'Picture inner windows opening onto '+ref+'.',hear:'Ask expectantly, then stop talking.',be:'Receive sight as a gift, not a technique.',mood:'dawn'}));
+  }
+  units.forEach((v,i)=>{
+    const vr=verseRef(ref, v.n);
+    const mood=verseMood(v.text, vr);
+    const title=units.length===1?'The Word itself':('The Word · '+(v.n?('v. '+v.n):('scene '+(i+1))));
+    steps.push(step(title,vr,90,visualizeLead(v.text, vr),{
+      verse:v.text, scripture:v.text, see:seePrompt(v.text), hear:hearPrompt(v.text), be:bePrompt(v.text), mood:mood
+    }));
+  });
+  if(lectio){
+    steps.push(step('Meditatio — Turn it over',ref,80,'Stay with one phrase that will not leave you. Repeat it. Let it search you. Do not harvest a lesson yet. Chew.',{verse:units[0]?units[0].text:'',see:'See the phrase as food, not a slogan.',hear:'Hear it until one word grows larger.',be:'Refuse to finish early.',mood:'wisdom'}));
+    steps.push(step('Oratio — Pray the Scripture',ref,70,'Turn the passage into prayer. Worship where it reveals God. Confess where it convicts. Ask where it promises.',{see:'See yourself answering the text.',hear:'Pray it back, phrase by phrase.',be:'Speak to the Father from inside the verse.',mood:'temple'}));
+    steps.push(step('Contemplatio — Remain',ref,70,'Stop producing thoughts. Remain before Him with what He has shown. Love is looking. Rest is not emptiness — it is presence.',{see:'Let the pictures quiet down.',hear:'Silence is now part of the Word.',be:'Stay. Do not run to the next task.',mood:'heaven'}));
+  } else {
+    steps.push(step('Watch and Wait','Habakkuk 2:1',70,'Stand upon your watch. You have seen the words. Now wait. Notice pictures, Scriptures, and gentle thoughts. Do not force. Simply watch.',{see:'See yourself as a watcher, not a manufacturer of revelation.',hear:'Notice what rises without grabbing it.',be:'Hold still long enough for the Word to look back.',mood:'night'}));
+    steps.push(step('Observe — What does it say?',ref,70,'Look again at what is actually on the page — not what you expected. Name the repeating words, the verbs, the people, the commands and promises.',{see:'See three concrete images in the passage.',hear:'Which verbs do the work of the sentence?',be:'Refuse to skip the obvious. Observation is worshipful attention.',mood:'wisdom',verse:units.map(u=>u.text).join(' ').slice(0,420)}));
+    steps.push(step('Interpret — What does it mean?',ref,70,'Who is speaking, and to whom? Why was this written? What did it mean first, before what it means in your week? Ask the Spirit to open understanding.',{see:'See the first hearers in their room, road, or exile.',hear:'Hear the argument or the story as they would.',be:'Do not make the text a mirror only. Let it be a window first.',mood:'temple'}));
+    steps.push(step('Theology — What is true of God?',ref,55,'Distill one central truth about God, Christ, or His work. Hold that truth until it searches you.',{see:'See the character of God in the passage.',hear:'Say the one truth quietly.',be:'Let it judge your assumptions.',mood:'throne'}));
+    steps.push(step('Apply — How must I respond?',ref,70,'The Word demands a response. What must you believe, change, start, or surrender? Picture yourself obeying this week.',{see:'See Tuesday afternoon, not only the prayer closet.',hear:'Name one obedient next step aloud.',be:'Decide. Application without a decision is fog.',mood:'dawn'}));
+    steps.push(step('Pray the Scripture',ref,55,'Turn each phrase into prayer. Worship, confess, ask. Pray it back to the Father now.',{see:'See the throne of grace as nearer than your chair.',hear:'Pray the verbs of the passage.',be:'Remain until the prayer is honest.',mood:'temple'}));
+    steps.push(step('Test Everything','1 Thessalonians 5:21',50,'Does what you sensed agree with this Scripture? Does it honor Christ? Does it produce His character? Hold fast what is good.',{see:'See the Word as the plumb-line.',hear:'Lay aside what is unclear without drama.',be:'Humility is part of sight.',mood:'cross'}));
+    steps.push(step('Carry and Rest',ref,45,'Choose one phrase from '+ref+' to carry today. Repeat it softly. His Word will not return void. Rest. His presence goes with you.',{see:'See the phrase written on the day ahead.',hear:'Let it be the last word in your mind.',be:'Walk out still wearing the text.',mood:'glory'}));
+  }
+  return steps;
+}
+
+function renderGuidedStep(){const st=guidedRun[guidedIdx];if(!st)return;const ref=((document.getElementById('guidedRef')||{}).value)||'Ephesians 1:17-18';const host=document.getElementById('guidedStep');if(host) host.innerHTML=cinemaHTML(st,guidedIdx,guidedRun.length,ref);const guide=(st.speak||st.x||'');speakGuided((st.t?st.t+'. ':'')+guide, st.scripture||st.verse||'')}
+let guidedStarting=false;
+async function startGuided(){
+  if(guidedStarting) return;
+  guidedStarting=true;
+  if(guidedTimer){clearTimeout(guidedTimer);guidedTimer=null}
+  if(guidedInt){clearInterval(guidedInt);guidedInt=null}
+  try{speakToken++;if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}
+  if(!audioCtx){try{ambient('sightmix')}catch(e){}}
+  saveGuidedPrefs();
+  try{const srr=document.getElementById('scriptureRate');if(srr&&srr.value)localStorage.setItem('jcrgmScriptureRate',srr.value)}catch(e){}
+  const ref=((document.getElementById('guidedRef')||{}).value||'').trim()||'Ephesians 1:17-18';
+  try{document.getElementById('guidedRef').value=ref}catch(e){}
+  const host=document.getElementById('guidedStep');
+  if(host) host.innerHTML='<div class="cinema mood-dawn" id="cinemaStage"><div class="cinemaDust">'+cinemaDustHTML()+'</div><div class="cinemaKicker">Opening Sight</div><p class="cinemaLead" style="position:relative;z-index:3;margin-top:18px">Opening the selected Scripture — '+esc(ref)+' — as living scenes. Stay with the words.</p></div>';
+  try{
+    if(isSightJourney()){
+      const built=await buildAliveSightJourney(ref);
+      guidedRun=scaleJourneyToFocus(built);
+      window._journeyName='Opening Sight into the Spirit Realm';
+      const status=document.getElementById('scriptureJourneyStatus');
+      if(status) status.textContent='Active journey: Opening Sight walking '+ref+' ('+guidedRun.length+' scenes · '+getFocusMinutes()+' min)';
+    }else{
+      guidedRun=scaleJourneyToFocus(GUIDED_STEPS);
+    }
+    guidedIdx=-1;
+    nextGuidedStep();
+    updateGuidedLengthHint();
+    toast('Opening Sight: '+ref+' · '+getFocusMinutes()+' minutes');
+  }finally{guidedStarting=false}
+}
+function stopGuided(){if(guidedTimer){clearTimeout(guidedTimer);guidedTimer=null}if(guidedInt){clearInterval(guidedInt);guidedInt=null}try{speakToken++;if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}guidedIdx=-1;toggleTheater(false);document.getElementById('guidedStep').innerHTML='<div class="muted">Journey ended. Record anything you received in the Meditation Room — and test it by Scripture.</div>';document.getElementById('guidedProgress').textContent='';toast('Journey ended')}
+function armGuidedProgress(){
+  const st=guidedRun[guidedIdx]; if(!st) return;
+  guidedRemaining=st.d;
+  const total=st.d;
+  const prog=()=>{
+    const el=document.getElementById('guidedProgress');
+    const msg='Scene '+(guidedIdx+1)+' of '+guidedRun.length+' · this scene '+fmtGuided(guidedRemaining)+' left · whole journey '+getFocusMinutes()+' min (or press Continue)';
+    if(el) el.textContent=msg;
+    const left=document.getElementById('cinemaLeft');
+    if(left) left.textContent=fmtGuided(guidedRemaining)+' in this scene';
+  };
+  prog();
+  if(guidedInt){clearInterval(guidedInt);guidedInt=null}
+  if(guidedTimer){clearTimeout(guidedTimer);guidedTimer=null}
+  guidedInt=setInterval(()=>{guidedRemaining--;if(guidedRemaining<=0){clearInterval(guidedInt);guidedInt=null;return}prog()},1000);
+  guidedTimer=setTimeout(()=>nextGuidedStep(),total*1000);
+}
+function nextGuidedStep(manual){
+  if(guidedTimer){clearTimeout(guidedTimer);guidedTimer=null}
+  if(guidedInt){clearInterval(guidedInt);guidedInt=null}
+  try{speakToken++;if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}
+  if(manual&&guidedIdx<0)return toast('Press Begin Journey first');
+  if(!guidedRun.length)guidedRun=scaleJourneyToFocus(GUIDED_STEPS);
+  guidedIdx++;
+  if(guidedIdx>=guidedRun.length){
+    guidedIdx=-1;
+    toggleTheater(false);
+    document.getElementById('guidedStep').innerHTML='<div class="cinema mood-glory" id="cinemaStage"><div class="cinemaDust">'+cinemaDustHTML()+'</div><div class="cinemaKicker">Opening Sight</div><p class="cinemaVerse" style="position:relative;z-index:3;margin-top:16px">Journey complete.</p><p class="cinemaLead" style="position:relative;z-index:3">Remain quiet a moment longer. Then record what you received — and test everything by Scripture.</p><div class="cinemaBar"><button type="button" class="btn primary" onclick="guidedToMeditation()">Record in Meditation Room</button></div></div>';
+    document.getElementById('guidedProgress').textContent='';
+    speakGuided('Journey complete. Record what you received, and test everything by Scripture.');
+    return toast('Journey complete — record what you received');
+  }
+  renderGuidedStep();
+  armGuidedProgress();
+}
+function prevGuidedStep(){
+  if(guidedIdx<=0) return;
+  guidedIdx=guidedIdx-2;
+  nextGuidedStep(false);
+}
+async function startLectioJourney(){
+  window._forceLectio=true;
+  window._journeyName='Opening Sight into the Spirit Realm';
+  try{await startGuided()}finally{window._forceLectio=false}
+}
+function sendPassageToSight(){
+  const ref=currentRef||passageValue();
+  document.getElementById('guidedRef').value=ref;
+  window._journeyName='Opening Sight into the Spirit Realm';
+  GUIDED_STEPS=SIGHT_JOURNEY;
+  go('focus');
+  toast('Journey Scripture set to '+ref+' — press Begin Journey');
+}
+async function beginSightFromReader(){
+  sendPassageToSight();
+  await startGuided();
+}
+function todaySight(){
+  const ref=localStorage.getItem('jcrgmTodayScripture')||currentRef;
+  if(!ref) return toast('Generate today\'s Scripture first');
+  document.getElementById('guidedRef').value=ref;
+  window._journeyName='Opening Sight into the Spirit Realm';
+  go('focus');
+  startGuided();
+}
+
+function getChapterMap(){try{return JSON.parse(localStorage.getItem('jcrgm-chapters')||'{}')}catch(e){return {}}}
+function saveChapterMap(m){try{localStorage.setItem('jcrgm-chapters',JSON.stringify(m))}catch(e){}}
+function openChapter(book, ch){
+  document.getElementById('sBook').value=book;
+  document.getElementById('sChapter').value=ch;
+  document.getElementById('sVerse').value='';
+  currentRef=book+' '+ch;
+  renderChapterNav();
+  loadScripture();
+}
+function toggleChapterRead(){
+  const book=document.getElementById('sBook').value;
+  const ch=+(document.getElementById('sChapter').value||1);
+  const m=getChapterMap();
+  const set=new Set(m[book]||[]);
+  if(set.has(ch)) set.delete(ch); else set.add(ch);
+  m[book]=[...set].sort((a,b)=>a-b);
+  saveChapterMap(m);
+  renderChapterNav();
+  toast((set.has(ch)?'Marked read: ':'Unmarked: ')+book+' '+ch);
+}
+function renderChapterNav(){
+  const el=document.getElementById('chapterNav');
+  if(!el) return;
+  const book=document.getElementById('sBook').value;
+  const cur=+(document.getElementById('sChapter').value||1);
+  const n=CHAPTERS[book]||1;
+  const done=new Set((getChapterMap()[book]||[]).map(Number));
+  let h='<div class="chapterNav">';
+  for(let i=1;i<=n;i++) h+='<button type="button" class="btn chBtn'+(done.has(i)?' done':'')+(i===cur?' on':'')+'" onclick="openChapter(\''+book.replace(/'/g,"\\'")+'\','+i+')">'+i+'</button>';
+  h+='</div><p class="small muted">'+done.size+' / '+n+' chapters marked read in '+esc(book)+'.</p>';
+  h+='<button type="button" class="btn" onclick="toggleChapterRead()">'+((done.has(cur)?'Unmark':'Mark')+' chapter '+cur+' read')+'</button>';
+  el.innerHTML=h;
+}
+async function compareTranslations(){
+  const box=document.getElementById('compareBox');
+  if(!box) return;
+  const ref=passageValue();
+  box.innerHTML='<div class="muted">Comparing KJV, WEB, BSB and ASV for '+esc(ref)+'…</div>';
+  const vers=['KJV','WEB','BSB','ASV'];
+  const cols=await Promise.all(vers.map(async v=>{
+    try{
+      const d=await fetchPassage(ref,v);
+      return '<div class="compareCol"><h4>'+v+'</h4><p>'+esc(d.text)+'</p></div>';
+    }catch(e){
+      return '<div class="compareCol"><h4>'+v+'</h4><p class="muted">Unavailable just now.</p></div>';
+    }
+  }));
+  box.innerHTML='<div class="compareGrid">'+cols.join('')+'</div>';
+}
+
+function renderBriefing(){
+  const el=document.getElementById('briefingBody');
+  if(!el) return;
+  const tracks=[
+    {t:'Lord\'s Day — Worship & Word',p:'Psalm 27:4',n:'Behold the beauty of the Lord. Let sight become worship before it becomes work.'},
+    {t:'Gospel Monday — The Life of Christ',p:'Mark 1:14-20',n:'The kingdom is at hand. Follow. Opening Sight will walk the call, not only the commentary.'},
+    {t:'Wisdom Tuesday — Fear of the Lord',p:'Proverbs 9:10',n:'Knowledge begins with reverence. Study that still fears God is study that can see.'},
+    {t:'Psalm Wednesday — Prayer in the text',p:'Psalm 119:18',n:'Open Thou mine eyes. Make this the first prayer before any method.'},
+    {t:'Prophet Thursday — The word that searches',p:'Isaiah 6:1-8',n:'Woe, then cleansing, then send. Prophetic sight without holiness is theatre.'},
+    {t:'Letter Friday — The church in the Word',p:'Ephesians 1:17-18',n:'Paul on his knees: not more data, but enlightened hearts. This is the house Scripture for Opening Sight.'},
+    {t:'Sabbath Saturday — Remember and rest',p:'Deuteronomy 6:4-9',n:'Bind the words. Teach them. Rest in them. Carry one phrase through the house.'}
+  ];
+  const d=new Date();
+  const tr=tracks[d.getDay()];
+  const done=getChapterMap();
+  const chRead=Object.values(done).reduce((a,x)=>a+(x?x.length:0),0);
+  el.innerHTML='<div class="briefMeta"><span class="pill">'+esc(d.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'}))+'</span><span class="pill">'+esc(tr.t)+'</span><span class="pill">'+chRead+' chapters marked</span></div>'
+    +'<p class="verse">'+esc(tr.n)+' <span class="ref">— '+esc(tr.p)+'</span></p>'
+    +'<div class="actions"><button class="btn primary" onclick="document.getElementById(\'guidedRef\').value=\''+tr.p.replace(/'/g,"\\'")+'\';go(\'focus\');startGuided()">Begin Opening Sight on today\'s briefing</button>'
+    +'<button class="btn" onclick="go(\'academy\')">Open Study Academy</button>'
+    +'<button class="btn" onclick="go(\'guides\')">66 Book Guides</button></div>';
+}
+
+function renderBookGuide(book){
+  const el=document.getElementById('bookGuideView');
+  if(!el) return;
+  book=book||(document.getElementById('guideBook')||{}).value||'Genesis';
+  const g=BOOK_GUIDES[book]||{title:book,purpose:'Read slowly, observe, interpret, apply.',outline:'Walk the book in order.',christ:'Ask where this book prepares, presents, or explains Christ.',key:[book+' 1'],watch:'Do not skip the hard chapters.'};
+  const n=CHAPTERS[book]||1;
+  const done=new Set((getChapterMap()[book]||[]).map(Number));
+  const keys=(g.key||[]).map(k=>'<button type="button" class="btn keyPass" onclick="openGuidePass(\''+String(k).replace(/'/g,"\\'")+'\')">'+esc(k)+'</button>').join('');
+  el.innerHTML='<div class="guideHero"><h2 style="margin-top:0">'+esc(book)+' — '+esc(g.title)+'</h2>'
+    +'<p class="muted">'+done.size+' / '+n+' chapters marked in your tracker.</p>'
+    +'<p><b>Purpose.</b> '+esc(g.purpose)+'</p>'
+    +'<p><b>Shape.</b> '+esc(g.outline)+'</p>'
+    +'<p><b>Christ.</b> '+esc(g.christ)+'</p>'
+    +'<p><b>Watch.</b> '+esc(g.watch)+'</p>'
+    +'<div class="guideKey">'+keys+'</div>'
+    +'<div class="actions" style="margin-top:12px"><button class="btn primary" onclick="openGuidePass(\''+book.replace(/'/g,"\\'")+' 1\')">Open chapter 1 in the Reader</button>'
+    +'<button class="btn" onclick="document.getElementById(\'guidedRef\').value=\''+String((g.key&&g.key[0])||(book+' 1')).replace(/'/g,"\\'")+'\';go(\'focus\');startGuided()">Begin Opening Sight</button></div></div>';
+}
+function openGuidePass(ref){
+  const m=String(ref).match(/^(.+?)\s+(\d+)(?::(.+))?$/);
+  if(m){
+    document.getElementById('sBook').value=m[1];
+    document.getElementById('sChapter').value=m[2];
+    document.getElementById('sVerse').value=m[3]||'';
+    currentRef=ref;
+  }
+  go('scripture');
+  loadScripture();
+}
+function renderGuidePicker(){
+  const sel=document.getElementById('guideBook');
+  if(!sel||sel.options.length) return;
+  sel.innerHTML=BOOKS.map(b=>'<option>'+b+'</option>').join('');
+  sel.value='Genesis';
+  sel.onchange=()=>renderBookGuide(sel.value);
+  renderBookGuide('Genesis');
+}
+function launchChristStation(ref){
+  document.getElementById('guidedRef').value=ref;
+  window._journeyName='Opening Sight into the Spirit Realm';
+  go('focus');
+  startGuided();
+}
+function launchWordStudy(){
+  const w=(document.getElementById('wordStudyInput')||{}).value||'';
+  if(!w.trim()) return toast('Enter a word or Strong\'s number');
+  openLink('https://www.blueletterbible.org/search/search.cfm?Criteria='+encodeURIComponent(w.trim())+'&t=KJV');
+}
+document.addEventListener('keydown',e=>{
+  if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+  if(e.key==='Escape' && document.body.classList.contains('theaterOn')){e.preventDefault();toggleTheater(false);return}
+  if(guidedIdx>=0 && (e.key==='ArrowRight'||e.key==='ArrowLeft')){
+    e.preventDefault();
+    if(e.key==='ArrowRight') nextGuidedStep(true); else prevGuidedStep();
+  }
+});
+
+async function startLectioFromReader(){
+  const ref=currentRef||passageValue();
+  document.getElementById('guidedRef').value=ref;
+  window._journeyName='Opening Sight into the Spirit Realm';
+  go('focus');
+  await startLectioJourney();
+}
+
 function guidedToMeditation(){const ref=((document.getElementById('guidedRef')||{}).value)||'Ephesians 1:17-18';document.getElementById('medRef').value=ref;document.getElementById('medFocus').value='Opening sight — what did I see, sense or receive?';go('meditation');toast('Record what you received — test it by Scripture')}
 function focusStudyData(){const g=id=>((document.getElementById(id)||{}).value||'').trim();return{ref:g('focusStudyRef')||g('passage')||currentRef,obs:g('obs'),interp:g('interp'),context:g('context'),theology:g('theology'),apply:g('apply'),prayer:g('prayer')}}
 function pullStudyIntoFocus(){const p=((document.getElementById('passage')||{}).value||'').trim()||currentRef;document.getElementById('focusStudyRef').value=p;const goal=document.getElementById('focusGoal');if(goal&&!goal.value.trim())goal.value='Meditate deeply on '+p+' for full understanding.';toast('Study Scripture loaded: '+p)}
 function trimNote(t,n){t=(t||'').replace(/\s+/g,' ').trim();if(t.length>n){t=t.slice(0,n);const cut=t.lastIndexOf('. ');if(cut>60)t=t.slice(0,cut+1)}return t}
 async function buildScriptureJourney(autoStart){const s=focusStudyData();if(!s.ref)return toast('Enter a study Scripture first');const status=document.getElementById('scriptureJourneyStatus');status.textContent='Preparing guided meditation on '+s.ref+' — fetching Scripture text…';document.getElementById('focusStudyRef').value=s.ref;document.getElementById('guidedRef').value=s.ref;const withNotes=((document.getElementById('focusStudyNotes')||{}).value)!=='off';let text=await fetchScriptureText(s.ref);if(!text)text='(Open '+s.ref+' in your Bible and read it slowly now.)';let spoken=text;if(spoken.length>1500){const cut=spoken.slice(0,1500).lastIndexOf('. ');spoken=(cut>400?spoken.slice(0,cut+1):spoken.slice(0,1500))+' Continue reading the rest silently.'}const obs=withNotes?trimNote(s.obs,400):'',interp=withNotes?trimNote(s.interp,400):'',theo=withNotes?trimNote(s.theology,300):'',app=withNotes?trimNote(s.apply,350):'',pr=withNotes?trimNote(s.prayer,300):'';GUIDED_STEPS=[{t:'Read and Receive',s:s.ref,d:90,speak:'Hear the Word of God. '+s.ref+'. Listen as it is read, and let each phrase settle in your heart.',scripture:spoken,x:'Hear the Word of God. '+s.ref+'. Listen as it is read, and let each phrase settle in your heart. '+text},{t:'Observe — What Does It Say?',s:s.ref,d:75,x:obs?('Look closely at what the text actually says. Your study notes observe: '+obs+' Linger on each key word. What repeats? What stands out?'):('Look closely at what the text actually says. Linger on each key word. What repeats? What commands, promises or warnings stand out? Notice exactly what is written before you interpret it.')},{t:'Understand — What Does It Mean?',s:s.ref,d:75,x:interp?('Now press into the meaning. Your study uncovered: '+interp+' Ask the Spirit to open your understanding as you turn this over slowly.'):('Now press into the meaning. Who is speaking, and to whom? Why was this written? What did it mean first, before what it means now? Ask the Spirit to open your understanding.')},{t:'The Central Truth',s:s.ref,d:60,x:theo?('Hold the central truth before you: '+theo+' Let this one truth echo. Say it quietly to yourself, and let it search you.'):('Distill this passage to one central truth about God, Christ, or His work. Hold that truth before you. Say it quietly to yourself, and let it search you.')},{t:'Apply — How Must I Respond?',s:s.ref,d:75,x:app?('The Word demands a response. You have discerned: '+app+' Decide now. What will you believe, change, start, or surrender? Picture yourself obeying this week.'):('The Word demands a response. What must you believe, change, start, or surrender? Decide now. Picture yourself obeying this passage this very week.')},{t:'Pray the Scripture',s:s.ref,d:60,x:pr?('Turn the passage into prayer. Pray with your own words: '+pr):('Turn each phrase of the passage into prayer. Worship where it reveals God. Confess where it convicts you. Ask where it promises. Pray it back to the Father now.')},{t:'Rest and Remember',s:s.ref,d:45,x:'Choose one phrase from '+s.ref+' to carry today. Repeat it softly. Let it be the last word in your mind as you rest. His Word will not return void. Carry it, remember it, and live it.'}];window._journeyName='Scripture Deep-Dive: '+s.ref;status.textContent='Active journey: '+window._journeyName+' ('+GUIDED_STEPS.length+' steps • '+(withNotes?'with your study notes':'Scripture only')+')';const goal=document.getElementById('focusGoal');if(goal&&!goal.value.trim())goal.value='Gain deep understanding of '+s.ref+' through guided meditation.';toast('Scripture meditation ready: '+s.ref);if(autoStart)startGuided()}
 function restoreSightJourney(){GUIDED_STEPS=SIGHT_JOURNEY;window._journeyName='Opening Sight into the Spirit Realm';document.getElementById('scriptureJourneyStatus').textContent='Active journey: Opening Sight into the Spirit Realm.';stopGuided();toast('Sight journey restored')}
-function stopAmbient(){if(audioNode&&audioNode._timers)audioNode._timers.forEach(t=>{try{clearInterval(t)}catch(e){}});if(audioCtx){try{audioCtx.close()}catch(e){}audioCtx=null;audioNode=null}}
 document.getElementById('audioFile').addEventListener('change',e=>{let f=e.target.files[0];if(!f)return;let p=document.getElementById('audioPlayer');p.src=URL.createObjectURL(f);p.play().catch(()=>{})});
 document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;if(e.code==='Space'){e.preventDefault();timer?pauseTimer():startTimer()}if(e.key.toLowerCase()==='r')resetTimer();if(e.key.toLowerCase()==='m')go('scripture');if(e.key.toLowerCase()==='f')go('focus')});
-document.getElementById('focusMin').addEventListener('change',resetTimer);
-document.getElementById('defaultFocus').addEventListener('change',e=>{document.getElementById('focusMin').value=e.target.value;resetTimer()});
+document.getElementById('focusMin').addEventListener('change',()=>{resetTimer();updateGuidedLengthHint()});
+document.getElementById('defaultFocus').addEventListener('change',e=>{document.getElementById('focusMin').value=e.target.value;resetTimer();updateGuidedLengthHint()});
 
 document.getElementById('globalSearch')?.addEventListener('keydown',e=>{if(e.key==='Enter'){openCommandPalette();document.getElementById('commandInput').value=e.target.value;renderSearchResults(e.target.value)}});
 document.getElementById('commandInput')?.addEventListener('input',e=>renderSearchResults(e.target.value));
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openCommandPalette()}if(e.key==='Escape')closeCommandPalette()});
 ['passage','obs','interp','context','theology','apply','prayer'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>{clearTimeout(window.__draftTimer);window.__draftTimer=setTimeout(saveStudyDraft,500)}));
 
-initBooks();loadDaily();loadTodayScripture();populateVerSelects();renderBooks();renderMemory();renderJournal();renderStudies();renderMeditations();renderTopics();renderSermonStudySelect();timerDisplay();updateMemoryProgress();
+initBooks();try{document.getElementById('sBook').addEventListener('change',()=>{document.getElementById('sChapter').value=1;renderChapterNav()});document.getElementById('sChapter').addEventListener('change',renderChapterNav);}catch(e){}loadDaily();loadTodayScripture();populateVerSelects();renderBooks();renderMemory();renderJournal();renderStudies();renderMeditations();renderTopics();renderPlans();renderPropheticPath();renderSoundscapes();renderBriefing();renderGuidePicker();renderChapterNav();renderSermonStudySelect();timerDisplay();updateMemoryProgress();updateGuidedLengthHint();
 document.getElementById('passage').addEventListener('input',autoGenre);document.getElementById('passage').addEventListener('change',autoGenre);autoGenre();
 if(state.dark===false)document.body.classList.add('light');
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39bbe4d9a34b56c',t:'MTc4OTE4Mjg4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a424ecc38b7bbd1a',t:'MTc5MDYyMTMzMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
