@@ -188,16 +188,17 @@ written consent.</li>
 </ul>
 
 <h2>7. Tests</h2>
-<p>Four suites plus eight desk scenarios, all run with plain <code>node</code> — no build, no bundler, nothing that touches the church server.</p>
+<p>Four suites plus nine desk scenarios, all run with plain <code>node</code> — no build, no bundler, nothing that touches the church server.</p>
 <pre><code>cd jcrgm
-node test/jcrgm-engine.test.js   # 221 assertions - logic + SQL integrity
-node .t/sql-check.js             #  14 checks  - the schema, parsed by Postgres’ own grammar
+node test/jcrgm-engine.test.js   # 239 assertions - logic + SQL integrity
+node .t/sql-check.js             #  24 checks  - the schema, parsed by Postgres’ own grammar
 node .t/html-check.js            # markup, ids, links, and the platform wiring
 node .t/ui-e2e.js                # 145 assertions - the real page, clicked through
 node .t/desk-writes.js --mode=ok       # the desk's save / close / delete,
 node .t/desk-writes.js --mode=silent   # against a server that accepts,
 node .t/desk-writes.js --mode=denied   # answers 401, or filters writes out,
-node .t/desk-writes.js --mode=recover  # and after the fix: Retry flushes
+node .t/desk-writes.js --mode=recover  # and after the fix: Retry flushes,
+node .t/desk-writes.js --mode=nodelete  # a leader's delete refused by a missing GRANT
 node .t/desk-writes.js --mode=leader   # what waited; a leader's delete is
 node .t/desk-writes.js --mode=forbidden# confirmed, an unreadable register
 node .t/desk-writes.js --mode=outsider # is announced, and a member off the
@@ -353,17 +354,39 @@ policies do not, because the script creates them in order and stops at the first
 <pre><code>select
   (select count(*) = 4 from pg_policy p join pg_class c on c.oid = p.polrelid
      where c.relname = 'jcrgm_welfare_cases')                             as all_policies,
-  (select count(*) = 4 from pg_proc where proname in
+  (select count(*) = 5 from pg_proc where proname in
      ('jcrgm_create_case','jcrgm_lookup_case',
-      'jcrgm_is_desk','jcrgm_is_leader'))                                 as functions,
+      'jcrgm_is_desk','jcrgm_is_leader','jcrgm_caps'))                    as functions,
   (has_table_privilege('authenticated','jcrgm_welfare_cases','update'))    as can_update,
+  (has_table_privilege('authenticated','jcrgm_welfare_cases','delete'))    as can_delete,
   (not has_table_privilege('anon','jcrgm_welfare_cases','select'))         as anon_blinded,
   (select count(*) = 2 from pg_proc where proname in
      ('jcrgm_desk_roles','jcrgm_leader_roles'))                            as role_lists;</code></pre>
 <p>An <code>f</code> anywhere means the script stopped part-way: fix the line the editor complained about and run the
 whole file again. Nothing in it destroys data — <code>create table if not exists</code>, <code>create or replace</code>,
 and <code>drop policy if exists</code> before each <code>create policy</code>, so a second pass is safe by design.
-<code>.t/sql-check.js</code> re-reads the four counts above against the script itself, so this query cannot go stale.</p>
+<code>can_delete</code> is the one that catches a refused delete: a policy may name a role all it
+likes, and Postgres still refuses the statement if the <code>GRANT</code> does not carry the privilege.</p>
+<p><code>.t/sql-check.js</code> re-reads the counts above against the script itself — the number of policies, of
+functions and of role lists — so this query cannot go stale, and it fails the build if the
+<code>delete</code> privilege is ever dropped from the grant line again.</p>
+<h3>“Not deleted — permission denied for table jcrgm_welfare_cases”</h3>
+<p>That exact wording is a schema problem, and it is worth naming separately because from the desk it looks like the
+role problem above. Postgres checks the <b>privilege</b> before it ever consults a <b>policy</b>: an earlier copy of
+<code>supabase-schema.sql</code> granted staff <code>select, update</code> on the register but never
+<code>delete</code>, so the leader-only delete policy could not be reached and <b>every</b> delete failed for
+<b>every</b> leader, however correctly the member was approved. The line now reads:</p>
+<pre><code>grant select, update, delete on public.jcrgm_welfare_cases to authenticated, service_role;</code></pre>
+<p>Direct <code>insert</code> stays closed on purpose — a new case must be minted by <code>jcrgm_create_case</code>,
+which assigns the reference and its check letter — and <code>.t/sql-check.js</code> fails the build if the word
+<code>delete</code> is ever dropped from that grant again.</p>
+<p>The portal no longer echoes raw Postgres at the desk either. A refused delete now says it is a missing privilege
+rather than a missing role, prints the one line to run, and offers <i>Copy that line for the SQL editor</i>,
+<i>Run the connection checks</i> (the same probe as the banner, from inside the file) and <i>Close the case
+instead</i>. The checks read a new function, <code>select public.jcrgm_caps()</code> — SECURITY DEFINER, granted
+to staff only — which reports which privileges the calling role actually holds, so the answer is “no DELETE
+privilege” instead of a shrug. Throughout, the file is untouched: a refused delete never removes the local copy,
+and <code>jcrgm_caps()</code> returns catalog facts and never a row.</p>
 <h3>Deleting is a leader's decision, on purpose</h3>
 <p>A desk member may <i>read and amend</i> a case; only a leader may <code>DELETE</code> one — an audit trail a
 volunteer can erase is not an audit trail. Because a policy-filtered delete arrives as <code>204</code> with no rows,

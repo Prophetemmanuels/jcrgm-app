@@ -536,7 +536,7 @@ var JCRGM = (function () {
     return L.filter(function (x) { return !!x; }).join("\n");
   };
 
-  W.explainError = function (e, labels) {
+  W.explainError = function (e, labels, verb) {
     if (!e) return "the database did not say why";
     var msg = String(e.message || e);
     labels = labels || {};
@@ -545,13 +545,23 @@ var JCRGM = (function () {
     var what = col ? (labels[col] || col) : null;
     if (/invalid input syntax for type (date|timestamp)/i.test(msg))
       return what ? what + " is not a date the database can read. Leave it blank, or type a real date (2026-09-28)."
-                  : "One of the dates on this file is not one the database can read. Blank is fine; half-typed is not."
+                  : "One of the dates on this file is not one the database can read. Blank is fine; half-typed is not.";
     if (/invalid input syntax for type numeric/i.test(msg)) return (what || "An amount") + " must be a number, or blank.";
     if (/violates check constraint/i.test(msg))
       return "A value on this file is outside the choices the register allows" + (what ? " (" + what + ")" : "") + ".";
     if (/null value in column/i.test(msg)) {
       var m2 = msg.match(/column "?(\w+)"?/i);
       return "A required detail came through empty: " + ((m2 && labels[m2[1]]) || (m2 && m2[1]) || "check the form");
+    }
+    if (/permission denied for (table|view|relation)/i.test(msg)) {
+      /* A table-level refusal is never about the Support Team role: it means
+         the database ROLE behind this connection has no GRANT for that
+         statement at all. Row-level security is checked only after that, so no
+         amount of re-approving members in the app can change this answer. */
+      var vbl = verb === "delete" ? "DELETE" : verb === "update" ? "UPDATE" : String(verb || "write").toUpperCase();
+      return "this database role has no " + vbl + " privilege on the welfare table \u2014 that is a schema problem rather than a role problem. In Supabase \u2192 SQL Editor run: grant " +
+        (verb === "delete" ? "delete" : verb === "update" ? "update" : "select, update, delete") +
+        " on public.jcrgm_welfare_cases to authenticated, service_role;  (or run supabase-schema.sql again whole, which is safe to re-run)";
     }
     if (/permission denied|row-level security|insufficient pr/i.test(msg + " " + (e.hint || "")))
       return "your account is not allowed to write this row (check the Support Team role, or re-run supabase-schema.sql)";
@@ -832,9 +842,11 @@ var JCRGM = (function () {
                       fix: reattached ? "re-attached just now" : "" });
     return Promise.all([
       c.rpc("jcrgm_is_desk").then(function (r) { return r; }, function (e) { return { error: e }; }),
-      c.rpc("jcrgm_is_leader").then(function (r) { return r; }, function (e) { return { error: e }; })
+      c.rpc("jcrgm_is_leader").then(function (r) { return r; }, function (e) { return { error: e }; }),
+      c.rpc("jcrgm_caps").then(function (r) { return r; }, function (e) { return { error: e }; })
     ]).then(function (both) {
-      var d = both[0], l = both[1];
+      var d = both[0], l = both[1], cr = both[2];
+      var caps = cr && !cr.error ? (Array.isArray(cr.data) ? cr.data[0] : cr.data) : null;
       var missing = function (r) { return r && r.error && /PGRST202|PGRST205|not find/.test((r.error.message || "") + " " + (r.error.code || "")); };
       var denied = function (r) { return r && r.error && /permission denied|42501/.test(r.error.message || ""); };
       var truthy = function (r) { var v = r && r.data; return Array.isArray(v) ? v[0] === true : v === true; };
@@ -857,6 +869,26 @@ var JCRGM = (function () {
         out.advice = "The church sees your account, but not as an approved Support Team member. In Announcements → Manage member access, approve this account and set its role to one of: "
           + CONFIG.deskRoles.join(", ") + ". Then Reload.";
         return finished(out);
+      }
+      /* The grant question, answered by the database rather than inferred
+         from an error message: a policy can narrow a statement all it likes,
+         but without the privilege it is decoration. */
+      if (caps && typeof caps.delete === "boolean") {
+        var lack = [];
+        if (caps.update !== true) lack.push("update");
+        if (caps.delete !== true) lack.push("delete");
+        out.checks.push({ name: "the database role holds the privileges this desk needs", pass: lack.length === 0,
+                          fix: lack.length ? "missing " + lack.join(" + ") : "" });
+        if (lack.length) {
+          out.verdict = "grant-missing";
+          out.advice = "You are on the desk, but the database role has no GRANT for: " + lack.join(", ") +
+            ". Run this in the SQL editor: grant " + lack.join(", ") +
+            " on public.jcrgm_welfare_cases to authenticated, service_role; — or run supabase-schema.sql again, which is safe to re-run. Re-approving the member in the app cannot fix this: the privilege is checked before any policy.";
+          return finished(out);
+        }
+      } else {
+        out.checks.push({ name: "the privilege probe (jcrgm_caps)", pass: true,
+                          fix: "not in this database yet - re-run supabase-schema.sql to gain it" });
       }
       out.ok = true; out.verdict = "clear";
       if (reattached) out.advice = "This page had been talking to the database with the project key instead of your sign-in; it is using your church session now, so Retry should write.";
@@ -901,6 +933,12 @@ var JCRGM = (function () {
       for (var i = 0; i < all.length; i++) if (all[i].id === id) rec = all[i];
       L.push("Stuck " + ((rec && rec.ref_no) || id) + ": " + String(u[id] || "no reason was recorded").replace(/\s+/g, " ").slice(0, 170));
     });
+    if (S.lastDeleteError) {
+      L.push("Delete refused: " + String(S.lastDeleteError.why).replace(/\s+/g, " ").slice(0, 170));
+      /* the line to run is the useful part, so it is never cut mid-word by a
+         length limit applied to a sentence above it */
+      if (S.lastDeleteError.fix) L.push("To fix it, run: " + String(S.lastDeleteError.fix));
+    }
     var d = S.lastSelfTest;
     L.push(d ? "Checks: " + d.verdict + (d.advice ? " - " + String(d.advice).replace(/\s+/g, " ").slice(0, 170) : "")
              : "Checks: not run yet on this page load.");
@@ -1160,10 +1198,14 @@ var JCRGM = (function () {
       }).catch(function (e) {
         target._syncError = (e && (e.message || e.code)) || "the server rejected the change";
         target._pending = true;
-        S.localUpsert(target); S.markUnsaved(id, W.explainError(e, W.fieldLabels));
+        var whyU = W.explainError(e, W.fieldLabels, "update");
+        S.localUpsert(target); S.markUnsaved(id, whyU);
         // The raw Postgres text stays on the record for the log; the desk gets
-        // a sentence that names the box to fix.
-        return { record: target, synced: false, reason: W.explainError(e, W.fieldLabels),
+        // a sentence that names the box to fix - and the line to run when the
+        // refusal is about a privilege rather than about the person.
+        var grantU = /permission denied for (table|view|relation)/i.test((e && e.message) || "");
+        return { record: target, synced: false, refused: true, reason: whyU,
+                 fix: grantU ? "grant update on public.jcrgm_welfare_cases to authenticated, service_role;" : "",
                  code: (e && e.code) || "", detail: (e && (e.details || e.hint)) || "" };
       });
     },
@@ -1181,13 +1223,29 @@ var JCRGM = (function () {
         if (res.error) throw res.error;
         var hit = Array.isArray(res.data) ? res.data.length > 0 : !!res.data;
         if (!hit) {
+          /* 204 with no rows: the DELETE privilege exists, so this is the
+             policy saying no - which in this register means the signed-in
+             account is not a leader, by design. */
+          var whyN = "nothing was deleted — the register let the request in but no row was writable for deletion. Deleting a case file is a leader's decision here; setting the status to Closed keeps the record and the reason for the church accounts.";
+          S.lastDeleteError = { at: new Date().toISOString(), id: id, why: whyN };
           return { synced: false, removed: false, refused: true, record: S.localAll().filter(function (r) { return r.id === id; })[0] || null,
-                   reason: "nothing was deleted — the database did not let this account remove that row (check your role, or run supabase-schema.sql)" };
+                   reason: whyN, closeInstead: true };
         }
         S.localRemove(id); S.clearUnsaved(id);
+        S.lastDeleteError = null;
         return { synced: true, removed: true };
       }).catch(function (e) {
-        return { synced: false, removed: false, reason: (e && e.message) || "the server rejected the delete" };
+        var why = W.explainError(e, W.fieldLabels, "delete");
+        var grant = /permission denied for (table|view|relation)/i.test((e && e.message) || "");
+        var out = { synced: false, removed: false, refused: true, reason: why,
+                    code: (e && e.code) || "", record: S.localAll().filter(function (r) { return r.id === id; })[0] || null };
+        if (grant) {
+          /* the one thing the desk can actually act on, spelled out */
+          out.fix = "grant delete on public.jcrgm_welfare_cases to authenticated, service_role;";
+          out.advice = "Until that line has been run, no account - leader included - can delete this file. Close the case instead: it keeps the record, the reason and the audit trail. Tap “Check the connection” and it will name any other privilege that is missing.";
+        }
+        S.lastDeleteError = { at: new Date().toISOString(), id: id, why: why, fix: (grant ? out.fix : "") };
+        return out;
       });
     },
 

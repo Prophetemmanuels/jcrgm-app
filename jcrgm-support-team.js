@@ -532,6 +532,35 @@
   function supportReport() {
     sendToSupport(J.supabase.supportReport ? J.supabase.supportReport() : "Welfare desk needs help, and the app could not describe why.");
   }
+  function diagHtml(r) {
+    return (r.checks || []).map(function (k) {
+      return '<div>' + (k.pass ? "✓ " : "✗ ") + esc(k.name) + (!k.pass && k.fix ? " (" + esc(k.fix) + ")" : "") + '</div>';
+    }).join("") + (r.advice ? '<div><b>' + esc(r.advice) + '</b></div>' : "");
+  }
+  /** The read-only checks, shown wherever they were asked for: the banner under
+      Retry, or the drawer under a refused delete. Same code, so an answer can
+      never mean two different things depending on where it was tapped. */
+  function runChecks(btn, out) {
+    var label = btn ? btn.textContent : "";
+    if (btn) { btn.disabled = true; btn.textContent = "Checking…"; }
+    function undo() { if (btn) { btn.disabled = false; btn.textContent = label; } }
+    (J.supabase.selfTest ? J.supabase.selfTest()
+      : Promise.resolve({ ok: false, verdict: "unknown", advice: "This build cannot check the connection.", checks: [] }))
+      .then(function (r) {
+        undo();
+        if (out) out.innerHTML = diagHtml(r);
+        if (r.ok) {
+          toast("Everything checks out: the database counts this connection as Support Team. Retry should now write.",
+                "ok", "Connection is fine", 11000);
+          loadRegister();
+        } else {
+          toast(r.advice || "The check found nothing to report.", "err", "Found: " + r.verdict, 16000);
+        }
+      }, function (e) {
+        undo();
+        toast("The check itself could not finish: " + ((e && e.message) || e) + ". Nothing on this page was changed.", "err", "Check failed", 12000);
+      });
+  }
 
   function showReceipt(rec) {
     var box = $("#applyDone");
@@ -922,11 +951,6 @@
     if (stale.length) bits.push('<div class="note danger" style="flex:1 1 320px"><span class="ni" aria-hidden="true">⏰</span><div><b>' + stale.length +
       " case(s) have waited over a week.</b> Someone should ring those families this week — a delay is its own kind of answer.</div></div>");
     n.innerHTML = bits.join("");
-    function diagHtml(r) {
-      return (r.checks || []).map(function (k) {
-        return '<div>' + (k.pass ? "✓ " : "✗ ") + esc(k.name) + (!k.pass && k.fix ? " (" + esc(k.fix) + ")" : "") + '</div>';
-      }).join("") + (r.advice ? '<div><b>' + esc(r.advice) + '</b></div>' : "");
-    }
     /* a diagnosis must outlive the repaint that a Sync or a Retry triggers */
     if (J.supabase.lastSelfTest) {
       var dgo = $("#diagOut");
@@ -958,27 +982,7 @@
       }
     }
     var dg = $("#btnDiag");
-    if (dg) dg.addEventListener("click", function () {
-      dg.disabled = true; dg.textContent = "Checking…";
-      var undo = function () { dg.disabled = false; dg.textContent = "Check the connection"; };
-      (J.supabase.selfTest ? J.supabase.selfTest() : Promise.resolve({ verdict: "unknown", advice: "", checks: [] }))
-        .then(function (r) {
-          undo();
-          var o = $("#diagOut");
-          if (o) o.innerHTML = diagHtml(r);
-          if (r.ok) {
-            toast("Everything checks out: the database counts this connection as Support Team. Retry should now write.",
-                  "ok", "Connection is fine", 11000);
-            loadRegister();
-          } else {
-            toast(r.advice || "The check found nothing to report.", "err", "Found: " + r.verdict, 16000);
-          }
-        }, function (e) {
-          /* the button must never be left spinning because a check went wrong */
-          undo();
-          toast("The check itself could not finish: " + ((e && e.message) || e) + ". Nothing on this page was changed.", "err", "Check failed", 12000);
-        });
-    });
+    if (dg) dg.addEventListener("click", function () { runChecks(dg, $("#diagOut")); });
     var rp = $("#btnReplay");
     if (rp) rp.addEventListener("click", function () {
       rp.disabled = true; rp.textContent = "Retrying…";
@@ -1329,6 +1333,44 @@
       window.open(waLink("Greetings " + (r.beneficiary_name || "") + ", this is the " + CONFIG.teamName + " about case " + r.ref_no +
         ".\nStatus: " + W.status(r.status).label + ".\n" + (r.decision_notes || "")), "_blank", "noopener");
     });
+    function showDeleteFix(res) {
+      var prev = body.querySelector(".deldiag");
+      if (prev) prev.parentNode.removeChild(prev);
+      var box = el("div", "note danger deldiag");
+      box.setAttribute("style", "margin-top:12px;text-align:left");
+      box.innerHTML = '<span class="ni" aria-hidden="true">⚖</span><div><b>Why the register refused that delete.</b> ' +
+        esc((res && res.reason) || "the database did not say why.") +
+        (res && res.fix ? '<pre class="mono" style="white-space:pre-wrap;margin:8px 0 0;padding:8px;background:rgba(0,0,0,.06);border-radius:6px">' +
+                          esc(res.fix) + '</pre><div class="sub">' + esc(res.advice || "") + '</div>' : "") +
+        '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">' +
+        (res && res.fix ? '<button class="btn ghost xs" type="button" data-act="copy">Copy that line for the SQL editor</button>' : "") +
+        '<button class="btn ghost xs" type="button" data-act="support">✉ Send these details to the church WhatsApp</button>' +
+        '<button class="btn ghost xs" type="button" data-act="close">Close the case instead</button>' +
+        '<button class="btn ghost xs" type="button" data-act="diag">Run the connection checks</button></div>' +
+        '<div class="sub" data-diagout style="margin-top:6px"></div>' +
+        '<div class="sub">Nothing was deleted and nothing is lost: this file is exactly as it was, and it stays editable.</div></div>';
+      body.appendChild(box);
+      box.addEventListener("click", function (e) {
+        var b = e.target.closest ? e.target.closest("[data-act]") : null;
+        if (!b) return;
+        e.preventDefault();
+        var act = b.getAttribute("data-act");
+        if (act === "copy") { if (res && res.fix) { try { copy(res.fix); } catch (err) {} toast("Copied. Paste it into Supabase → SQL Editor and run it once.", "ok", "Grant line copied"); } return; }
+        if (act === "support") {
+          sendToSupport(J.supabase.supportReport("A delete was refused: " + ((res && res.reason) || "no reason given") +
+                        (res && res.fix ? " | to run: " + res.fix : "")));
+          return;
+        }
+        if (act === "diag") { runChecks(b, box.querySelector("[data-diagout]")); return; }
+        if (act === "close") {
+          var st = $('[name="status"]', body);
+          toast("Choose “Closed” in the status box at the top of this file, then Save: the record and the reason stay for the church accounts, and no privilege is needed.",
+                "warn", "Closing instead of deleting", 14000);
+          if (st && st.scrollIntoView) { try { st.scrollIntoView({ block: "center" }); st.focus(); } catch (err) {} }
+        }
+      });
+      try { box.scrollIntoView({ block: "nearest" }); } catch (e) {}
+    }
     $("#dSup").addEventListener("click", function () {
       var withContact = /\d/.test(String(r.phone || ""));
       sendToSupport(W.supportCaseText(r, { withContact: withContact }));
@@ -1352,6 +1394,7 @@
           closeDrawer(); return loadRegister().then(refreshBadge);
         }
         toast(((res && res.reason) || "the database refused the delete.") + " The file is still here, nothing was lost.", "err", "Not deleted", 14000);
+        showDeleteFix(res);
         return loadRegister().then(refreshBadge);
       });
     });
