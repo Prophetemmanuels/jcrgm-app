@@ -739,6 +739,7 @@ body.theaterOn .cinema, .cinema.theater{position:fixed;inset:0;z-index:80;border
 <div class="card"><h2>BibleProject</h2><p class="muted">Book overviews, themes, videos, classes, podcasts and reading plans.</p><button class="btn" onclick="openLink('https://bibleproject.com/')">Open BibleProject</button></div>
 <div class="card"><h2>Blue Letter Bible</h2><p class="muted">Lexicons, concordances, commentaries, dictionaries and parallel Bible tools.</p><button class="btn" onclick="openLink('https://www.blueletterbible.org/')">Open BLB</button></div>
 <div class="card"><h2>YouVersion</h2><p class="muted">Bible reading plans, translations, audio and reading tools.</p><button class="btn" onclick="openLink('https://www.bible.com/')">Open Bible App</button></div>
+<div class="card"><h2>Write to JCRGM</h2><p class="muted">Questions, partnership and ministry correspondence — always this church email:</p><p><a id="churchEmailResources" href="/cdn-cgi/l/email-protection#b3c3d6d7d2dbc9c6c1dedadddac0c7c1dad6c0f3d4ded2dadf9dd0dcde" style="color:var(--gold);font-weight:700"><span class="__cf_email__" data-cfemail="24544140454c5e5156494d4a4d5750564d4157644349454d480a474b49">[email&#160;protected]</span></a></p></div>
 <div class="card full"><h2>Research principle</h2><p class="muted">Start with the biblical text. Use external resources to test and deepen understanding. Compare interpretations when they differ and return to context.</p></div>
 </div>
 </section>
@@ -747,11 +748,12 @@ body.theaterOn .cinema, .cinema.theater{position:fixed;inset:0;z-index:80;border
 <div class="grid">
 <div class="card"><h2>Data</h2><button class="btn primary" onclick="exportData()">Export Study Data</button><button class="btn" onclick="importData()">Import Data</button><button class="btn danger" onclick="resetData()">Reset Local Data</button><p class="muted">Notes, progress, memory and study records are stored locally in this browser.</p></div>
 <div class="card"><h2>Preferences</h2><label>Default focus minutes</label><input id="defaultFocus" type="number" value="25" min="1" max="180"><br><br><label>Bible version (whole app)</label><select class="verSelect" onchange="setBibleVersion(this.value)"></select><br><br><label>Daily target</label><select id="target"><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60" selected>60 minutes</option><option value="90">90 minutes</option><option value="120">120 minutes</option></select></div>
+<div class="card"><h2>Church email</h2><p>Jesus Christ Redeems Global Ministries</p><p><a id="churchEmailSettings" href="/cdn-cgi/l/email-protection#43332627222b3936312e2a2d2a3037312a263003242e222a2f6d202c2e" style="color:var(--gold);font-weight:700"><span class="__cf_email__" data-cfemail="e5958081848d9f9097888c8b8c9691978c8096a58288848c89cb868a88">[email&#160;protected]</span></a></p><p class="muted">This is the only church email used in this house.</p></div>
 <div class="card"><h2>Keyboard shortcuts</h2><p><span class="kbd">Space</span> Start/Pause timer</p><p><span class="kbd">R</span> Reset timer</p><p><span class="kbd">M</span> Scripture Reader</p><p><span class="kbd">F</span> Focus Room</p></div>
 </div>
 </section>
 
-<div class="footer">JCRGM MASTER STUDY • Jesus Christ Redeems Global Ministries • <a href="/cdn-cgi/l/email-protection#37475253565f4d42455a5e595e4443455e524477505a565e5b1954585a" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="f4849190959c8e8186999d9a9d8780869d9187b49399959d98da979b99">[email&#160;protected]</span></a><br>Personal Bible-study workspace • Scripture text shown by the built-in reader is free API output (KJV, WEB, BSB, ASV, YLT) plus licensed NKJV &amp; AMPC via open &amp; paste.</div>
+<div class="footer">JCRGM MASTER STUDY • Jesus Christ Redeems Global Ministries • Email: <a id="churchEmailLink" href="/cdn-cgi/l/email-protection#5b2b3e3f3a33212e2936323532282f29323e281b3c363a323775383436" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="e090858481889a95928d898e89939492898593a0878d81898cce838f8d">[email&#160;protected]</span></a><br>Personal Bible-study workspace • Scripture text shown by the built-in reader is free API output (KJV, WEB, BSB, ASV, YLT) plus licensed NKJV &amp; AMPC via open &amp; paste.</div>
 </main></div>
 
 
@@ -3012,6 +3014,39 @@ initBooks();try{document.getElementById('sBook').addEventListener('change',()=>{
 document.getElementById('passage').addEventListener('input',autoGenre);document.getElementById('passage').addEventListener('change',autoGenre);autoGenre();
 if(state.dark===false)document.body.classList.add('light');
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+
+const CHURCH_EMAIL=['pedahzurministries','gmail.com'].join('@');
+function restoreChurchEmail(){
+  const email=CHURCH_EMAIL;
+  document.querySelectorAll('a[href*="email-protection"],a.__cf_email__,[data-cfemail]').forEach(a=>{
+    try{a.removeAttribute('data-cfemail');a.classList.remove('__cf_email__');a.href='mailto:'+email;a.textContent=email;}catch(e){}
+  });
+  document.querySelectorAll('a[href^="mailto:"]').forEach(a=>{
+    a.href='mailto:'+email;
+    const t=(a.textContent||'').trim();
+    if(!t || t.indexOf('pedahzurministries')<0) a.textContent=email;
+  });
+  const skip={SCRIPT:1,STYLE:1,NOSCRIPT:1,TEXTAREA:1};
+  try{
+    const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode(n){const p=n.parentElement; if(!p||skip[p.tagName]) return NodeFilter.FILTER_REJECT; return NodeFilter.FILTER_ACCEPT;}});
+    const nodes=[]; while(w.nextNode()) nodes.push(w.currentNode);
+    nodes.forEach(n=>{
+      const v=n.nodeValue; if(!v) return;
+      if(/email/i.test(v) && /protected/i.test(v)){
+        n.nodeValue=v.replace(/\[\s*email\s*protected\s*\]/gi,email).replace(/email\s*protected/gi,email);
+      }
+    });
+  }catch(e){}
+  document.querySelectorAll('#churchEmailLink,#churchEmailSettings,#churchEmailResources,#footerEmailLink').forEach(a=>{
+    try{a.href='mailto:'+email; a.textContent=email;}catch(e){}
+  });
+}
+restoreChurchEmail();
+document.addEventListener('DOMContentLoaded', restoreChurchEmail);
+window.addEventListener('load', restoreChurchEmail);
+setTimeout(restoreChurchEmail, 800);
+setTimeout(restoreChurchEmail, 2000);
+
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a424ecc38b7bbd1a',t:'MTc5MDYyMTMzMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4250c7adc1316d9',t:'MTc5MDYyMjYzMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
