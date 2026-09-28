@@ -39,7 +39,7 @@ and sync the moment the database is connected. Nothing is lost while you decide 
 <ul class="files">
 <li><code>index.html</code> — <b>modified</b>. New nav group (3 tiles) + <code>openSupportTeam()</code> + one <code>rose</code> accent colour. Nothing else changed.</li>
 <li><code>jcrgm-support-team.html</code> — the portal: home, apply wizard, status lookup, admin desk.</li>
-<li><code>jcrgm-support-team.js</code> — the portal’s behaviour: wizard, register, drawer, desk gate. Every write it makes is <b>confirmed against the server</b> before the screen claims success.
+<li><code>jcrgm-support-team.js</code> — the portal’s behaviour: wizard, register, drawer, desk gate. Every write it makes is <b>confirmed against the server</b> before the screen claims success.</li>
 <li><code>jcrgm-support-team.css</code> — styling built on the same navy/gold tokens as <code>index.html</code>.</li>
 <li><code>jcrgm-config.js</code> — <b>the only file you normally edit</b>. Church details, categories, statuses, desk code, role list. Its Supabase constants stay blank on purpose (see §2).</li>
 <li><code>supabase-schema.sql</code> — paste into the SQL editor of the <b>church app’s own project</b>, once.</li>
@@ -188,9 +188,9 @@ written consent.</li>
 </ul>
 
 <h2>7. Tests</h2>
-<p>Four suites plus seven desk scenarios, all run with plain <code>node</code> — no build, no bundler, nothing that touches the church server.</p>
+<p>Four suites plus eight desk scenarios, all run with plain <code>node</code> — no build, no bundler, nothing that touches the church server.</p>
 <pre><code>cd jcrgm
-node test/jcrgm-engine.test.js   # 161 assertions - logic + SQL integrity
+node test/jcrgm-engine.test.js   # 173 assertions - logic + SQL integrity
 node .t/sql-check.js             #  14 checks  - the schema, parsed by Postgres’ own grammar
 node .t/html-check.js            # markup, ids, links, and the platform wiring
 node .t/ui-e2e.js                # 145 assertions - the real page, clicked through
@@ -201,7 +201,8 @@ node .t/desk-writes.js --mode=recover  # and after the fix: Retry flushes
 node .t/desk-writes.js --mode=leader   # what waited; a leader's delete is
 node .t/desk-writes.js --mode=forbidden# confirmed, an unreadable register
 node .t/desk-writes.js --mode=outsider # is announced, and a member off the
-#                                        desk is refused even with the code
+node .t/desk-writes.js --mode=baddate  # desk is refused even with the code -
+#                                        and blanks never reach a date column
 # or everything: npm test  (needs one npm install, for jsdom; and pip install pglast)</code></pre>
 <p>(<code>.t/</code> needs <code>npm install</code> once, for jsdom. The harness serves the folder over
 <code>http://127.0.0.1:&lt;port&gt;</code> rather than <code>file://</code>, because browsers refuse
@@ -225,6 +226,20 @@ decision letter persisted, disbursement blocked without a receipt, CSV export fi
 sharing the platform’s single client rather than minting a second one, the sign-in card replacing the code box when
 nobody is signed in, the code alone refused, the desk opening only on account <i>plus</i> code, and the desk still
 reaching the code box when the platform file is missing.</li>
+<li><b><code>.t/desk-writes.js</code></b> — the write paths, against eight server behaviours, because a
+2xx-with-no-rows response is not a success. <code>ok</code>: the row comes back written, the drawer closes, the
+database holds the new status. <code>silent</code>: PostgREST answers <code>204</code> with zero rows (RLS filtered
+it) — the desk must be told “Not written”, must <b>not</b> see “Case saved”, the attempted change must stay
+visible and marked on the row, a refused delete must keep the file, and a retry must be offered.
+<code>denied</code>: the same for an explicit <code>401 42501</code>. <code>recover</code>: the access is then fixed
+and <b>Retry</b> flushes the exact change the desk made earlier, clearing the mark. <code>leader</code>: a leader's
+delete is sent and, when the server drops it, reported as not done. <code>forbidden</code>: the register cannot even
+be read, and the desk says it is showing the device's copy. <code>outsider</code>: an approved <i>member</i> who
+knows the code is still refused, and told why (that case is what a code-only unlock used to allow).
+<code>baddate</code> reads the payload actually put on the wire: a cleared date goes out as <code>null</code>, never
+as <code>""</code> — <code>invalid input syntax for type date</code> is what an empty string into a
+<code>date</code> column earns you — and a date already on the record that is not a date is stopped in the app
+and named, instead of handed to Postgres and echoed back at a volunteer.</li>
 <li><b><code>.t/sql-check.js</code></b> — splits <code>supabase-schema.sql</code> the way psql does and parses
 every statement with the <b>real PostgreSQL grammar</b> (libpg_query, via <code>pglast</code>), because the Supabase
 editor runs it one statement at a time and a failure in statement 30 of 42 leaves the table created with no policies
@@ -237,16 +252,16 @@ point rejects <code>RETURNS TRIGGER</code>, and wrapping a <code>LANGUAGE sql</c
 invents errors), so the <b>logic</b> of <code>jcrgm_next_ref()</code> and <code>jcrgm_lookup_case()</code> is checked
 instead by the engine suite, which re-implements them from the SQL text and compares real outputs — a stronger test
 than a parse. If <code>pglast</code> is absent the SQL check says so and skips; it never pretends to pass.</li>
-<li><b><code>.t/html-check.js</code></b> — also proves that every class written into the markup is declared in
+<li><b><code>.t/html-check.js</code></b> — quote-aware tag balance, duplicate-id scan, every
+<code>getElementById</code>/<code>$("#id")</code> resolves, new links exist, tiles in the right place in the header nav,
+no hard-coded contact details, the six script/stylesheet includes present <b>in the app’s own order</b>, no CDN or
+third-party reference anywhere, both Supabase constants left blank, and the privacy note matching what the code does.</li>
+<li><b><code>.t/html-check.js</code></b> continues: it checks that every class written into the markup is declared in
 <code>jcrgm-support-team.css</code> or <code>church-platform.css</code>, and <code>.t/ui-e2e.js</code> repeats the check
 against the <b>live rendered DOM</b> (so a class assembled at runtime is caught too, and only classes that never appear
 are excused). This found two phantom classes — an identity-chip button and the default toast kind — that would have
 rendered as unstyled, unobtrusive HTML with no error anywhere. Markup tests are scoped to literal <code>class="…"</code>
 attributes; the DOM pass is what covers the rest, and the checker says so rather than implying full coverage.</li>
-<li><b><code>.t/html-check.js</code></b> — quote-aware tag balance, duplicate-id scan, every
-<code>getElementById</code>/<code>$("#id")</code> resolves, new links exist, tiles in the right place in the header nav,
-no hard-coded contact details, the six script/stylesheet includes present <b>in the app’s own order</b>, no CDN or
-third-party reference anywhere, both Supabase constants left blank, and the privacy note matching what the code does.</li>
 </ul>
 
 <div class="box">
@@ -286,6 +301,20 @@ so the desk never loses track of what it typed;</li>
 </ul>
 <p>If the register itself cannot be read, the banner says so plainly
 (<i>“This is the copy on this phone”</i>) instead of showing a stale list as though it were live.</p>
+<h3>“Not written to the database — invalid input syntax for type date: \"\"”</h3>
+<p>That one is different, and it is a good sign: the desk <i>tried</i> to write and Postgres refused the value.
+An empty form box is stored locally as <code>""</code> (that is what the form and the CSV want), but a
+<code>date</code>, <code>numeric</code> or <code>smallint</code> column has no idea what to do with an empty
+string. The create path never had this problem because the SQL function behind it writes
+<code>nullif(p_record-&gt;&gt;'decision_date','')::date</code>; a direct row update does not go through that function,
+so the app now applies the same rule itself: <b>blank in a typed column goes out as <code>null</code></b>, which is
+also how you clear a date you typed by mistake. Text columns keep their empty string, because a cleared note really
+is cleared. A date that is not a date (from an imported or hand-edited record) is stopped in the app and named
+— <i>“Fix that before it can be saved: Next review … is not a date”</i> — instead of being handed to
+Postgres and echoed back at a volunteer.</p>
+<p>The same pass put one more guard on the money side: marking assistance as <i>given</i> with no amount used to
+write a <code>null</code> into a numeric column, so the register would read “released, K0.00”. The desk now
+refuses that save and leaves the reason beside the amount box, next to the receipt rule it already had.</p>
 <h3>The two causes, and how to tell which one you have</h3>
 <ol>
 <li><b>The signed-in account is not on the Support Team.</b> Roles come from <code>church_members.role</code>, which the

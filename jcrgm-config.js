@@ -390,6 +390,119 @@ var JCRGM = (function () {
     return out;
   };
 
+  /* The columns Postgres types strictly, mirrored from supabase-schema.sql:
+     test/jcrgm-engine.test.js re-reads the schema and fails if the two drift.
+     Everything else is text, where '' is a legitimate empty answer. */
+  var DATE_COLS = { dob: 1, start_date: 1, end_date: 1, decision_date: 1, review_date: 1, disbursed_date: 1 };
+  var STAMP_COLS = { created_at: 1, updated_at: 1 };
+  var NUM_COLS = { amount_requested: 1, disbursed_amount: 1, sponsor_pledge_total: 1, sponsor_pledge_monthly: 1 };
+  var INT_COLS = { household_size: 1, dependants: 1, period_months: 1 };
+  var BOOL_COLS = { consent_data: 1, consent_minor: 1, consent_photo: 1, declaration: 1 };
+  var JSON_COLS = { documents: 1, vulnerability: 1 };
+  W.columnKinds = { date: DATE_COLS, timestamp: STAMP_COLS, numeric: NUM_COLS, smallint: INT_COLS,
+                    boolean: BOOL_COLS, jsonb: JSON_COLS };
+
+  /** A plain YYYY-MM-DD, or '' when it is not a real day. Postgres' date type
+      wants the calendar form; an ISO stamp works too, so both are normalised
+      here instead of being argued about downstream. */
+  W.validDate = function (v) {
+    if (v === null || v === undefined || v === "") return "";
+    var str = String(v);
+    var m = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (m) {
+      var d = new Date(+m[1], +m[2] - 1, +m[3]);
+      var okDay = d.getFullYear() === +m[1] && d.getMonth() === +m[2] - 1 && d.getDate() === +m[3];
+      return okDay ? m[0] : "";
+    }
+    var t = Date.parse(str);
+    if (isNaN(t)) return "";
+    var dt = new Date(t);
+    function p2(x) { return (x < 10 ? "0" : "") + x; }
+    return dt.getFullYear() + "-" + p2(dt.getMonth() + 1) + "-" + p2(dt.getDate());
+  };
+
+  /** Column id -> the words the form uses, so an error can name the box. */
+  var FIELD_LABELS = null;
+  function buildLabels(extra) {
+    if (FIELD_LABELS && !extra) return FIELD_LABELS;
+    var out = FIELD_LABELS || (FIELD_LABELS = {});
+    function walk(defs) {
+      (defs || []).forEach(function (sec) {
+        (sec.fields || []).forEach(function (f) {
+          if (f && f.id && f.label && !out[f.id]) out[f.id] = f.label;
+        });
+      });
+    }
+    walk(typeof APPLY_FORM !== "undefined" ? APPLY_FORM : null);
+    walk(typeof SPONSOR_FORM !== "undefined" ? SPONSOR_FORM : null);
+    if (extra) Object.keys(extra).forEach(function (k) { walk(extra[k]); });
+    return out;
+  }
+  /* Built from the form definitions themselves, lazily, so the labels are there
+     whether the error is raised in the browser or in a Node test - and so they
+     can never disagree with what the form actually shows. */
+  Object.defineProperty(W, "fieldLabels", { get: function () { return buildLabels(); }, enumerable: true });
+  W.indexFieldLabels = function (forms) { return buildLabels(forms); };
+
+  /**
+   * Turn a mirror record into something Postgres will accept. A blank in a
+   * strongly typed column is *no answer*, so it goes out as null - which is
+   * also how the desk clears a date it typed by mistake.
+   */
+  W.toWire = function (obj) {
+    var out = {}, k;
+    obj = obj || {};
+    for (k in obj) {
+      if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+      if (k.charAt(0) === "_" && k !== "_id") continue;          // device bookkeeping
+      var v = obj[k];
+      var blank = v === "" || v === null || v === undefined;
+      if (DATE_COLS[k]) {
+        if (blank) { out[k] = null; continue; }
+        var d = W.validDate(v);
+        if (!d) { var err = new Error(d + ""); err.field = k; err.value = v; throw err; }
+        out[k] = d; continue;
+      }
+      if (STAMP_COLS[k]) { out[k] = blank ? null : (W.validIso(v) || null); continue; }
+      if (NUM_COLS[k]) {
+        if (blank) { out[k] = null; continue; }
+        var m2 = Number(v); out[k] = isFinite(m2) ? Math.round(m2 * 100) / 100 : null; continue;
+      }
+      if (INT_COLS[k]) {
+        if (blank) { out[k] = null; continue; }
+        var n = Number(v); out[k] = isFinite(n) ? Math.round(n) : null; continue;
+      }
+      if (BOOL_COLS[k]) { out[k] = (v === true || v === "true" || v === "on"); continue; }
+      if (JSON_COLS[k]) { out[k] = Array.isArray(v) ? v.map(W.sanitise).slice(0, 12) : []; continue; }
+      if (v && typeof v === "object") { out[k] = v; continue; }
+      out[k] = blank ? "" : W.sanitise(v);
+    }
+    return out;
+  };
+
+  /** A Postgres / PostgREST error in words a welfare volunteer can act on. */
+  W.explainError = function (e, labels) {
+    if (!e) return "the database did not say why";
+    var msg = String(e.message || e);
+    labels = labels || {};
+    var col = e.column || null;
+    if (!col) { var mc = msg.match(/column (\w+)/i); if (mc) col = mc[1]; }
+    var what = col ? (labels[col] || col) : null;
+    if (/invalid input syntax for type (date|timestamp)/i.test(msg))
+      return what ? what + " is not a date the database can read. Leave it blank, or type a real date (2026-09-28)."
+                  : "One of the dates on this file is not one the database can read. Blank is fine; half-typed is not."
+    if (/invalid input syntax for type numeric/i.test(msg)) return (what || "An amount") + " must be a number, or blank.";
+    if (/violates check constraint/i.test(msg))
+      return "A value on this file is outside the choices the register allows" + (what ? " (" + what + ")" : "") + ".";
+    if (/null value in column/i.test(msg)) {
+      var m2 = msg.match(/column "?(\w+)"?/i);
+      return "A required detail came through empty: " + ((m2 && labels[m2[1]]) || (m2 && m2[1]) || "check the form");
+    }
+    if (/permission denied|row-level security|insufficient pr/i.test(msg + " " + (e.hint || "")))
+      return "your account is not allowed to write this row (check the Support Team role, or re-run supabase-schema.sql)";
+    return e.hint ? msg + " - " + e.hint : msg;
+  };
+
   /* ---------- 2.7 CSV export (Excel-safe) ---------------------------------- */
   W.toCSV = function (records, columns) {
     var cols = columns || RECORD_KEYS;
@@ -703,7 +816,7 @@ var JCRGM = (function () {
       var c = S.client();
       var p;
       if (c) {
-        p = c.rpc(CONFIG.rpcInsert, { p_record: clean }).then(function (res) {
+        p = c.rpc(CONFIG.rpcInsert, { p_record: W.toWire(clean) }).then(function (res) {
           if (res.error) throw res.error;
           var row = Array.isArray(res.data) ? res.data[0] : res.data;
           if (row && row.ref_no) clean.ref_no = row.ref_no;
@@ -821,8 +934,16 @@ var JCRGM = (function () {
         S.localUpsert(target);
         return Promise.resolve({ record: target, synced: false, reason: "kept on this device — no database connection configured" });
       }
-      var wire = {};                                   // strip local bookkeeping
-      for (var key in target) if (key.charAt(0) !== "_") wire[key] = target[key];
+      var wire;
+      try { wire = W.toWire(target); }                          // blanks -> null, dates -> YYYY-MM-DD
+      catch (e) {
+        var bad = (W.fieldLabels[e.field] || e.field || "a field") + " - \"" + e.value + "\" is not a date.";
+        target._syncError = bad;
+        target._pending = true;
+        S.localUpsert(target); S.markUnsaved(id);
+        return Promise.resolve({ record: target, synced: false, refused: true, badField: true,
+                                 reason: "Fix that before it can be saved: " + bad });
+      }
       return c.from(CONFIG.tableName).update(wire).eq("id", id).select().then(function (res) {
         if (res.error) throw res.error;
         var row = Array.isArray(res.data) ? res.data[0] : res.data;
@@ -838,10 +959,13 @@ var JCRGM = (function () {
         S.localUpsert(done); S.clearUnsaved(id);
         return { record: done, synced: true };
       }).catch(function (e) {
-        target._syncError = (e && e.message) || "the server rejected the change";
+        target._syncError = (e && (e.message || e.code)) || "the server rejected the change";
         target._pending = true;
         S.localUpsert(target); S.markUnsaved(id);
-        return { record: target, synced: false, reason: target._syncError };
+        // The raw Postgres text stays on the record for the log; the desk gets
+        // a sentence that names the box to fix.
+        return { record: target, synced: false, reason: W.explainError(e, W.fieldLabels),
+                 code: (e && e.code) || "", detail: (e && (e.details || e.hint)) || "" };
       });
     },
 

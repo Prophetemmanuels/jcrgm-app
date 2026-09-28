@@ -1141,6 +1141,15 @@
         toast("Record a receipt or proof reference before marking assistance as given.", "err", "Cannot save");
         return;
       }
+      /* A disbursement with no amount would go out as null - the register would
+         say "released" and K0.00 - so it is caught here, where the desk can fix
+         it, rather than in the money column of a spreadsheet three weeks later. */
+      if (patch.status === "disbursed" && !(Number(patch.disbursed_amount) > 0)) {
+        toast("Enter the amount actually disbursed, down to the kwacha, before marking assistance as given.",
+              "err", "Cannot save");
+        markFieldBad(body, "disbursed_amount");
+        return;
+      }
       if ((patch.status === "approved" || patch.status === "declined") && !patch.decision_notes) {
         toast("Write the decision letter first — the applicant sees exactly that text.", "warn", "One thing missing");
       }
@@ -1152,6 +1161,9 @@
           return loadRegister().then(function () { closeDrawer(); refreshBadge(); });
         }
         var why = (res && res.reason) || "the change is held on this device only.";
+        // Point at the box, not just at the problem.
+        if (res && res.code && /22007|22P02/.test(res.code)) markFieldBad(body, res.detail || why);
+        else if (res && res.badField) markFieldBad(body, why);
         // The row stays visible with its attempted change, marked, so the desk
         // is never left wondering whether the click did anything.
         toast(why, "err", "Not written to the database", 14000);
@@ -1159,6 +1171,45 @@
       }).catch(function (e) { busy($("#dSave"), false); toast("Save failed: " + ((e && e.message) || e), "err"); });
     }
     $("#dSave").addEventListener("click", saveCase);
+    /* Points at the box that caused a refusal. Takes either a field id, or the
+       sentence the engine produced, and works out which box that sentence
+       means. Silent when it cannot tell - guessing at a field is worse than
+       saying nothing. */
+    function markFieldBad(scope, textOrId) {
+      var txt = String(textOrId == null ? "" : textOrId);
+      var bare = /^[a-z][a-z0-9_]*$/.test(txt) && !/\s/.test(txt);
+      var id = bare ? txt : null;
+      var text = id ? (W.fieldLabels[id] || id) : txt;
+      if (!id) {
+        Object.keys(W.fieldLabels || {}).some(function (k) {
+          if (text.indexOf(W.fieldLabels[k]) >= 0) { id = k; return true; }
+          return false;
+        });
+      }
+      if (!id) {
+        var m = /\b(dob|start_date|end_date|decision_date|review_date|disbursed_date|disbursed_amount)\b/.exec(text);
+        if (m) id = m[1];
+      }
+      if (!id) return;
+      var f = $('[name="' + id + '"]', scope);
+      if (!f) return;
+      /* The wizard wraps a control in .field and styles .field.bad; the drawer
+         lays controls out in a plain grid, so there is nothing to mark there.
+         Mark whichever box the CSS (or a reader) will actually look at, and put
+         the note inside it, so the two never end up in different elements. */
+      var field = f.closest(".field");
+      var box = field || f.parentNode || f;
+      box.classList.add("bad");
+      if (!field) f.classList.add("bad");
+      var note = box.querySelector(".wireerr");
+      if (!note) {
+        note = el("p", "wireerr");
+        note.style.cssText = "margin:4px 0 0;color:var(--danger,#b3261e);font-size:12.5px";
+        box.appendChild(note);
+      }
+      note.textContent = "The database refused this value: " + text;
+      try { f.focus({ preventScroll: false }); } catch (e) {}
+    }
     $("#dWa").addEventListener("click", function () {
       var to = W.normalisePhone(r.phone);
       if (!to) { toast("There is no phone number on this file.", "warn"); return; }
