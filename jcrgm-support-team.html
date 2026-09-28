@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>JCRGM Support Team — Compassion &amp; Welfare | Jesus Christ Redeems Global Ministries</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#101d44">
+<meta name="description" content="JCRGM Support Team: register the people we are sponsoring, apply for assistance, and check the progress of a request. Jesus Christ Redeems Global Ministries.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="JCRGM Support">
+<meta name="format-detection" content="telephone=no">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="JCRGM Compassion &amp; Welfare — Support Team Desk">
+<meta property="og:description" content="Register the people we are sponsoring or apply for assistance. Every gift is recorded, receipted and followed up.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23101d44'/><path d='M32 12v40M20 26h24' stroke='%23ffd700' stroke-width='6' stroke-linecap='round'/></svg>">
+<link rel="stylesheet" href="church-platform.css">
+<link rel="stylesheet" href="jcrgm-support-team.css">
+</head>
+<body>
+
+<!-- ───────────────────────────── ambient flare ───────────────────────────── -->
+<div class="pv" aria-hidden="true">
+  <span class="pv-orb a"></span><span class="pv-orb b"></span><span class="pv-orb c"></span>
+</div>
+
+<!-- ───────────────────────────────── masthead ───────────────────────────── -->
+<header class="mast">
+  <div class="mast-stars" aria-hidden="true"></div>
+  <a class="back" href="index.html" aria-label="Back to the church home page">‹ App Home</a>
+
+  <div class="mast-inner">
+    <div class="crest" aria-hidden="true">
+      <svg viewBox="0 0 64 64" width="46" height="46" role="img" aria-label="JCRGM cross emblem">
+        <defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#3b5bb5"/><stop offset="1" stop-color="#101d44"/></linearGradient></defs>
+        <path d="M32 9v46M17 24h30" stroke="url(#cg)" stroke-width="7.5" stroke-linecap="round" fill="none"/>
+        <circle cx="32" cy="24" r="19.5" fill="none" stroke="#b8912c" stroke-width="2.4" opacity=".8"/>
+      </svg>
+    </div>
+
+    <span class="eyebrow"><span id="mastIco">🛡</span> <span id="mastUnit">Compassion &amp; Welfare Ministry</span></span>
+    <h1 id="mastTitle">JCRGM <span class="gold">Support Team</span></h1>
+    <p class="sub" id="mastSub">The welfare desk of Jesus Christ Redeems Global Ministries — registering the people we sponsor, and opening the door to anyone who needs help.</p>
+    <p class="verse" id="mastVerse"></p>
+
+    <div class="mast-row">
+      <span class="pill" id="pillMode"><span class="dot off"></span>Checking connection…</span>
+      <span class="pill" id="pillQueue" hidden>📥 0 queued</span>
+      <span class="pill" id="pillWho" hidden>👤 …</span>
+      <a class="pill" id="pillCall" href="#">📞 <span>Call the desk</span></a>
+      <a class="pill" id="pillMap" href="#" target="_blank" rel="noopener">📍 Directions</a>
+    </div>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────── tabs ─────────────────────────────── -->
+<nav class="tabs" aria-label="Welfare sections">
+  <div class="tabs-in" role="tablist">
+    <button class="tab" role="tab" id="tab-home"    aria-controls="p-home"    aria-selected="true"  data-tab="home"><span class="ti">🏠</span> Home</button>
+    <button class="tab" role="tab" id="tab-apply"   aria-controls="p-apply"   aria-selected="false" data-tab="apply"><span class="ti">🤲</span> Apply for Help</button>
+    <button class="tab" role="tab" id="tab-status"  aria-controls="p-status"  aria-selected="false" data-tab="status"><span class="ti">🔎</span> Check Status</button>
+    <button class="tab" role="tab" id="tab-admin"   aria-controls="p-admin"   aria-selected="false" data-tab="admin"><span class="ti">🛡</span> Support Team <span class="tab-badge" id="badgeAwaiting" hidden>0</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ══════════════════════════════ HOME ══════════════════════════════ -->
+  <section class="panel" id="p-home" role="tabpanel" aria-labelledby="tab-home" tabindex="-1">
+
+    <div class="card">
+      <div class="card-hd">
+        <span class="ico" aria-hidden="true">✝</span>
+        <div class="grow">
+          <span class="eyebrow-sm">A ministry of mercy</span>
+          <h2>Nobody who comes in good faith goes unanswered</h2>
+          <p>This desk exists so that every gift given to the church can be traced to a real person, a real need, and a real receipt. Choose where you want to go.</p>
+        </div>
+      </div>
+
+      <div class="act-grid">
+        <button class="act is-primary" type="button" data-go="apply">
+          <span class="ai g-gold" aria-hidden="true">🤲</span>
+          <h3>Apply for Assistance</h3>
+          <p>For any person — member or not — who needs help with school fees, medical bills, food, rent or a funeral. No login, no cost.</p>
+          <span class="go">Start my request <span aria-hidden="true">→</span></span>
+        </button>
+
+        <button class="act" type="button" data-go="status">
+          <span class="ai g-teal" aria-hidden="true">🔎</span>
+          <h3>Check a Reference</h3>
+          <p>Already applied? Enter your JCRGM number and the last digits of your phone to see exactly where your case stands.</p>
+          <span class="go">Track my case <span aria-hidden="true">→</span></span>
+        </button>
+
+        <button class="act" type="button" data-go="admin">
+          <span class="ai g-navy" aria-hidden="true">🛡</span>
+          <h3>Support Team Register</h3>
+          <p>Admins only. Register the people we are sponsoring, vet applications, record disbursements and print reports.</p>
+          <span class="go">Open the desk <span aria-hidden="true">→</span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd">
+        <span class="ico" aria-hidden="true">📊</span>
+        <div class="grow"><span class="eyebrow-sm">This device</span>
+          <h2>Where we stand right now</h2>
+          <p>Live counts from the welfare register. When Supabase is connected these numbers are shared across every phone in the church app.</p>
+        </div>
+      </div>
+      <div class="stats" id="homeStats">
+        <div class="stat"><b>—</b><span>Loading…</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd">
+        <span class="ico" aria-hidden="true">🧭</span>
+        <div class="grow"><span class="eyebrow-sm">How it works</span>
+          <h2>Four steps, from need to receipt</h2></div>
+      </div>
+      <ol class="flow">
+        <li><span class="n">1</span><div><b>Apply or be registered</b><span>A member applies on their phone, or the Support Team registers a beneficiary being sponsored.</span></div></li>
+        <li><span class="n">2</span><div><b>Vetting &amp; reference</b><span>Two team members verify the details — documents, a home visit or a phone call to the referee.</span></div></li>
+        <li><span class="n">3</span><div><b>Decision &amp; payment</b><span>The committee approves, declines or defers. Money is paid as far as possible straight to the school or clinic.</span></div></li>
+        <li><span class="n">4</span><div><b>Receipt &amp; follow-up</b><span>A proof reference is recorded, a review date is set, and the sponsor is told what became of their gift.</span></div></li>
+      </ol>
+      <div class="divider"></div>
+      <p class="small" style="margin:0 0 9px"><b>What we help with</b> — every case is filed under one of these:</p>
+      <div class="cats" id="homeCats"></div>
+      <blockquote class="scripture" id="homeVerse" style="margin-top:16px"></blockquote>
+    </div>
+
+    <div class="card">
+      <div class="card-hd">
+        <span class="ico" aria-hidden="true">⚖️</span>
+        <div class="grow"><span class="eyebrow-sm">Before you apply</span><h2>What we ask of you — and what we promise</h2></div>
+      </div>
+      <div class="note warn"><span class="ni" aria-hidden="true">⚠️</span><div><b>Apply honestly.</b> Every case is checked. A false claim ends support immediately and is reported to church leadership. A genuine need, however small, is always welcome.</div></div>
+      <div class="note" style="margin-top:9px"><span class="ni" aria-hidden="true">🔒</span><div><b>Your privacy.</b> Names, phone numbers and NRC details are seen only by the Support Team and are held under the Data Protection Act No. 3 of 2021. We never publish a beneficiary's name or photograph without written consent.</div></div>
+      <div class="note ok" style="margin-top:9px"><span class="ni" aria-hidden="true">💰</span><div><b>No cash is ever promised.</b> Support is given as far as possible by paying the school, clinic or supplier directly, and everything is receipted.</div></div>
+      <div class="note danger" style="margin-top:9px"><span class="ni" aria-hidden="true">🚨</span><div><b>In an emergency</b> — a child at risk, violence at home, or a medical crisis — do not wait for this form. Call <a href="#" id="emergCall">the office</a> now, or go to the nearest police station or hospital.</div></div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════ APPLY ══════════════════════════════ -->
+  <section class="panel" id="p-apply" role="tabpanel" aria-labelledby="tab-apply" tabindex="-1" hidden>
+    <div class="card" id="applyShell">
+      <div class="card-hd">
+        <span class="ico" aria-hidden="true">🤲</span>
+        <div class="grow">
+          <span class="eyebrow-sm">Application for assistance</span>
+          <h2 id="applyStepTitle">Who is asking</h2>
+          <p id="applyStepNote">Take your time. Everything here is confidential, and there is no charge for any of it.</p>
+        </div>
+      </div>
+
+      <ol class="steps" id="applySteps" aria-label="Progress"></ol>
+
+      <form id="applyForm" novalidate autocomplete="on">
+        <div id="applySections"></div>
+        <div class="formbar">
+          <button class="btn ghost" type="button" id="applyBack" hidden>‹ Back</button>
+          <span class="grow"></span>
+          <button class="btn ghost" type="button" id="applySave">💾 Save draft</button>
+          <button class="btn primary" type="button" id="applyNext">Continue ›</button>
+          <button class="btn gold" type="submit" id="applySubmit" hidden><span class="sp"></span><span class="lb">Send to Support Team</span></button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card" id="applyDone" hidden></div>
+
+    <div class="card">
+      <div class="note"><span class="ni" aria-hidden="true">🤝</span><div><b>Cannot read or write?</b> Come to the Support Team desk after any Sunday service, or call the office and a member will fill this in with you over the phone. You can also hand a written note to your cell leader.</div></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ STATUS ═══════════════════════════════ -->
+  <section class="panel" id="p-status" role="tabpanel" aria-labelledby="tab-status" tabindex="-1" hidden>
+    <div class="card">
+      <div class="card-hd">
+        <span class="ico" aria-hidden="true">🔎</span>
+        <div class="grow"><span class="eyebrow-sm">Case tracking</span>
+          <h2>Where is my request?</h2>
+          <p>Enter the reference number we gave you together with the phone number you applied with. We check the last four digits so that nobody else can read your file.</p>
+        </div>
+      </div>
+      <form id="lookupForm" novalidate>
+        <div class="grid">
+          <div class="field span2">
+            <label for="lkRef">Reference number <span class="req" aria-hidden="true">*</span></label>
+            <input class="inp mono" id="lkRef" name="ref" inputmode="text" autocapitalize="characters"
+                   placeholder="JCRGM-2026-1234-K" autocomplete="off" spellcheck="false" required>
+            <span class="hint">On your receipt card, in the SMS or WhatsApp confirmation, or on the paper slip you were given.</span>
+            <span class="err" id="lkRefErr"><span aria-hidden="true">⚠</span><span class="em"></span></span>
+          </div>
+          <div class="field span2">
+            <label for="lkPhone">Phone number you applied with <span class="req" aria-hidden="true">*</span></label>
+            <input class="inp" id="lkPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel"
+                   placeholder="097X XXX XXX" required>
+            <span class="err" id="lkPhoneErr"><span aria-hidden="true">⚠</span><span class="em"></span></span>
+          </div>
+        </div>
+        <div class="formbar">
+          <span class="count" id="lkHint">Tip: your reference begins with <b>JCRGM-</b> and ends with a single letter.</span>
+          <span class="grow"></span>
+          <button class="btn primary" type="submit" id="lkGo"><span class="sp"></span><span class="lb">Find my case</span></button>
+        </div>
+      </form>
+    </div>
+    <div id="lookupResult"></div>
+  </section>
+
+  <!-- ════════════════════════════ ADMIN ══════════════════════════════ -->
+  <section class="panel" id="p-admin" role="tabpanel" aria-labelledby="tab-admin" tabindex="-1" hidden>
+
+    <!-- ── lock ── -->
+    <div class="card lock" id="lockCard">
+      <div class="lk" aria-hidden="true">🔐</div>
+      <h2>Support Team only</h2>
+      <p>Enter the admin password to open the welfare register. Records are never shown to anyone outside this desk.</p>
+      <form id="lockForm" novalidate>
+        <div class="pin"><input id="lockPw" type="password" inputmode="text" autocomplete="off"
+             aria-label="Admin password" placeholder="••••••••" maxlength="40" spellcheck="false"></div>
+        <div class="note danger" id="lockErr" hidden><span class="ni" aria-hidden="true">⚠</span><div id="lockErrText"></div></div>
+        <button class="btn primary block" type="submit" id="lockGo" style="margin-top:6px"><span class="sp"></span><span class="lb">Unlock the desk</span></button>
+        <label class="row" style="justify-content:center;margin-top:12px;font-size:12px;color:var(--muted);cursor:pointer">
+          <input type="checkbox" id="showPw" style="width:16px;height:16px;accent-color:#1f3c88"> Show characters
+        </label>
+      </form>
+      <div id="lockAuthSlot"></div>
+      <p class="who">Authorised by the Office of the Senior Pastor · <span id="lockFoot"></span></p>
+    </div>
+
+    <!-- ── desk ── -->
+    <div id="desk" hidden>
+      <div class="card" style="padding-top:14px">
+        <div class="card-hd" style="margin-bottom:10px">
+          <span class="ico" aria-hidden="true">🛡</span>
+          <div class="grow"><span class="eyebrow-sm">Support Team desk</span>
+            <h2>Welfare register</h2>
+            <p id="deskIntro">Register someone we are sponsoring, or work through the requests that have arrived.</p>
+          </div>
+          <div class="row" style="margin-left:auto">
+            <button class="btn gold sm" type="button" id="btnNew">＋ Register a beneficiary</button>
+            <button class="btn ghost sm" type="button" id="btnSync">🔄 Sync</button>
+            <button class="btn ghost sm" type="button" id="btnLock">🔒 Lock</button>
+          </div>
+        </div>
+        <div class="row" id="deskNotes"></div>
+      </div>
+
+      <div class="card">
+        <div class="stats" id="deskStats"></div>
+      </div>
+
+      <!-- ── registration form ── -->
+      <div class="card" id="regCard" hidden>
+        <div class="card-hd">
+          <span class="ico" aria-hidden="true">📝</span>
+          <div class="grow"><span class="eyebrow-sm">New record</span>
+            <h2 id="regTitle">Register a sponsored beneficiary</h2>
+            <p>Fill in every section you can. Fields marked <span class="req">*</span> are required; the rest make the file audit-ready for sponsors and for the church accounts.</p>
+          </div>
+          <button class="btn ghost sm" type="button" id="regClose" style="margin-left:auto">✕ Close</button>
+        </div>
+        <div class="row" id="regMode" style="margin-bottom:14px">
+          <span class="badge tone-info" id="regKindBadge">Sponsorship register</span>
+          <span class="count">Sections are saved together as one case file.</span>
+        </div>
+        <form id="regForm" novalidate>
+          <div id="regSections"></div>
+          <div class="formbar">
+            <button class="btn ghost" type="button" id="regCancel">Cancel</button>
+            <span class="grow"></span>
+            <button class="btn ok" type="submit" id="regSave"><span class="sp"></span><span class="lb">Save to register</span></button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ── register ── -->
+      <div class="card pad-0">
+        <div style="padding:16px 16px 0">
+          <div class="card-hd" style="margin-bottom:12px">
+            <span class="ico" aria-hidden="true">🗂</span>
+            <div class="grow"><span class="eyebrow-sm">All cases</span><h2>Search, review and act</h2></div>
+          </div>
+          <div class="toolbar">
+            <div class="search"><span class="si" aria-hidden="true">🔎</span>
+              <input class="inp" id="fQuery" type="search" placeholder="Name, reference, NRC, compound, sponsor…" aria-label="Search the register">
+            </div>
+            <select class="sel" id="fKind" aria-label="Filter by record type">
+              <option value="">All types</option>
+              <option value="sponsorship">🧍 Sponsored only</option>
+              <option value="application">🤲 Applications only</option>
+            </select>
+            <select class="sel" id="fStatus" aria-label="Filter by status"><option value="">Any status</option></select>
+            <select class="sel" id="fCat" aria-label="Filter by category"><option value="">Any category</option></select>
+            <select class="sel" id="fSort" aria-label="Sort">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="amount">Largest amount</option>
+            </select>
+            <button class="btn ghost sm" type="button" id="fAwait" aria-pressed="false">⏳ Awaiting me</button>
+          </div>
+        </div>
+        <div class="toolbar" style="padding:0 16px 14px;margin:0">
+          <span class="count" id="regCount">—</span>
+          <span class="grow"></span>
+          <button class="btn ghost xs" type="button" id="btnCsv">⬇ CSV export</button>
+          <button class="btn ghost xs" type="button" id="btnCsvFull">⬇ Full CSV</button>
+          <button class="btn ghost xs" type="button" id="btnPrint">🖨 Print report</button>
+        </div>
+        <div id="registerView"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd"><span class="ico" aria-hidden="true">ℹ️</span>
+          <div class="grow"><span class="eyebrow-sm">Good practice</span><h2>Standing orders of this desk</h2></div></div>
+        <div class="note"><span class="ni" aria-hidden="true">1</span><div><b>Two-person rule.</b> No disbursement is made on one signature. The assigned member and one other must both appear in the file notes.</div></div>
+        <div class="note" style="margin-top:9px"><span class="ni" aria-hidden="true">2</span><div><b>Pay the institution, not the pocket.</b> School fees go to the bursar, treatment to the clinic. Record the receipt number the same day.</div></div>
+        <div class="note" style="margin-top:9px"><span class="ni" aria-hidden="true">3</span><div><b>Close the loop.</b> Every applicant is told the outcome in <em>Decision letter</em>, and every sponsor gets a one-paragraph report on their gift.</div></div>
+        <div class="note warn" style="margin-top:9px"><span class="ni" aria-hidden="true">4</span><div><b>Children and the vulnerable.</b> Where a minor is involved, a guardian's consent must be ticked, and no photograph leaves this device without it.</div></div>
+        <p class="legal">
+          <b>Where the data lives.</b> A case is saved to this church's own Supabase project over HTTPS — the same project the Announcements and membership pages use — and from there it appears on every phone that runs the app. Reading the whole register needs a signed-in, leader-approved account in a Support Team role <em>and</em> the team code; the database enforces the same rule, so a modified copy of this page cannot get around it.<br>
+          <b>What the public form can do.</b> It can file a case, and look up one case with the reference number plus the last four digits of the phone that applied. It cannot list, search or browse anyone else's file — that is a database policy, not a setting.<br>
+          <b>If the phone has no signal.</b> The entry is kept in this phone's own browser storage and uploaded later. Anyone holding this phone and opening this page can read that queue, so do not leave the app open on an unattended device, and do not store what does not need to be stored. A phone code is a deterrent, not a vault: the register is protected by the church account and the database rules, and by keeping the desk itself out of strangers' hands.<br>
+          <b>What not to type here.</b> This is a welfare register, not a filing cabinet. No HIV or clinic letters, no national ID images, no court or family-dispute detail, nothing a child should never read back. If a case needs that, it belongs in the pastoral office on paper, referenced here by one line saying it exists.
+        </p>      </div>
+    </div>
+  </section>
+
+  <footer class="pfoot">
+    <span id="footChurch">Jesus Christ Redeems Global Ministries</span><span class="sep">·</span>
+    <a href="#" id="footCall">📞 <span></span></a><span class="sep">·</span>
+    <a href="#" id="footMail">✉ <span></span></a><span class="sep">·</span>
+    <a href="#" id="footMap" target="_blank" rel="noopener">📍 Map</a><br>
+    <span id="footVer"></span> · Confidential welfare record · <span id="footYear"></span>
+  </footer>
+</main>
+
+<!-- detail drawer (populated by script) -->
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" hidden>
+  <div class="dhd">
+    <div class="dbody"><h3 id="drawerTitle">Case</h3><div class="dsub" id="drawerSub"></div></div>
+    <button class="x" type="button" id="drawerClose" aria-label="Close case file">✕</button>
+  </div>
+  <div class="dbody-scroll" id="drawerBody"></div>
+  <div class="dfoot" id="drawerFoot"></div>
+</aside>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite" aria-atomic="false"></div>
+
+<!-- The same four lines the rest of the church app uses, in the same order:
+     shared project settings -> vendored Supabase library -> church platform
+     (sign-in, membership, roles, realtime) -> this module's own config. -->
+<script src="supabase-config.js"></script>
+<script src="vendor/supabase.js"></script>
+<script src="church-platform.js"></script>
+<script src="jcrgm-config.js"></script>
+<script src="jcrgm-support-team.js"></script>
+</body>
+</html>

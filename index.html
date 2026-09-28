@@ -443,6 +443,11 @@ button:active{transform:translateY(0) scale(.98);}
 .nav-group[data-accent="emerald"]{border-color:rgba(110,231,183,.22);}
 .nav-group[data-accent="emerald"]::before{background:linear-gradient(180deg,transparent,#6ee7b7,transparent);}
 .nav-group[data-accent="emerald"] .nav-group-title{color:#bbf7d9;text-shadow:0 0 10px rgba(110,231,183,.4);}
+.nav-group[data-accent="rose"]{border-color:rgba(251,191,199,.26);}
+.nav-group[data-accent="rose"]::before{background:linear-gradient(180deg,transparent,#fb9faf,transparent);}
+.nav-group[data-accent="rose"] .ng-ico{background:rgba(246,93,122,.16);border-color:rgba(251,160,178,.42);}
+.nav-group[data-accent="rose"] .nav-group-title,.nav-group[data-accent="rose"] .ng-title{color:#ffc9d4;text-shadow:0 0 10px rgba(246,93,122,.45);}
+.nav-group[data-accent="rose"]:hover{box-shadow:0 0 26px rgba(246,93,122,.13), inset 0 0 20px rgba(246,93,122,.05);border-color:rgba(251,160,178,.5);border-radius:var(--radius);}
 
 /* ============================================================
    LUXURY MAIN CARD — gold gradient frame + ornaments
@@ -899,6 +904,16 @@ animation:wgPulse 1.8s ease-in-out infinite;}
     </div>
   </div>
 
+
+  <div class="nav-group" data-accent="rose">
+    <div class="nav-group-head"><span class="ng-ico">❤️</span><span class="ng-title">Compassion &amp; Welfare</span><span class="ng-rule"></span><span class="ng-count">3 portals</span></div>
+    <div class="nav-grid">
+      <a class="tile" href="jcrgm-support-team.html"><span class="t-ico c-rose">❤️</span><span class="t-txt"><span class="t-name">Support Team Register</span><span class="t-sub">Sponsorships &amp; welfare desk</span></span></a>
+      <a class="tile" href="jcrgm-support-team.html#apply"><span class="t-ico c-gold">🤲</span><span class="t-txt"><span class="t-name">Apply for Assistance</span><span class="t-sub">Confidential &mdash; no login</span></span></a>
+      <a class="tile" href="jcrgm-support-team.html#status"><span class="t-ico c-teal">🔎</span><span class="t-txt"><span class="t-name">Check My Reference</span><span class="t-sub">Track a case you filed</span></span></a>
+    </div>
+  </div>
+
   <div class="nav-group" data-accent="violet">
     <div class="nav-group-head"><span class="ng-ico">📖</span><span class="ng-title">Study &amp; Prayer</span><span class="ng-rule"></span><span class="ng-count">10 portals</span></div>
     <div class="nav-grid">
@@ -1038,6 +1053,9 @@ function openMasterStudy(){window.location.href='JCRGM%20MASTER%20STUDY.html';}
 function openBiblePlan() {window.location.href = "full_bible_plan.html";}
 function openCrossover(){ window.location.href = "crossover.html";}
 function openPrayerGuide(){window.location.href = "prayer-guide.html";}
+
+// JCRGM Support Team — Compassion & Welfare desk (admin password: see jcrgm-config.js)
+function openSupportTeam(section){ window.location.href = "jcrgm-support-team.html" + (section ? "#" + section : ""); }
 
 // Payments via USSD
 function makePayment(){ window.location.href = "tel:*115%23"; }

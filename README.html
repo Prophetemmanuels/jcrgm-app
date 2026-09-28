@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>JCRGM Compassion &amp; Welfare — Setup, Deploy &amp; Admin Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+ body{font-family:"Segoe UI",Inter,Arial,sans-serif;line-height:1.62;color:#1e2a3a;max-width:900px;margin:0 auto;padding:32px 20px 80px;background:#eef2f7}
+ h1{font-size:26px;color:#101d44;border-bottom:3px solid #ffd700;padding-bottom:10px}
+ h2{font-size:18px;color:#1f3c88;margin-top:34px;border-left:4px solid #b8912c;padding-left:10px}
+ h3{font-size:14.5px;color:#16295e;margin-bottom:6px}
+ pre{background:#0f1a33;color:#dce6ff;padding:14px 16px;border-radius:10px;overflow:auto;font-size:12.5px;line-height:1.5}
+ code{background:#e3eaf7;padding:1px 5px;border-radius:4px;font-size:12.5px;color:#16295e}
+ pre code{background:none;padding:0;color:inherit}
+ table{border-collapse:collapse;width:100%;font-size:13px;background:#fff}
+ th,td{border:1px solid #d7e0ee;padding:8px 10px;text-align:left;vertical-align:top}
+ th{background:#f2f6fd;font-size:11px;text-transform:uppercase;letter-spacing:.6px}
+ .box{background:#fff;border:1px solid #d7e0ee;border-left:4px solid #1f3c88;border-radius:10px;padding:4px 16px 14px;margin:14px 0}
+ .warn{border-left-color:#b81e3f;background:#fff6f8}
+ .ok{border-left-color:#1e8e4f;background:#f4fcf7}
+ .files li{margin:4px 0;font-size:13px}
+ ul{padding-left:20px}
+</style>
+</head>
+<body>
+<h1>JCRGM Compassion &amp; Welfare<br><span style="font-size:15px;color:#64748b">Support Team register · assistance applications · Supabase setup</span></h1>
+
+<p>Five new files, plus a three-tile “Compassion &amp; Welfare” group added to <code>index.html</code>. Drop all five next to
+<code>index.html</code> in the GitHub repo and the feature works immediately — <b>no build step, no dependencies, no npm</b>.</p>
+
+<div class="box ok">
+<h3>Try it right now, before touching Supabase</h3>
+<p>Open <code>jcrgm-support-team.html</code> on a phone. Everything works offline against the phone’s own storage:
+the public application form, the reference number, the status lookup, the admin desk. Records queue for upload
+and sync the moment the database is connected. Nothing is lost while you decide on hosting.</p>
+</div>
+
+<h2>1. Files</h2>
+<ul class="files">
+<li><code>index.html</code> — <b>modified</b>. New nav group (3 tiles) + <code>openSupportTeam()</code> + one <code>rose</code> accent colour. Nothing else changed.</li>
+<li><code>jcrgm-support-team.html</code> — the portal: home, apply wizard, status lookup, admin desk.</li>
+<li><code>jcrgm-support-team.css</code> — styling built on the same navy/gold tokens as <code>index.html</code>.</li>
+<li><code>jcrgm-config.js</code> — <b>the only file you normally edit</b>. Church details, categories, statuses, desk code, role list. Its Supabase constants stay blank on purpose (see §2).</li>
+<li><code>supabase-schema.sql</code> — paste into the SQL editor of the <b>church app’s own project</b>, once.</li>
+<li><code>test/</code>, <code>.t/</code> — the test suites (not needed on the server; delete or <code>.gitignore</code> before committing if you prefer).</li>
+</ul>
+<p>The portal is <b>not a separate app</b>. It loads the four files the rest of the app already ships —
+<code>church-platform.css</code>, <code>supabase-config.js</code>, <code>vendor/supabase.js</code>,
+<code>church-platform.js</code> — in that order, exactly as <code>announcements.html</code> does. So it shares
+one project, one sign-in session, one member list, one realtime socket and one design system. It does
+<b>not</b> download anything from a CDN, which matters on a phone using the PWA on limited data.</p>
+
+<h2>2. Supabase — already decided, one step left</h2>
+<p><b>Nothing to create and no key to paste.</b> Your repo’s <code>supabase-config.js</code> already points at
+<code>https://yisfzexlbjeoeujvmmno.supabase.co</code> with a publishable key, and that is what the welfare pages read.
+The only missing piece is the table itself:</p>
+<ol>
+<li>Open that project → <b>SQL Editor</b> → <i>New query</i>.</li>
+<li>Open <code>supabase-schema.sql</code>, select <b>all</b> of it, paste, <b>Run</b>. Expect “Success. No rows returned”.</li>
+<li>Reload the portal. The masthead pill should read <i>“Live — supabase-config.js”</i>. If it reads
+<i>“On this device”</i>, the config file was not found beside the page — check that you committed all five files into the
+same folder as <code>index.html</code>.</li>
+</ol>
+<p>The script is idempotent (every object is <code>create or replace</code> / <code>if not exists</code>), so re-running it
+after an upgrade is safe and no data is dropped. It also <code>create table if not exists church_members</code> only as a
+guard so the script still completes on a bare project — in yours that table already exists and is left alone.</p>
+<div class="box">
+<p><b>Want welfare in its own database instead?</b> Fill <code>supabaseUrl</code> / <code>supabaseAnonKey</code> in
+<code>jcrgm-config.js</code>. Those two override the shared project, and the church sign-in gate then has no meaning for
+this portal (it would be checking a different project’s member list), so set
+<code>requireChurchAuth: false</code> to fall back to the code alone — or keep it <code>true</code> and accept that the
+desk and the data live in different places. Running <code>supabase-schema.sql</code> in both projects keeps the RPCs valid.</p>
+</div>
+
+<h3>What protects the data</h3>
+<p>Row-level security is <b>enabled and forced</b> in the schema, and <code>anon</code> has no <code>SELECT</code> on the
+table at all. A phone can only (a) submit a case through <code>jcrgm_create_case()</code> and (b) read one case back
+through <code>jcrgm_lookup_case(ref, last4_of_phone)</code>, which masks the name as <code>“Chanda M.”</code>. Reading the
+register needs an authenticated account whose row in <b><code>church_members</code></b> is <code>approved</code> and in a
+Support Team role — the very table <code>church-platform.js</code> reads for Announcements and programme prep, so there is
+still exactly <b>one</b> list of people with access to the church app:</p>
+<pre><code>create policy "jcrgm desk read" ... using (public.jcrgm_is_desk());
+create policy "jcrgm desk delete" ... using (public.jcrgm_is_leader());  -- leaders only</code></pre>
+<p>Check it yourself after deploying:</p>
+<pre><code># expect 401/403 or an empty array, never the data
+curl "https://yisfzexlbjeoeujvmmno.supabase.co/rest/v1/jcrgm_welfare_cases?select=*" \
+     -H "apikey: PUBLISHABLE_KEY" -H "Authorization: Bearer PUBLISHABLE_KEY"</code></pre>
+<p>Never paste a <b>service_role</b> or <code>sb_secret_</code> key into these files — it bypasses every policy, and
+<code>jcrgm-config.js</code> now refuses to start a connection that carries one.</p>
+
+<h2>3. Opening the desk: church account + team code</h2>
+<p>Two things, in order:</p>
+<ol>
+<li><b>An approved church account in a Support Team role.</b> Anyone signed out, or signed in as a plain member, is
+shown <i>“Sign in / request access”</i> and nothing else — the code box never appears. Leaders are let straight through,
+because a leader already has more access than this desk does. Roles are set by a leader in
+<i>Announcements → Manage member access</i>.</li>
+<li><b>The team code</b> (<code>JCRGMST</code> today) for non-leader team members, as a second factor against a shared
+or left-open phone. It is stored only as a salted SHA-256 digest:</li>
+</ol>
+<pre><code>adminPasswordPepper: "jcrgm-welfare-v1",
+adminPasswordHash: "0dbe76dc0430264dde5f9a96c14f2d72ce0ad5fe238c853ed456cff8c90b90ef",  // "JCRGMST"
+adminSessionMinutes: 40, maxPasswordAttempts: 6,
+requireChurchAuth: true,
+deskRoles: ["welfare", "diaconia", "leader", "pastor", "administrator"],
+allowMembersFullAccess: false, listLimit: 500</code></pre>
+<div class="box">
+<p><b>If you rename the roles</b> in <code>church_members</code> (say <code>welfare</code> → <code>diaconacy</code>), edit
+<code>deskRoles</code> here <i>and</i> the role list inside <code>jcrgm_is_desk()</code> in
+<code>supabase-schema.sql</code>. They are deliberately two copies: the browser check is for politeness, the SQL check is
+the boundary, and a boundary that silently disagrees with the UI is worse than either alone. The test suite asserts both
+lists contain <code>welfare</code> and <code>leader</code>.</p>
+</div>
+<h3>Rotating the code (when a member leaves the team)</h3>
+<pre><code>node -e "const c=require('crypto');\
+console.log(c.createHash('sha256').update('jcrgm-welfare-v1::NEW_CODE').digest('hex'))"</code></pre>
+<p>…paste the result into <code>adminPasswordHash</code> and commit. <code>adminPasswordHashFallback</code> exists only for
+phones that open the file over <code>file://</code>, where browsers refuse to give the page <code>crypto.subtle</code>; it is
+ignored whenever real SHA-256 is available.</p>
+<h3>If you remove <code>church-platform.js</code> from a page</h3>
+<p>Then the account check cannot run, and the code alone opens the desk — with no sign-in prompt and no crash. That is
+deliberate: the desk must stay reachable when the platform file fails to load on a poor connection. The database still
+refuses every read, so a stranger with the code sees an empty register, not other people’s files. The footer of the lock
+card states which mode is in force (“church sign-in + team code” vs “team code only”).</p>
+<div class="box warn">
+<p><b>Be honest about what the code is.</b> Anything a browser can check, a determined person can read in DevTools. The
+code stops a curious member from wandering into beneficiaries’ NRC numbers on a shared phone — a locked office door, not
+a vault. The vault is the member list, the RLS policies, and the physical security of the device. Keep it that way by
+not storing data here that would hurt if leaked (see the privacy note at the foot of the portal).</p>
+</div>
+
+<h2>4. Rebranding / editing without touching markup</h2>
+<p>Every church detail lives in <code>jcrgm-config.js</code>. The phone number, email, map link, office hours, verse,
+welfare categories, urgency levels, provinces, currency, disbursement methods and the seven workflow statuses all
+render from it — the HTML files contain no hard-coded contact details (a test enforces this).</p>
+<table>
+<tr><th>To change…</th><th>Edit in <code>jcrgm-config.js</code></th></tr>
+<tr><td>Phone / WhatsApp / email / office hours</td><td><code>phone</code>, <code>whatsapp</code>, <code>email</code>, <code>officeHours</code></td></tr>
+<tr><td>What the team can fund</td><td><code>categories</code> array — <code>id</code> becomes the stored value</td></tr>
+<tr><td>Approval workflow</td><td><code>statuses</code> — must stay in step with the SQL <code>CHECK</code> constraint</td></tr>
+<tr><td>Currencies / banks</td><td><code>currencyOptions</code>, <code>disbursementMethods</code></td></tr>
+<tr><td>Reference number look</td><td><code>refPrefix</code> (becomes <code>PREFIX-2026-0001-K</code>)</td></tr>
+<tr><td>Lock timeout / attempts</td><td><code>adminSessionMinutes</code>, <code>maxPasswordAttempts</code></td></tr>
+</table>
+<p>If you add a field, list it in the form schema <b>and</b> add the column to the table (plus the insert list in
+<code>jcrgm_create_case</code>). A test fails if a form field has no matching SQL column, so you cannot drift silently.</p>
+
+<h2>5. Deploying from GitHub</h2>
+<ul>
+<li><b>Where they go</b> — the <b>repo root</b>, beside <code>index.html</code>, <code>announcements.html</code> and
+<code>church-platform.js</code>. Not a subfolder: the portal references its neighbours with relative paths
+(<code>vendor/supabase.js</code>, <code>supabase-config.js</code>, <code>announcements.html</code>), so a subfolder
+would break the sign-in bridge and it would lose the shared project.</li>
+<li><b>Five new files, one edited</b> — commit <code>jcrgm-support-team.html</code>,
+<code>jcrgm-support-team.css</code>, <code>jcrgm-config.js</code>, <code>supabase-schema.sql</code>,
+<code>README.html</code>, plus the modified <code>index.html</code>. Nothing else needs to change;
+<code>church-platform.*</code>, <code>supabase-config.js</code> and <code>vendor/</code> are already yours.</li>
+<li><b>Offline / PWA</b> — the portal does not register a worker of its own; the app’s single
+<code>service-worker.js</code> already serves every same-origin <code>.html/.css/.js</code> <b>network-first</b>, so new
+files arrive on each phone on the next open without bumping anything, and after one visit they are cached for a phone
+that opens the app with no data. It also refuses to cache anything carrying an <code>authorization</code> header or a
+query string, so no welfare record is ever written into the browser cache. If you want the portal in the
+<i>pre-cached</i> set for a first-ever offline launch, add its three files to <code>START_ASSETS</code> and bump
+<code>VERSION</code> in <code>service-worker.js</code> — optional, and it does not affect correctness.</li>
+<li><b>Phones that open the file directly</b> (<code>file://</code>, some WebViews) — <code>crypto.subtle</code> is
+unavailable there, so the fallback digest is used for the code check and <code>localStorage</code> is the only store.
+It still works; it simply cannot reach the church database. Serve from the Pages URL whenever you can.</li>
+<li><b>Never</b> commit a real Supabase <code>service_role</code>/<code>sb_secret_</code> key. The publishable key in
+<code>supabase-config.js</code> is public by design and safe to keep committed — but if a secret is ever pushed, rotate
+it immediately in Project Settings → API.</li>
+</ul>
+
+<h2>6. Data protection notes (Zambia + international practice)</h2>
+<ul>
+<li><b>Consent is captured, not assumed</b> — the applicant ticks a Data Protection Act No. 3 of 2021 clause, plus a
+guardian clause that is required whenever the date of birth makes them a minor (the form detects this live).</li>
+<li><b>Minimisation</b> — documents are recorded as <i>which</i> items were sighted, not the documents themselves; no
+ID photographs are stored in the browser.</li>
+<li><b>Purpose limitation</b> — internal notes and the applicant-facing decision letter are separate columns, so a
+staffer’s private assessment cannot accidentally be shown to the applicant.</li>
+<li><b>Two-person rule</b> — a case cannot be marked “Assistance Given” without a receipt reference, which the code
+enforces, not just recommends.</li>
+<li><b>Retention</b> — nothing auto-deletes. Run an annual pass: export the year to CSV, then close or delete settled
+files. The “Full CSV” export includes every column so a deleted year can still be reconstructed for the auditors.</li>
+<li><b>Right to be informed</b> — the home tab states plainly that names and photographs are never published without
+written consent.</li>
+</ul>
+
+<h2>7. Tests</h2>
+<p>Three suites, all run with plain <code>node</code> — no build, no bundler, nothing that touches the church server.</p>
+<pre><code>cd jcrgm
+node test/jcrgm-engine.test.js   # 151 assertions - logic + SQL integrity
+node .t/sql-check.js             #  15 checks  - the schema, parsed by Postgres' own grammar
+node .t/html-check.js            # markup, ids, links, and the platform wiring
+node .t/ui-e2e.js                # 145 assertions - the real page, clicked through
+# or all four: npm test  (needs one npm install, for jsdom; and pip install pglast)</code></pre>
+<p>(<code>.t/</code> needs <code>npm install</code> once, for jsdom. The harness serves the folder over
+<code>http://127.0.0.1:&lt;port&gt;</code> rather than <code>file://</code>, because browsers refuse
+<code>localStorage</code> on an opaque origin — and it pulls <code>church-platform.js</code>,
+<code>supabase-config.js</code> and <code>vendor/supabase.js</code> from the repo, so the integration is tested with your
+<b>real</b> platform files, not a stub.)</p>
+<ul>
+<li><b><code>test/jcrgm-engine.test.js</code></b> — reference numbers and their check letter (cross-checked against the
+Postgres algorithm and fuzzed over 20,000 random and all 10,000 sequence values), phone/NRC validation, money, age and
+minor detection, CSV quoting, XSS sanitising, roll-ups, the offline store, the admin digest, the guard-rails on the
+Supabase URL and key, the shared-project inheritance from <code>window.JCRGM_SUPABASE</code>, all nine desk-permission
+cases (member / leader / unapproved / signed-out / platform-missing / platform-half-loaded), and the schema’s own
+integrity: every <code>public.fn()</code> the policies call must exist, RLS must be <i>enabled and forced</i>, the
+policies must key off <code>church_members</code>, and <code>anon</code> must hold no <code>SELECT</code>.</li>
+<li><b><code>.t/ui-e2e.js</code></b> — loads the <b>real</b> page in jsdom and clicks through it, including a whole
+submission and a reload: blank form refused, each wizard step validated, bad email blocked, minor warning shown,
+reference issued, status lookup found <i>and</i> denied for the wrong phone, lookup answered <b>from the device</b> when
+the network is down, the badge counting without waiting on the server, all six register sections filled and re-read,
+decision letter persisted, disbursement blocked without a receipt, CSV export fired, an injected
+<code>&lt;script&gt;</code> proven inert — and the platform integration: <code>window.Church</code> present, this portal
+sharing the platform’s single client rather than minting a second one, the sign-in card replacing the code box when
+nobody is signed in, the code alone refused, the desk opening only on account <i>plus</i> code, and the desk still
+reaching the code box when the platform file is missing.</li>
+<li><b><code>.t/sql-check.js</code></b> — splits <code>supabase-schema.sql</code> the way psql does and parses
+every statement with the <b>real PostgreSQL grammar</b> (libpg_query, via <code>pglast</code>), because the Supabase
+editor runs it one statement at a time and a failure in statement 30 of 42 leaves the table created with no policies
+attached. It also greps for the things a parser cannot see: <code>bitand(</code> and other Redshift/Oracle spellings
+(legal syntax, unknown function at run time — the exact bug this file had), every referenced
+<code>public.fn()</code> existing, each policy having a matching <code>drop policy if exists</code> so re-running is
+safe, <code>force row level security</code> being present, and no <code>SELECT</code> grant to <code>anon</code>.
+Its limit is stated in the script: it does not read inside <code>AS $$</code> bodies (libpg_query’s plpgsql entry
+point rejects <code>RETURNS TRIGGER</code>, and wrapping a <code>LANGUAGE sql</code> body in a <code>DO</code> block
+invents errors), so the <b>logic</b> of <code>jcrgm_next_ref()</code> and <code>jcrgm_lookup_case()</code> is checked
+instead by the engine suite, which re-implements them from the SQL text and compares real outputs — a stronger test
+than a parse. If <code>pglast</code> is absent the SQL check says so and skips; it never pretends to pass.</li>
+<li><b><code>.t/html-check.js</code></b> — also proves that every class written into the markup is declared in
+<code>jcrgm-support-team.css</code> or <code>church-platform.css</code>, and <code>.t/ui-e2e.js</code> repeats the check
+against the <b>live rendered DOM</b> (so a class assembled at runtime is caught too, and only classes that never appear
+are excused). This found two phantom classes — an identity-chip button and the default toast kind — that would have
+rendered as unstyled, unobtrusive HTML with no error anywhere. Markup tests are scoped to literal <code>class="…"</code>
+attributes; the DOM pass is what covers the rest, and the checker says so rather than implying full coverage.</li>
+<li><b><code>.t/html-check.js</code></b> — quote-aware tag balance, duplicate-id scan, every
+<code>getElementById</code>/<code>$("#id")</code> resolves, new links exist, tiles in the right place in the header nav,
+no hard-coded contact details, the six script/stylesheet includes present <b>in the app’s own order</b>, no CDN or
+third-party reference anywhere, both Supabase constants left blank, and the privacy note matching what the code does.</li>
+</ul>
+
+<div class="box">
+<h3>Where the tests found real bugs during the build</h3>
+<p>Not style nits — behaviour: the record cleaner was dropping <code>ref_no</code> and <code>id</code> on write, which made
+every status lookup miss; the reference was truncated to 24 characters, deleting the check letter; the
+date-of-birth handler re-rendered the step and wiped the date just typed; <code>currency</code> was required but never
+pre-filled, so “Continue” appeared broken; phones were only normalised on blur, so a user who tapped Continue
+straight away saved a number that could not be matched later; the JS and SQL check letters both indexed a 24-letter alphabet <b>modulo 26</b>, so roughly one reference in thirteen
+came out as <code>JCRGM-2026-8010-</code> with no check letter at all — and the harness could not see it, because it
+duplicated the same wrong constant instead of reading it from the schema (it now parses the alphabet out of the SQL, so
+the two cannot drift);
+checkboxes had no <code>name</code> attribute; collapsed register sections removed their inputs from the DOM, making
+validation errors unfixable; a guard flag permanently silenced the “awaiting” badge; a delete policy called
+<code>jcrgm_is_leader()</code>, which no <code>CREATE FUNCTION</code> in the script ever defined (that would have
+aborted the SQL editor run halfway); the desk stayed open forever in single-factor mode because the idle re-check only
+ran in church mode; and the register painted nothing until <code>DB.list()</code> answered, which on a hung connection
+means a blank screen for half a minute.</p>
+<p>The last two were only found once the portal was wired to the <b>real</b> platform files. A stub would have passed.</p>
+</div>
+</body>
+</html>
