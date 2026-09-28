@@ -48,13 +48,13 @@
 
   /* ══════════════ 3. NOTICES (toasts) ═════════════════════════════════ */
   var toastBox = $("#toasts");
-  function toast(msg, kind, title) {
+  function toast(msg, kind, title, life) {
     var icon = { ok: "✅", err: "⛔", warn: "⚠️", info: "ℹ️" }[kind || "info"];
     var t = el("div", "toast " + (kind || "info"),
       '<span class="tx" aria-hidden="true">' + icon + '</span><div>' +
       (title ? "<b>" + esc(title) + "</b>" : "") + esc(msg) + "</div>");
     toastBox.appendChild(t);
-    var life = kind === "err" ? 7000 : 4600;
+    var life = life || (kind === "err" ? 9000 : 4600);
     setTimeout(function () {
       t.classList.add("out");
       setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 320);
@@ -743,6 +743,17 @@
       busy($("#lockGo"), false);
       if (okk) {
         attempts = 0; $("#lockPw").value = ""; err.hidden = true;
+        /* The code is one factor, not the door. The form is normally hidden for
+           anyone who is not on the desk, but a hidden form can still be
+           submitted - so the role is re-checked here, at the moment of trust,
+           rather than assumed from which pixels are visible. */
+        var pm = permission();
+        if (pm.mode === "church" && !pm.allowed) {
+          refreshAccess();
+          toast(pm.label + ". The code alone does not open the register — the database checks the role too.",
+                "err", "Right code, wrong account", 12000);
+          return;
+        }
         try { sessionStorage.setItem(SES + "_code", "ok"); } catch (e) {}
         refreshAccess(); openDesk();
         toast("Welcome" + (permission().name ? ", " + permission().name : "") + ". " + DB.queueSize() + " record(s) waiting to sync.", "ok", "Desk unlocked");
@@ -842,10 +853,31 @@
       " record(s) are waiting to upload. This portal reads the church app's own project (supabase-config.js); run supabase-schema.sql there and every phone shares one register. To keep welfare in its own database instead, put that URL and publishable key in <span class='mono'>jcrgm-config.js</span>.</div></div>");
     else if (!online) bits.push('<div class="note warn" style="flex:1 1 320px"><span class="ni" aria-hidden="true">📡</span><div><b>No connection right now.</b> The list below is the last copy this phone received, so it may be behind the others. New entries queue here and upload themselves when signal returns.</div></div>');
     else bits.push('<div class="note ok" style="flex:1 1 320px"><span class="ni" aria-hidden="true">🛰</span><div><b>Live with the church database.</b> Anything saved here appears on every phone in the app within seconds.</div></div>');
+    var pending = records.filter(function (r) { return r._pending || r._syncError; });
+    if (J.supabase.lastListError) bits.push('<div class="note danger" style="flex:1 1 320px"><span class="ni" aria-hidden="true">👀</span><div><b>This is the copy on this phone — the church register could not be read.</b> ' +
+      esc(J.supabase.lastListError) +
+      '<br>A Support Team member who cannot read the register cannot write to it either: check that this account is approved and holds one of the roles in <span class="mono">' + esc(CONFIG.deskRoles.join(", ")) +
+      '</span> (Announcements → Manage member access), and that <span class="mono">supabase-schema.sql</span> has been run whole in this project.</div></div>');
+    if (pending.length) bits.push('<div class="note danger" style="flex:1 1 320px"><span class="ni" aria-hidden="true">⛔</span><div><b>' + pending.length +
+      " change(s) are on this phone only — the database did not accept them.</b> " +
+      esc(pending[0]._syncError || "no row was updated") +
+      "<br>This is nearly always one of two things: the signed-in account is not an approved <b>Support Team</b> member in Announcements → Manage member access, or <span class='mono'>supabase-schema.sql</span> has not been run (or was run only partly) in this project." +
+      ' <button class="btn ghost xs" type="button" id="btnReplay" style="margin-top:6px">Retry the ' + pending.length + ' change(s)</button></div></div>');
     var stale = records.filter(function (r) { return W.isAwaitingAdmin(r) && (W.daysSince(r.created_at) || 0) > 7; });
     if (stale.length) bits.push('<div class="note danger" style="flex:1 1 320px"><span class="ni" aria-hidden="true">⏰</span><div><b>' + stale.length +
       " case(s) have waited over a week.</b> Someone should ring those families this week — a delay is its own kind of answer.</div></div>");
     n.innerHTML = bits.join("");
+    var rp = $("#btnReplay");
+    if (rp) rp.addEventListener("click", function () {
+      rp.disabled = true; rp.textContent = "Retrying…";
+      (DB.replayPending ? DB.replayPending() : Promise.resolve({ written: 0, still: 0 })).then(function (r) {
+        rp.disabled = false; rp.textContent = "Retry the unsaved change(s)";
+        if (r.written && !r.still) { toast("All " + r.written + " change(s) are now in the church database.", "ok", "Written"); }
+        else if (r.written) { toast(r.written + " written, " + r.still + " still refused: " + r.reason, "warn", "Partly written"); }
+        else { toast("Still refused: " + (r.reason || "the account cannot write to " + CONFIG.tableName + "."), "err", "Not written", 14000); }
+        loadRegister();
+      });
+    });
   }
 
   function paintFilters() {
@@ -870,6 +902,13 @@
 
   function currentRows() { return W.filterRecords(records, filter); }
 
+  /* Deleting is the leader's call in the schema ("jcrgm desk delete"), and a
+     policy-filtered DELETE comes back as 204 with no rows - indistinguishable
+     from success unless you know the rule. So the desk states the rule. */
+  function canDelete() {
+    try { var pm = permission(); return !!(pm && (pm.leader || pm.mode === "no-platform" || pm.mode === "not-configured")); }
+    catch (e) { return true; }
+  }
   function rowBadges(r) {
     var b = [];
     if (r.priority === "critical" || r.urgency === "critical") b.push('<span class="badge tone-danger">Critical</span>');
@@ -877,6 +916,7 @@
     if (r.kind === "sponsorship") b.push('<span class="badge tone-teal">Sponsored</span>');
     if ((W.daysSince(r.created_at) || 0) > 7 && W.isAwaitingAdmin(r)) b.push('<span class="badge tone-warn">' + W.daysSince(r.created_at) + "d waiting</span>");
     if (r._offline) b.push('<span class="badge tone-gold">On device</span>');
+    if (r._pending || r._syncError) b.push('<span class="badge tone-danger" title="' + esc(r._syncError || "not written") + '">Not written</span>');
     return b.join(" ");
   }
   function stBadge(r) {
@@ -1048,7 +1088,9 @@
         '<button class="btn ghost sm" type="button" id="dWa">💬 WhatsApp applicant</button>' +
         '<button class="btn ghost sm" type="button" id="dCall">📞 Call</button>' +
         '<button class="btn ghost sm" type="button" id="dPrint">🖨 Print file</button>' +
-        '<span class="grow"></span><button class="btn danger xs" type="button" id="dDel">🗑 Delete</button></div>' +
+        '<span class="grow"></span><button class="btn danger xs" type="button" id="dDel"' +
+      (canDelete() ? '' : ' aria-disabled="true" title="Deleting a case file needs a leadership role; closing the case keeps the record.">') +
+      '>🗑 Delete</button></div>' +
         '<p class="hint" style="margin-top:9px">Last updated ' + esc(nice(r.updated_at)) + " · " + esc(ago(r.updated_at)) + "</p>" +
       "</div>" +
       '<div class="dsec"><h4>🧭 Case history</h4><ol class="tl">' + timelineFor(r).map(function (t) {
@@ -1069,11 +1111,19 @@
       var b = e.target.closest("[data-st]"); if (!b) return;
       $$("#stSteper button").forEach(function (x) { x.className = ""; x.style.background = ""; x.style.color = ""; });
       b.className = "on"; b.style.background = W.status(b.dataset.st).color; b.style.color = "#fff";
-      toast("Will save as “" + W.status(b.dataset.st).label + "”.", "info");
+      var box = $('[name="status"]', body);            // keep a hidden mirror in sync
+      if (box) { box.value = b.dataset.st; }
+      // A tap on a stage is the decision, not a note to self: save it at once.
+      // (Silently marking an inner field and waiting for Save is what made the
+      // desk look dead.) Payment rules still apply inside saveCase.
+      // Re-tapping the stage a case already sits on is not a change, so it does
+      // not write anything and does not nag about it.
+      if (b.dataset.st === r.status) { toast("This case is already “" + W.status(b.dataset.st).label + "”.", "info"); return; }
+      saveCase();
     });
     function fldVal(id) { var n = $('[name="' + id + '"]', body); return n ? n.value : ""; }
 
-    $("#dSave").addEventListener("click", function () {
+    function saveCase() {
       var chosen = $("#stSteper .on");
       var patch = {
         status: chosen ? chosen.dataset.st : r.status,
@@ -1095,12 +1145,20 @@
         toast("Write the decision letter first — the applicant sees exactly that text.", "warn", "One thing missing");
       }
       busy($("#dSave"), true, "Saving…");
-      DB.update(r.id, patch).then(function () {
+      DB.update(r.id, patch).then(function (res) {
         busy($("#dSave"), false);
-        toast("Case saved" + (DB.live() ? " to the church database." : " on this device."), "ok", r.ref_no);
-        return loadRegister().then(function () { closeDrawer(); refreshBadge(); });
+        if (res && res.synced) {
+          toast("Saved to the church database — every phone running the app now sees this.", "ok", r.ref_no);
+          return loadRegister().then(function () { closeDrawer(); refreshBadge(); });
+        }
+        var why = (res && res.reason) || "the change is held on this device only.";
+        // The row stays visible with its attempted change, marked, so the desk
+        // is never left wondering whether the click did anything.
+        toast(why, "err", "Not written to the database", 14000);
+        return loadRegister().then(refreshBadge);
       }).catch(function (e) { busy($("#dSave"), false); toast("Save failed: " + ((e && e.message) || e), "err"); });
-    });
+    }
+    $("#dSave").addEventListener("click", saveCase);
     $("#dWa").addEventListener("click", function () {
       var to = W.normalisePhone(r.phone);
       if (!to) { toast("There is no phone number on this file.", "warn"); return; }
@@ -1114,8 +1172,20 @@
     });
     $("#dPrint").addEventListener("click", function () { printDoc("Case " + r.ref_no, body.innerHTML); });
     $("#dDel").addEventListener("click", function () {
+      if (!canDelete()) {
+        toast("Deleting a case file is a leader's decision in this register \u2014 your role can close it, which keeps the record and the reason for the church accounts. Ask a leader to delete it if the file must truly go.",
+              "warn", "Needs a leader", 12000);
+        return;
+      }
       if (!window.confirm("Delete " + r.ref_no + " for " + (r.beneficiary_name || "this beneficiary") + "?\n\nThis removes the file permanently. Prefer setting the status to \"Not approved\" or \"Closed\" so the record and the reason survive for the church accounts.")) return;
-      DB.remove(r.id).then(function () { toast("Case deleted.", "warn"); closeDrawer(); loadRegister().then(refreshBadge); });
+      DB.remove(r.id).then(function (res) {
+        if (res && res.removed) {
+          toast("Case deleted" + (res.synced ? " from the church database." : " from this device only (" + res.reason + ")."), res.synced ? "warn" : "err", r.ref_no, res.synced ? 5000 : 14000);
+          closeDrawer(); return loadRegister().then(refreshBadge);
+        }
+        toast(((res && res.reason) || "the database refused the delete.") + " The file is still here, nothing was lost.", "err", "Not deleted", 14000);
+        return loadRegister().then(refreshBadge);
+      });
     });
     var rows = currentRows(), idx = rows.map(function (x) { return x.id; }).indexOf(r.id);
     $("#dPrev").disabled = idx <= 0;

@@ -39,6 +39,7 @@ and sync the moment the database is connected. Nothing is lost while you decide 
 <ul class="files">
 <li><code>index.html</code> — <b>modified</b>. New nav group (3 tiles) + <code>openSupportTeam()</code> + one <code>rose</code> accent colour. Nothing else changed.</li>
 <li><code>jcrgm-support-team.html</code> — the portal: home, apply wizard, status lookup, admin desk.</li>
+<li><code>jcrgm-support-team.js</code> — the portal’s behaviour: wizard, register, drawer, desk gate. Every write it makes is <b>confirmed against the server</b> before the screen claims success.
 <li><code>jcrgm-support-team.css</code> — styling built on the same navy/gold tokens as <code>index.html</code>.</li>
 <li><code>jcrgm-config.js</code> — <b>the only file you normally edit</b>. Church details, categories, statuses, desk code, role list. Its Supabase constants stay blank on purpose (see §2).</li>
 <li><code>supabase-schema.sql</code> — paste into the SQL editor of the <b>church app’s own project</b>, once.</li>
@@ -187,13 +188,21 @@ written consent.</li>
 </ul>
 
 <h2>7. Tests</h2>
-<p>Three suites, all run with plain <code>node</code> — no build, no bundler, nothing that touches the church server.</p>
+<p>Four suites plus seven desk scenarios, all run with plain <code>node</code> — no build, no bundler, nothing that touches the church server.</p>
 <pre><code>cd jcrgm
-node test/jcrgm-engine.test.js   # 151 assertions - logic + SQL integrity
-node .t/sql-check.js             #  15 checks  - the schema, parsed by Postgres' own grammar
+node test/jcrgm-engine.test.js   # 161 assertions - logic + SQL integrity
+node .t/sql-check.js             #  14 checks  - the schema, parsed by Postgres’ own grammar
 node .t/html-check.js            # markup, ids, links, and the platform wiring
 node .t/ui-e2e.js                # 145 assertions - the real page, clicked through
-# or all four: npm test  (needs one npm install, for jsdom; and pip install pglast)</code></pre>
+node .t/desk-writes.js --mode=ok       # the desk's save / close / delete,
+node .t/desk-writes.js --mode=silent   # against a server that accepts,
+node .t/desk-writes.js --mode=denied   # answers 401, or filters writes out,
+node .t/desk-writes.js --mode=recover  # and after the fix: Retry flushes
+node .t/desk-writes.js --mode=leader   # what waited; a leader's delete is
+node .t/desk-writes.js --mode=forbidden# confirmed, an unreadable register
+node .t/desk-writes.js --mode=outsider # is announced, and a member off the
+#                                        desk is refused even with the code
+# or everything: npm test  (needs one npm install, for jsdom; and pip install pglast)</code></pre>
 <p>(<code>.t/</code> needs <code>npm install</code> once, for jsdom. The harness serves the folder over
 <code>http://127.0.0.1:&lt;port&gt;</code> rather than <code>file://</code>, because browsers refuse
 <code>localStorage</code> on an opaque origin — and it pulls <code>church-platform.js</code>,
@@ -258,5 +267,63 @@ ran in church mode; and the register painted nothing until <code>DB.list()</code
 means a blank screen for half a minute.</p>
 <p>The last two were only found once the portal was wired to the <b>real</b> platform files. A stub would have passed.</p>
 </div>
+
+<h2>8. “Nothing is happening” when the desk closes, saves or deletes a case</h2>
+<p>This is almost never a broken button. The desk’s buttons talk to PostgREST, and PostgREST has a
+particular habit that used to make this look like a dead UI: <b>when row-level security (or a missing
+<code>GRANT</code>) filters a write out, it answers <code>204 No Content</code> with zero rows and no
+error at all.</b> Nothing was written, yet nothing failed either. So the page said “Case saved”,
+re-read the list, and the row quietly snapped back to what it was — exactly “nothing is happening”.</p>
+<p>The code no longer trusts a write it cannot see. Every update asks the server for the row back
+(<code>update(…).select()</code>) and counts only what returns; every delete is confirmed the same way
+before the file is removed from the device. If the database did not accept it, you now get:</p>
+<ul>
+<li>a red toast headed <b>“Not written to the database”</b> (or <b>“Not deleted”</b>) that names the reason;</li>
+<li>the attempted change <b>stays visible on the row</b>, marked <b>Not written</b>, instead of reverting,
+so the desk never loses track of what it typed;</li>
+<li>a banner above the register — <i>“n change(s) are on this phone only, the database did not accept them”</i>
+— with a <b>Retry</b> button that re-sends them the moment access is fixed. No re-typing.</li>
+</ul>
+<p>If the register itself cannot be read, the banner says so plainly
+(<i>“This is the copy on this phone”</i>) instead of showing a stale list as though it were live.</p>
+<h3>The two causes, and how to tell which one you have</h3>
+<ol>
+<li><b>The signed-in account is not on the Support Team.</b> Roles come from <code>church_members.role</code>, which the
+church app sets in <i>Announcements → Manage member access</i>. A <code>member</code> or an unapproved account can file an
+application but cannot amend the register — by design. The code alone does not open the desk any more: with the right
+code and the wrong account you get “Right code, wrong account”, because the database would refuse the write anyway.</li>
+<li><b><code>supabase-schema.sql</code> was run only partly.</b> The tables can exist while the grants, functions and
+policies do not, because the script creates them in order and stops at the first failure.</li>
+</ol>
+<h3>One query that answers “did the schema actually run?”</h3>
+<p>Paste this in the SQL editor instead of guessing. Every line should come back <code>t</code>:</p>
+<pre><code>select
+  (select count(*) = 4 from pg_policy p join pg_class c on c.oid = p.polrelid
+     where c.relname = 'jcrgm_welfare_cases')                             as all_policies,
+  (select count(*) = 4 from pg_proc where proname in
+     ('jcrgm_create_case','jcrgm_lookup_case',
+      'jcrgm_is_desk','jcrgm_is_leader'))                                 as functions,
+  (has_table_privilege('authenticated','jcrgm_welfare_cases','update'))    as can_update,
+  (not has_table_privilege('anon','jcrgm_welfare_cases','select'))         as anon_blinded,
+  (select count(*) = 2 from pg_proc where proname in
+     ('jcrgm_desk_roles','jcrgm_leader_roles'))                            as role_lists;</code></pre>
+<p>An <code>f</code> anywhere means the script stopped part-way: fix the line the editor complained about and run the
+whole file again. Nothing in it destroys data — <code>create table if not exists</code>, <code>create or replace</code>,
+and <code>drop policy if exists</code> before each <code>create policy</code>, so a second pass is safe by design.
+<code>.t/sql-check.js</code> re-reads the four counts above against the script itself, so this query cannot go stale.</p>
+<h3>Deleting is a leader's decision, on purpose</h3>
+<p>A desk member may <i>read and amend</i> a case; only a leader may <code>DELETE</code> one — an audit trail a
+volunteer can erase is not an audit trail. Because a policy-filtered delete arrives as <code>204</code> with no rows,
+the desk no longer fires a doomed request: a <code>welfare</code> or <code>diaconia</code> member is told
+<b>“Needs a leader”</b> and offered <i>Close case</i>, which keeps the record. The two role lists live once, in
+the database:</p>
+<pre><code>select public.jcrgm_desk_roles()   as who_may_amend,
+       public.jcrgm_leader_roles() as who_may_delete;</code></pre>
+<p><code>CONFIG.deskRoles</code> and <code>CONFIG.leaderRoles</code> in <code>jcrgm-config.js</code> mirror them, and
+<code>test/jcrgm-engine.test.js</code> compares the JS arrays with the schema text and fails if they drift — which
+matters, because a role the door lets in and the database then refuses is itself a “nothing happened” report.</p>
+<p><b>After re-running the SQL, sign out and back in</b> (or tap ↻ Sync on the desk): the page keeps the PostgREST
+response for the session, and <b>Retry</b> in the banner will then flush everything it had marked
+<b>Not written</b> — the unsaved changes are kept in the browser, not lost with the failed attempt.</p>
 </body>
 </html>

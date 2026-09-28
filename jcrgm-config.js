@@ -70,7 +70,10 @@ var JCRGM = (function () {
     adminSessionMinutes: 40,           // auto lock-out after inactivity
     maxPasswordAttempts: 6,            // then a cool-down
     requireChurchAuth: true,           // an approved church account is needed as well
-    deskRoles: ["welfare", "diaconia", "leader", "pastor", "administrator"],
+    /* Mirrors public.jcrgm_desk_roles() in supabase-schema.sql - the engine
+       test compares the two, so change both or neither. */
+    deskRoles: ["welfare", "diaconia", "leader", "pastor", "administrator", "admin", "deacon", "secretary"],
+    leaderRoles: ["leader", "pastor", "administrator", "admin"],  // = public.jcrgm_leader_roles(): deletes only
     allowMembersFullAccess: false,     // true = any approved member may review cases
     listLimit: 500,                    // stay inside the platform's stated interface limits
 
@@ -570,8 +573,8 @@ var JCRGM = (function () {
     if (!c.configured) return { mode: "not-configured", allowed: true, signedIn: false, label: "" };
     var signedIn = !!(c.user && c.user.id);
     var member = !!(signedIn && c.isMember && c.isMember());
-    var leader = !!(signedIn && c.isLeader && c.isLeader());
     var role = String((c.member && c.member.role) || "").toLowerCase();
+    var leader = !!(signedIn && ((c.isLeader && c.isLeader()) || CONFIG.leaderRoles.indexOf(role) >= 0));
     var byRole = CONFIG.deskRoles.indexOf(role) >= 0;
     var allowed = !CONFIG.requireChurchAuth ? true : (member && (leader || byRole || CONFIG.allowMembersFullAccess));
     return {
@@ -636,10 +639,12 @@ var JCRGM = (function () {
   S.client = function () { return client || S.init(); };
   /** whether a write right now would reach the database at all */
   S.live = function () { return !!S.client(); };
+  S.lastListError = null;
 
   /* ---- localStorage fallback (always on, also the offline queue) ---------- */
   var LS_RECORDS = "jcrgm_welfare_records_v1";
   var LS_QUEUE = "jcrgm_welfare_queue_v1";
+  var LS_UNSAVED = "jcrgm_welfare_unsaved_v1";
   var LS_SESSION = "jcrgm_welfare_admin_session";
 
   function hasStorage() { try { return typeof localStorage !== "undefined" && !!localStorage; } catch (e) { return false; } }
@@ -654,6 +659,25 @@ var JCRGM = (function () {
   }
 
   S.localAll = function () { return readLS(LS_RECORDS).map(W.cleanRecord); };
+
+  /* Unsaved-change ledger. PostgREST answers "204, no rows" for a write that
+     row-level security filtered out, so the page cannot rely on the response
+     alone; it keeps its own note of which cases carry a change the database has
+     not accepted, and stamps that on the row every time the list is re-read
+     from the server. Without this, the next reload paints the server's stale
+     copy and the desk sees its click disappear. */
+  S.unsavedIds = function () {
+    try { return JSON.parse(localStorage.getItem(LS_UNSAVED) || "[]") || []; } catch (e) { return []; }
+  };
+  S.markUnsaved = function (id) {
+    if (!id) return;
+    var u = S.unsavedIds();
+    if (u.indexOf(id) < 0) { u.push(id); try { localStorage.setItem(LS_UNSAVED, JSON.stringify(u)); } catch (e) {} }
+  };
+  S.clearUnsaved = function (id) {
+    var u = S.unsavedIds().filter(function (x) { return x !== id; });
+    try { if (u.length) localStorage.setItem(LS_UNSAVED, JSON.stringify(u)); else localStorage.removeItem(LS_UNSAVED); } catch (e) {}
+  };
   S.localUpsert = function (rec) {
     var all = readLS(LS_RECORDS), found = false;
     for (var i = 0; i < all.length; i++) if (all[i].id === rec.id) { all[i] = rec; found = true; }
@@ -707,13 +731,33 @@ var JCRGM = (function () {
       return c.from(CONFIG.tableName).select("*").order("created_at", { ascending: false }).limit(CONFIG.listLimit || 500)
         .then(function (res) {
           if (res.error) throw res.error;
-          var rows = (res.data || []).map(W.cleanRecord);
+          S.lastListError = null;
+          var byId = {}; S.localAll().forEach(function (r) { byId[r.id] = r; });
+          var unsaved = {}; S.unsavedIds().forEach(function (id) { unsaved[id] = 1; });
+          var rows = (res.data || []).map(W.cleanRecord).map(function (r) {
+            if (!unsaved[r.id]) return r;
+            var m = byId[r.id];
+            // The server's row wins on every field it holds; the attempted
+            // changes are layered back over it so the desk can see exactly
+            // what is waiting to be written, and the row cannot revert.
+            if (m) { Object.keys(m).forEach(function (k) { if (k.charAt(0) === "_") return; r[k] = m[k]; }); }
+            r._pending = true;
+            if (!r._syncError) r._syncError = "written on this device only — the database refused the change";
+            return r;
+          });
           // merge any not-yet-synced local records so nothing is ever lost
           var ids = {}; rows.forEach(function (r) { ids[r.id] = 1; });
           var local = S.localAll().filter(function (r) { return !ids[r.id]; });
+          local.forEach(function (r) { r._pending = true; if (!r._syncError) r._syncError = "not yet written to the database"; });
           return local.concat(rows);
         })
-        .catch(function () { return S.localAll(); });
+        .catch(function (e) {
+          // Remember it, so the desk can say out loud that what it is looking
+          // at is the device's copy, not the church's register. A silent
+          // fallback here is how a broken install looks like a working one.
+          S.lastListError = (e && (e.message || e.hint)) || String(e || "the read failed");
+          return S.localAll();
+        });
     },
 
     /** public: one case by reference + phone tail — no table read allowed */
@@ -757,26 +801,71 @@ var JCRGM = (function () {
     },
 
     /** admin: update status / disbursement */
+    /**
+     * admin: amend a case. The write is verified, not assumed: PostgREST
+     * answers 204 with zero rows when row-level security (or a missing grant,
+     * or a policy that only leaders satisfy) filtered the UPDATE away, and
+     * that is NOT an error - so an earlier version of this reported "saved"
+     * while nothing had changed and the next reload quietly reverted the row.
+     */
     update: function (id, patch) {
       var all = S.localAll(), target = null;
       for (var i = 0; i < all.length; i++) if (all[i].id === id) target = all[i];
-      if (!target) return Promise.reject(new Error("not found"));
+      if (!target) return Promise.reject(new Error("This case is not in this device's copy, so it cannot be amended here."));
       for (var k in patch) if (Object.prototype.hasOwnProperty.call(patch, k)) target[k] = patch[k];
       target.updated_at = new Date().toISOString();
       target = W.cleanRecord(target);
-      S.localUpsert(target);
       var c = S.client();
-      if (!c) { target._offline = true; return Promise.resolve(target); }
-      return c.from(CONFIG.tableName).update(target).eq("id", id).select().then(function (res) {
-        if (res.error) throw res.error; return target;
-      }).catch(function (e) { target._syncError = (e && e.message) || "sync failed"; return target; });
+      if (!c) {
+        target._offline = true; target._syncError = "";
+        S.localUpsert(target);
+        return Promise.resolve({ record: target, synced: false, reason: "kept on this device — no database connection configured" });
+      }
+      var wire = {};                                   // strip local bookkeeping
+      for (var key in target) if (key.charAt(0) !== "_") wire[key] = target[key];
+      return c.from(CONFIG.tableName).update(wire).eq("id", id).select().then(function (res) {
+        if (res.error) throw res.error;
+        var row = Array.isArray(res.data) ? res.data[0] : res.data;
+        if (!row) {                                    // 204 / [] : the write was dropped
+          target._syncError = "The database did not accept this change (no matching row was writable).";
+          target._pending = true;
+          S.localUpsert(target); S.markUnsaved(id);
+          return { record: target, synced: false, refused: true,
+                   reason: "no row was updated — your account may not hold a Support Team role, or supabase-schema.sql has not been run in this project" };
+        }
+        var done = W.cleanRecord(row);
+        done._syncError = ""; done._pending = false; done._synced = true;
+        S.localUpsert(done); S.clearUnsaved(id);
+        return { record: done, synced: true };
+      }).catch(function (e) {
+        target._syncError = (e && e.message) || "the server rejected the change";
+        target._pending = true;
+        S.localUpsert(target); S.markUnsaved(id);
+        return { record: target, synced: false, reason: target._syncError };
+      });
     },
 
+    /** admin: delete a case. Removal from this device happens only once the
+        server agrees, so a refused delete can never look like a successful one
+        (deleting welfare records is not a thing to get wrong twice). */
     remove: function (id) {
-      S.localRemove(id);
       var c = S.client();
-      if (!c) return Promise.resolve();
-      return c.from(CONFIG.tableName).delete().eq("id", id).then(function () { return true; }).catch(function () { return false; });
+      if (!c) {
+        S.localRemove(id);
+        return Promise.resolve({ synced: false, removed: true, reason: "deleted from this device only — no database connection configured" });
+      }
+      return c.from(CONFIG.tableName).delete().eq("id", id).select("id").then(function (res) {
+        if (res.error) throw res.error;
+        var hit = Array.isArray(res.data) ? res.data.length > 0 : !!res.data;
+        if (!hit) {
+          return { synced: false, removed: false, refused: true, record: S.localAll().filter(function (r) { return r.id === id; })[0] || null,
+                   reason: "nothing was deleted — the database did not let this account remove that row (check your role, or run supabase-schema.sql)" };
+        }
+        S.localRemove(id); S.clearUnsaved(id);
+        return { synced: true, removed: true };
+      }).catch(function (e) {
+        return { synced: false, removed: false, reason: (e && e.message) || "the server rejected the delete" };
+      });
     },
 
     /** Push everything queued while offline. Returns {sent, failed}. */
@@ -802,6 +891,34 @@ var JCRGM = (function () {
         writeLS(LS_QUEUE, remaining);
         return { sent: sent, failed: failed, queued: remaining.length };
       });
+    },
+
+    /** Changes that exist only on this phone (refused or unsent edits). */
+    pending: function () {
+      return S.localAll().filter(function (r) { return r._pending || r._syncError; });
+    },
+
+    /** Re-applies refused/unsent edits after the account or the schema is
+        fixed. Deletes are NOT replayed from here: a removal is expressed as
+        status "closed" in this register, and genuine deletion stays a
+        deliberate, per-click act rather than something retried in the background. */
+    replayPending: function () {
+      var list = DB.pending();
+      var done = 0, still = 0, firstErr = "";
+      var chain = list.reduce(function (pr, rec) {
+        return pr.then(function () {
+          var patch = {};
+          Object.keys(rec).forEach(function (k) { if (k.charAt(0) !== "_" && k !== "id") patch[k] = rec[k]; });
+          return DB.update(rec.id, patch).then(function (res) {
+            if (res && res.synced) {
+              var all = readLS(LS_QUEUE).filter(function (q) { return q.id !== rec.id; });
+              writeLS(LS_QUEUE, all);
+              done++;
+            } else { still++; firstErr = firstErr || ((res && res.reason) || "still refused"); }
+          });
+        });
+      }, Promise.resolve());
+      return chain.then(function () { return { attempted: list.length, written: done, still: still, reason: firstErr }; });
     },
 
     queueSize: function () { return readLS(LS_QUEUE).length; },
