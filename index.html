@@ -446,6 +446,13 @@ button:active{transform:translateY(0) scale(.98);}
 .nav-group{padding:16px 18px 12px;}
 @media (max-width:640px){.nav-grid{grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px;}.tile{padding:9px 11px;}.t-sub{display:none;}.t-ico{flex-basis:31px;width:31px;height:31px;font-size:15px;}}
 @media (prefers-reduced-motion:reduce){.tile,.t-ico,.tile::after{transition:none;}}
+
+.nav-group[data-accent="gold"]{border-color:rgba(255,215,0,.32);}
+.nav-group[data-accent="gold"]::before{background:linear-gradient(180deg,transparent,#ffd700,transparent);}
+.nav-group[data-accent="gold"] .ng-ico{background:rgba(255,215,0,.20);border-color:rgba(255,215,0,.45);}
+.nav-group[data-accent="gold"] .nav-group-title,.nav-group[data-accent="gold"] .ng-title{color:#ffe57f;text-shadow:0 0 10px rgba(255,215,0,.55);}
+.nav-group[data-accent="gold"]:hover{box-shadow:0 0 26px rgba(255,215,0,.15), inset 0 0 20px rgba(255,215,0,.06);border-color:rgba(255,215,0,.5);border-radius:var(--radius);}
+
 .nav-group[data-accent="sky"]{border-color:rgba(125,211,252,.22);}
 .nav-group[data-accent="sky"]::before{background:linear-gradient(180deg,transparent,#7dd3fc,transparent);}
 .nav-group[data-accent="sky"] .nav-group-title{color:#bae6fd;text-shadow:0 0 10px rgba(125,211,252,.4);}
@@ -972,17 +979,23 @@ html.scrolling *, html.scrolling *::before, html.scrolling *::after{
   </div>
 
   <div class="nav-group">
-    <div class="nav-group-head"><span class="ng-ico">🏛</span><span class="ng-title">Membership &amp; Administration</span><span class="ng-rule"></span><span class="ng-count">9 portals</span></div>
+    <div class="nav-group-head"><span class="ng-ico">🏛</span><span class="ng-title">Membership &amp; Administration</span><span class="ng-rule"></span><span class="ng-count">5 portals</span></div>
     <div class="nav-grid">
       <a class="tile" href="membership.html"><span class="t-ico c-green">📝</span><span class="t-txt"><span class="t-name">Membership</span><span class="t-sub">Register + digital ID card</span></span></a>
       <a class="tile" href="membership_admin.html"><span class="t-ico c-indigo">🧮</span><span class="t-txt"><span class="t-name">Membership Admin</span><span class="t-sub">Number desk &amp; verification</span></span></a>
       <button type="button" class="tile" onclick="viewMembers()"><span class="t-ico c-teal">👥</span><span class="t-txt"><span class="t-name">View Members</span><span class="t-sub">Local register</span></span></button>
       <button type="button" class="tile" onclick="openJCRGMChurchManagementPrayerCenter()"><span class="t-ico c-navy">⛪</span><span class="t-txt"><span class="t-name">Church Management</span><span class="t-sub">Prayer centre dashboard</span></span></button>
-      <button type="button" class="tile" onclick="openChurchConstitution()"><span class="t-ico c-gold">📜</span><span class="t-txt"><span class="t-name">Church Constitution</span><span class="t-sub">Governing document</span></span></button>
-      <button type="button" class="tile" onclick="window.location.href='jcrgm_policy_system.html'"><span class="t-ico c-slate">📋</span><span class="t-txt"><span class="t-name">Church Policy</span><span class="t-sub">Order &amp; excellence</span></span></button>
+      <button type="button" class="tile" onclick="openChurchConstitution()"><span class="t-ico c-gold">📜</span><span class="t-txt"><span class="t-name">Church Constitution &amp; Policy</span><span class="t-sub">Governing charter &amp; orders</span></span></button>
+    </div>
+  </div>
+
+  <div class="nav-group" data-accent="gold">
+    <div class="nav-group-head"><span class="ng-ico">👔</span><span class="ng-title">Ministry Workers &amp; Operations</span><span class="ng-rule"></span><span class="ng-count">4 portals</span></div>
+    <div class="nav-grid">
+      <button type="button" class="tile" onclick="window.location.href='jcrgm_ministry_attire.html'"><span class="t-ico c-gold">👔</span><span class="t-txt"><span class="t-name">Ministry Attire</span><span class="t-sub">Sunday uniforms &amp; tailoring</span></span></button>
       <button type="button" class="tile" onclick="window.location.href='ministry-workers.html'"><span class="t-ico c-orange">🙌</span><span class="t-txt"><span class="t-name">Ministry Workers</span><span class="t-sub">Departments &amp; orders</span></span></button>
-      <button type="button" class="tile" onclick="window.location.href='Prophets Office.html'"><span class="t-ico c-violet">🕊</span><span class="t-txt"><span class="t-name">Prophets Office</span><span class="t-sub">Word &amp; intercession</span></span></button>
       <button type="button" class="tile" onclick="window.location.href='JCRGM_Service_Schedule_Router.html'"><span class="t-ico c-indigo">🗓</span><span class="t-txt"><span class="t-name">Service Schedule Router</span><span class="t-sub">Who serves when</span></span></button>
+      <button type="button" class="tile" onclick="window.location.href='Prophets Office.html'"><span class="t-ico c-violet">🕊</span><span class="t-txt"><span class="t-name">Prophets Office</span><span class="t-sub">Word &amp; intercession</span></span></button>
     </div>
   </div>
 
@@ -1643,5 +1656,5 @@ document.addEventListener("visibilitychange", function(){ if(!document.hidden) u
   });
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42464b8feb390cf',t:'MTc5MDYxNTc2MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42464b8feb390cf',t:'MTc5MDYxNTc2MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4337504cc34b578',t:'MTc5MDc3MzcxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
