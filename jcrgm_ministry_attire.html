@@ -128,6 +128,17 @@
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(37,99,235,0.3);
     }
+    .btn-print {
+      background: rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+    .btn-print:hover {
+      background: rgba(255, 255, 255, 0.28);
+      border-color: #FFFFFF;
+      color: #FFFFFF;
+    }
     .btn-primary {
       background: linear-gradient(135deg, #D4AF37 0%, #AA820A 100%);
       color: #0F1E3D;
@@ -385,25 +396,25 @@
     }
     .flyer-row {
       display: grid;
-      grid-template-columns: 88px 1fr 280px;
+      grid-template-columns: 105px 1fr 340px;
       align-items: center;
       gap: 24px;
       background: #fff;
       border-radius: var(--radius-md);
-      padding: 16px 22px;
+      padding: 18px 24px;
       border: 1px solid #E2E8F0;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-      min-height: 180px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      min-height: 200px;
       transition: all 0.2s ease;
       position: relative;
     }
     .flyer-row:hover {
-      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.09);
       border-color: #CBD5E1;
     }
     .sunday-badge {
-      width: 88px;
-      height: 88px;
+      width: 105px;
+      height: 105px;
       border-radius: var(--radius-md);
       color: #fff;
       display: flex;
@@ -412,37 +423,38 @@
       justify-content: center;
       text-align: center;
       font-weight: 800;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-      padding: 4px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+      padding: 6px;
     }
     .sunday-badge .badge-date {
-      font-size: 1.6rem;
+      font-size: 2.1rem;
       line-height: 1;
       font-weight: 900;
     }
     .sunday-badge .badge-month {
-      font-size: 0.72rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 1px;
-      opacity: 0.9;
-      margin-top: 2px;
+      opacity: 0.95;
+      margin-top: 3px;
+      color: #D4AF37;
     }
     .sunday-badge .badge-ordinal {
-      font-size: 0.65rem;
-      opacity: 0.85;
-      font-weight: 600;
+      font-size: 0.72rem;
+      opacity: 0.9;
+      font-weight: 700;
     }
     .flyer-row-details {
       min-width: 0;
       word-break: break-word;
     }
     .flyer-theme-title {
-      font-size: 1.1rem;
-      font-weight: 800;
+      font-size: 1.25rem;
+      font-weight: 900;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: #0F1E3D;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -450,44 +462,48 @@
       line-height: 1.35;
     }
     .color-swatch {
-      width: 14px;
-      height: 14px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       display: inline-block;
-      border: 1px solid rgba(0,0,0,0.15);
+      border: 1px solid rgba(0,0,0,0.2);
       flex-shrink: 0;
     }
     .flyer-desc-group {
-      font-size: 0.86rem;
-      line-height: 1.45;
+      font-size: 0.94rem;
+      line-height: 1.5;
       color: #334155;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     .flyer-desc-group strong {
       color: #0F1E3D;
-      font-weight: 700;
+      font-weight: 800;
     }
     .flyer-duty-rule {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: #B45309;
-      font-weight: 600;
-      margin-top: 6px;
-      display: flex;
+      font-weight: 700;
+      margin-top: 8px;
+      display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       line-height: 1.35;
+      background: #FEF3C7;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid #FCD34D;
     }
     .flyer-swap-btn {
       margin-top: 10px;
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       font-weight: 700;
       color: #1E3A8A;
       background: #EFF6FF;
       border: 1px solid #BFDBFE;
-      padding: 5px 12px;
+      padding: 6px 14px;
       border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s;
@@ -500,17 +516,17 @@
     /* SEPARATE, DEDICATED IMAGE CONTAINER IN GRID COLUMN 3 */
     .flyer-img-box {
       width: 100%;
-      max-width: 280px;
-      height: 165px;
+      max-width: 340px;
+      height: 195px;
       background: #ffffff;
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 6px;
+      padding: 8px;
       overflow: hidden;
       box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-      border: 1px solid #e2e8f0;
+      border: 1.5px solid #E2E8F0;
       justify-self: end;
     }
     .flyer-img {
@@ -624,28 +640,29 @@
       filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));
     }
     .option-card-body {
-      padding: 14px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
       flex: 1;
     }
     .option-card-title {
-      font-size: 0.95rem;
+      font-size: 1.05rem;
       font-weight: 800;
       color: #0F1E3D;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      line-height: 1.35;
     }
     .option-card-specs {
-      font-size: 0.82rem;
-      color: #475569;
-      line-height: 1.45;
-      margin-bottom: 12px;
+      font-size: 0.88rem;
+      color: #334155;
+      line-height: 1.5;
+      margin-bottom: 14px;
       flex: 1;
     }
     .option-card-btn {
       width: 100%;
-      padding: 8px;
-      font-size: 0.82rem;
+      padding: 9px;
+      font-size: 0.85rem;
       font-weight: 700;
       border-radius: var(--radius-sm);
       border: 1px solid #CBD5E1;
@@ -653,17 +670,18 @@
       color: var(--text);
       cursor: pointer;
       transition: all 0.2s;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
     .option-card.selected .option-card-btn {
       background: var(--gold);
       color: #0F1E3D;
       border-color: var(--gold);
+      font-weight: 800;
     }
     .option-card-swap {
       width: 100%;
-      padding: 6px;
-      font-size: 0.75rem;
+      padding: 7px;
+      font-size: 0.78rem;
       font-weight: 700;
       border-radius: var(--radius-sm);
       border: 1px dashed #94A3B8;
@@ -998,7 +1016,7 @@
     /* RESPONSIVE LAYOUT — PREVENTS ANY WORD COVERAGE OR SQUEEZING */
     @media (max-width: 980px) {
       .flyer-row {
-        grid-template-columns: 80px 1fr;
+        grid-template-columns: 90px 1fr;
         grid-template-rows: auto auto;
         gap: 16px;
         padding: 16px;
@@ -1007,19 +1025,49 @@
         grid-column: 1 / -1;
         width: 100%;
         max-width: 100%;
-        height: 220px;
+        height: 230px;
         order: 3;
       }
       .sunday-badge {
-        width: 80px;
-        height: 80px;
+        width: 90px;
+        height: 90px;
       }
       .sunday-badge .badge-date {
-        font-size: 1.4rem;
+        font-size: 1.7rem;
       }
       .nav-actions {
         width: 100%;
         justify-content: flex-start;
+      }
+    }
+
+    /* PRINT STYLESHEET — CLEAN POSTER & BULLETIN FIT */
+    @media print {
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      header.header, .controls-panel, .month-ribbon, .specs-grid, .inspiration-section, .flyer-swap-btn, .toast, .modal-backdrop {
+        display: none !important;
+      }
+      .container {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .flyer-card {
+        box-shadow: none !important;
+        border: none !important;
+      }
+      .flyer-row {
+        page-break-inside: avoid;
+        box-shadow: none !important;
+        border: 1.5px solid #CBD5E1 !important;
+        margin-bottom: 12px;
+      }
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
     }
   </style>
@@ -1039,6 +1087,7 @@
       <div class="nav-actions">
         <a href="index.html" class="btn btn-portal">🏛️ Main Portal</a>
         <button class="btn btn-shuffle" onclick="shuffleMonthOutfits()" title="Shuffle attires for this month with zero repeats">🔀 Shuffle Outfits</button>
+        <button class="btn btn-print" onclick="window.print()" title="Print flyer or save as PDF">🖨️ Print / PDF</button>
         <button class="btn btn-primary" onclick="downloadFlyerPNG()">📥 Download HD Flyer</button>
         <button class="btn btn-whatsapp" onclick="shareWhatsApp()">💬 WhatsApp Memo</button>
       </div>
@@ -2113,7 +2162,7 @@
       return y;
     }
 
-    // Download HD Canvas Flyer PNG (1200 x 1850 px) with Guaranteed Safe Text Column
+    // Download HD Canvas Flyer PNG (1200 x 1850 px) — PROPORTIONAL, LARGE, FIT PAGE & PROFESSIONAL
     function downloadFlyerPNG() {
       showToast("Generating HD Ministry Flyer...");
       const canvas = document.getElementById("exportCanvas");
@@ -2128,63 +2177,129 @@
       canvas.width = W;
       canvas.height = H;
 
-      // Background
+      // 1. Crisp Professional Background
       ctx.fillStyle = "#F8FAFC";
       ctx.fillRect(0, 0, W, H);
 
-      // Header Banner
-      const grad = ctx.createLinearGradient(0, 0, W, 220);
-      grad.addColorStop(0, "#091326");
-      grad.addColorStop(0.6, "#0F1E3D");
-      grad.addColorStop(1, "#172B4D");
+      // 2. Executive Header Banner (Height: 260px)
+      const headerH = 260;
+      const grad = ctx.createLinearGradient(0, 0, W, headerH);
+      grad.addColorStop(0, "#071124");
+      grad.addColorStop(0.5, "#0F1E3D");
+      grad.addColorStop(1, "#16284F");
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, 220);
+      ctx.fillRect(0, 0, W, headerH);
 
-      // Gold Divider
+      // Gold Divider (6px)
       ctx.fillStyle = "#D4AF37";
-      ctx.fillRect(0, 216, W, 6);
+      ctx.fillRect(0, headerH - 6, W, 6);
 
-      // Header Text
+      // Header Typography
       ctx.fillStyle = "#FFFFFF";
-      ctx.font = "bold 36px -apple-system, sans-serif";
+      ctx.font = "900 36px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText(`JESUS CHRIST REDEEMS GLOBAL MINISTRIES`, W / 2, 60);
+      ctx.fillText("JESUS CHRIST REDEEMS GLOBAL MINISTRIES", W / 2, 126);
 
       ctx.fillStyle = "#D4AF37";
-      ctx.font = "bold 25px -apple-system, sans-serif";
-      ctx.fillText(`${mName.toUpperCase()} ${currentYear} MINISTRY ATTIRE & UNIFORMS`, W / 2, 105);
+      ctx.font = "900 30px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText(`${mName.toUpperCase()} ${currentYear} MINISTRY ATTIRE & UNIFORMS`, W / 2, 168);
 
-      ctx.fillStyle = "#E2E8F0";
-      ctx.font = "bold 20px -apple-system, sans-serif";
-      ctx.fillText(`DEPARTMENT: ${deptLabels[currentDept].toUpperCase()}`, W / 2, 145);
+      // Department Badge in Header
+      const deptName = deptLabels[currentDept].toUpperCase();
+      ctx.font = "bold 20px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      const deptW = ctx.measureText(deptName).width + 36;
+      ctx.fillStyle = "rgba(212, 175, 55, 0.22)";
+      ctx.strokeStyle = "#D4AF37";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(W / 2 - deptW / 2, 188, deptW, 34, 17);
+      ctx.fill();
+      ctx.stroke();
 
+      ctx.fillStyle = "#FFFFFF";
+      ctx.fillText(deptName, W / 2, 212);
+
+      // Theme Tag
       ctx.fillStyle = "#CBD5E1";
-      ctx.font = "16px -apple-system, sans-serif";
-      ctx.fillText(`${mData.themeTag}`, W / 2, 180);
+      ctx.font = "600 16px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText(mData.themeTag, W / 2, 244);
 
-      // Sunday Rows Calculation
-      const padX = 35;
-      const startY = 240;
-      const footerH = 60;
-      const availableH = H - startY - footerH - 20;
-      const rowH = Math.min(270, Math.floor((availableH / schedule.length) - 14));
+      // 3. Footer Banner (Height: 65px)
+      const footerH = 65;
+      const footerY = H - footerH;
+      ctx.fillStyle = "#091326";
+      ctx.fillRect(0, footerY, W, footerH);
+      ctx.fillStyle = "#D4AF37";
+      ctx.fillRect(0, footerY, W, 4);
 
-      // Separate Text and Photo Columns
-      const badgeW = 90;
-      const badgeH = 90;
-      const badgeX = padX + 16;
-      const textX = badgeX + badgeW + 20; // 161
-      const photoW = 340;
-      const photoX = W - padX - photoW - 16; // 809
-      const maxTextW = photoX - textX - 25; // 623 px (Guaranteed safe boundary!)
+      ctx.fillStyle = "#D4AF37";
+      ctx.font = "bold 16px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("JESUS CHRIST REDEEMS GLOBAL MINISTRIES • LIVING BY THE WORD & TRUTH", W / 2, footerY + 28);
+
+      ctx.fillStyle = "#94A3B8";
+      ctx.font = "600 13px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("Official Leadership & Ministry Workers Attire Portal • Lusaka, Zambia", W / 2, footerY + 48);
+
+      // 4. DYNAMIC ROW BUDGETING — 100% FILLS PAGE HEIGHT
+      const N = schedule.length; // 4 or 5 Sundays
+      const padX = 30;
+      const startY = 278;
+      const availH = footerY - startY - 14;
+      const gapY = (N === 4) ? 20 : 14;
+      const rowH = Math.floor((availH - (N - 1) * gapY) / N);
+
+      // Proportional Dimensions
+      const badgeW = (N === 4) ? 125 : 112;
+      const badgeH = (N === 4) ? 150 : 130;
+      const photoW = (N === 4) ? 450 : 420;
+      const photoH = rowH - 22;
+      const photoX = W - padX - photoW - 14;
+      const badgeX = padX + 22;
+      const textX = badgeX + badgeW + 24;
+      const maxTextW = photoX - textX - 25;
 
       let loadedCount = 0;
-      const totalImages = schedule.length;
+      const totalImages = schedule.length + 1; // +1 for church logo
 
+      // Load and Draw Circular Church Logo in Header
+      const logoImg = new Image();
+      logoImg.crossOrigin = "anonymous";
+      logoImg.onload = () => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(W / 2, 54, 40, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fill();
+        ctx.drawImage(logoImg, W / 2 - 40, 14, 80, 80);
+        ctx.restore();
+
+        ctx.strokeStyle = "#D4AF37";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(W / 2, 54, 40, 0, Math.PI * 2);
+        ctx.stroke();
+
+        loadedCount++;
+        if (loadedCount === totalImages) {
+          triggerCanvasDownload(canvas, mName);
+        }
+      };
+      logoImg.onerror = () => {
+        loadedCount++;
+        if (loadedCount === totalImages) {
+          triggerCanvasDownload(canvas, mName);
+        }
+      };
+      logoImg.src = "data:image/jpeg;base64,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";
+
+      // Render Sunday Rows
       schedule.forEach((item) => {
         const idx = item.sundayIdx;
         const dayNum = item.dayNum;
-        const rowY = startY + (idx * (rowH + 14));
+        const rowY = startY + idx * (rowH + gapY);
         const activeSlot = selectedOptionPerSunday[idx] || 'A';
         let choice = item.options[activeSlot];
 
@@ -2193,80 +2308,100 @@
           choice = customSundayOverwrites[overwriteKey];
         }
 
-        // Row White Card
+        const badgeColor = choice.badgeColor || "#0F1E3D";
+        const accentColor = choice.accentColor || "#D4AF37";
+
+        // Card Container
         ctx.fillStyle = "#FFFFFF";
         ctx.strokeStyle = "#CBD5E1";
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.roundRect(padX, rowY, W - (padX * 2), rowH, 12);
+        ctx.roundRect(padX, rowY, W - (padX * 2), rowH, 16);
         ctx.fill();
         ctx.stroke();
 
-        // Sunday Date Badge
-        const badgeY = rowY + (rowH - badgeH) / 2;
-        ctx.fillStyle = choice.badgeColor || "#0F1E3D";
+        // Left Liturgical Accent Stripe
+        ctx.fillStyle = accentColor;
         ctx.beginPath();
-        ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 10);
+        ctx.roundRect(padX, rowY, 10, rowH, [16, 0, 0, 16]);
         ctx.fill();
 
-        ctx.strokeStyle = choice.accentColor || "#D4AF37";
+        // Date Badge
+        const badgeY = rowY + Math.floor((rowH - badgeH) / 2);
+        ctx.fillStyle = badgeColor;
+        ctx.beginPath();
+        ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 12);
+        ctx.fill();
+
+        ctx.strokeStyle = accentColor;
         ctx.lineWidth = 3;
         ctx.stroke();
 
         ctx.fillStyle = "#FFFFFF";
-        ctx.font = "bold 36px -apple-system, sans-serif";
+        ctx.font = `900 ${N === 4 ? 58 : 50}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
         ctx.textAlign = "center";
-        ctx.fillText(`${dayNum}`, badgeX + (badgeW / 2), badgeY + 36);
+        ctx.fillText(`${dayNum}`, badgeX + badgeW / 2, badgeY + (N === 4 ? 58 : 50));
 
-        ctx.font = "bold 14px -apple-system, sans-serif";
-        ctx.fillText(`${mName.slice(0,3).toUpperCase()}`, badgeX + (badgeW / 2), badgeY + 64);
+        ctx.fillStyle = "#D4AF37";
+        ctx.font = `bold ${N === 4 ? 20 : 18}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+        ctx.fillText(mName.slice(0, 3).toUpperCase(), badgeX + badgeW / 2, badgeY + (N === 4 ? 96 : 86));
 
-        ctx.font = "12px -apple-system, sans-serif";
-        ctx.fillText(`${getOrdinal(idx + 1)} Sun`, badgeX + (badgeW / 2), badgeY + 80);
+        ctx.fillStyle = "#E2E8F0";
+        ctx.font = `bold ${N === 4 ? 16 : 14}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+        ctx.fillText(`${getOrdinal(idx + 1)} Sun`, badgeX + badgeW / 2, badgeY + (N === 4 ? 126 : 112));
 
-        // Row Text Details — Auto-wrapping inside maxTextW (CANNOT BE HIDDEN!)
+        // Details (Large, Bold & Ultra-Legible)
         ctx.textAlign = "left";
-        let curY = rowY + 28;
+        let curY = rowY + (N === 4 ? 38 : 32);
 
-        // Title (wrapped)
+        // Theme Title
         ctx.fillStyle = "#0F1E3D";
-        ctx.font = "bold 20px -apple-system, sans-serif";
-        curY = drawWrappedText(ctx, choice.title, textX, curY, maxTextW, 24, 2);
-        curY += 4;
+        ctx.font = `900 ${N === 4 ? 26 : 22}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+        curY = drawWrappedText(ctx, choice.title, textX, curY, maxTextW, (N === 4 ? 30 : 26), 2);
+        curY += (N === 4 ? 12 : 8);
 
-        // Men (wrapped)
-        ctx.fillStyle = "#334155";
-        ctx.font = "14px -apple-system, sans-serif";
-        curY = drawWrappedText(ctx, "👔 Men: " + choice.men, textX, curY, maxTextW, 19, 2);
-        curY += 2;
+        // Men Attire
+        ctx.fillStyle = "#1E293B";
+        ctx.font = `600 ${N === 4 ? 18.5 : 16.5}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+        curY = drawWrappedText(ctx, "👔 Men: " + choice.men, textX, curY, maxTextW, (N === 4 ? 26 : 22), 2);
+        curY += (N === 4 ? 8 : 4);
 
-        // Ladies (wrapped)
-        ctx.fillStyle = "#334155";
-        ctx.font = "14px -apple-system, sans-serif";
-        curY = drawWrappedText(ctx, "👗 Ladies: " + choice.ladies, textX, curY, maxTextW, 19, 2);
-        curY += 4;
+        // Ladies Attire
+        ctx.fillStyle = "#1E293B";
+        ctx.font = `600 ${N === 4 ? 18.5 : 16.5}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+        curY = drawWrappedText(ctx, "👗 Ladies: " + choice.ladies, textX, curY, maxTextW, (N === 4 ? 26 : 22), 2);
+        curY += (N === 4 ? 14 : 9);
 
-        // Duty Rule (wrapped)
-        ctx.fillStyle = "#B45309";
-        ctx.font = "bold 12px -apple-system, sans-serif";
-        drawWrappedText(ctx, choice.duty, textX, curY, maxTextW, 17, 2);
-
-        // DEDICATED PHOTO BOX (Starts at photoX = 809, never overlaps text!)
-        const pY = rowY + 10;
-        const pH = rowH - 20;
-
-        ctx.fillStyle = "#FFFFFF";
+        // Duty Rule Pill
+        const dutyText = `⚡ ${choice.duty}`;
+        ctx.font = `bold ${N === 4 ? 15 : 13.5}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+        const dutyPillW = Math.min(maxTextW, ctx.measureText(dutyText).width + 24);
+        const dutyPillH = (N === 4 ? 32 : 26);
+        ctx.fillStyle = "#FEF3C7";
+        ctx.strokeStyle = "#FCD34D";
+        ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.roundRect(photoX, pY, photoW, pH, 8);
+        ctx.roundRect(textX, curY - 2, dutyPillW, dutyPillH, 6);
         ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#B45309";
+        ctx.fillText(dutyText, textX + 10, curY + (N === 4 ? 20 : 16));
+
+        // Giant Prominent Photo Box
+        const py = rowY + 11;
+        ctx.fillStyle = "#FFFFFF";
         ctx.strokeStyle = "#E2E8F0";
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(photoX, py, photoW, photoH, 12);
+        ctx.fill();
         ctx.stroke();
 
         const img = new Image();
         img.crossOrigin = "anonymous";
         img.onload = () => {
-          drawImageProp(ctx, img, photoX + 6, pY + 6, photoW - 12, pH - 12, 0.5, 0.5);
+          drawImageProp(ctx, img, photoX + 8, py + 8, photoW - 16, photoH - 16, 0.5, 0.5);
           loadedCount++;
           if (loadedCount === totalImages) {
             triggerCanvasDownload(canvas, mName);
@@ -2280,14 +2415,6 @@
         };
         img.src = getImageSrc(choice.imageKey);
       });
-
-      // Footer
-      ctx.fillStyle = "#091326";
-      ctx.fillRect(0, H - footerH, W, footerH);
-      ctx.fillStyle = "#D4AF37";
-      ctx.font = "bold 16px -apple-system, sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText(`JESUS CHRIST REDEEMS GLOBAL MINISTRIES • LIVING BY THE WORD & TRUTH`, W / 2, H - 24);
     }
 
     function triggerCanvasDownload(canvas, mName) {
@@ -2314,5 +2441,5 @@
       initDefaults();
     });
   </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a435bfbe29c3b56f',t:'MTc5MDc5Nzc0Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a43ba3273a5eb56f',t:'MTc5MDg1OTQ5MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
