@@ -1,8 +1,8 @@
-JCRGM CHURCH GROWTH CENTER — WEBSITE BUNDLE
+JCRGM CHURCH GROWTH CENTER — WEBSITE & EVANGELISM RESOURCE BUNDLE
 
-Contents
-- index.html — updated JCRGM homepage with a link to the Church Growth Center
-- ministry-growth.html — Church Growth Center overview
+Website pages
+- index.html — updated JCRGM homepage linking to the Church Growth Center
+- ministry-growth.html — Growth Center overview
 - jcrgm-evangelism.html
 - jcrgm-new-believers.html
 - jcrgm-discipleship.html
@@ -12,11 +12,21 @@ Contents
 - jcrgm-church-health.html
 - jcrgm-mission.html
 - jcrgm-resources.html
+- jcrgm-outreach-kit.html — dedicated practical field-kit tab
+- jcrgm-evangelism-questionnaire.html — local fillable, print-ready questionnaire
+- jcrgm-evangelism-flyers.html — two print-ready flyer designs
 
-Teaching material
-Each of the 64 facilitator-led course sessions now contains an expanded, three-movement teaching guide (open the Scripture, teach the main truth, apply and pray), alongside the reading, aim, outline, discussion questions and weekly practice. Each session also has its own topic-and-passage-specific YouTube search link. Search results are not a specific endorsed video; preview them for biblical accuracy, JCRGM fit, age suitability and safeguarding before use.
+Downloadable print assets
+- jcrgm-evangelism-questionnaire.pdf — A4 blank questionnaire
+- jcrgm-evangelism-flyers.pdf — two-page A4 flyer set
+- jcrgm-gospel-invitation.png — high-resolution A4 gospel flyer
+- jcrgm-sunday-invitation.png — high-resolution A4 service invitation
+
+The Outreach Kit contains team preparation and packing checklists, conversation steps, safeguarding guidance, an outreach planning worksheet, a sample run sheet and a team debrief. Its print control can print/save the field-kit page as PDF.
+
+The questionnaire is optional. Consent for non-identifying totals, follow-up contact and keeping contact details is separate. Written comments are not included in aggregate totals; the local HTML form sends nothing online. Follow JCRGM's approved records, safeguarding and local legal procedures.
+
+The flyer phone, email, service times and Maps link were taken from the supplied JCRGM homepage. Please confirm these details are current before printing large quantities.
 
 Deployment
-Extract the contents of this folder together into the same website directory. The Growth Center tabs use relative links between these files.
-
-The updated homepage and Growth Center preserve links to JCRGM companion portals. Those companion HTML files were not included in this bundle; include them from the existing site deployment if those portal links should resolve.
+Extract all files in this folder together into the same website directory; the Growth Center tabs use relative links. Existing JCRGM companion portal pages are referenced but were not included in this bundle, so include them from the existing site deployment if those links should resolve.
