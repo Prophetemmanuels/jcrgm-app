@@ -718,6 +718,167 @@ figure,q,cite{margin:0;padding:0}
 .blk{margin:0}
 .hint{font-size:.78rem;color:var(--muted)}
 
+/* ======================= THE CLOSET WATCH =======================
+   Personal daily order — 03:00–07:30 · 19:30–22:30 (Zambia time)
+   ================================================================ */
+
+.cw-hero{background:linear-gradient(120deg,#100620,var(--violet-900) 40%,var(--violet-700) 76%,#5d3a0c)}
+
+.cw-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:16px}
+.cw-card{
+  position:relative;overflow:hidden;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  padding:15px 17px 17px;box-shadow:var(--shadow-sm);
+  transition:background .35s ease,border-color .35s ease,box-shadow .35s ease;
+}
+.cw-card .k{font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;font-weight:800;color:var(--gold-700)}
+.cw-card .name{
+  font-family:var(--serif);font-size:1.04rem;font-weight:700;color:var(--violet-800);
+  margin-top:5px;line-height:1.3;min-height:2.6em;
+}
+.cw-card .cd{
+  font-variant-numeric:tabular-nums;font-weight:800;line-height:1.05;letter-spacing:-.02em;
+  font-size:clamp(1.75rem,4.4vw,2.3rem);color:var(--violet-800);margin-top:2px;
+}
+.cw-card .note{font-size:.79rem;color:var(--muted);margin-top:6px;line-height:1.5}
+.cw-card .progress-bar{margin-top:12px}
+.cw-card.is-now{background:linear-gradient(125deg,#fffaf0,#fdf1d9);border-color:#eed9ac;box-shadow:0 0 0 3px rgba(201,150,47,.14),0 14px 30px rgba(201,150,47,.14)}
+.cw-card.is-next{background:linear-gradient(125deg,#fbf8ff,#f3ecfb);border-color:#dccdf0}
+.cw-card.is-idle{background:linear-gradient(125deg,#fbfafd,#f5f2f8);border-color:var(--line)}
+.cw-card.is-idle .cd{color:var(--muted)}
+.cw-card.is-idle .k{color:var(--muted)}
+
+/* 24-hour timeline */
+.cw-track{
+  position:relative;height:52px;margin-top:12px;border-radius:12px;overflow:hidden;
+  background:var(--violet-050);border:1px solid var(--line);
+  box-shadow:inset 0 1px 2px rgba(29,12,51,.06);
+}
+.cw-seg{
+  position:absolute;top:9px;bottom:9px;border-radius:6px;overflow:hidden;
+  background:linear-gradient(180deg,var(--violet-500),var(--violet-700));opacity:.5;
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .3s ease,box-shadow .3s ease;
+}
+.cw-seg b{
+  font-size:.58rem;font-weight:800;letter-spacing:.04em;color:#fff;
+  white-space:nowrap;overflow:hidden;text-overflow:clip;padding:0 3px;
+}
+.cw-seg.void{background:repeating-linear-gradient(45deg,rgba(109,43,140,.075) 0 5px,rgba(109,43,140,.02) 5px 10px);opacity:1}
+.cw-seg.now{background:linear-gradient(180deg,var(--gold-300),var(--gold-600));opacity:1;box-shadow:0 0 0 2px rgba(201,150,47,.35)}
+.cw-seg.next{opacity:.92;box-shadow:inset 0 0 0 2px rgba(255,255,255,.65)}
+.cw-marker{
+  position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;
+  background:var(--gold-500);box-shadow:0 0 9px rgba(201,150,47,.85);
+}
+.cw-marker::before{
+  content:"";position:absolute;top:2px;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--gold-400);
+}
+.cw-axis{display:flex;justify-content:space-between;font-size:.66rem;font-weight:800;color:var(--muted);margin-top:6px;font-variant-numeric:tabular-nums}
+.cw-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.74rem;font-weight:700;color:var(--muted);margin-top:12px}
+.cw-legend span{display:inline-flex;align-items:center;gap:6px}
+.cw-legend i{width:13px;height:13px;border-radius:4px;display:inline-block}
+.cw-legend .i-now{background:linear-gradient(180deg,var(--gold-300),var(--gold-600))}
+.cw-legend .i-next{background:linear-gradient(180deg,var(--violet-500),var(--violet-700))}
+.cw-legend .i-void{background:var(--violet-050);border:1px solid var(--line-strong)}
+
+/* programme list */
+.cw-list{display:grid;gap:10px;list-style:none;margin-top:12px}
+.cw-item{
+  display:grid;grid-template-columns:108px minmax(0,1fr) auto;gap:14px;align-items:center;
+  padding:13px 16px;border-radius:12px;background:var(--violet-050);
+  border:1px solid var(--line);
+  transition:background .35s ease,border-color .35s ease,box-shadow .35s ease,transform .35s ease;
+}
+.cw-item .t{font-weight:800;color:var(--violet-700);font-variant-numeric:tabular-nums;font-size:.95rem}
+.cw-item .w{font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;color:var(--gold-700);font-weight:800;margin-bottom:3px}
+.cw-item h4{font-size:1rem;color:var(--ink);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cw-item p{font-size:.88rem;color:var(--muted);margin-top:3px}
+.cw-item .cw-do{font-size:.8rem;color:var(--violet-700);margin-top:5px;font-style:italic}
+.cw-item .cd{font-variant-numeric:tabular-nums;font-weight:800;color:var(--violet-700);font-size:.95rem;white-space:nowrap;text-align:right}
+.cw-item .cdl{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--muted);text-align:right;white-space:nowrap}
+.cw-item.now{
+  background:linear-gradient(120deg,#fff9ec,#fdf0d6);border-color:#e9cf95;
+  box-shadow:0 0 0 3px rgba(201,150,47,.15),0 12px 26px rgba(201,150,47,.14);
+  transform:translateX(3px);
+}
+.cw-item.now .cd{color:var(--gold-700)}
+.cw-item.next{background:linear-gradient(120deg,#fbf8ff,#f3ecfb);border-color:#d7c6ef;box-shadow:0 0 0 3px rgba(109,43,140,.09)}
+.cw-item.done{opacity:.6}
+.cw-item.flash{animation:cwFlash 1.25s ease-out}
+@keyframes cwFlash{0%{box-shadow:0 0 0 0 rgba(224,182,79,.85)}100%{box-shadow:0 0 0 18px rgba(224,182,79,0)}}
+.cw-tag{
+  font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;font-weight:800;
+  padding:3px 8px;border-radius:999px;background:var(--gold-100);color:var(--gold-700);border:1px solid #efdcb2;
+}
+.cw-tag.next-tag{background:var(--violet-100);color:var(--violet-700);border-color:#ddcdf0}
+.cw-tag.done-tag{background:var(--ok-bg);color:var(--ok);border-color:#bfe3cf}
+.cw-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--gold-400);flex:0 0 auto;
+  animation:cwPulse 1.9s ease-out infinite;
+}
+@keyframes cwPulse{
+  0%{box-shadow:0 0 0 0 rgba(224,182,79,.6)}
+  70%{box-shadow:0 0 0 10px rgba(224,182,79,0)}
+  100%{box-shadow:0 0 0 0 rgba(224,182,79,0)}
+}
+
+/* daily meditation card */
+.cw-medit{
+  margin-top:18px;border-radius:var(--radius);color:#fff;padding:24px 26px 22px;box-shadow:var(--shadow-md);
+  background:
+    radial-gradient(620px 230px at 93% -12%,rgba(224,182,79,.22),transparent 62%),
+    linear-gradient(140deg,var(--violet-950),var(--violet-800) 55%,var(--violet-600));
+  position:relative;overflow:hidden;
+}
+.cw-medit .k{font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;font-weight:800;color:var(--gold-300)}
+.cw-medit blockquote{
+  font-family:var(--serif);font-size:clamp(1.06rem,2.3vw,1.42rem);line-height:1.58;
+  margin:12px 0 0;max-width:64ch;
+}
+.cw-medit .ref{display:inline-block;margin-top:12px;font-weight:800;color:var(--gold-300);font-size:.92rem}
+.cw-medit .prompt{
+  margin-top:15px;padding:12px 14px;border-radius:12px;font-size:.92rem;
+  background:rgba(0,0,0,.18);border-left:3px solid var(--gold-300);color:rgba(255,255,255,.93);
+}
+.cw-medit .meta{margin-top:13px;font-size:.76rem;color:rgba(255,255,255,.62);display:flex;gap:16px;flex-wrap:wrap}
+.cw-medit .cw-dwell{
+  display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:7px 12px;border-radius:12px;
+  background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.22);
+}
+.cw-medit .cw-dwell .tv{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.02rem;min-width:54px;text-align:center}
+.cw-medit .cw-dwell .mini{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.28);color:#fff}
+.cw-medit .cw-dwell .mini:hover{background:rgba(255,255,255,.24)}
+
+.cw-close{
+  margin-top:16px;padding:16px 18px;border-radius:var(--radius-sm);
+  background:var(--violet-050);border:1px solid var(--line);
+  font-family:var(--serif);font-size:.95rem;color:var(--ink-soft);line-height:1.68;
+}
+.cw-close b{display:block;font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-700);margin-bottom:6px}
+
+@media (max-width:880px){
+  .cw-cards{grid-template-columns:1fr}
+  .cw-card .name{min-height:0}
+}
+@media (max-width:620px){
+  .cw-item{grid-template-columns:1fr;gap:6px}
+  .cw-item .cd,.cw-item .cdl{text-align:left}
+  .cw-medit{padding:20px 18px}
+  .cw-seg b{display:none}
+  .cw-axis{font-size:.6rem}
+}
+@media print{
+  .cw-cards{grid-template-columns:repeat(3,1fr)}
+  .cw-card .cd{font-size:16pt}
+  .cw-medit{background:#fff !important;color:#000 !important;border:1px solid #999;border-radius:0;box-shadow:none}
+  .cw-medit .k,.cw-medit .ref{color:#000 !important}
+  .cw-medit .prompt{background:#fff !important;color:#000 !important;border-color:#999}
+  .cw-medit .meta{color:#333 !important}
+  .cw-medit .cw-dwell{display:none}
+  .cw-track,.cw-axis{display:none}
+}
+
 .timer{
   display:flex;align-items:center;gap:7px;padding:5px 9px;
   background:var(--violet-050);border:1px solid var(--line);border-radius:10px;
@@ -822,6 +983,13 @@ figure,q,cite{margin:0;padding:0}
         <span class="ti" aria-hidden="true">⛪</span>
         <span>Sunday Services</span>
         <span class="badge" data-badge="services">0/5</span>
+      </button>
+
+      <button class="tab-button" role="tab" id="tab-closet" data-tab="closet"
+              aria-controls="closet" aria-selected="false" tabindex="-1">
+        <span class="ti" aria-hidden="true">🕯️</span>
+        <span>Closet Watch</span>
+        <span class="badge" data-badge="closet" id="closetTabBadge">--:--:--</span>
       </button>
 
     </div>
@@ -1864,6 +2032,11 @@ const WEEK_OF_THE_LORD = [
 
 const TAB_IDS = PRAYER_ORDERS.map(order => order.id);
 
+/* The five prayer orders + the personal Closet Watch panel. The closet is not a
+   prayer order (it has no targets), so it is kept out of TAB_IDS and added
+   here wherever the whole tab strip has to be addressed. */
+const ALL_TABS = TAB_IDS.concat(["closet"]);
+
 function orderById(id) {
   return PRAYER_ORDERS.find(order => order.id === id);
 }
@@ -2150,7 +2323,14 @@ function renderOrderIndex() {
         '<span class="oi-meta">' + orderMinutes(order) + ' min</span>' +
         '<span class="oi-count">0/' + order.targets.length + '</span>' +
       '</button></li>';
-  }).join("");
+  }).join("") +
+
+    '<li><button type="button" onclick="JCRGM.openTab(\'closet\',{scroll:true})">' +
+      '<span aria-hidden="true">🕯️</span>' +
+      '<span class="oi-name">Closet Watch — my personal order</span>' +
+      '<span class="oi-meta">03:00 &amp; 19:30</span>' +
+      '<span class="oi-count">6 slots</span>' +
+    '</button></li>';
 }
 
 function paintAll() {
@@ -2275,7 +2455,7 @@ function openTab(tabId, options) {
   if (!document.getElementById(tabId)) tabId = "daily";
   activeTab = tabId;
 
-  TAB_IDS.forEach(function (id) {
+  ALL_TABS.forEach(function (id) {
     const panel = document.getElementById(id);
     const button = document.getElementById("tab-" + id);
     const isActive = id === tabId;
@@ -2347,6 +2527,7 @@ function filterTab(orderId, query) {
 
 function setAllOpen(orderId, open) {
   const order = orderById(orderId);
+  if (!order) return; /* the Closet Watch panel carries no prayer targets */
   order.targets.forEach(function (target, index) { setCardOpen(orderId, index, open); });
 }
 
@@ -2793,6 +2974,682 @@ function updateTodayMessage() {
 }
 
 /* ============================================================
+   THE CLOSET WATCH
+   My personal daily order of prayer.
+     Morning closet : 03:00 – 07:30
+     Evening closet : 19:30 – 22:30
+   The countdowns and the highlighter reset themselves at
+   midnight, Lusaka time. The meditation Scripture is drawn
+   fresh for every new day.
+   ============================================================ */
+
+const CLOSET_PROGRAMME = [
+  {
+    start: "03:00", end: "03:30", span: [3 * 60, 3 * 60 + 30],
+    when: "First watch", icon: "📖",
+    title: "Meditation on the Word",
+    note: "Rise at 03:00. Take the Scripture drawn for today and chew it slowly — read it, whisper it, then be still until it speaks.",
+    action: "Read today's meditation text below three times, then keep silence."
+  },
+  {
+    start: "03:30", end: "05:00", span: [3 * 60 + 30, 5 * 60],
+    when: "Second watch", icon: "🙏",
+    title: "Prayer",
+    note: "Ninety unhurried minutes of prayer. Thanksgiving first, then the Word prayed back to God, then intercession for the church, the city and the nation.",
+    action: "Work the Daily Prayer Order, then the Intercession order."
+  },
+  {
+    start: "05:00", end: "07:00", span: [5 * 60, 7 * 60],
+    when: "Third watch", icon: "✍️",
+    title: "Studying the Bible",
+    note: "Two hours in the Word with a pen. Read whole chapters, note what you see, cross-reference it, and write the obedience it demands.",
+    action: "Read, note, cross-reference. Do not rush to finish a chapter."
+  },
+  {
+    start: "07:00", end: "07:30", span: [7 * 60, 7 * 60 + 30],
+    when: "Fourth watch", icon: "🕊️",
+    title: "Waiting on the Lord",
+    note: "No list, no asking, no agenda. Sit before the Lord in silence and let Him speak. Write down whatever He shows you.",
+    action: "Silence. Journal. Do not close the watch until He has spoken."
+  },
+  {
+    start: "19:30", end: "21:00", span: [19 * 60 + 30, 21 * 60],
+    when: "Evening watch", icon: "🌙",
+    title: "Closet — studying the Word",
+    note: "Re-enter the closet. The same discipline as the morning study: the Word opened, notes taken, obedience written down.",
+    action: "Continue exactly where the morning study stopped."
+  },
+  {
+    start: "21:00", end: "22:30", span: [21 * 60, 22 * 60 + 30],
+    when: "Night watch", icon: "⛪",
+    title: "Church Online Prayers",
+    note: "Prepare your heart, then join the church online for corporate prayer. Come with a testimony, a burden and an expectation.",
+    action: "Join the online prayer meeting and pray with the church."
+  }
+];
+
+const CLOSET_WAKE = "03:00";
+
+/* A pool of King James verses for the 03:00 meditation. One is drawn
+   for each new day, so the prophet never has to choose. */
+const MEDITATION_VERSES = [
+  { ref: "Psalm 1:2-3", text: "But his delight is in the law of the LORD; and in his law doth he meditate day and night. And he shall be like a tree planted by the rivers of water, that bringeth forth his fruit in his season; his leaf also shall not wither; and whatsoever he doeth shall prosper." },
+  { ref: "Joshua 1:8", text: "This book of the law shall not depart out of thy mouth; but thou shalt meditate therein day and night, that thou mayest observe to do according to all that is written therein: for then thou shalt make thy way prosperous, and then thou shalt have good success." },
+  { ref: "Psalm 119:105", text: "Thy word is a lamp unto my feet, and a light unto my path." },
+  { ref: "Psalm 63:6", text: "When I remember thee upon my bed, and meditate on thee in the night watches." },
+  { ref: "Psalm 46:10", text: "Be still, and know that I am God: I will be exalted among the heathen, I will be exalted in the earth." },
+  { ref: "Psalm 27:4", text: "One thing have I desired of the LORD, that will I seek after; that I may dwell in the house of the LORD all the days of my life, to behold the beauty of the LORD, and to enquire in his temple." },
+  { ref: "Psalm 16:8", text: "I have set the LORD always before me: because he is at my right hand, I shall not be moved." },
+  { ref: "Psalm 91:1", text: "He that dwelleth in the secret place of the most High shall abide under the shadow of the Almighty." },
+  { ref: "Isaiah 26:3", text: "Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee." },
+  { ref: "Isaiah 40:31", text: "But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint." },
+  { ref: "Isaiah 50:4", text: "The Lord GOD hath given me the tongue of the learned, that I should know how to speak a word in season to him that is weary: he wakeneth morning by morning, he wakeneth mine ear to hear as the learned." },
+  { ref: "Lamentations 3:22-23", text: "It is of the LORD's mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness." },
+  { ref: "Psalm 5:3", text: "My voice shalt thou hear in the morning, O LORD; in the morning will I direct my prayer unto thee, and will look up." },
+  { ref: "Psalm 143:8", text: "Cause me to hear thy lovingkindness in the morning; for in thee do I trust: cause me to know the way wherein I should walk; for I lift up my soul unto thee." },
+  { ref: "Mark 1:35", text: "And in the morning, rising up a great while before day, he went out, and departed into a solitary place, and there prayed." },
+  { ref: "Luke 6:12", text: "And it came to pass in those days, that he went out into a mountain to pray, and continued all night in prayer to God." },
+  { ref: "Psalm 119:11", text: "Thy word have I hid in mine heart, that I might not sin against thee." },
+  { ref: "Psalm 119:18", text: "Open thou mine eyes, that I may behold wondrous things out of thy law." },
+  { ref: "Psalm 119:97", text: "O how love I thy law! it is my meditation all the day." },
+  { ref: "Psalm 119:148", text: "Mine eyes prevent the night watches, that I might meditate in thy word." },
+  { ref: "Psalm 42:1", text: "As the hart panteth after the water brooks, so panteth my soul after thee, O God." },
+  { ref: "Psalm 63:1", text: "O God, thou art my God; early will I seek thee: my soul thirsteth for thee, my flesh longeth for thee in a dry and thirsty land, where no water is." },
+  { ref: "Psalm 34:8", text: "O taste and see that the LORD is good: blessed is the man that trusteth in him." },
+  { ref: "Psalm 37:4", text: "Delight thyself also in the LORD; and he shall give thee the desires of thine heart." },
+  { ref: "Psalm 37:5", text: "Commit thy way unto the LORD; trust also in him; and he shall bring it to pass." },
+  { ref: "Proverbs 3:5-6", text: "Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths." },
+  { ref: "Proverbs 4:23", text: "Keep thy heart with all diligence; for out of it are the issues of life." },
+  { ref: "Proverbs 8:34", text: "Blessed is the man that heareth me, watching daily at my gates, waiting at the posts of my doors." },
+  { ref: "Micah 7:7", text: "Therefore I will look unto the LORD; I will wait for the God of my salvation: my God will hear me." },
+  { ref: "Habakkuk 2:1", text: "I will stand upon my watch, and set me upon the tower, and will watch to see what he will say unto me, and what I shall answer when I am reproved." },
+  { ref: "Jeremiah 33:3", text: "Call unto me, and I will answer thee, and shew thee great and mighty things, which thou knowest not." },
+  { ref: "Jeremiah 29:13", text: "And ye shall seek me, and find me, when ye shall search for me with all your heart." },
+  { ref: "Matthew 6:6", text: "But thou, when thou prayest, enter into thy closet, and when thou hast shut thy door, pray to thy Father which is in secret; and thy Father which seeth in secret shall reward thee openly." },
+  { ref: "Matthew 6:33", text: "But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you." },
+  { ref: "Matthew 26:41", text: "Watch and pray, that ye enter not into temptation: the spirit indeed is willing, but the flesh is weak." },
+  { ref: "John 15:5", text: "I am the vine, ye are the branches: He that abideth in me, and I in him, the same bringeth forth much fruit: for without me ye can do nothing." },
+  { ref: "John 15:7", text: "If ye abide in me, and my words abide in you, ye shall ask what ye will, and it shall be done unto you." },
+  { ref: "John 14:21", text: "He that hath my commandments, and keepeth them, he it is that loveth me: and he that loveth me shall be loved of my Father, and I will love him, and will manifest myself to him." },
+  { ref: "John 8:31-32", text: "If ye continue in my word, then are ye my disciples indeed; and ye shall know the truth, and the truth shall make you free." },
+  { ref: "Acts 1:8", text: "But ye shall receive power, after that the Holy Ghost is come upon you: and ye shall be witnesses unto me both in Jerusalem, and in all Judaea, and in Samaria, and unto the uttermost part of the earth." },
+  { ref: "Acts 2:17", text: "And it shall come to pass in the last days, saith God, I will pour out of my Spirit upon all flesh: and your sons and your daughters shall prophesy." },
+  { ref: "Romans 8:26", text: "Likewise the Spirit also helpeth our infirmities: for we know not what we should pray for as we ought: but the Spirit itself maketh intercession for us with groanings which cannot be uttered." },
+  { ref: "Romans 12:1-2", text: "I beseech you therefore, brethren, by the mercies of God, that ye present your bodies a living sacrifice, holy, acceptable unto God, which is your reasonable service. And be not conformed to this world: but be ye transformed by the renewing of your mind." },
+  { ref: "2 Corinthians 3:18", text: "But we all, with open face beholding as in a glass the glory of the Lord, are changed into the same image from glory to glory, even as by the Spirit of the Lord." },
+  { ref: "Ephesians 6:18", text: "Praying always with all prayer and supplication in the Spirit, and watching thereunto with all perseverance and supplication for all saints." },
+  { ref: "Colossians 3:16", text: "Let the word of Christ dwell in you richly in all wisdom; teaching and admonishing one another in psalms and hymns and spiritual songs, singing with grace in your hearts to the Lord." },
+  { ref: "2 Timothy 2:15", text: "Study to shew thyself approved unto God, a workman that needeth not to be ashamed, rightly dividing the word of truth." },
+  { ref: "Hebrews 4:12", text: "For the word of God is quick, and powerful, and sharper than any twoedged sword, piercing even to the dividing asunder of soul and spirit, and of the joints and marrow, and is a discerner of the thoughts and intents of the heart." },
+  { ref: "Hebrews 11:6", text: "But without faith it is impossible to please him: for he that cometh to God must believe that he is, and that he is a rewarder of them that diligently seek him." },
+  { ref: "James 1:5", text: "If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him." },
+  { ref: "James 4:8", text: "Draw nigh to God, and he will draw nigh to you." },
+  { ref: "James 5:16", text: "The effectual fervent prayer of a righteous man availeth much." },
+  { ref: "1 Peter 5:7", text: "Casting all your care upon him; for he careth for you." },
+  { ref: "1 John 5:14", text: "And this is the confidence that we have in him, that, if we ask any thing according to his will, he heareth us." },
+  { ref: "Jude 1:20", text: "But ye, beloved, building up yourselves on your most holy faith, praying in the Holy Ghost." },
+  { ref: "Revelation 3:20", text: "Behold, I stand at the door, and knock: if any man hear my voice, and open the door, I will come in to him, and will sup with him, and he with me." },
+  { ref: "Zechariah 4:6", text: "Not by might, nor by power, but by my spirit, saith the LORD of hosts." },
+  { ref: "Psalm 84:11", text: "For the LORD God is a sun and shield: the LORD will give grace and glory: no good thing will he withhold from them that walk uprightly." }
+];
+
+/* A second, slower wheel, so the verse and the way of meditating it
+   do not repeat together for almost a year. */
+const MEDITATION_PROMPTS = [
+  "Read it slowly three times — once with your mind, once with your heart, once aloud. Then stop speaking and let the Lord answer.",
+  "Take one phrase from this verse and turn it into a prayer. Do not move on until you have said it back to God.",
+  "Ask the Lord: what in me does not agree with this word? Write down whatever He shows you, and repent of it at once.",
+  "Picture the scene. Where are you standing in it, and who is speaking? Stay there until the picture becomes a word to you.",
+  "Take the verse apart word by word. Which single word is the Lord emphasising to you this morning? Circle it.",
+  "Pray this verse over your household name by name, before you pray it over yourself.",
+  "Ask for the one obedience this verse demands today. Write it down and do it before the sun goes down.",
+  "Pray this verse over JCRGM — the prophet, the ministers, and every soul the Lord is adding.",
+  "Repeat the verse until your own thoughts stop and the Holy Spirit begins to speak. Then write exactly what you hear.",
+  "Find the promise in this verse. Thank God for it before you have seen it, and record the date in your journal.",
+  "Find the command in this verse. Ask the Lord for grace to keep it today, specifically and practically.",
+  "Say it from memory if you can, and let the Word be the only voice in the closet for this half hour.",
+  "Ask the Lord what He is saying to this city through this verse, then pray it over Lusaka and the nation.",
+  "Turn the verse into a declaration and speak it aloud seven times. Faith cometh by hearing."
+];
+
+function closetDayNumber() {
+  const p = zambiaParts();
+  return Math.floor(Date.UTC(Number(p.year), Number(p.month) - 1, Number(p.day)) / 86400000);
+}
+
+function todayMeditation() {
+  const n = closetDayNumber();
+  const verse = MEDITATION_VERSES[((n % MEDITATION_VERSES.length) + MEDITATION_VERSES.length) % MEDITATION_VERSES.length];
+  const prompt = MEDITATION_PROMPTS[((n * 3 + 1) % MEDITATION_PROMPTS.length + MEDITATION_PROMPTS.length) % MEDITATION_PROMPTS.length];
+  return { verse: verse, prompt: prompt, day: n };
+}
+
+function closetMinuteOfDay(now) {
+  const p = zambiaParts(now);
+  return Number(p.hour) * 60 + Number(p.minute);
+}
+
+function closetIndexAt(minutes) {
+  for (let i = 0; i < CLOSET_PROGRAMME.length; i++) {
+    const slot = CLOSET_PROGRAMME[i];
+    if (minutes >= slot.span[0] && minutes < slot.span[1]) return i;
+  }
+  return -1;
+}
+
+/* Wall-clock timestamp of a programme's start/end, offset by whole days. */
+function closetStartAt(now, index, dayOffset) {
+  const slot = CLOSET_PROGRAMME[index];
+  const p = zambiaParts(new Date(Date.UTC.apply(null, closetUtcParts(now)) + (dayOffset || 0) * 86400000));
+  return lusakaMs(Number(p.year), Number(p.month), Number(p.day), Math.floor(slot.span[0] / 60), slot.span[0] % 60);
+}
+
+function closetEndAt(now, index, dayOffset) {
+  const slot = CLOSET_PROGRAMME[index];
+  const p = zambiaParts(new Date(Date.UTC.apply(null, closetUtcParts(now)) + (dayOffset || 0) * 86400000));
+  return lusakaMs(Number(p.year), Number(p.month), Number(p.day), Math.floor(slot.span[1] / 60), slot.span[1] % 60);
+}
+
+function closetUtcParts(now) {
+  const p = zambiaParts(now);
+  return [Number(p.year), Number(p.month) - 1, Number(p.day)];
+}
+
+function closetState(now) {
+  const minutes = closetMinuteOfDay(now);
+  const current = closetIndexAt(minutes);
+  let nextIndex, nextOffset;
+
+  if (current === -1) {
+    nextIndex = -1;
+    for (let i = 0; i < CLOSET_PROGRAMME.length; i++) {
+      if (CLOSET_PROGRAMME[i].span[0] > minutes) { nextIndex = i; break; }
+    }
+    if (nextIndex === -1) { nextIndex = 0; nextOffset = 1; }   /* past 22:30 — the watch opens tomorrow */
+    else nextOffset = 0;
+  } else {
+    nextIndex = (current + 1) % CLOSET_PROGRAMME.length;
+    nextOffset = nextIndex === 0 ? 1 : 0;
+  }
+
+  return { minutes: minutes, current: current, nextIndex: nextIndex, nextOffset: nextOffset };
+}
+
+/* ------------------------------------------------------------
+   Keeping count of the days the watch was kept
+   ------------------------------------------------------------ */
+
+function closetLog() {
+  try {
+    const raw = Store.get("CLOSET_LOG");
+    const list = raw ? JSON.parse(raw) : [];
+    return Array.isArray(list) ? list : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function closetMarkDay(day) {
+  if (Store.get("CLOSET_DAY") === day) return;
+  const log = closetLog();
+  if (log.indexOf(day) === -1) {
+    log.push(day);
+    log.sort();
+    Store.set("CLOSET_LOG", JSON.stringify(log.slice(-600)));
+  }
+  Store.set("CLOSET_DAY", day);
+}
+
+function closetStreak() {
+  const log = closetLog();
+  if (!log.length) return { total: 0, streak: 0 };
+  const seen = Object.create(null);
+  log.forEach(function (day) { seen[day] = true; });
+
+  const p = zambiaParts();
+  const base = Date.UTC(Number(p.year), Number(p.month) - 1, Number(p.day));
+  const today = getZambiaDate();
+
+  /* A day not yet kept does not break the streak until it is over. */
+  let back = seen[today] ? 0 : 1;
+  let streak = 0;
+  for (; back < 5000; back++) {
+    if (seen[getZambiaDate(new Date(base - back * 86400000))]) streak++;
+    else break;
+  }
+  return { total: log.length, streak: streak };
+}
+
+/* ------------------------------------------------------------
+   The 24-hour ribbon
+   ------------------------------------------------------------ */
+
+function closetTimeline() {
+  const segs = [];
+  let cursor = 0;
+  CLOSET_PROGRAMME.forEach(function (slot, index) {
+    if (slot.span[0] > cursor) segs.push({ from: cursor, to: slot.span[0], void: true, index: -1, label: "" });
+    segs.push({ from: slot.span[0], to: slot.span[1], void: false, index: index, label: slot.start });
+    cursor = slot.span[1];
+  });
+  if (cursor < 1440) segs.push({ from: cursor, to: 1440, void: true, index: -1, label: "" });
+  return segs;
+}
+
+/* ------------------------------------------------------------
+   RENDER — built once a day; only the live parts are repainted
+   ------------------------------------------------------------ */
+
+function closetHtml() {
+  const now = new Date();
+  const med = todayMeditation();
+  const dayIndex = zambiaDayIndex(now);
+
+  const segs = closetTimeline().map(function (seg) {
+    const left = (seg.from / 1440 * 100).toFixed(3);
+    const width = ((seg.to - seg.from) / 1440 * 100).toFixed(3);
+    return '<div class="cw-seg' + (seg.void ? " void" : "") + '"' +
+      (seg.index >= 0 ? ' id="cw-seg-' + seg.index + '"' : "") +
+      ' style="left:' + left + '%;width:' + width + '%">' +
+      (seg.void || (seg.to - seg.from) < 60 ? "" : "<b>" + seg.label + "</b>") +
+      "</div>";
+  }).join("");
+
+  const axis = ["00:00", "03:00", "06:00", "09:00", "12:00", "15:00", "18:00", "21:00", "24:00"]
+    .map(function (tick) { return "<span>" + tick + "</span>"; }).join("");
+
+  const items = CLOSET_PROGRAMME.map(function (slot, index) {
+    return '' +
+      '<li class="cw-item" id="cw-item-' + index + '">' +
+        '<div>' +
+          '<div class="t">' + slot.start + "&ndash;" + slot.end + "</div>" +
+          '<div class="w">' + esc(slot.when) + "</div>" +
+        "</div>" +
+        "<div>" +
+          '<h4><span aria-hidden="true">' + slot.icon + "</span>" + esc(slot.title) +
+            '<span class="cw-tag" id="cw-tag-' + index + '" hidden></span>' +
+          "</h4>" +
+          "<p>" + esc(slot.note) + "</p>" +
+          '<p class="cw-do">➜ ' + esc(slot.action) + "</p>" +
+        "</div>" +
+        "<div>" +
+          '<div class="cd" id="cw-cd-' + index + '">--:--:--</div>' +
+          '<div class="cdl" id="cw-cdl-' + index + '">&nbsp;</div>' +
+        "</div>" +
+      "</li>";
+  }).join("");
+
+  const rhythm = "03:00 rise · 03:00–03:30 meditate on the Word · 03:30–05:00 pray · " +
+    "05:00–07:00 study the Bible · 07:00–07:30 wait on the Lord · " +
+    "19:30–21:00 closet study · 21:00–22:30 church online prayers.";
+
+  return '' +
+    '<div class="tab-hero cw-hero">' +
+      '<div class="tab-hero-head">' +
+        "<div>" +
+          "<h2>🕯️ The Closet Watch &mdash; My Personal Order of Prayer</h2>" +
+          '<span class="when">⏰ Every day · 03:00–07:30 &amp; 19:30–22:30 · Zambia time</span>' +
+        "</div>" +
+        '<div class="chips" style="margin:0">' +
+          '<span class="chip gold">6 programmes</span>' +
+          '<span class="chip" style="background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff">⏱ 7½ hours in the closet</span>' +
+        "</div>" +
+      "</div>" +
+      "<p>This is the order I keep in the closet: seven and a half hours with the Lord every day, " +
+      "four watches before the day opens and two before it closes. Everything below runs itself — " +
+      "the countdowns are reset at midnight in Lusaka, the programme you are in is lifted up in gold, " +
+      "the one that follows is held in violet, and a fresh Scripture is drawn for the 03:00 meditation " +
+      "each new day.</p>" +
+      '<div class="emphasis"><span class="day">The prophet&rsquo;s daily rhythm</span>' + esc(rhythm) + "</div>" +
+    "</div>" +
+
+    '<div class="cw-cards">' +
+      '<div class="cw-card is-idle" id="cwCardNow">' +
+        '<div class="k">In the closet now</div>' +
+        '<div class="name" id="cwNowName">—</div>' +
+        '<div class="cd" id="cwNowClock">--:--:--</div>' +
+        '<div class="note" id="cwNowNote">—</div>' +
+        '<div class="progress-bar"><div class="bar-fill" id="cwNowBar"></div></div>' +
+      "</div>" +
+      '<div class="cw-card is-idle" id="cwCardNext">' +
+        '<div class="k">Next programme</div>' +
+        '<div class="name" id="cwNextName">—</div>' +
+        '<div class="cd" id="cwNextClock">--:--:--</div>' +
+        '<div class="note" id="cwNextNote">—</div>' +
+      "</div>" +
+      '<div class="cw-card is-idle" id="cwCardRise">' +
+        '<div class="k">Rise &mdash; wake-up call</div>' +
+        '<div class="name">🕯️ Into the closet at ' + CLOSET_WAKE + "</div>" +
+        '<div class="cd" id="cwRiseClock">--:--:--</div>' +
+        '<div class="note" id="cwRiseNote">—</div>' +
+      "</div>" +
+    "</div>" +
+
+    '<section class="panel" style="margin-bottom:16px">' +
+      "<h2>🗺️ The whole day at a glance</h2>" +
+      '<p class="sub">Every programme of the closet drawn across twenty-four hours. The gold line is the present moment in Lusaka.</p>' +
+      '<div class="cw-track">' + segs + '<div class="cw-marker" id="cwMarker" style="left:0%"></div></div>' +
+      '<div class="cw-axis">' + axis + "</div>" +
+      '<div class="cw-legend">' +
+        '<span><i class="i-now"></i> In session now</span>' +
+        '<span><i class="i-next"></i> A programme of the closet</span>' +
+        '<span><i class="i-void"></i> Rest, work and the day&rsquo;s duties</span>' +
+      "</div>" +
+    "</section>" +
+
+    '<section class="panel" style="margin-bottom:16px">' +
+      "<h2>📋 Today&rsquo;s programme in the closet</h2>" +
+      '<p class="sub">The programme you are in is highlighted in gold; the one that follows is held in violet. ' +
+      "Both move by themselves, every second — you will not have to touch a thing.</p>" +
+      '<ul class="cw-list">' + items + "</ul>" +
+      '<div class="toolbar" style="margin-top:14px">' +
+        '<button class="btn gold small" type="button" onclick="JCRGM.closetJump()">⦿ Jump to the current programme</button>' +
+        '<button class="btn ghost small" type="button" onclick="JCRGM.printTab(\'closet\')">🖨 Print the closet order</button>' +
+        '<span class="spacer"></span>' +
+        '<span class="chip gold" id="cwStreakChip">🔥 Watch kept: 0 days</span>' +
+        "<span class=\"chip\">🕯️ 6 programmes · 450 minutes daily</span>" +
+      "</div>" +
+    "</section>" +
+
+    '<div class="cw-medit">' +
+      '<div class="k">Today&rsquo;s meditation · ' + esc(longDate(now)) + "</div>" +
+      "<blockquote>&ldquo;" + esc(med.verse.text) + "&rdquo;</blockquote>" +
+      '<span class="ref">— ' + esc(med.verse.ref) + " (KJV)</span>" +
+      '<div class="prompt"><b>How to meditate it:</b> ' + esc(med.prompt) + "</div>" +
+      '<div class="cw-dwell">' +
+        '<span class="tl" aria-hidden="true">⏱</span>' +
+        '<span class="tv" id="cwDwellTime">30:00</span>' +
+        '<button class="mini" type="button" id="cwDwellBtn" onclick="JCRGM.dwellToggle()">Start</button>' +
+        '<button class="mini" type="button" onclick="JCRGM.dwellReset()">Reset</button>' +
+      "</div>" +
+      '<div class="meta">' +
+        "<span>📖 Drawn for the 03:00 watch &mdash; none of your choosing, the Lord&rsquo;s choosing for today</span>" +
+        "<span>🔄 A new text is drawn every day at midnight, Lusaka time</span>" +
+      "</div>" +
+    "</div>" +
+
+    '<div class="cw-close">' +
+      "<b>The closing of the watch</b>" +
+      "Father, I have kept the watch You appointed for me. What You have spoken in the secret place, " +
+      "I will obey in the open place. Seal the Word in my heart, order my steps today, and let my life " +
+      "answer the prayer I have prayed. I go out from this closet led by Your Spirit, covered by the blood, " +
+      "and kept by Your peace. In Jesus&rsquo; name, Amen." +
+    "</div>";
+}
+
+function renderCloset() {
+  const host = document.getElementById("tabPanels");
+  if (!host || document.getElementById("closet")) return;
+
+  const panel = document.createElement("section");
+  panel.className = "tab-content";
+  panel.id = "closet";
+  panel.setAttribute("role", "tabpanel");
+  panel.setAttribute("aria-labelledby", "tab-closet");
+  panel.setAttribute("tabindex", "-1");
+  panel.innerHTML = closetHtml();
+  host.appendChild(panel);
+}
+
+/* ------------------------------------------------------------
+   LIVE UPDATE — runs every second from the ticker
+   ------------------------------------------------------------ */
+
+let closetKey = null;
+
+function updateCloset() {
+  const panel = document.getElementById("closet");
+  if (!panel) return;
+
+  const now = new Date();
+  const nowMs = now.getTime();
+  const st = closetState(now);
+  const cur = st.current;
+  const nextSlot = CLOSET_PROGRAMME[st.nextIndex];
+  const nextAt = closetStartAt(now, st.nextIndex, st.nextOffset);
+  const day = getZambiaDate(now);
+
+  /* ---------- the "now" card ---------- */
+  const cardNow = document.getElementById("cwCardNow");
+  const nowName = document.getElementById("cwNowName");
+  const nowClock = document.getElementById("cwNowClock");
+  const nowNote = document.getElementById("cwNowNote");
+  const nowBar = document.getElementById("cwNowBar");
+
+  if (cur >= 0) {
+    const slot = CLOSET_PROGRAMME[cur];
+    const endAt = closetEndAt(now, cur, 0);
+    const total = slot.span[1] - slot.span[0];
+    const spanMs = total * 60000;
+    const left = Math.max(endAt - nowMs, 0);
+
+    if (nowName) nowName.textContent = slot.icon + " " + slot.title;
+    if (nowClock) nowClock.textContent = formatCountdown(left);
+    if (nowNote) {
+      nowNote.textContent = slot.start + "–" + slot.end + " · " +
+        Math.ceil(left / 60000) + " min of " + total + " left. " + slot.action;
+    }
+    if (nowBar) {
+      nowBar.style.width = Math.round(Math.min(Math.max((spanMs - left) / spanMs * 100, 0), 100)) + "%";
+    }
+    if (cardNow) {
+      cardNow.classList.remove("is-idle", "is-next");
+      cardNow.classList.add("is-now");
+    }
+    closetMarkDay(day);
+  } else {
+    if (nowName) nowName.textContent = "☾ The closet is closed";
+    if (nowClock) nowClock.textContent = formatCountdown(nextAt - nowMs);
+    if (nowNote) {
+      nowNote.textContent = "Rest, work, eat and serve. The next watch is “" + nextSlot.title +
+        "” at " + nextSlot.start + (st.nextOffset ? " tomorrow." : " today.");
+    }
+    if (nowBar) nowBar.style.width = "0%";
+    if (cardNow) {
+      cardNow.classList.remove("is-now", "is-next");
+      cardNow.classList.add("is-idle");
+    }
+  }
+
+  /* ---------- the "next" card ---------- */
+  let secondIndex, secondOffset;
+  if (cur >= 0) {
+    secondIndex = st.nextIndex;
+    secondOffset = st.nextOffset;
+  } else {
+    secondIndex = (st.nextIndex + 1) % CLOSET_PROGRAMME.length;
+    secondOffset = (st.nextIndex + 1 >= CLOSET_PROGRAMME.length) ? 1 : st.nextOffset;
+  }
+  const second = CLOSET_PROGRAMME[secondIndex];
+  const secondAt = closetStartAt(now, secondIndex, secondOffset);
+
+  const cardNext = document.getElementById("cwCardNext");
+  const nextName = document.getElementById("cwNextName");
+  const nextClock = document.getElementById("cwNextClock");
+  const nextNote = document.getElementById("cwNextNote");
+
+  if (nextName) nextName.textContent = second.icon + " " + second.title;
+  if (nextClock) nextClock.textContent = formatCountdown(secondAt - nowMs);
+  if (nextNote) {
+    nextNote.textContent = second.start + "–" + second.end + " · " +
+      (secondOffset === 1 ? "tomorrow" : "today") + ". " + second.action;
+  }
+  if (cardNext) {
+    cardNext.classList.remove("is-idle", "is-now");
+    cardNext.classList.add("is-next");
+  }
+
+  /* ---------- the wake-up card ---------- */
+  const riseOffset = st.minutes < 180 ? 0 : 1;
+  const riseAt = closetStartAt(now, 0, riseOffset);
+  const riseClock = document.getElementById("cwRiseClock");
+  const riseNote = document.getElementById("cwRiseNote");
+  if (riseClock) riseClock.textContent = formatCountdown(riseAt - nowMs);
+  if (riseNote) {
+    riseNote.textContent = (riseOffset === 1 ? "Sleep now — tomorrow morning at " : "This morning at ") +
+      CLOSET_WAKE + ". " + (riseOffset === 1
+        ? "He wakeneth morning by morning; He will waken you too."
+        : "The Lord is already awake and waiting for you.");
+  }
+
+  /* ---------- each programme in the list ---------- */
+  CLOSET_PROGRAMME.forEach(function (slot, index) {
+    const item = document.getElementById("cw-item-" + index);
+    const cd = document.getElementById("cw-cd-" + index);
+    const cdl = document.getElementById("cw-cdl-" + index);
+    const tag = document.getElementById("cw-tag-" + index);
+    const seg = document.getElementById("cw-seg-" + index);
+    if (!item) return;
+
+    let label, value, state;
+    if (index === cur) {
+      value = formatCountdown(closetEndAt(now, index, 0) - nowMs);
+      label = "ends in";
+      state = "now";
+    } else if (index === st.nextIndex) {
+      value = formatCountdown(closetStartAt(now, index, st.nextOffset) - nowMs);
+      label = "begins in";
+      state = "next";
+    } else if (nowMs < closetStartAt(now, index, 0)) {
+      value = formatCountdown(closetStartAt(now, index, 0) - nowMs);
+      label = "begins in";
+      state = "upcoming";
+    } else {
+      value = formatCountdown(closetStartAt(now, index, 1) - nowMs);
+      label = "again in";
+      state = "done";
+    }
+
+    if (cd) cd.textContent = value;
+    if (cdl) cdl.textContent = label;
+
+    item.classList.remove("now", "next", "done");
+    if (state === "now" || state === "next" || state === "done") item.classList.add(state);
+
+    if (tag) {
+      if (state === "now") { tag.textContent = "now"; tag.className = "cw-tag"; tag.hidden = false; }
+      else if (state === "next") { tag.textContent = "next"; tag.className = "cw-tag next-tag"; tag.hidden = false; }
+      else if (state === "done") { tag.textContent = "closed"; tag.className = "cw-tag done-tag"; tag.hidden = false; }
+      else tag.hidden = true;
+    }
+
+    if (seg) seg.classList.toggle("now", index === cur);
+    if (seg) seg.classList.toggle("next", index === st.nextIndex);
+  });
+
+  /* ---------- the gold marker on the ribbon ---------- */
+  const marker = document.getElementById("cwMarker");
+  if (marker) marker.style.left = (st.minutes / 1440 * 100).toFixed(3) + "%";
+
+  /* ---------- the tab badge ---------- */
+  const badge = document.getElementById("closetTabBadge");
+  if (badge) {
+    if (cur >= 0) {
+      badge.textContent = "● now";
+      badge.title = "In the closet now: " + CLOSET_PROGRAMME[cur].title;
+    } else {
+      badge.textContent = formatCountdown(nextAt - nowMs);
+      badge.title = "Next: " + nextSlot.title + " at " + nextSlot.start;
+    }
+  }
+
+  /* ---------- the kept-days counter ---------- */
+  const chip = document.getElementById("cwStreakChip");
+  if (chip) {
+    const count = closetStreak();
+    chip.textContent = "🔥 Watch kept: " + count.total + (count.total === 1 ? " day" : " days") +
+      " · streak: " + count.streak;
+  }
+
+  /* ---------- announce the change of watch ---------- */
+  const key = day + "#" + cur;
+  if (closetKey !== null && key !== closetKey) {
+    if (cur >= 0) {
+      const slot = CLOSET_PROGRAMME[cur];
+      toast("🕯️ " + slot.icon + " " + slot.title + " — " + slot.start + "–" + slot.end +
+        ". The watch has changed.");
+      const item = document.getElementById("cw-item-" + cur);
+      if (item && !prefersReducedMotion()) {
+        item.classList.remove("flash");
+        void item.offsetWidth;
+        item.classList.add("flash");
+        window.setTimeout(function () { item.classList.remove("flash"); }, 1300);
+      }
+    } else {
+      toast("☾ The closet is closed for now. Rest — the next watch opens at " + nextSlot.start + ".");
+    }
+  }
+  closetKey = key;
+}
+
+/* ------------------------------------------------------------
+   The thirty-minute meditation timer ("dwell")
+   ------------------------------------------------------------ */
+
+const closetDwell = { left: 30 * 60, running: false, handle: null };
+
+function dwellPaint() {
+  const el = document.getElementById("cwDwellTime");
+  const btn = document.getElementById("cwDwellBtn");
+  const minutes = Math.floor(closetDwell.left / 60);
+  const seconds = closetDwell.left % 60;
+  if (el) el.textContent = String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+  if (btn) {
+    btn.textContent = closetDwell.running ? "Pause" : (closetDwell.left === 1800 ? "Start" : "Resume");
+  }
+}
+
+function dwellToggle() {
+  if (closetDwell.running) {
+    window.clearInterval(closetDwell.handle);
+    closetDwell.handle = null;
+    closetDwell.running = false;
+  } else {
+    if (closetDwell.left <= 0) closetDwell.left = 30 * 60;
+    closetDwell.running = true;
+    closetDwell.handle = window.setInterval(function () {
+      closetDwell.left = Math.max(closetDwell.left - 1, 0);
+      if (closetDwell.left <= 0) {
+        dwellToggle();
+        toast("⏰ The half hour of meditation is complete — rise and begin to pray.");
+      }
+      dwellPaint();
+    }, 1000);
+  }
+  dwellPaint();
+}
+
+function dwellReset() {
+  if (closetDwell.handle) { window.clearInterval(closetDwell.handle); closetDwell.handle = null; }
+  closetDwell.running = false;
+  closetDwell.left = 30 * 60;
+  dwellPaint();
+}
+
+/* Bring the programme that is running (or the next one) into view. */
+function closetJump() {
+  openTab("closet", { scroll: false });
+  const st = closetState(new Date());
+  const index = st.current >= 0 ? st.current : st.nextIndex;
+  const target = document.getElementById("cw-item-" + index);
+  if (!target || typeof window.scrollTo !== "function") return;
+
+  const bar = document.getElementById("tabbar");
+  const offset = (bar ? bar.offsetHeight : 0) + 18;
+  window.scrollTo({
+    top: Math.max(documentTop(target) - offset, 0),
+    behavior: prefersReducedMotion() ? "auto" : "smooth"
+  });
+
+  if (!prefersReducedMotion()) {
+    target.classList.remove("flash");
+    void target.offsetWidth;
+    target.classList.add("flash");
+    window.setTimeout(function () { target.classList.remove("flash"); }, 1300);
+  }
+}
+
+/* ============================================================
    TOAST
    ============================================================ */
 
@@ -2882,6 +3739,9 @@ window.JCRGM = {
   printAll: printAll,
   exportPlan: exportPlan,
   openTab: openTab,
+  closetJump: closetJump,
+  dwellToggle: dwellToggle,
+  dwellReset: dwellReset,
   resetAll: function () {
     if (!window.confirm("Reset today's progress and notes in every order?")) return;
     PROGRESS = {};
@@ -2889,6 +3749,8 @@ window.JCRGM = {
     saveProgress();
     paintAll();
     renderOrders();
+    renderCloset();
+    updateCloset();
     restoreNotes();
     TAB_IDS.forEach(paintTimer);
     toast("♻️ Everything reset for today.");
@@ -2909,8 +3771,10 @@ function rollToNewDay() {
   paintAll();
   TAB_IDS.forEach(paintTimer);
   updateTodayMessage();
+  renderCloset();
+  updateCloset();
   openTab("daily", { scroll: false });
-  toast("🌅 A new day in Zambia — five fresh targets are waiting in every order.");
+  toast("🌅 A new day in Zambia — five fresh targets are waiting in every order, and a fresh Scripture for the 03:00 watch.");
 }
 
 function startTicker() {
@@ -2918,6 +3782,7 @@ function startTicker() {
   window.setInterval(function () {
     updateClock();
     updateGathering();
+    updateCloset();
     elapsed += 1;
     if (elapsed >= 30) {
       elapsed = 0;
@@ -2941,6 +3806,7 @@ function boot() {
   const steps = [
     ["clock", function () { updateClock(); }],
     ["prayer orders", function () { renderOrders(); }],
+    ["closet watch", function () { renderCloset(); updateCloset(); dwellPaint(); }],
     ["tabs", function () {
       bindTabs();
       const saved = Store.get("ACTIVE_TAB");
@@ -3025,5 +3891,5 @@ if (document.readyState === "loading") {
 }
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39d47c409f3b575',t:'MTc4OTE5ODk5Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39d47c409f3b575',t:'MTc4OTE5ODk5Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a44edaee0d2eb56c',t:'MTc5MTA2MTAwNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
