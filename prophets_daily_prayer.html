@@ -857,6 +857,115 @@ figure,q,cite{margin:0;padding:0}
 }
 .cw-close b{display:block;font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-700);margin-bottom:6px}
 
+/* ---------- the second watch: prophetic prayers & intimacy ---------- */
+
+.cw-live{
+  display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;justify-content:space-between;
+  margin-top:14px;padding:13px 16px;border-radius:12px;
+  background:linear-gradient(120deg,#fffaf0,#fdf1d9);border:1px solid #eed9ac;
+}
+.cw-live .lbl{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;font-weight:800;color:var(--gold-700)}
+.cw-live .what{font-family:var(--serif);font-size:1.02rem;font-weight:700;color:var(--violet-800);margin-top:2px;line-height:1.35}
+.cw-live .cd{font-variant-numeric:tabular-nums;font-weight:800;font-size:clamp(1.4rem,3.6vw,1.9rem);color:var(--violet-800);line-height:1.05}
+.cw-live .sub{font-size:.78rem;color:var(--muted)}
+.cw-live .rt{min-width:150px}
+.cw-live .progress-bar{margin-top:9px}
+
+.cw-pt-list{display:grid;gap:12px;list-style:none;margin-top:14px}
+
+.cw-pt{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-sm);
+  overflow:hidden;box-shadow:var(--shadow-sm);
+  transition:background .35s ease,border-color .35s ease,box-shadow .35s ease;
+}
+.cw-pt-head{
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;
+  width:100%;text-align:left;cursor:pointer;padding:13px 15px;border:0;
+  background:var(--violet-050);border-bottom:1px solid var(--line);
+  transition:background .35s ease;
+}
+.cw-pt-head .num{
+  width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;
+  background:linear-gradient(135deg,var(--violet-700),var(--violet-500));color:#fff;
+  font-weight:800;font-size:.84rem;font-variant-numeric:tabular-nums;
+}
+.cw-pt-head .mid{min-width:0}
+.cw-pt-head .ttl{font-family:var(--serif);font-size:1.02rem;font-weight:700;color:var(--ink);line-height:1.35}
+.cw-pt-head .sub{font-size:.82rem;color:var(--muted);margin-top:2px}
+.cw-pt-head .meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.cw-pt-head .slot{font-variant-numeric:tabular-nums;font-size:.79rem;font-weight:800;color:var(--violet-700);white-space:nowrap}
+.cw-pt-head .cd{font-variant-numeric:tabular-nums;font-size:.76rem;font-weight:800;color:var(--muted);white-space:nowrap;min-width:78px;text-align:right}
+.cw-pt-head .chev{font-size:.8rem;color:var(--muted);transition:transform .25s ease;display:inline-block}
+.cw-pt.open .chev{transform:rotate(180deg)}
+.cw-pt-body{display:none;padding:2px 17px 17px}
+.cw-pt.open .cw-pt-body{display:block;animation:cwOpen .3s ease both}
+@keyframes cwOpen{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+.cw-pt.now{border-color:#e9cf95;box-shadow:0 0 0 3px rgba(201,150,47,.15),0 14px 28px rgba(201,150,47,.14)}
+.cw-pt.now .cw-pt-head{background:linear-gradient(120deg,#fff9ec,#fdf0d6);border-bottom-color:#eed9ac}
+.cw-pt.now .num{background:linear-gradient(135deg,var(--gold-600),var(--gold-400))}
+.cw-pt.now .cd{color:var(--gold-700)}
+.cw-pt.now .cw-verse{border-left-color:#c9a06b}
+.cw-pt.next{border-color:#d7c6ef;box-shadow:0 0 0 3px rgba(109,43,140,.09)}
+.cw-pt.next .cw-pt-head{background:linear-gradient(120deg,#fbf8ff,#f3ecfb)}
+.cw-pt.done{opacity:.7}
+.cw-pt.done .num{background:var(--ok)}
+.cw-pt.flash{animation:cwFlash 1.25s ease-out}
+.cw-pt-tag{
+  font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;font-weight:800;white-space:nowrap;
+  padding:3px 8px;border-radius:999px;background:var(--gold-100);color:var(--gold-700);border:1px solid #efdcb2;
+}
+.cw-pt-tag.next-tag{background:var(--violet-100);color:var(--violet-700);border-color:#ddcdf0}
+.cw-pt-tag.done-tag{background:var(--ok-bg);color:var(--ok);border-color:#bfe3cf}
+
+.cw-pt h5,.cw-block h5{
+  font-size:.68rem;letter-spacing:.17em;text-transform:uppercase;font-weight:800;
+  color:var(--gold-700);margin:16px 0 9px;
+}
+.cw-pt h5:first-child{margin-top:10px}
+
+.cw-verse{
+  border-left:3px solid var(--violet-500);border-radius:0 9px 9px 0;
+  padding:9px 13px;margin-bottom:9px;background:var(--violet-050);
+  transition:background .4s ease,border-color .4s ease,box-shadow .4s ease;
+}
+.cw-verse .vtext{font-family:var(--serif);font-size:.97rem;line-height:1.62;color:var(--ink)}
+.cw-verse .vref{font-size:.77rem;font-weight:800;color:var(--violet-700);margin-top:4px}
+.cw-verse .vsays{font-size:.87rem;line-height:1.58;color:var(--ink-soft);margin-top:6px}
+.cw-verse .vsays b{color:var(--violet-700)}
+.cw-verse.focus{
+  border-left-color:var(--gold-400);
+  background:linear-gradient(90deg,#fff8e9,#fffdf8);
+  box-shadow:0 0 0 2px rgba(201,150,47,.16);
+}
+.cw-verse.focus .vref::after{content:" ▸ pray this verse now";color:var(--gold-700);font-size:.7rem;letter-spacing:.05em}
+
+.cw-prec{
+  margin-top:16px;padding:15px 17px;border-radius:12px;color:#fff;
+  background:linear-gradient(135deg,var(--violet-950),var(--violet-800) 58%,var(--violet-600));
+  box-shadow:var(--shadow-sm);
+}
+.cw-prec h5{color:var(--gold-300);margin:0 0 9px}
+.cw-prec .pcry{font-family:var(--serif);font-style:italic;font-size:1.02rem;line-height:1.6;color:#fff}
+.cw-prec .pacc{margin-top:9px;font-size:.88rem;line-height:1.66;color:rgba(255,255,255,.86)}
+.cw-prec .pout{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.2);font-size:.88rem;line-height:1.66;color:#ffeec6}
+.cw-prec .pout b{color:#fff}
+
+.cw-points{display:grid;gap:7px;list-style:none;margin:0}
+.cw-points li{position:relative;padding-left:21px;font-size:.91rem;line-height:1.58;color:var(--ink-soft)}
+.cw-points li::before{content:"▸";position:absolute;left:2px;top:-1px;color:var(--gold-500);font-weight:800}
+
+.cw-pray{margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--violet-050);border:1px dashed var(--line-strong)}
+.cw-pray h5{margin:0 0 8px}
+.cw-pray p{font-family:var(--serif);font-size:.98rem;line-height:1.72;color:var(--ink)}
+
+.cw-decl{margin-top:12px;padding:12px 15px;border-radius:12px;background:linear-gradient(120deg,#fffaf0,#fdf1d9);border:1px solid #eed9ac}
+.cw-decl b{display:block;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;font-weight:800;color:var(--gold-700);margin-bottom:5px}
+.cw-decl p{font-weight:700;color:var(--violet-800);line-height:1.58;font-size:.95rem}
+
+.cw-check{display:inline-flex;align-items:center;gap:9px;margin-top:15px;cursor:pointer;font-size:.85rem;font-weight:700;color:var(--violet-700)}
+.cw-check input{width:17px;height:17px;accent-color:var(--violet-600);cursor:pointer}
+
 @media (max-width:880px){
   .cw-cards{grid-template-columns:1fr}
   .cw-card .name{min-height:0}
@@ -867,6 +976,10 @@ figure,q,cite{margin:0;padding:0}
   .cw-medit{padding:20px 18px}
   .cw-seg b{display:none}
   .cw-axis{font-size:.6rem}
+  .cw-pt-head{grid-template-columns:auto minmax(0,1fr);gap:10px}
+  .cw-pt-head .meta{grid-column:1 / -1;justify-content:flex-start}
+  .cw-pt-head .cd{text-align:left}
+  .cw-pt-body{padding:2px 14px 15px}
 }
 @media print{
   .cw-cards{grid-template-columns:repeat(3,1fr)}
@@ -877,6 +990,13 @@ figure,q,cite{margin:0;padding:0}
   .cw-medit .meta{color:#333 !important}
   .cw-medit .cw-dwell{display:none}
   .cw-track,.cw-axis{display:none}
+  .cw-pt-body{display:block !important}
+  .cw-pt,.cw-prec{break-inside:avoid;box-shadow:none}
+  .cw-prec{background:#fff !important;color:#000 !important;border:1px solid #999}
+  .cw-prec h5{color:#000 !important}
+  .cw-prec .pcry,.cw-prec .pacc{color:#000 !important}
+  .cw-prec .pout{color:#000 !important;border-color:#999}
+  .cw-pt-head .chev{display:none}
 }
 
 .timer{
@@ -2995,8 +3115,9 @@ const CLOSET_PROGRAMME = [
     start: "03:30", end: "05:00", span: [3 * 60 + 30, 5 * 60],
     when: "Second watch", icon: "🙏",
     title: "Prayer",
-    note: "Ninety unhurried minutes of prayer. Thanksgiving first, then the Word prayed back to God, then intercession for the church, the city and the nation.",
-    action: "Work the Daily Prayer Order, then the Intercession order."
+    note: "Ninety unhurried minutes of prayer: eight targets for prophetic prayers and intimacy, each carried by Scripture and by a prayer a Bible prophet prayed.",
+    action: "Follow the Second Watch guide below — the highlighter takes you target by target.",
+    guide: true
   },
   {
     start: "05:00", end: "07:00", span: [5 * 60, 7 * 60],
@@ -3029,6 +3150,402 @@ const CLOSET_PROGRAMME = [
 ];
 
 const CLOSET_WAKE = "03:00";
+
+/* ============================================================
+   THE SECOND WATCH — PROPHETIC PRAYERS & INTIMACY
+   03:30 – 05:00. Eight targets, ninety minutes. Every target is
+   carried by Scripture (and what that Scripture actually says),
+   and anchored to a prayer a Bible prophet prayed that moved the
+   Holy Spirit in his generation.
+   ============================================================ */
+
+const PROPHETIC_TARGETS = [
+
+  {
+    title: "The listening ear — “Speak, LORD; for thy servant heareth”",
+    tag: "Intimacy · the open ear",
+    minutes: 8,
+    sub: "Begin the second watch by stopping. The Spirit speaks to those who have stopped speaking.",
+    scriptures: [
+      {
+        ref: "1 Samuel 3:9-10",
+        text: "Therefore Eli said unto Samuel, Go, lie down: and it shall be, if he call thee, that thou shalt say, Speak, LORD; for thy servant heareth. So Samuel went and lay down in his place. And the LORD came, and stood, and called as at other times, Samuel, Samuel. Then Samuel answered, Speak; for thy servant heareth.",
+        says: "God does not shout over noise. Before the voice, the boy had to learn the posture of a servant: lie down again, and answer with one sentence. Notice the order — Samuel asks for nothing at all; he offers his ear. The prayer that opens a closed heaven is a prayer of availability, not of request."
+      },
+      {
+        ref: "Isaiah 50:4-5",
+        text: "The Lord GOD hath given me the tongue of the learned, that I should know how to speak a word in season to him that is weary: he wakeneth morning by morning, he wakeneth mine ear to hear as the learned. The Lord GOD hath opened mine ear, and I was not rebellious, neither turned away back.",
+        says: "There is a morning-by-morning wakening, and what is wakened first is the ear, not the tongue. Prophetic vocabulary is received before it is spoken. Your 03:30 watch is the workshop where He opens the ear for the word in season you will need at nine, at three, and all week."
+      },
+      {
+        ref: "Psalm 85:8",
+        text: "I will hear what God the LORD will speak: for he will speak peace unto his people, and to his saints: but let them not turn again to folly.",
+        says: "The psalmist takes a resolution before he has heard anything at all: “I will hear.” Intimacy is a decision made in advance of the feeling. Note the condition attached — hearing is tied to not turning back to folly. An unrepented ear is a dull ear."
+      },
+      {
+        ref: "John 10:27",
+        text: "My sheep hear my voice, and I know them, and they follow me.",
+        says: "Hearing is presented here as the ordinary, defining mark of belonging to Jesus — not a rare gift reserved for a few. The goal of this target is not ecstasy but recognition: His voice becoming as familiar to you as a shepherd's to a sheep."
+      }
+    ],
+    precedent: {
+      who: "Samuel",
+      ref: "1 Samuel 3:1-10, 19-21",
+      cry: "Speak; for thy servant heareth.",
+      account: "“The word of the LORD was precious in those days; there was no open vision.” The lamp of God had not yet gone out, and Samuel was laid down in the temple of the LORD where the ark of God was. Three times the LORD called and three times the boy ran to Eli, “for Samuel had not yet known the LORD, neither was the word of the LORD yet revealed unto him.” Once Eli discerned the Caller, he gave the boy one sentence to answer with — and the LORD came, and stood, and called as at other times.",
+      outcome: "“And the LORD appeared again in Shiloh: for the LORD revealed himself to Samuel in Shiloh by the word of the LORD” — and all Israel from Dan even to Beer-sheba knew that Samuel was established to be a prophet of the LORD. The age of no open vision ended at a sleeping boy who had been taught to answer with one surrendered sentence."
+    },
+    points: [
+      "Lord, I lay down every list, every burden and every deadline at the door of this closet. I stop speaking.",
+      "You waken me morning by morning and You waken my ear — wake my ear now, before my tongue.",
+      "I repent of every noise I have used to avoid Your voice. I will not turn again to folly.",
+      "Speak, LORD; for Thy servant heareth. One word from You is worth a thousand from men.",
+      "Let every season of “no open vision” end in me and in this house, today."
+    ],
+    prayer: "Holy Spirit, I have come in and shut the door. I am not here to inform You — I am here to listen. Still my thoughts; take the reins of my imagination; let the noise of the day die at the threshold. Lord GOD, You waken me morning by morning and You waken my ear to hear as the learned, so wake my ear now. Like Samuel, I have not known You as I ought; teach me the one sentence that keeps the heavens open: Speak, LORD, for Thy servant heareth. I take the resolution of the psalmist — I will hear what God the LORD will speak. Let nothing in me turn back to folly today. The sheep's ear is Yours; make Your voice the most familiar sound in my life. In Jesus' name.",
+    declaration: "The Lord GOD hath opened mine ear, and I was not rebellious. I hear the voice of my Shepherd, and the word of the LORD is revealed to me in this place."
+  },
+
+  {
+    title: "The cleansing of the lips — “Lo, this hath touched thy lips”",
+    tag: "Holiness before the vision",
+    minutes: 10,
+    sub: "No vision is given to uncleansed lips. Confession is the doorway to commissioning.",
+    scriptures: [
+      {
+        ref: "Isaiah 6:5-7",
+        text: "Then said I, Woe is me! for I am undone; because I am a man of unclean lips, and I dwell in the midst of a people of unclean lips: for mine eyes have seen the King, the LORD of hosts. Then flew one of the seraphims unto me, having a live coal in his hand, which he had taken with the tongs from off the altar: And he laid it upon my mouth, and said, Lo, this hath touched thy lips; and thine iniquity is taken away, and thy sin purged.",
+        says: "The vision produced confession, and confession produced the coal. Note where the coal came from — the altar, not the throne. The fire that cleanses a prophet is the fire that has already fallen on sacrifice. It is applied to the mouth, because the mouth is the instrument of the prophetic office: God will not loose an unclean tongue on a nation."
+      },
+      {
+        ref: "Psalm 24:3-4",
+        text: "Who shall ascend into the hill of the LORD? or who shall stand in his holy place? He that hath clean hands, and a pure heart; who hath not lifted up his soul unto vanity, nor sworn deceitfully.",
+        says: "Ascent is a moral question before it is an emotional one. Clean hands (conduct), a pure heart (motive), undivided worship and honest speech. The hill of the LORD is climbed by those whose yes is yes — not by those who can generate an atmosphere."
+      },
+      {
+        ref: "1 John 1:9",
+        text: "If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.",
+        says: "Cleansing is not earned by tears; it is received on the basis of His faithfulness and His justice — the cross has already paid for it. This is why a prophet who will not confess is a prophet who will slowly stop seeing: unconfessed sin fogs the lens."
+      },
+      {
+        ref: "Psalm 51:10",
+        text: "Create in me a clean heart, O God; and renew a right spirit within me.",
+        says: "David does not ask to be improved; he asks to be created — only the Creator can make a clean heart. “A right spirit” is a steadfast spirit, one that does not wobble under the weight of what it is shown. Prophets see heavy things; ask for the steadiness to carry them."
+      }
+    ],
+    precedent: {
+      who: "Isaiah",
+      ref: "Isaiah 6:1-8",
+      cry: "Woe is me! for I am undone… for mine eyes have seen the King, the LORD of hosts.",
+      account: "“In the year that king Uzziah died I saw also the Lord sitting upon a throne, high and lifted up, and his train filled the temple.” The seraphims covered their faces and their feet and cried, “Holy, holy, holy, is the LORD of hosts: the whole earth is full of his glory,” and the posts of the door moved at the voice of him that cried. Isaiah did not applaud the vision — he collapsed under it, and the first thing he confessed was his mouth.",
+      outcome: "A seraphim flew with a live coal taken with the tongs from off the altar, laid it on his mouth and said, “Thine iniquity is taken away, and thy sin purged.” Immediately the counsel of the Godhead opened to him — “Who will go for us?” — and the purged man answered, “Here am I; send me.” Cleansing came before commissioning, and a purged lip became the voice that would name Immanuel for twenty-seven chapters."
+    },
+    points: [
+      "Search me, Lord. Show me every unclean word I have spoken this week — careless, angry, flattering, exaggerated or deceitful.",
+      "I name them now, and I do not excuse them. Wash me in the blood of Jesus.",
+      "Take the coal from off the altar and lay it upon my mouth; let the fire that fell on the Sacrifice fall on my lips.",
+      "Clean hands and a pure heart: I renounce vanity, and every double word I have used.",
+      "Let nothing I am shown today be distorted by anything unconfessed in me."
+    ],
+    prayer: "Lord GOD, I have seen the King this morning, and my first honest word is Isaiah's: woe is me, for I am undone. I am a man of unclean lips, and I have lived among people of unclean lips. I confess before You now every word that grieved the Holy Spirit this week — every hasty answer, every sharp reply, every word spoken to be seen of men, every true thing said in the wrong spirit. I do not excuse them; I plead the blood of Jesus, and You are faithful and just to forgive and to cleanse. Create in me a clean heart, O God, and renew a right spirit within me. Send the seraph with the coal from off the altar — from the sacrifice, not from the throne — and lay it on my mouth. Let my iniquity be taken away and my sin purged, for a purged lip is the only lip fit to carry Your word to a nation. In Jesus' name.",
+    declaration: "This hath touched my lips: mine iniquity is taken away and my sin purged. I have clean hands and a pure heart — I ascend the hill of the LORD and I stand in His holy place."
+  },
+
+  {
+    title: "Face to face — “I beseech thee, shew me thy glory”",
+    tag: "Intimacy · beholding",
+    minutes: 14,
+    sub: "Moses asked for a way and was answered with a Person. Press past the gift to the Giver.",
+    scriptures: [
+      {
+        ref: "Exodus 33:11",
+        text: "And the LORD spake unto Moses face to face, as a man speaketh unto his friend.",
+        says: "This is the high-water mark of Old Testament intimacy, and it is recorded as a plain fact of Moses' ordinary life. Friendship with God is not poetic exaggeration; it is the covenant ground from which everything else in a prophet's ministry flows."
+      },
+      {
+        ref: "Exodus 33:13-14",
+        text: "Now therefore, I pray thee, if I have found grace in thy sight, shew me now thy way, that I may know thee, that I may find grace in thy sight: and consider that this nation is thy people. And he said, My presence shall go with thee, and I will give thee rest.",
+        says: "Moses asks for a way; God answers with a Person — “My presence shall go with thee.” The answer to every question about direction is the Presence. Note also his reasoning: “if I have found grace… shew me.” Intimacy grows by asking again on the basis of grace already given, and it is never presumption."
+      },
+      {
+        ref: "Exodus 33:18",
+        text: "And he said, I beseech thee, shew me thy glory.",
+        says: "Moses had already been promised the Presence, and it was not enough. He pressed past the gift to the Giver. This is the prayer that separates the servant from the friend, and the friend from the prophet: not “bless what I am doing” but “show me Yourself.”"
+      },
+      {
+        ref: "2 Corinthians 3:18",
+        text: "But we all, with open face beholding as in a glass the glory of the Lord, are changed into the same image from glory to glory, even as by the Spirit of the Lord.",
+        says: "Beholding is the mechanism of transformation. We do not change ourselves into His image; we are changed while we look. And the agent is named — “even as by the Spirit of the Lord.” This is precisely why the closet is not optional: the Spirit does His transforming work on those who linger in front of the glory."
+      },
+      {
+        ref: "John 15:15",
+        text: "Henceforth I call you not servants; for the servant knoweth not what his lord doeth: but I have called you friends; for all things that I have heard of my Father I have made known unto you.",
+        says: "Friendship with God means disclosure — He tells His friends what He is doing. That is the very definition of the prophetic office: a friend who has been told. Every secret you carry from this closet is a confidence from a Friend."
+      }
+    ],
+    precedent: {
+      who: "Moses",
+      ref: "Exodus 33:12-23; 34:5-8",
+      cry: "I beseech thee, shew me thy glory.",
+      account: "Moses had already heard “My presence shall go with thee, and I will give thee rest,” and it did not satisfy him. He stood in the tent outside the camp where the LORD spoke with him face to face as a man speaks with his friend, and he asked for more than guidance: he asked for the glory. God answered by setting him in a clift of the rock, covering him with His hand, and causing all His goodness to pass before him while He proclaimed the name of the LORD.",
+      outcome: "“The LORD descended in the cloud, and stood with him there, and proclaimed the name of the LORD… The LORD God, merciful and gracious, longsuffering, and abundant in goodness and truth, keeping mercy for thousands, forgiving iniquity and transgression and sin.” And when Moses came down from the mount, the skin of his face shone. A man who asked for more than direction came down carrying radiance — beholding had become shining."
+    },
+    points: [
+      "Lord, I do not want only Your directions this morning — I want You. Shew me Thy glory.",
+      "Let Your presence go with me today; I refuse to move anywhere Your presence does not go.",
+      "Holy Spirit, hold the mirror. I set my open face before the glory and I will not look away.",
+      "Change me while I look. I will not try to improve myself — I am being changed by the Spirit of the Lord.",
+      "Treat me as a friend: tell me what You are doing in this church, this city and this nation."
+    ],
+    prayer: "Father, Moses spoke with You face to face as a man speaks with his friend, and I ask for the same nearness in the name of Jesus. You have said My presence shall go with Thee — and I receive it, and by it I receive rest. But I ask for more, as Moses did: I beseech Thee, shew me Thy glory. Not the power only, not the utterance only, not the results only — Thyself. Holy Spirit, I set my face before the glory with no veil between; hold up the mirror of the Word and keep me looking until the looking changes me. Proclaim Your name over me again this morning: merciful, gracious, longsuffering, abundant in goodness and truth. I am Your friend, and friends are told what the Father is doing — so tell me. Let me come down from this closet carrying something that shows. In Jesus' name.",
+    declaration: "I am the friend of God; all that the Father has said, He makes known to me. With open face I behold His glory, and I am changed into the same image, from glory to glory, by the Spirit of the Lord."
+  },
+
+  {
+    title: "Open eyes — “LORD, I pray thee, open his eyes”",
+    tag: "Open visions · the seer's sight",
+    minutes: 14,
+    sub: "The chariots were already there. Prayer did not bring the army — it opened the eyes.",
+    scriptures: [
+      {
+        ref: "2 Kings 6:16-17",
+        text: "And he answered, Fear not: for they that be with us are more than they that be with them. And Elisha prayed, and said, LORD, I pray thee, open his eyes, that he may see. And the LORD opened the eyes of the young man; and he saw: and, behold, the mountain was full of horses and chariots of fire round about Elisha.",
+        says: "The chariots were already in position before the prayer — the prayer did not summon the army, it opened the eyes. Fear is not overcome by new resources but by new sight. Notice also that it is the prophet who prays for the servant's eyes: part of your ministry is to intercede that others see."
+      },
+      {
+        ref: "Ephesians 1:17-18",
+        text: "That the God of our Lord Jesus Christ, the Father of glory, may give unto you the spirit of wisdom and revelation in the knowledge of him: The eyes of your understanding being enlightened; that ye may know what is the hope of his calling, and what the riches of the glory of his inheritance in the saints.",
+        says: "Revelation is called “a spirit” — a gift of the Spirit, given by the Father — and its subject matter is the knowledge of Him, not the knowledge of events. And note what is opened: “the eyes of your understanding.” The Holy Spirit enlightens the mind; vision is not the abandonment of the mind but its illumination."
+      },
+      {
+        ref: "Numbers 24:4",
+        text: "He hath said, which heard the words of God, which saw the vision of the Almighty, falling into a trance, but having his eyes open.",
+        says: "Scripture is entirely comfortable with a state in which a man falls into a trance and yet has his eyes open. God is not embarrassed by the physical dimension of vision; He records it. Ask Him for what He is willing to give, and refuse nothing that He gives."
+      },
+      {
+        ref: "Acts 10:9-11, 17",
+        text: "Peter went up upon the housetop to pray about the sixth hour: And he became very hungry, and would have eaten: but while they made ready, he fell into a trance, And saw heaven opened, and a certain vessel descending unto him, as it had been a great sheet knit at the four corners… Now while Peter doubted in himself what this vision which he had seen should mean…",
+        says: "The pattern is fixed and repeatable: a set hour of prayer, a rooftop, and then a trance and an open heaven. Note honestly that Peter “doubted in himself what this vision should mean” — receiving a vision and interpreting it are two different exercises, and the Holy Spirit is the interpreter. Ask for both."
+      },
+      {
+        ref: "Daniel 10:12",
+        text: "Then said he unto me, Fear not, Daniel: for from the first day that thou didst set thine heart to understand, and to chasten thyself before thy God, thy words were heard, and I am come for thy words.",
+        says: "The answer was dispatched on the first day; the manifestation was contested for twenty-one. “Thy words were heard, and I am come for thy words” — your prayers are literally travelled for. Set your heart; the hearing is immediate even when the appearing is delayed."
+      }
+    ],
+    precedent: {
+      who: "Elisha",
+      ref: "2 Kings 6:8-17; 7:6",
+      cry: "LORD, I pray thee, open his eyes, that he may see.",
+      account: "The king of Syria sent horses, chariots and a great host by night, and they compassed the city of Dothan. When the prophet's servant rose early and saw the army he cried, “Alas, my master! how shall we do?” Elisha answered with one sentence — “Fear not: for they that be with us are more than they that be with them” — and then prayed one short prayer, not for deliverance but for the young man's eyes.",
+      outcome: "“The LORD opened the eyes of the young man; and he saw: and, behold, the mountain was full of horses and chariots of fire round about Elisha.” One short prayer gave a servant a prophet's eyes. The siege was broken the same night — the Lord made the Syrian host hear a noise of chariots and horses, and Samaria's famine ended before sunrise."
+    },
+    points: [
+      "LORD, open my eyes that I may see. The chariots are already here — I only need sight.",
+      "Give me a spirit of wisdom and revelation in the knowledge of Him; enlighten the eyes of my understanding.",
+      "Open the eyes of my household, my ministers and every member of JCRGM — let your servants see.",
+      "I receive the trance, the dream and the open heaven; I refuse nothing the Holy Spirit gives.",
+      "Give me the interpretation as well as the vision, and let what I see be judged by what is written."
+    ],
+    prayer: "LORD, I pray Thee, open mine eyes that I may see. Open the eyes of my understanding; give me the spirit of wisdom and revelation in the knowledge of Thyself. Like Elisha's servant I have risen early and seen the siege — the pressure on this house, the pressure on this city — and I have cried, how shall we do? Answer me with the prophet's answer: fear not, for they that be with us are more than they that be with them. Let me see the mountain full of horses and chariots of fire. Father, You are not embarrassed by trance or open heaven; Peter prayed at the sixth hour and the heavens opened. I set my heart to understand and to chasten myself before You — let my words be heard and let the answer come. And when the vision comes, do not leave me doubting what it means: be my Interpreter. Every vision I receive I hold to the written Word. In Jesus' name.",
+    declaration: "The LORD hath opened mine eyes, and I see: the mountain is full of horses and chariots of fire round about me. I have a spirit of wisdom and revelation, and the eyes of my understanding are enlightened."
+  },
+
+  {
+    title: "The watchtower — “I will stand upon my watch… write the vision”",
+    tag: "The word of the LORD · the pen",
+    minutes: 14,
+    sub: "Stand, write, wait. The prophet takes a position before he receives a word.",
+    scriptures: [
+      {
+        ref: "Habakkuk 2:1-3",
+        text: "I will stand upon my watch, and set me upon the tower, and will watch to see what he will say unto me, and what I shall answer when I am reproved. And the LORD answered me, and said, Write the vision, and make it plain upon tables, that he may run that readeth it. For the vision is yet for an appointed time, but at the end it shall speak, and not lie: though it tarry, wait for it; because it will surely come, it will not tarry.",
+        says: "Three laws of the seer's life in three verses: stand (take a position, and keep it), write (the pen is ready before the word arrives), and wait (the vision has its own appointed time and will not be hurried). Note also that Habakkuk expects to be corrected — “what I shall answer when I am reproved.” A true watchman is teachable."
+      },
+      {
+        ref: "Jeremiah 33:3",
+        text: "Call unto me, and I will answer thee, and shew thee great and mighty things, which thou knowest not.",
+        says: "Divine initiative meets human invitation — “Call, and I will answer.” The content of the answer is “things which thou knowest not”: revelation that could not have been reached by study or inference. Prophecy is not research; it is disclosure."
+      },
+      {
+        ref: "Amos 3:7",
+        text: "Surely the Lord GOD will do nothing, but he revealeth his secret unto his servants the prophets.",
+        says: "God has bound Himself to disclose before He acts. This verse is the theological ground of the whole watch: the Lord does not move without telling His servants first. If He is about to move in Lusaka, He will tell somebody — be the one standing in the place where secrets are told."
+      },
+      {
+        ref: "Psalm 119:18",
+        text: "Open thou mine eyes, that I may behold wondrous things out of thy law.",
+        says: "Revelation is anchored to the written Word — the wondrous things come “out of thy law.” Vision never floats free of Scripture; anything shown to you must be judged, weighed and tested by what is already written. The Spirit who wrote the Book will never contradict the Book."
+      },
+      {
+        ref: "1 Corinthians 14:1",
+        text: "Follow after charity, and desire spiritual gifts, but rather that ye may prophesy.",
+        says: "Prophecy is commanded as a thing to desire — “rather that ye may prophesy.” Desire is a legitimate prayer; the Holy Spirit is not offended by a prophet who asks for more of the gift. Ask boldly, but always on the road of love."
+      }
+    ],
+    precedent: {
+      who: "Habakkuk",
+      ref: "Habakkuk 2:1-4; 3:1, 19",
+      cry: "I will stand upon my watch, and set me upon the tower, and will watch to see what he will say unto me.",
+      account: "Habakkuk had complained twice and had been answered twice, and both answers troubled him. Instead of arguing a third time he climbed: he took his stand on the watch and stationed himself on the tower, expecting to be spoken to — and expecting to be corrected. He kept a writing tablet ready before anything at all was said.",
+      outcome: "The LORD answered and gave him the charter text of the Reformation — “the just shall live by his faith” — and the vision of the earth filled with the knowledge of the glory of the LORD, as the waters cover the sea. The book closes as a prayer set to music, and the prophet ends on his high places: “he will make my feet like hinds' feet, and he will make me to walk upon mine high places.” A man who stood on a tower ended up walking on high places."
+    },
+    points: [
+      "I take my stand on the watch this morning. I station myself on the tower and I expect You to speak.",
+      "My pen is ready before the word comes — write, Lord, and I will make it plain upon tables.",
+      "Call unto me and I will answer: I call now, and I ask for great and mighty things I could not know.",
+      "You do nothing without telling Your servants — tell me what You are about to do in this church and this nation.",
+      "I desire to prophesy. Give me the gift, keep me in charity, and make my feet like hinds' feet."
+    ],
+    prayer: "Lord GOD, I climb the tower this morning. I take my stand upon my watch and I station myself, and I will watch to see what Thou wilt say unto me — and I will receive it if I am reproved. My tablet is open and my pen is ready: write the vision and make it plain, that he may run that readeth it. Thou hast said, Call unto me and I will answer thee, and shew thee great and mighty things which thou knowest not — so I call, and I ask for what no study could have taught me. Thou doest nothing until Thou revealest Thy secret to Thy servants the prophets; reveal it to me. Open mine eyes to wondrous things out of Thy law, and let nothing I see contradict what Thou hast written. I desire spiritual gifts, and rather that I may prophesy — fill the desire, and keep me in love. When the vision tarries, I will wait for it; it will surely come, it will not tarry. In Jesus' name.",
+    declaration: "I stand upon my watch and I write the vision. God doeth nothing but He revealeth His secret to His servant; the vision speaks at the appointed time and does not lie. My feet are like hinds' feet — I walk upon my high places."
+  },
+
+  {
+    title: "Travail until the cloud — “Go again seven times”",
+    tag: "Prophetic intercession",
+    minutes: 14,
+    sub: "The rain is heard before it is seen. Faith hears it, prayer labours for it, perseverance sees it.",
+    scriptures: [
+      {
+        ref: "1 Kings 18:36-38",
+        text: "And it came to pass at the time of the offering of the evening sacrifice, that Elijah the prophet came near, and said, LORD God of Abraham, Isaac, and of Israel, let it be known this day that thou art God in Israel, and that I am thy servant, and that I have done all these things at thy word. Hear me, O LORD, hear me, that this people may know that thou art the LORD God, and that thou hast turned their heart back again. Then the fire of the LORD fell, and consumed the burnt sacrifice, and the wood, and the stones, and the dust, and licked up the water that was in the trench.",
+        says: "Elijah prays about sixty words at a set hour, and the whole prayer aims at one thing: that God would be known. He pleads the covenant (“God of Abraham, Isaac and of Israel”), his own obedience (“at thy word”), and the turning of the people's hearts. The fire answers the prayer that seeks God's fame rather than the prophet's reputation."
+      },
+      {
+        ref: "1 Kings 18:41-44",
+        text: "And Elijah said unto Ahab, Get thee up, eat and drink; for there is a sound of abundance of rain. So Ahab went up to eat and to drink. And Elijah went up to the top of Carmel; and he cast himself down upon the earth, and put his face between his knees… And it came to pass at the seventh time, that he said, Behold, there ariseth a little cloud out of the sea, like a man's hand.",
+        says: "The rain was heard before it was seen — “a sound of abundance of rain” under a clear sky. Then the prophet put his face between his knees and sent his servant to look seven times. Three stages in every outpouring: faith hears it, prayer labours for it, perseverance sees it first as a cloud the size of a man's hand."
+      },
+      {
+        ref: "James 5:17-18",
+        text: "Elias was a man subject to like passions as we are, and he prayed earnestly that it might not rain: and it rained not on the earth by the space of three years and six months. And he prayed again, and the heaven gave rain, and the earth brought forth her fruit.",
+        says: "The New Testament insists that Elijah was “a man subject to like passions as we are” — the same nature, the same weaknesses, the same body. This is the Spirit's own argument that the Elijah order of prayer is not reserved for Elijah. It is open to you."
+      },
+      {
+        ref: "Zechariah 10:1",
+        text: "Ask ye of the LORD rain in the time of the latter rain; so the LORD shall make bright clouds, and give them showers of rain, to every one grass in the field.",
+        says: "God commands what He intends to give — “Ask ye of the LORD rain.” Asking is part of the sending: the rain of the Spirit is given in answer to a church that has been told to ask."
+      },
+      {
+        ref: "Acts 4:31",
+        text: "And when they had prayed, the place was shaken where they were assembled together; and they were all filled with the Holy Ghost, and they spake the word of God with boldness.",
+        says: "The New Testament sequence is fixed: they prayed, the place was shaken, they were filled, they spoke with boldness. Prayer, then shaking, then filling, then utterance — for JCRGM as much as for the upper room."
+      }
+    ],
+    precedent: {
+      who: "Elijah",
+      ref: "1 Kings 18:36-46",
+      cry: "Hear me, O LORD, hear me, that this people may know that thou art the LORD God.",
+      account: "On Carmel, at the time of the evening sacrifice, Elijah repaired the broken altar of the LORD with twelve stones, laid the sacrifice in order and had four barrels of water poured over it three times, until the trench was filled. Then he came near and prayed sixty-one words. Afterwards he climbed to the top of Carmel, cast himself down upon the earth, put his face between his knees, and sent his servant to look toward the sea — seven times.",
+      outcome: "“Then the fire of the LORD fell, and consumed the burnt sacrifice, and the wood, and the stones, and the dust, and licked up the water that was in the trench” — and when all the people saw it they fell on their faces and said, “The LORD, he is the God; the LORD, he is the God.” At the seventh sending a cloud like a man's hand arose out of the sea, and the heaven was black with clouds and wind and there was a great rain; the hand of the LORD was upon Elijah and he ran before Ahab to the entrance of Jezreel."
+    },
+    points: [
+      "Repair the broken altar first — Lord, restore the altar of prayer in my life and in this church.",
+      "Hear me, O LORD, hear me, that this people may know that Thou art the LORD God. Let Your fame, not mine, be the issue.",
+      "I hear the sound of abundance of rain before a cloud appears. I declare it by faith.",
+      "I put my face between my knees and I will send again — seven times, and not once fewer.",
+      "Shake the place, fill the house, loose the utterance: pray, shake, fill, speak."
+    ],
+    prayer: "LORD God of Abraham, Isaac and of Israel, hear me, O LORD, hear me, that this people may know that Thou art the LORD God, and that Thou hast turned their heart back again. I stand at the altar this morning and I repair what has been broken down — the altar of secret prayer in my own life, the altar of corporate prayer in JCRGM. Pour the water on; I am not afraid of a sacrifice that only You can consume. Let it be known this day that Thou art God in Zambia. And now I climb Carmel: I hear the sound of abundance of rain while the sky is still clear, and I put my face between my knees. I will send again — a second time, a third, a fourth, a fifth, a sixth, a seventh — until the cloud like a man's hand rises out of the sea. LORD, make bright clouds and give showers of rain; let the latter rain fall on Lusaka. Shake the place where we are assembled, fill us with the Holy Ghost, and loose the word of God with boldness. In Jesus' name.",
+    declaration: "There is a sound of abundance of rain. I travail until the cloud appears — the fire of the LORD falls, and the heaven is black with clouds and wind and a great rain. The place where we pray is shaken, and we are filled with the Holy Ghost."
+  },
+
+  {
+    title: "Prophesy to the bones — “Prophesy upon these bones”",
+    tag: "The release of the Spirit",
+    minutes: 10,
+    sub: "Word first, then wind. The bones do not move until the prophet speaks.",
+    scriptures: [
+      {
+        ref: "Ezekiel 37:4-7",
+        text: "Again he said unto me, Prophesy upon these bones, and say unto them, O ye dry bones, hear the word of the LORD… Thus saith the Lord GOD unto these bones; Behold, I will cause breath to enter into you, and ye shall live… So I prophesied as I was commanded: and as I prophesied, there was a noise, and behold a shaking, and the bones came together, bone to his bone.",
+        says: "God supplies the word, but the prophet must open his mouth — the bones do not move until the prophet speaks. Note the order: prophesy, then noise, then shaking, then structure, then breath. Revival begins with an obedience, not with a feeling."
+      },
+      {
+        ref: "Ezekiel 37:9-10",
+        text: "Then said he unto me, Prophesy unto the wind, prophesy, son of man, and say to the wind, Thus saith the Lord GOD; Come from the four winds, O breath, and breathe upon these slain, that they may live. So I prophesied as he commanded me, and the breath came into them, and they lived, and stood up upon their feet, an exceeding great army.",
+        says: "There are two prophesyings — one to the bones (the word) and one to the wind (the Spirit). Word first, then wind. Prophetic ministry that stops at the word leaves a valley of assembled skeletons; that which also prophesies to the wind raises an exceeding great army."
+      },
+      {
+        ref: "Ezekiel 1:3",
+        text: "The word of the LORD came expressly unto Ezekiel the priest, the son of Buzi, in the land of the Chaldeans by the river Chebar; and the hand of the LORD was there upon him.",
+        says: "The word came “expressly” — with definition and clarity — and the hand of the LORD was upon him in the land of the Chaldeans, by a river, outside the temple, far from every sanctuary. The hand does not wait for a holy building; it finds a man. It can find you in exile too."
+      },
+      {
+        ref: "Romans 4:17",
+        text: "(As it is written, I have made thee a father of many nations,) before him whom he believed, even God, who quickeneth the dead, and calleth those things which be not as though they were.",
+        says: "This is the theology of prophetic speech. God “calleth those things which be not as though they were.” When you prophesy to dry bones you are imitating your Father, and He will not contradict His own word in your mouth."
+      },
+      {
+        ref: "2 Timothy 1:6",
+        text: "Wherefore I put thee in remembrance that thou stir up the gift of God, which is in thee by the putting on of my hands.",
+        says: "The gift can smoulder, and stirring it up is your responsibility, not God's. The word pictures rekindling a fire that has gone to embers. This target is where you rekindle — deliberately, every morning."
+      }
+    ],
+    precedent: {
+      who: "Ezekiel",
+      ref: "Ezekiel 37:1-14",
+      cry: "So I prophesied as I was commanded.",
+      account: "The hand of the LORD carried Ezekiel in the Spirit and set him down in the midst of a valley full of bones, and caused him to pass by them round about: very many, and very dry. Asked “Son of man, can these bones live?”, the prophet refused both despair and presumption — “O Lord GOD, thou knowest.” He was then commanded to prophesy to the bones, and afterwards to prophesy to the breath.",
+      outcome: "“As I prophesied, there was a noise, and behold a shaking, and the bones came together, bone to his bone” — sinews and flesh came upon them and skin covered them; and when he prophesied to the wind “the breath came into them, and they lived, and stood up upon their feet, an exceeding great army.” The word God put in one prophet's mouth became the Spirit's own breath in a dead nation."
+    },
+    points: [
+      "Lord God, Thou knowest — I hand You every situation I have already written off as too dry.",
+      "I open my mouth and prophesy as I am commanded. I will not wait until I feel something.",
+      "Prophesy to the bones: I speak the word of the LORD over the dry places in this church and this city.",
+      "Prophesy to the wind: come from the four winds, O breath, and breathe upon these slain that they may live.",
+      "I stir up the gift of God that is in me — I rekindle the fire this morning, by the word of my testimony and the laying on of hands."
+    ],
+    prayer: "Lord GOD, Thou knowest. I will not pretend these bones are not dry, and I will not agree that they are beyond You. I speak as I am commanded: O ye dry bones, hear the word of the LORD — I will cause breath to enter into you, and ye shall live. I prophesy over every dead thing in my own life, over this household, over JCRGM, over Lusaka and over this nation. And now I prophesy to the wind: come from the four winds, O breath, and breathe upon these slain, that they may live. Holy Spirit, You quicken the dead and You call those things which be not as though they were — so let the word in my mouth become the breath in their nostrils. I stir up the gift of God that is in me this morning; I rekindle the fire and I refuse a smouldering anointing. The hand of the LORD is upon me here, by this river, far from any temple — let the noise and the shaking begin. In Jesus' name.",
+    declaration: "I prophesy as I am commanded: there is a noise and a shaking, bone comes to bone, and the breath comes in. The hand of the LORD is upon me, and the gift of God in me is stirred up and aflame."
+  },
+
+  {
+    title: "The upper room — the Spirit upon the church",
+    tag: "The outpouring · tarrying",
+    minutes: 6,
+    sub: "Ten days of one thing: they all continued with one accord in prayer and supplication.",
+    scriptures: [
+      {
+        ref: "Acts 2:1-4",
+        text: "And when the day of Pentecost was fully come, they were all with one accord in one place. And suddenly there came a sound from heaven as of a rushing mighty wind, and it filled all the house where they were sitting. And there appeared unto them cloven tongues like as of fire, and it sat upon each of them. And they were all filled with the Holy Ghost, and began to speak with other tongues, as the Spirit gave them utterance.",
+        says: "Two conditions precede the sound: the appointed day had “fully come,” and they were all “with one accord in one place.” The wind is from heaven — sovereign, unscheduled; but the unity and the tarrying are our part. Note that the fire sat upon each of them: the outpouring is at once corporate and intensely personal."
+      },
+      {
+        ref: "Luke 11:13",
+        text: "If ye then, being evil, know how to give good gifts unto your children: how much more shall your heavenly Father give the Holy Spirit to them that ask him?",
+        says: "The Spirit is given in answer to asking, and “how much more” is the Lord's own argument for boldness in prayer. If a flawed earthly father gives good gifts, the Father in heaven will not withhold the greatest gift from a son who asks."
+      },
+      {
+        ref: "Joel 2:28",
+        text: "And it shall come to pass afterward, that I will pour out my spirit upon all flesh; and your sons and your daughters shall prophesy, your old men shall dream dreams, your young men shall see visions.",
+        says: "This is the promise Peter stood and claimed on the day of Pentecost, and the signature of the outpouring is prophetic: prophesying, dreams and visions across every generation and both sexes — sons, daughters, old men, young men, servants and handmaids. When the Spirit is poured out, the church prophesies."
+      },
+      {
+        ref: "Ephesians 5:18",
+        text: "And be not drunk with wine, wherein is excess; but be filled with the Spirit.",
+        says: "“Be filled” is continuous — be being filled, again and again. Yesterday's filling does not cover today's watch, which is precisely why you are in the closet at 04:54 and not living off last Sunday."
+      }
+    ],
+    precedent: {
+      who: "The hundred and twenty",
+      ref: "Acts 1:14; 2:1-4; 4:31",
+      cry: "These all continued with one accord in prayer and supplication.",
+      account: "One hundred and twenty disciples obeyed the instruction to tarry in Jerusalem until they were endued with power from on high. They did not organise, campaign or argue; they gave themselves to one thing for ten days — “these all continued with one accord in prayer and supplication, with the women, and Mary the mother of Jesus, and with his brethren.”",
+      outcome: "“And when the day of Pentecost was fully come… suddenly there came a sound from heaven as of a rushing mighty wind, and it filled all the house where they were sitting.” Cloven tongues like fire sat upon each of them, they were all filled with the Holy Ghost, and three thousand souls were added to them that day. And when the church prayed again, “the place was shaken where they were assembled together; and they were all filled with the Holy Ghost, and they spake the word of God with boldness.”"
+    },
+    points: [
+      "Father, how much more — I ask for the Holy Spirit this morning, and I ask again.",
+      "Keep JCRGM in one accord in one place; let nothing divide a church that is asking for fire.",
+      "Pour out Your Spirit upon all flesh here: let sons and daughters prophesy, old men dream, young men see visions.",
+      "Fill me again. I will not live on yesterday's filling.",
+      "Shake the place where we assemble, fill us, and loose the word of God with boldness."
+    ],
+    prayer: "Father, I close the second watch where the church began: in an upper room, of one accord, in prayer and supplication. You gave Your Son to me — how much more will You give the Holy Spirit to them that ask You? I ask now, for myself and for JCRGM. Keep us in one accord in one place; let no division, no offence and no ambition scatter a people who are asking for fire. Pour out Your Spirit upon all flesh in this house: let our sons and our daughters prophesy, let our old men dream dreams and our young men see visions, and upon the servants and upon the handmaidens pour out Your Spirit. Fill me again — I will not live on yesterday's anointing. When the day fully comes, let the sound from heaven fill the house; let the place be shaken where we are assembled; and let us speak the word of God with boldness. In Jesus' name. Amen.",
+    declaration: "We are of one accord in one place, and the day has fully come: the sound from heaven fills the house, the fire sits upon each of us, and we speak the word of God with boldness. I am being filled with the Spirit."
+  }
+];
 
 /* A pool of King James verses for the 03:00 meditation. One is drawn
    for each new day, so the prophet never has to choose. */
@@ -3237,6 +3754,350 @@ function closetTimeline() {
 }
 
 /* ------------------------------------------------------------
+   THE SECOND WATCH GUIDE — schedule, render, highlighter
+   ------------------------------------------------------------ */
+
+function closetMinuteAt(now, minute, dayOffset) {
+  const p = zambiaParts(new Date(Date.UTC.apply(null, closetUtcParts(now)) + (dayOffset || 0) * 86400000));
+  return lusakaMs(Number(p.year), Number(p.month), Number(p.day), Math.floor(minute / 60) % 24, minute % 60);
+}
+
+function hhmm(minutes) {
+  return String(Math.floor(minutes / 60) % 24).padStart(2, "0") + ":" + String(minutes % 60).padStart(2, "0");
+}
+
+function cwTargetSchedule() {
+  let cursor = 3 * 60 + 30; /* 03:30 */
+  return PROPHETIC_TARGETS.map(function (target, index) {
+    const from = cursor;
+    cursor += target.minutes;
+    return { index: index, from: from, to: cursor, target: target };
+  });
+}
+
+function cwTargetState(now) {
+  const minutes = closetMinuteOfDay(now);
+  const slots = cwTargetSchedule();
+  for (let i = 0; i < slots.length; i++) {
+    if (minutes >= slots[i].from && minutes < slots[i].to) {
+      const slot = slots[i];
+      return { index: i, slot: slot, progress: (minutes - slot.from) / (slot.to - slot.from) };
+    }
+  }
+  return { index: -1, slot: null, progress: 0 };
+}
+
+/* Which targets have been marked prayed today. */
+function cwDoneKey() { return "CWPRAY_" + getZambiaDate(); }
+
+function cwDoneLoad() {
+  try {
+    const raw = Store.get(cwDoneKey());
+    const list = raw ? JSON.parse(raw) : [];
+    return Array.isArray(list) && list.length === PROPHETIC_TARGETS.length
+      ? list
+      : PROPHETIC_TARGETS.map(function () { return false; });
+  } catch (error) {
+    return PROPHETIC_TARGETS.map(function () { return false; });
+  }
+}
+
+function cwDoneSave(list) { Store.set(cwDoneKey(), JSON.stringify(list)); }
+
+function propheticGuideHtml() {
+  const slots = cwTargetSchedule();
+  const done = cwDoneLoad();
+
+  const cards = PROPHETIC_TARGETS.map(function (target, index) {
+    const slot = slots[index];
+
+    const verses = target.scriptures.map(function (v, vIndex) {
+      return '' +
+        '<div class="cw-verse" id="cw-v-' + index + "-" + vIndex + '">' +
+          '<p class="vtext">&ldquo;' + esc(v.text) + "&rdquo;</p>" +
+          '<p class="vref">&mdash; ' + esc(v.ref) + "</p>" +
+          '<p class="vsays"><b>What this says:</b> ' + esc(v.says) + "</p>" +
+        "</div>";
+    }).join("");
+
+    const points = target.points.map(function (point) {
+      return "<li>" + esc(point) + "</li>";
+    }).join("");
+
+    return '' +
+      '<li class="cw-pt" id="cw-pt-' + index + '" data-index="' + index + '">' +
+        '<button class="cw-pt-head" type="button" id="cw-pth-' + index + '" ' +
+          'aria-expanded="false" aria-controls="cw-ptb-' + index + '" ' +
+          'onclick="JCRGM.cwTarget(' + index + ')">' +
+          '<span class="num">' + (index + 1) + "</span>" +
+          '<span class="mid">' +
+            '<span class="ttl">' + esc(target.title) + "</span>" +
+            '<span class="sub">' + esc(target.sub) + "</span>" +
+          "</span>" +
+          '<span class="meta">' +
+            '<span class="slot">' + hhmm(slot.from) + "&ndash;" + hhmm(slot.to) + "</span>" +
+            '<span class="cd" id="cw-ptcd-' + index + '">&nbsp;</span>' +
+            '<span class="cw-pt-tag" id="cw-pttag-' + index + '" hidden></span>' +
+            '<span class="chev" aria-hidden="true">▾</span>' +
+          "</span>" +
+        "</button>" +
+        '<div class="cw-pt-body" id="cw-ptb-' + index + '">' +
+
+          "<h5>📖 The Scripture, and what it says</h5>" +
+          verses +
+
+          '<div class="cw-prec">' +
+            "<h5>🔥 The prophet&rsquo;s precedent &mdash; " + esc(target.precedent.who) + "</h5>" +
+            '<p class="pcry">&ldquo;' + esc(target.precedent.cry) + "&rdquo;</p>" +
+            '<p class="pacc"><b>' + esc(target.precedent.ref) + ".</b> " + esc(target.precedent.account) + "</p>" +
+            '<p class="pout"><b>What happened:</b> ' + esc(target.precedent.outcome) + "</p>" +
+          "</div>" +
+
+          "<h5>🙏 Prayer points</h5>" +
+          '<ul class="cw-points">' + points + "</ul>" +
+
+          '<div class="cw-pray"><h5>🕊️ Pray it</h5><p>' + esc(target.prayer) + "</p></div>" +
+
+          '<div class="cw-decl"><b>📣 Declaration</b><p>' + esc(target.declaration) + "</p></div>" +
+
+          '<label class="cw-check">' +
+            '<input type="checkbox" id="cw-ptdone-' + index + '"' + (done[index] ? " checked" : "") + " " +
+              'onchange="JCRGM.cwDone(' + index + ',this.checked)">' +
+            "<span>Target " + (index + 1) + " prayed &mdash; " + target.minutes + " min · " +
+              esc(target.tag) + "</span>" +
+          "</label>" +
+
+        "</div>" +
+      "</li>";
+  }).join("");
+
+  return '' +
+    '<section class="panel" id="cwGuide" style="margin-bottom:16px">' +
+      "<h2>🔥 The Second Watch &mdash; Prophetic Prayers &amp; Intimacy</h2>" +
+      '<p class="sub">03:30&ndash;05:00. Eight targets, ninety minutes, every one carried by Scripture ' +
+      "and by a prayer a Bible prophet prayed that moved the Holy Spirit in his generation. " +
+      "The highlighter follows the clock: the target you are in is lifted up in gold, the next is held " +
+      "in violet, and the verse the Spirit is pressing at this minute is marked &ldquo;pray this verse now&rdquo;.</p>" +
+
+      '<div class="cw-live">' +
+        "<div>" +
+          '<div class="lbl" id="cwGuideLbl">The second watch</div>' +
+          '<div class="what" id="cwGuideNow">&mdash;</div>' +
+          '<div class="sub" id="cwGuideSub">&mdash;</div>' +
+        "</div>" +
+        '<div class="rt">' +
+          '<div class="cd" id="cwGuideClock">--:--:--</div>' +
+          '<div class="sub" id="cwGuideClockLbl">&mdash;</div>' +
+          '<div class="progress-bar"><div class="bar-fill" id="cwGuideBar"></div></div>' +
+        "</div>" +
+      "</div>" +
+
+      '<ol class="cw-pt-list">' + cards + "</ol>" +
+
+      '<div class="toolbar" style="margin-top:14px">' +
+        '<button class="btn gold small" type="button" onclick="JCRGM.cwJump()">⦿ Jump to the target I am in</button>' +
+        '<button class="btn ghost small" type="button" onclick="JCRGM.cwAll(true)">⤓ Expand all</button>' +
+        '<button class="btn ghost small" type="button" onclick="JCRGM.cwAll(false)">⤒ Collapse</button>' +
+        '<button class="btn ghost small" type="button" onclick="JCRGM.cwResetPrayed()">♻️ Clear the ticks</button>' +
+        '<span class="spacer"></span>' +
+        '<span class="chip gold" id="cwGuideChip">0 of 8 targets prayed</span>' +
+      "</div>" +
+    "</section>";
+}
+
+let cwGuideKey = null;
+
+function updateClosetGuide(now) {
+  const guide = document.getElementById("cwGuide");
+  if (!guide) return;
+
+  const nowMs = now.getTime();
+  const st = cwTargetState(now);
+  const minutes = closetMinuteOfDay(now);
+  const done = cwDoneLoad();
+  const day = getZambiaDate(now);
+
+  /* ---------- the live strip ---------- */
+  const lbl = document.getElementById("cwGuideLbl");
+  const what = document.getElementById("cwGuideNow");
+  const sub = document.getElementById("cwGuideSub");
+  const clock = document.getElementById("cwGuideClock");
+  const clockLbl = document.getElementById("cwGuideClockLbl");
+  const bar = document.getElementById("cwGuideBar");
+
+  if (st.index >= 0) {
+    const target = st.slot.target;
+    const endAt = closetMinuteAt(now, st.slot.to, 0);
+    if (lbl) lbl.textContent = "Praying now — target " + (st.index + 1) + " of " + PROPHETIC_TARGETS.length;
+    if (what) what.textContent = target.title;
+    if (sub) sub.textContent = hhmm(st.slot.from) + "–" + hhmm(st.slot.to) + " · " + target.minutes + " min · " + target.tag;
+    if (clock) clock.textContent = formatCountdown(endAt - nowMs);
+    if (clockLbl) clockLbl.textContent = "left in this target";
+    if (bar) bar.style.width = Math.round(Math.min(Math.max(st.progress * 100, 0), 100)) + "%";
+  } else {
+    const opening = closetMinuteAt(now, 3 * 60 + 30, minutes >= 5 * 60 ? 1 : 0);
+    if (lbl) lbl.textContent = "The second watch";
+    if (what) what.textContent = "03:30–05:00 · Prophetic prayers & intimacy";
+    if (sub) sub.textContent = minutes >= 5 * 60
+      ? "This watch has closed for today. It opens again at 03:30 tomorrow."
+      : "Eight targets, ninety minutes. The guide will light up target by target when the watch opens.";
+    if (clock) clock.textContent = formatCountdown(opening - nowMs);
+    if (clockLbl) clockLbl.textContent = "until the watch opens";
+    if (bar) bar.style.width = "0%";
+  }
+
+  /* ---------- the highlighter on every card ---------- */
+  const slots = cwTargetSchedule();
+
+  slots.forEach(function (slot, index) {
+    const card = document.getElementById("cw-pt-" + index);
+    if (!card) return;
+
+    let state;
+    if (index === st.index) state = "now";
+    else if (st.index >= 0
+      ? index === st.index + 1
+      : (index === 0 && minutes < slot.from)) state = "next";   /* the whole day's watch is still ahead */
+    else if (minutes >= slot.to) state = "done";
+    else state = "upcoming";
+
+    card.classList.remove("now", "next", "done");
+    if (state !== "upcoming") card.classList.add(state);
+
+    const cd = document.getElementById("cw-ptcd-" + index);
+    const tag = document.getElementById("cw-pttag-" + index);
+
+    if (state === "now") {
+      if (cd) cd.textContent = formatCountdown(closetMinuteAt(now, slot.to, 0) - nowMs);
+    } else if (state === "next") {
+      if (cd) cd.textContent = "in " + formatCountdown(closetMinuteAt(now, slot.from, 0) - nowMs);
+    } else if (state === "done") {
+      if (cd) cd.textContent = "again at " + hhmm(slot.from);
+    } else {
+      if (cd) cd.textContent = "at " + hhmm(slot.from);
+    }
+
+    if (tag) {
+      if (state === "now") { tag.textContent = "now"; tag.className = "cw-pt-tag"; tag.hidden = false; }
+      else if (state === "next") { tag.textContent = "next"; tag.className = "cw-pt-tag next-tag"; tag.hidden = false; }
+      else if (state === "done") { tag.textContent = "closed"; tag.className = "cw-pt-tag done-tag"; tag.hidden = false; }
+      else tag.hidden = true;
+    }
+
+    /* the verse highlighter inside the target being prayed */
+    const verses = PROPHETIC_TARGETS[index].scriptures;
+    const focus = st.index === index && verses.length
+      ? Math.min(Math.floor(st.progress * verses.length), verses.length - 1)
+      : -1;
+
+    verses.forEach(function (v, vIndex) {
+      const node = document.getElementById("cw-v-" + index + "-" + vIndex);
+      if (node) node.classList.toggle("focus", vIndex === focus);
+    });
+  });
+
+  /* ---------- counter ---------- */
+  const chip = document.getElementById("cwGuideChip");
+  if (chip) {
+    const count = done.filter(Boolean).length;
+    chip.textContent = count + " of " + PROPHETIC_TARGETS.length + " targets prayed";
+    chip.className = "chip" + (count === PROPHETIC_TARGETS.length ? " ok" : " gold");
+  }
+
+  /* ---------- announce the move to the next target ---------- */
+  const key = day + "#" + st.index;
+  if (cwGuideKey !== null && key !== cwGuideKey) {
+    if (st.index >= 0) {
+      const target = st.slot.target;
+      toast("🔥 Target " + (st.index + 1) + " of " + PROPHETIC_TARGETS.length + " — " + target.title.replace(/—.*$/, "").trim());
+      cwTargetOpen(st.index, true);
+      const card = document.getElementById("cw-pt-" + st.index);
+      if (card && !prefersReducedMotion()) {
+        card.classList.remove("flash");
+        void card.offsetWidth;
+        card.classList.add("flash");
+        window.setTimeout(function () { card.classList.remove("flash"); }, 1300);
+      }
+    } else if (cwGuideKey.indexOf("#-1") === -1) {
+      toast("🕊️ The second watch is complete — the Word now waits for you from 05:00.");
+    }
+  }
+  cwGuideKey = key;
+}
+
+function cwTargetOpen(index, open) {
+  const card = document.getElementById("cw-pt-" + index);
+  const head = document.getElementById("cw-pth-" + index);
+  if (!card) return;
+  card.classList.toggle("open", Boolean(open));
+  if (head) head.setAttribute("aria-expanded", open ? "true" : "false");
+}
+
+function cwTargetToggle(index) {
+  const card = document.getElementById("cw-pt-" + index);
+  if (!card) return;
+  cwTargetOpen(index, !card.classList.contains("open"));
+}
+
+function cwTargetAll(open) {
+  PROPHETIC_TARGETS.forEach(function (target, index) { cwTargetOpen(index, open); });
+}
+
+function cwTargetDone(index, value) {
+  const done = cwDoneLoad();
+  done[index] = Boolean(value);
+  cwDoneSave(done);
+  const chip = document.getElementById("cwGuideChip");
+  if (chip) {
+    const count = done.filter(Boolean).length;
+    chip.textContent = count + " of " + PROPHETIC_TARGETS.length + " targets prayed";
+    chip.className = "chip" + (count === PROPHETIC_TARGETS.length ? " ok" : " gold");
+  }
+  if (value) {
+    const card = document.getElementById("cw-pt-" + index);
+    if (card && !card.classList.contains("open")) cwTargetOpen(index + 1, true);
+    toast("✓ Target " + (index + 1) + " sealed. " + (index + 1 < PROPHETIC_TARGETS.length
+      ? "Target " + (index + 2) + " is open."
+      : "The second watch is complete — go into the Word at 05:00."));
+  }
+}
+
+function cwResetPrayed() {
+  cwDoneSave(PROPHETIC_TARGETS.map(function () { return false; }));
+  PROPHETIC_TARGETS.forEach(function (target, index) {
+    const box = document.getElementById("cw-ptdone-" + index);
+    if (box) box.checked = false;
+  });
+  toast("♻️ The eight targets are clear again for tomorrow.");
+}
+
+function closetGuide() {
+  openTab("closet", { scroll: false });
+  const st = cwTargetState(new Date());
+  const index = st.index >= 0 ? st.index : 0;
+  cwTargetOpen(index, true);
+
+  const target = document.getElementById(st.index >= 0 ? "cw-pt-" + index : "cwGuide");
+  if (!target || typeof window.scrollTo !== "function") return;
+
+  const bar = document.getElementById("tabbar");
+  const offset = (bar ? bar.offsetHeight : 0) + 18;
+  window.scrollTo({
+    top: Math.max(documentTop(target) - offset, 0),
+    behavior: prefersReducedMotion() ? "auto" : "smooth"
+  });
+
+  if (!prefersReducedMotion()) {
+    target.classList.remove("flash");
+    void target.offsetWidth;
+    target.classList.add("flash");
+    window.setTimeout(function () { target.classList.remove("flash"); }, 1300);
+  }
+}
+
+function cwJump() { closetGuide(); }
+
+/* ------------------------------------------------------------
    RENDER — built once a day; only the live parts are repainted
    ------------------------------------------------------------ */
 
@@ -3271,6 +4132,10 @@ function closetHtml() {
           "</h4>" +
           "<p>" + esc(slot.note) + "</p>" +
           '<p class="cw-do">➜ ' + esc(slot.action) + "</p>" +
+          (slot.guide
+            ? '<button class="mini" type="button" style="margin-top:9px" onclick="JCRGM.closetGuide()">' +
+              "📜 Open the second watch guide</button>"
+            : "") +
         "</div>" +
         "<div>" +
           '<div class="cd" id="cw-cd-' + index + '">--:--:--</div>' +
@@ -3368,6 +4233,8 @@ function closetHtml() {
       "</div>" +
     "</div>" +
 
+    propheticGuideHtml() +
+
     '<div class="cw-close">' +
       "<b>The closing of the watch</b>" +
       "Father, I have kept the watch You appointed for me. What You have spoken in the secret place, " +
@@ -3389,6 +4256,10 @@ function renderCloset() {
   panel.setAttribute("tabindex", "-1");
   panel.innerHTML = closetHtml();
   host.appendChild(panel);
+
+  /* Start with the target you are in already open, if the watch is running. */
+  const open = cwTargetState(new Date()).index;
+  if (open >= 0) cwTargetOpen(open, true);
 }
 
 /* ------------------------------------------------------------
@@ -3560,6 +4431,9 @@ function updateCloset() {
     chip.textContent = "🔥 Watch kept: " + count.total + (count.total === 1 ? " day" : " days") +
       " · streak: " + count.streak;
   }
+
+  /* ---------- the second watch guide ---------- */
+  updateClosetGuide(now);
 
   /* ---------- announce the change of watch ---------- */
   const key = day + "#" + cur;
@@ -3740,6 +4614,12 @@ window.JCRGM = {
   exportPlan: exportPlan,
   openTab: openTab,
   closetJump: closetJump,
+  closetGuide: closetGuide,
+  cwJump: cwJump,
+  cwTarget: cwTargetToggle,
+  cwAll: cwTargetAll,
+  cwDone: cwTargetDone,
+  cwResetPrayed: cwResetPrayed,
   dwellToggle: dwellToggle,
   dwellReset: dwellReset,
   resetAll: function () {
@@ -3891,5 +4771,5 @@ if (document.readyState === "loading") {
 }
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39d47c409f3b575',t:'MTc4OTE5ODk5Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a44edaee0d2eb56c',t:'MTc5MTA2MTAwNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39d47c409f3b575',t:'MTc4OTE5ODk5Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4523fb63a35b575',t:'MTc5MTA5NjU4OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
