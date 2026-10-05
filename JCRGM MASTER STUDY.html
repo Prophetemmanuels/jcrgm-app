@@ -361,7 +361,7 @@ body{font-size:calc(16px * var(--readSize,1));line-height:var(--readLH,1.55);let
 <div id="scriptureResult" class="scriptureBox">
   <div class="muted">Choose a passage and select “Show Scripture”.</div>
 </div>
-<p class="small muted">The built-in reader auto-loads free versions (KJV, WEB, BSB, ASV, YLT). NKJV and AMPC are licensed: the app opens them in BibleGateway/YouVersion/Logos and lets you paste the text in.</p>
+<p class="small muted">Strong's numbers that some free sources embed in the text are removed automatically, so you always read clean Scripture. The built-in reader auto-loads free versions (KJV, WEB, BSB, ASV, YLT). NKJV and AMPC are licensed: the app opens them in BibleGateway/YouVersion/Logos and lets you paste the text in.</p>
 </div>
 <div class="card">
 <h3>Study this passage</h3>
@@ -919,6 +919,12 @@ body{font-size:calc(16px * var(--readSize,1));line-height:var(--readLH,1.55);let
 <div class="grid">
 <div class="card"><h2>Data</h2><button class="btn primary" onclick="exportData()">Export Study Data</button><button class="btn" onclick="importData()">Import Data</button><button class="btn danger" onclick="resetData()">Reset Local Data</button><p class="muted">Notes, progress, memory and study records are stored locally in this browser.</p></div>
 <div class="card"><h2>Preferences</h2><label>Default focus minutes</label><input id="defaultFocus" type="number" value="25" min="1" max="180"><br><br><label>Bible version (whole app)</label><select class="verSelect" onchange="setBibleVersion(this.value)"></select><br><br><label>Daily target</label><select id="target"><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60" selected>60 minutes</option><option value="90">90 minutes</option><option value="120">120 minutes</option></select></div>
+<div class="card"><h2>Text repair — Strong's numbers</h2>
+<p class="muted">Some free Bible sources embed Strong's numbers inside the verse text — for example <i>“At the mouth6310 of two8147 witnesses5707”</i>. The app now removes them automatically whenever Scripture is read, imported or saved. Use this to clean anything you saved before the fix.</p>
+<div class="actions"><button class="btn" onclick="repairStrongsPreview()">Scan saved text</button><button class="btn primary" onclick="repairStrongsApply()">Repair now</button></div>
+<div id="strongsRepairResult"></div>
+<p class="small muted">Real numbers are never touched — 144,000 / 1,335 days / chapter and verse references / dates all stay exactly as written.</p>
+</div>
 <div class="card"><h2>Church email</h2><p>Jesus Christ Redeems Global Ministries</p><p><a id="churchEmailSettings" href="/cdn-cgi/l/email-protection#fb8b9e9f9a93818e8996929592888f89929e88bb9c969a9297d5989496" style="color:var(--gold);font-weight:700"><span class="__cf_email__" data-cfemail="b4c4d1d0d5dccec1c6d9dddaddc7c0c6ddd1c7f4d3d9d5ddd89ad7dbd9">[email&#160;protected]</span></a></p><p class="muted">This is the only church email used in this house.</p></div>
 <div class="card"><h2>Reading comfort &amp; accessibility</h2>
 <p class="muted">Make the text easy for your eyes. These settings apply to the whole app and are remembered on this device.</p>
@@ -1254,7 +1260,7 @@ function passageValue(){let b=document.getElementById('sBook').value,c=document.
 async function loadScripture(){let ref=passageValue();currentRef=ref;let box=document.getElementById('scriptureResult');box.innerHTML='<div class="muted">Loading Scripture…</div>';try{let d=await fetchPassage(ref);box.innerHTML='<div class="scriptureText">'+esc(d.text)+'</div><div class="scriptureMeta"><span class="pill">'+esc(d.ref)+'</span><span class="pill">'+esc(d.ver)+'</span></div><div class="actions" style="margin-top:8px"><button class="btn" onclick="readVerseFromBox(&#39;scriptureResult&#39;)">🔊 Read aloud</button><button class="btn" onclick="ttsStop()">⏹ Stop</button></div>'}catch(e){if(e&&e.code==='LICENSED'){licensedPendingRef=ref;box.innerHTML=licensedFallbackHTML(ref,getBibleVersion(),'reader')}else{box.innerHTML='<b>Could not load this passage.</b><p class="muted">Check your internet connection, then try again. You can still open the reference directly in Logos or Bible.com.</p>'}}}
 function licensedLinks(ref,ver){const bg=(ver==='AMPC'?'AMPC':'NKJV');return '<div class="actions"><a class="btn primary" target="_blank" rel="noopener noreferrer" href="https://www.biblegateway.com/passage/?search='+encodeURIComponent(ref)+'&version='+bg+'">Read in '+ver+' on BibleGateway</a><a class="btn" target="_blank" rel="noopener noreferrer" href="'+youVersionUrl(ref)+'">Open in YouVersion</a><a class="btn" target="_blank" rel="noopener noreferrer" href="'+logosUrl(ref)+'">Open in Logos</a></div>'}
 function licensedFallbackHTML(ref,ver,target){return '<b>'+esc(ver)+' is a licensed translation.</b><p class="muted">Free Bible APIs cannot auto-load '+esc(ver)+' text (copyright). Open the passage below, then paste the text here to continue in the app.</p>'+licensedLinks(ref,ver)+'<br><label>Paste the '+esc(ver)+' text of '+esc(ref)+'</label><textarea id="licensedPaste_'+target+'" placeholder="Paste the passage text here…"></textarea><br><br><button class="btn primary" onclick="useLicensedText(\''+target+'\')">Use This Text</button>'}
-function useLicensedText(target){const ta=document.getElementById('licensedPaste_'+target),txt=((ta&&ta.value)||'').trim();if(!txt)return toast('Paste the passage text first');const ver=getBibleVersion(),ref=licensedPendingRef||currentRef;if(target==='reader'){currentRef=ref;document.getElementById('scriptureResult').innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(ref)+'</span><span class="pill">'+esc(ver)+' (pasted)</span></div>'}else if(target==='memory'){document.getElementById('memRef').value=ref;document.getElementById('memText').value=txt;document.getElementById('memoryScriptureResult').innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(ref)+'</span><span class="pill">'+esc(ver)+' (pasted)</span></div><br><button class="btn primary" onclick="saveMemory()">Save This Scripture</button>'}else if(target==='today'){localStorage.setItem('jcrgmTodayScripture',ref);localStorage.setItem('jcrgmTodayScriptureText',txt);localStorage.setItem('jcrgmTodayScriptureVer',ver+' (pasted)');document.getElementById('todayScriptureResult').innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(ref)+'</span><span class="pill">'+esc(ver)+' (pasted)</span></div>'}toast(ver+' text loaded')}
+function useLicensedText(target){const ta=document.getElementById('licensedPaste_'+target),txt=stripStrongs(((ta&&ta.value)||'').trim());if(!txt)return toast('Paste the passage text first');const ver=getBibleVersion(),ref=licensedPendingRef||currentRef;if(target==='reader'){currentRef=ref;document.getElementById('scriptureResult').innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(ref)+'</span><span class="pill">'+esc(ver)+' (pasted)</span></div>'}else if(target==='memory'){document.getElementById('memRef').value=ref;document.getElementById('memText').value=txt;document.getElementById('memoryScriptureResult').innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(ref)+'</span><span class="pill">'+esc(ver)+' (pasted)</span></div><br><button class="btn primary" onclick="saveMemory()">Save This Scripture</button>'}else if(target==='today'){localStorage.setItem('jcrgmTodayScripture',ref);localStorage.setItem('jcrgmTodayScriptureText',txt);localStorage.setItem('jcrgmTodayScriptureVer',ver+' (pasted)');document.getElementById('todayScriptureResult').innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(ref)+'</span><span class="pill">'+esc(ver)+' (pasted)</span></div>'}toast(ver+' text loaded')}
 function openCurrentLogos(){openLink('https://app.logos.com/search?query='+encodeURIComponent(currentRef))}
 function openCurrentBible(){openLink('https://www.bible.com/search?query='+encodeURIComponent(currentRef))}
 function sendPassageToStudy(){document.getElementById('passage').value=currentRef;go('study')}
@@ -1972,7 +1978,102 @@ function populateVerSelects(){const cur=getBibleVersion();document.querySelector
 function bookNumber(name){const i=BOOKS.indexOf(name);return i>=0?i+1:0}
 function parseRef(ref){const m=String(ref||'').match(/^(.+?)\s+(\d+)(?::(.+))?$/);if(!m)return null;return{book:m[1].trim(),chapter:+m[2],verses:(m[3]||'').trim()}}
 function verseInRange(v,spec){if(!spec)return true;const parts=String(spec).split(/[,\s]+/);for(const p of parts){const m=p.match(/(\d+)(?:\s*[\u2013\u2014\-]\s*(\d+))?/);if(!m)continue;const a=+m[1],b=m[2]?+m[2]:a;if(v>=a&&v<=b)return true}return false}
-function cleanVerseText(s){return String(s||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim()}
+/* Strong's numbers leak from some free sources (bolls.life returns KJV and ASV
+   with <S>6310</S> tags). Strip the numbers, keep the words, never damage real
+   numbers such as 144,000 / 1,335 / 3:16 / years. */
+function stripStrongs(input){
+  let s=String(input==null?'':input);
+  if(!s)return s;
+  const soft=s;
+  // 1) tag-wrapped Strong's numbers: <S>6310</S>, <strongs>H430</strongs>, <sup>25</sup>, <num>, <w>
+  s=s.replace(/<\s*(?:s|strongs?|sup|num|w|ref|note)\b[^>]*>\s*[HG]?\d{1,5}[a-z]?\s*<\s*\/\s*(?:s|strongs?|sup|num|w|ref|note)\s*>/gi,' ');
+  // 1b) same tags carrying the number in an attribute
+  s=s.replace(/<\s*(?:s|strongs?|sup|num|w|ref)\b[^>]*\d{1,5}[^>]*>\s*<\s*\/\s*(?:s|strongs?|sup|num|w|ref)\s*>/gi,' ');
+  // 2) any remaining markup
+  s=s.replace(/<[^>]*>/g,' ');
+  // 3) bracketed numbers: (6310) [H430] {G26}
+  s=s.replace(/[\(\[]\s*[HG]?\d{1,5}[a-z]?\s*[\)\]]/g,' ');
+  s=s.replace(/\{\s*[HG]?\d{1,5}[a-z]?\s*\}/g,' ');
+  // 4) prefixed Strong's numbers: H430, G26, H 430
+  s=s.replace(/(^|[\s(\[])H\s?(\d{1,5})(?=$|[\s)\],.;:!?])/g,'$1');
+  s=s.replace(/(^|[\s(\[])G\s?(\d{1,5})(?=$|[\s)\],.;:!?])/g,'$1');
+  // 5) numbers glued to the end of a word — the usual result of stripped tags: witnesses5707
+  s=s.replace(/([A-Za-z][A-Za-z'\u2019\u2011-]*)[_\u2044]?\d{1,5}\b/g,'$1');
+  // 6) numbers glued to the front of a word: 5707witnesses (never ordinals like 3rd)
+  s=s.replace(/\b\d{1,5}(?![,.]\d)(?=[A-Za-z])(?!st\b|nd\b|rd\b|th\b)/g,' ');
+  // 7) bare integers — only in text that reads like an untagged Strong's verse
+  const wordCount=(s.match(/[A-Za-z]+/g)||[]).length||1;
+  const numRe=/(^|[\s"'\u201c\u201d\u2018\u2019(\[])(\d{1,5})(?!\d|%|[,.:]\d)/g;
+  let cands=0,m,probe=new RegExp(numRe.source,'g');
+  while((m=probe.exec(s))){const v=+m[2];if(v>=1&&v<=8674)cands++}
+  const dense=(cands>=2&&cands/Math.max(1,(s.match(/\S+/g)||[]).length)>=0.4);
+  if(cands>=3||dense){
+    s=s.replace(numRe,(full,pre,num)=>{const v=+num;return (v>=1&&v<=8674)?pre:full});
+  }
+  s=s.replace(/\s+([,.;:!?])/g,'$1').replace(/\(\s+/g,'(').replace(/\s+\)/g,')').replace(/\s{2,}/g,' ').trim();
+  return s===soft?s:s;
+}
+function cleanVerseText(s){return stripStrongs(String(s||'')).replace(/\s+/g,' ').trim()}
+/* Repair text already saved before this fix */
+function strongsIsDirty(t){
+  if(typeof t!=='string'||!t)return false;
+  return stripStrongs(t)!==t;
+}
+function strongsScan(){
+  const items=[];
+  const add=(label,obj,key,store)=>{try{
+    const v=obj&&obj[key];
+    if(typeof v==='string'&&v.trim()){
+      const c=stripStrongs(v);
+      if(c!==v)items.push({label:label,obj:obj,key:key,before:v,after:c,store:store||null});
+    }
+  }catch(e){}};
+  (state.memory||[]).forEach((x,i)=>add('Memory verse — '+(x.ref||('#'+(i+1))),x,'text'));
+  (state.sermons||[]).forEach((x,i)=>add('Sermon — '+(x.title||('#'+(i+1))),x,'text'));
+  (state.studies||[]).forEach((x,i)=>['obs','interp','context','theology','apply','prayer'].forEach(k=>add('Study '+(x.passage||('#'+(i+1)))+' — '+k,x,k)));
+  (state.journal||[]).forEach((x,i)=>add('Journal — '+(x.title||('#'+(i+1))),x,'text'));
+  (state.meditations||[]).forEach((x,i)=>['scripture','reflection','impression','response'].forEach(k=>add('Meditation '+(x.ref||('#'+(i+1)))+' — '+k,x,k)));
+  (state.prayers||[]).forEach((x,i)=>['request','testimony','verse'].forEach(k=>add('Prayer — '+(x.name||('#'+(i+1))),x,k)));
+  try{
+    const keys=[];
+    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&/^jcrgm(TodayScriptureText|TodayScripture|ChatRefs:)/.test(k))keys.push(k)}
+    keys.forEach(k=>{
+      const raw=localStorage.getItem(k)||'';
+      if(!raw)return;
+      const c=stripStrongs(raw);
+      if(c!==raw)items.push({label:'Saved text ('+k.replace(/^jcrgm/,'')+')',obj:null,key:k,before:raw,after:c,store:'localStorage'});
+    });
+  }catch(e){}
+  return items;
+}
+function repairStrongsPreview(){
+  const box=document.getElementById('strongsRepairResult');
+  const items=strongsScan();
+  if(!box)return;
+  if(!items.length){box.innerHTML='<p class="score" style="margin-top:8px">✓ Nothing to repair — no Strong\'s numbers found in your saved text.</p>';return}
+  const show=items.slice(0,6).map(x=>'<div class="libItem"><b>'+esc(x.label)+'</b><div class="small muted">Before:</div><div class="small">'+esc(x.before.slice(0,150))+'</div><div class="small muted">After:</div><div class="small">'+esc(x.after.slice(0,150))+'</div></div>').join('');
+  box.innerHTML='<div class="highlightNote"><b class="noteLabel">'+items.length+' item'+(items.length===1?'':'s')+' contain Strong\'s numbers</b>'
+    +'Some free Bible sources embed the numbers inside the verse text. This repair removes them from your saved memory verses, studies, sermons, journal, meditations and prayers — and leaves every real number untouched.</div>'
+    +show+(items.length>6?'<p class="small muted">…and '+(items.length-6)+' more.</p>':'')
+    +'<div class="actions"><button class="btn primary" onclick="repairStrongsApply()">Repair all '+items.length+' now</button></div>';
+}
+function repairStrongsApply(){
+  const items=strongsScan();
+  if(!items.length)return toast('Nothing to repair');
+  let n=0;
+  items.forEach(x=>{
+    try{
+      if(x.store==='localStorage'){localStorage.setItem(x.key,x.after);n++;return}
+      if(x.obj){x.obj[x.key]=x.after;n++}
+    }catch(e){}
+  });
+  try{save()}catch(e){}
+  try{renderMemory();renderStudies&&renderStudies();renderJournal();renderMeditations();renderPrayer();renderArchive()}catch(e){}
+  const box=document.getElementById('strongsRepairResult');
+  if(box)box.innerHTML='<p class="score" style="margin-top:8px">✓ Repaired '+n+' item'+(n===1?'':'s')+'. Every verse and note now reads cleanly.</p>';
+  toast('Repaired '+n+' item'+(n===1?'':'s'));
+}
+
 async function fetchPassageNetwork(ref, verOverride){
   const ver=verOverride||getBibleVersion();
   const vinfo=BIBLE_VERSIONS.find(v=>v.id===ver);
@@ -2327,7 +2428,7 @@ function openMemoryLogos(){
   let ref=document.getElementById('memRef').value.trim()||currentRef;
   openLink('https://app.logos.com/search?query='+encodeURIComponent(ref));
 }
-function saveMemory(){if(!memRef.value.trim()||!memText.value.trim())return toast('Add a reference and verse');state.memory.unshift({ref:memRef.value.trim(),text:memText.value.trim(),date:new Date().toLocaleDateString(),reviews:[],nextReview:new Date().toISOString()});save();memRef.value='';memText.value='';renderMemory();toast('Memory verse saved')}
+function saveMemory(){if(!memRef.value.trim()||!memText.value.trim())return toast('Add a reference and verse');state.memory.unshift({ref:memRef.value.trim(),text:stripStrongs(memText.value.trim()),date:new Date().toLocaleDateString(),reviews:[],nextReview:new Date().toISOString()});save();memRef.value='';memText.value='';renderMemory();toast('Memory verse saved')}
 function renderMemory(){document.getElementById('memoryList').innerHTML=state.memory.map((x,i)=>`<div class="listItem"><span class="ref">${esc(x.ref)}</span><p class="verse">${esc(x.text)}</p><div class="small muted">Saved ${esc(x.date)}</div><button class="btn danger" onclick="removeMem(${i})">Remove</button></div>`).join('')||'<p class="muted">No memory verses yet.</p>'}
 function removeMem(i){state.memory.splice(i,1);save();renderMemory()}
 function startMemoryReview(){if(!state.memory.length)return toast('Add a memory verse first');currentMemory=Math.floor(Math.random()*state.memory.length);memoryHintLevel=0;let x=state.memory[currentMemory];document.getElementById('memoryReview').innerHTML='<div><div class="big">'+esc(x.ref)+'</div><p class="muted">Say the verse aloud from memory. Press Hint to reveal it sentence by sentence.</p></div>'}
@@ -4322,6 +4423,7 @@ function ttsVoiceLabel(v,langWant){
 /* Turn what is on the page into what a person would actually say aloud. */
 function naturalizeForSpeech(text){
   let s=String(text==null?'':text);
+  try{if(typeof stripStrongs==='function')s=stripStrongs(s)}catch(e){}
   try{
     s=s.replace(/[\u{1F000}-\u{1FAFF}\u{1F1E6}-\u{1F1FF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{20E3}\u{2300}-\u{23FF}\u{2190}-\u{21FF}\u{2500}-\u{257F}\u{25A0}-\u{25FF}\u{2400}-\u{243F}]/gu,' ');
   }catch(e){
@@ -4826,6 +4928,7 @@ async function importBibleFile(file,label){
     rows=parseBibleText(text);
   }
   if(!rows.length)return toast('No verses found — check the file format below');
+  rows=rows.map(r=>Object.assign({},r,{t:stripStrongs(r.t)}));
   const box=document.getElementById('bibleImportProgress');
   const total=rows.length;
   try{
@@ -5559,6 +5662,12 @@ function initExtras(){
   }catch(e){}
   renderSectionHook('dashboard');
   refreshOfflineStatus();
+  try{
+    if(!sessionStorage.getItem('jcrgmStrongsHinted')){
+      const dirty=strongsScan().length;
+      if(dirty){sessionStorage.setItem('jcrgmStrongsHinted','1');setTimeout(()=>toast(dirty+' saved item'+(dirty===1?'':'s')+' contain Strong\'s numbers — Settings → Text repair cleans them'),1800)}
+    }
+  }catch(e){}
 }
 function saveTtsPrefs(){
   const v=((document.getElementById('ttsVoice')||{}).value||'');
@@ -5577,5 +5686,5 @@ setTimeout(restoreChurchEmail, 800);
 setTimeout(restoreChurchEmail, 2000);
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42533afdbbcda14',t:'MTc5MDYyNDIzOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42533afdbbcda14',t:'MTc5MDYyNDIzOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a45c7060fc3667d4',t:'MTc5MTIwMzQ0MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
