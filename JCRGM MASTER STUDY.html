@@ -259,6 +259,7 @@ body{font-size:calc(16px * var(--readSize,1));line-height:var(--readLH,1.55);let
     <button data-go="occasions">⛪ Ministry Occasions</button>
     <button data-go="archive">🗄 Sermon Archive</button>
     <button data-go="prayer">🙏 Prayer &amp; Care</button>
+    <button data-go="visitors">👋 Visitors &amp; Welcome</button>
     <button data-go="offline">📥 Offline Scripture</button>
     <button data-go="settings">⚙ Settings & Data</button>
   </nav>
@@ -438,6 +439,8 @@ body{font-size:calc(16px * var(--readSize,1));line-height:var(--readLH,1.55);let
       <input id="sermonTitle" placeholder="e.g. The God Who Provides">
       <label>Sermon direction / burden</label>
       <input id="sermonDirection" placeholder="e.g. Faith in difficult seasons">
+      <label>Audience / setting (optional)</label>
+      <input id="sermonAudience" placeholder="e.g. Sunday main service; youth; village congregation; funeral">
     </div>
   </div>
   <div id="sermonTargets" class="sermonTargets">
@@ -448,11 +451,14 @@ body{font-size:calc(16px * var(--readSize,1));line-height:var(--readLH,1.55);let
     <div class="sermonBuilderHead">
       <div>
         <h3>💬 Send Study to ChatGPT — Full Preaching</h3>
-        <p class="muted">Sends your whole study (passage, genre, O-I-C-T-A-P, direction, purpose, subject and the researched Scripture shelf) to ChatGPT under the <b>master preaching standard</b>: the subject must be defined as <i>&ldquo;what is ___?&rdquo;</i> before it is preached, Scripture must interpret Scripture, biblical examples must illustrate rather than replace the text, exactly <b>10 backing Scriptures</b> carry the manuscript, and the message closes with exactly <b>5 prayer targets</b>, each anchored to a Scripture.</p>
+        <p class="muted">Sends your whole study (passage, genre, O-I-C-T-A-P, direction, audience, purpose, subject and the researched Scripture shelf) to ChatGPT under the <b>master full-sermon standard</b>: the sermon must be <b>established from Scripture, not merely illustrated with it</b> — every major point carrying multiple Scripture backings, and every biblical example established from several passages of that person's own story. It is built in the <b>17-part preaching order</b> (title, main text, introduction, plain biblical definition, foundation in Scripture, major points, biblical examples with their explanation and supporting Scriptures, application, warnings and corrections, what the believer must do, Christ-centred application, conclusion, final charge, prayer points, final declarations) and keeps the app's rules: the subject defined as <i>&ldquo;what is ___?&rdquo;</i> before it is preached, exactly <b>10 backing Scriptures</b>, exactly <b>5 prayer targets</b>, and a final check on every claim before the sermon is handed back.</p>
       </div>
       <div class="actions">
         <button class="btn" style="background:#10a37f;border-color:#10a37f;color:#fff;font-weight:800" onclick="openChatGPTWithStudy()">🚀 Open ChatGPT with Study</button>
         <button class="btn" onclick="copyChatGPTPrompt()">📋 Copy ChatGPT Prompt</button>
+        <button class="btn" onclick="quickSermonPrompt()">⚡ Quick sermon prompt</button>
+        <button class="btn" onclick="copyFullSermonStandard()">📋 Copy full-sermon standard</button>
+        <button class="btn small" onclick="showFullSermonStandard()">👁 See the standard</button>
       </div>
     </div>
     <div class="small muted" style="margin-top:8px">How it works: 1) Complete your study &amp; sermon direction above → 2) Click “Open ChatGPT with Study” → 3) The full prompt is auto-copied → 4) Paste (Ctrl+V) in ChatGPT and press Enter → 5) ChatGPT writes the complete sermon.</div>
@@ -889,6 +895,37 @@ body{font-size:calc(16px * var(--readSize,1));line-height:var(--readLH,1.55);let
 </div>
 </section>
 
+<section id="visitors" class="section">
+<div class="card full"><h2>Receiving Visitors — Welcome Ministry</h2>
+<p class="muted">How to handle a visitor from the gate to the ninetieth day — and what the church owes them as a body. Scripture calls the stranger God's own concern (Leviticus 19:34; Deuteronomy 10:18-19; Hebrews 13:2; Matthew 25:35), so this is not a hospitality committee but a duty of the whole house: the pulpit, the ushers, the members, the children's ministry, the money and the records. Built for a Zambian congregation and any church that will take the stranger seriously.</p>
+<div class="actions">
+  <button class="btn primary" onclick="welcomeTeamPrompt()">Build the full welcome-ministry prompt</button>
+  <button class="btn" onclick="welcomeScriptPrompt()">Pulpit welcome script</button>
+  <button class="btn" onclick="welcomePackPrompt()">Welcome pack contents</button>
+  <button class="btn" onclick="printWelcomeChecklist()">Print Sunday checklist</button>
+  <button class="btn" onclick="welcomeReport()">Visitor care report</button>
+</div>
+<div id="visitorsBody"></div>
+</div>
+
+<div class="card full"><h2>Visitor Tracker</h2>
+<p class="muted">Record every visitor on the day — saved on this device like the rest of your work. A name written down is the beginning of discipleship; a name forgotten is how a church loses the person God sent.</p>
+<div class="row3">
+  <div><label>Full name</label><input id="vName" placeholder="Name of the visitor"></div>
+  <div><label>First came</label><input id="vDate" type="date"></div>
+  <div><label>Who invited them / how they heard</label><input id="vVia" placeholder="Invited by, or found us through…"></div>
+</div>
+<div class="row3">
+  <div><label>Phone / WhatsApp</label><input id="vPhone" placeholder="With their permission"></div>
+  <div><label>Area where they stay</label><input id="vArea" placeholder="Compound, road, nearest landmark"></div>
+  <div><label>Stage</label><select id="vStage"></select></div>
+</div>
+<div><label>What we know — family, work, prayer need, questions, the Scripture they were given</label><textarea id="vNote" rows="3" placeholder="Keep it factual and kind — this is a pastoral record, not gossip"></textarea></div>
+<div class="actions"><button class="btn primary" onclick="visitorAdd()">Save visitor</button><button class="btn" onclick="visitorClearForm()">Clear form</button></div>
+<div id="visitorList"></div>
+</div>
+</section>
+
 <section id="offline" class="section">
 <div class="card full"><h2>Offline Scripture Library</h2>
 <p class="muted">Make this tool work where the internet does not. Every passage you read online is cached automatically, and you can import a public-domain Bible once so the whole app reads Scripture offline — built for low-data and off-grid ministry.</p>
@@ -1113,6 +1150,7 @@ function ensureState(){
   if(!state.reviewLog)state.reviewLog=[];
   if(!Array.isArray(state.sermons))state.sermons=[];
   if(!Array.isArray(state.prayers))state.prayers=[];
+  if(!Array.isArray(state.visitors))state.visitors=[];
   if(!state.settings)state.settings={};
 }
 ensureState();
@@ -1124,6 +1162,7 @@ function searchEverything(q){
   state.memory.forEach((x,i)=>{if([x.ref,x.text].join(' ').toLowerCase().includes(q))out.push({type:'Memory',title:x.ref,meta:x.text.slice(0,90),action:()=>{go('memory');startMemoryIndex(i)}})});
   state.journal.forEach((x,i)=>{if([x.title,x.text].join(' ').toLowerCase().includes(q))out.push({type:'Journal',title:x.title||'Journal entry',meta:x.date||'',action:()=>{go('journal')}})});
   state.meditations.forEach((x,i)=>{if([x.ref,x.focus,x.impression,x.response].join(' ').toLowerCase().includes(q))out.push({type:'Meditation',title:x.ref||'Meditation session',meta:x.date||'',action:()=>{go('meditation')}})});
+  (state.visitors||[]).forEach((x,i)=>{if([x.name,x.via,x.area,x.note,x.phone].join(' ').toLowerCase().includes(q))out.push({type:'Visitor',title:x.name||'Visitor',meta:VISITOR_STAGES[Number(x.stage)||0]||'',action:()=>{go('visitors')}})});
   if(typeof librarySearch==='function')out.push(...librarySearch(q));
   return out.slice(0,30);
 }
@@ -1138,7 +1177,7 @@ function renderSearchResults(q){
     ['Topics & Themes','Open Topics','topics'],['Reading Plans','Open Plans','plans'],['Study Academy','Open Academy','academy'],['Book Guides','Open 66 Book Guides','guides'],['Study Resources','Open Resources','resources'],
     ['Word Study','Hebrew & Greek words','words'],['Doctrine Library','Foundation doctrines','doctrine'],['Timeline & History','Bible, church, places, creeds','history'],
     ['Hard Questions','Answering objections','apologetics'],['Teaching Toolkit','Group, children, handout','toolkit'],['Ministry Occasions','Funerals, weddings, services','occasions'],
-    ['Sermon Archive','Your saved sermons','archive'],['Prayer & Care','Prayer list and answers','prayer'],['Offline Scripture','Read and store offline','offline'],
+    ['Sermon Archive','Your saved sermons','archive'],['Prayer & Care','Prayer list and answers','prayer'],['Visitors & Welcome','How to receive and keep visitors','visitors'],['Offline Scripture','Read and store offline','offline'],
     ['Settings & Data','Open Settings','settings']
   ];
   let html='';
@@ -1638,6 +1677,184 @@ function sermonSubject(s,title,dir){
   return {key:theme,label:label,question:entry.label?entry.question:('WHAT IS '+String(label).toUpperCase()+'?'),not:entry.not,qs:entry.qs,prophetic:!!entry.prophetic};
 }
 
+/* ==========================================================================
+   MASTER FULL-SERMON STANDARD
+   The standard below is the one the app sends for a full sermon. It is bound
+   into buildChatGPTSermonPrompt() (the long form) and offered as a one-line
+   quick prompt for use in a hurry before ministration.
+   ========================================================================== */
+function fullSermonStandardBlock(o){
+  o=o||{};
+  const N=o.N||10, P=o.P||5, TR=o.translation||'KJV';
+  const subject=o.subject||{label:'THE SUBJECT',question:'WHAT IS THE SUBJECT?'};
+  const place=(t)=>String(t==null?'':t)
+    .replace(/\{N\}/g,N).replace(/\{P\}/g,P).replace(/\{TRANSLATION\}/g,TR)
+    .replace(/\{SUBJECT\}/g,subject.label||'')
+    .replace(/\{SUBJECT_QUESTION\}/g,subject.question||'')
+    .replace(/\{MAIN_TEXT\}/g,o.passage||'')
+    .replace(/\{TITLE\}/g,o.title||'(create one that carries the central truth)')
+    .replace(/\{PURPOSE\}/g,o.purpose||'')
+    .replace(/\{AUDIENCE\}/g,o.audience||'(not stated — preach to a mixed congregation of new and mature believers)')
+    .replace(/\{EMPHASIS\}/g,o.emphasis||'(not stated — let the text set the emphasis)');
+  return FULL_SERMON_STANDARD.map(place).join('\n');
+}
+const FULL_SERMON_STANDARD=[
+'=== THE MASTER PREACHING STANDARD — FULL SERMON (READ AND OBEY IN FULL) ===',
+'This is the standard my house preaches by. Where it and the numbered sections above state the same thing, obey both. Where this standard is more specific, this standard governs. Nothing here cancels the non-negotiable requirements: the SUBJECT DEFINITION is mandatory, the dedicated backing-Scriptures section carries EXACTLY {N} Scriptures, and the message closes with EXACTLY {P} prayer targets.',
+'',
+'You are a careful, Bible-centred expository preacher, Bible teacher and theological researcher helping me prepare to minister the Word of God.',
+'I will give you a SERMON SUBJECT, THEME or MAIN SCRIPTURE. Develop it into a COMPLETE, ORDERLY, PREACHABLE, SCRIPTURE-SATURATED SERMON.',
+'',
+'--- PRIMARY REQUIREMENT ---',
+'The sermon must be ESTABLISHED from Scripture, not merely ILLUSTRATED with Scripture.',
+'Every major teaching, explanation, theological statement, biblical principle, example, warning, application, promise and conclusion must be supported by appropriate Bible references.',
+'Do not give me only one Scripture and then build many unsupported statements around it.',
+'Where you make a point, give multiple supporting Scriptures where appropriate.',
+'Where you use a biblical character as an example, support the example with the relevant passages from that person\'s story AND, where possible, additional Scriptures that interpret or confirm the lesson.',
+'For example: if using Abraham as an example of faith, do not simply mention Abraham. Establish his example through several relevant passages — Genesis 12, Genesis 15, Genesis 17, Genesis 21, Romans 4, and Hebrews 6 or 11 where applicable.',
+'',
+'--- SERMON OBJECTIVE ---',
+'The congregation should understand:',
+'1. What the subject means',
+'2. What the Bible says about it',
+'3. Why it matters',
+'4. How it works',
+'5. What God requires from us',
+'6. What happens when we obey it',
+'7. What happens when we neglect it',
+'8. How it applies to everyday Christian life',
+'9. How believers should respond',
+'10. How to pray concerning it',
+'',
+'--- STRUCTURE — ORGANISE THE SERMON IN THIS PREACHING ORDER ---',
+'1. SERMON TITLE',
+'2. MAIN TEXT',
+'3. INTRODUCTION',
+'4. PLAIN BIBLICAL DEFINITION',
+'5. FOUNDATION IN SCRIPTURE',
+'6. MAJOR TEACHING POINTS',
+'7. BIBLICAL EXAMPLES',
+'8. EXPLANATION OF EACH EXAMPLE',
+'9. SUPPORTING SCRIPTURES FOR EACH EXAMPLE',
+'10. PRACTICAL APPLICATION',
+'11. WARNINGS AND CORRECTIONS',
+'12. WHAT THE BELIEVER MUST DO',
+'13. CHRIST-CENTRED APPLICATION',
+'14. CONCLUSION',
+'15. FINAL CHARGE',
+'16. PRAYER POINTS',
+'17. FINAL DECLARATIONS, where appropriate',
+'(The numbered sections above already carry items 3-16 of this order under their own headings — the SUBJECT DEFINITION of section 3 is the PLAIN BIBLICAL DEFINITION here. What must NOT be omitted is: the explanation and supporting Scriptures of every example (7-9), WARNINGS AND CORRECTIONS (11), WHAT THE BELIEVER MUST DO (12), the CHRIST-CENTRED APPLICATION (13), the FINAL CHARGE (15), and the FINAL DECLARATIONS (17) where the text genuinely warrants them.)',
+'',
+'--- SCRIPTURE STANDARD ---',
+'Use Scripture abundantly but accurately. Prefer:',
+'* Old Testament + New Testament witnesses',
+'* Direct teaching passages',
+'* Narrative passages where the principle is demonstrated',
+'* Passages that explain or interpret other passages',
+'* Multiple supporting Scriptures for important claims',
+'Do not use verses merely because they contain similar words. Make sure they genuinely support the point being made.',
+'Do not invent Scripture references.',
+'Do not misrepresent the meaning of a passage.',
+'When quoting Scripture, use the {TRANSLATION} unless I request another translation.',
+'Give the Scripture reference clearly.',
+'Where a Scripture is especially important, quote the relevant verse or passage rather than merely listing the reference.',
+'',
+'--- BIBLICAL EXAMPLES — REQUIRED PATTERN ---',
+'When giving a biblical example, follow this pattern:',
+'Example: [Biblical Person/Event]',
+'**What happened:** Explain the biblical event accurately.',
+'**Scriptural evidence:** Give the relevant passages.',
+'**What it teaches:** Explain the spiritual principle.',
+'**Additional confirmation:** Give other Scriptures that establish the same principle.',
+'**Application:** Explain how the congregation should respond today.',
+'Never use a biblical character as a decorative illustration. Use the person\'s story to establish the biblical truth.',
+'',
+'--- EXPOSITORY METHOD ---',
+'Where the main text contains several important words or phrases, examine them carefully. Explain:',
+'* context',
+'* meaning',
+'* biblical principle',
+'* surrounding verses',
+'* connection to the wider teaching of Scripture',
+'* practical application',
+'Do not force meanings into the text. Distinguish between: what the text explicitly says; what can reasonably be inferred; and practical application.',
+'',
+'--- CHRIST-CENTRED ---',
+'Where appropriate, show how the teaching points believers toward Jesus Christ. Use Scripture to establish Christ\'s:',
+'* person',
+'* work',
+'* example',
+'* authority',
+'* finished work',
+'* promises',
+'* relationship to the believer',
+'Do not force Christ into passages where the connection is not biblically warranted.',
+'',
+'--- PREACHING STYLE ---',
+'Write for an actual congregation. The sermon must be: clear, strong, orderly, pastoral, teachable, preach-ready, spiritually weighty, easy to follow.',
+'Use headings and subheadings. Use short preaching statements where appropriate.',
+'Avoid empty motivational slogans. Do not substitute emotional language for biblical substance. Do not make unsupported prophetic claims. Do not promise that God will do something that Scripture does not promise. Do not confuse personal opinion with biblical doctrine.',
+'',
+'--- APPLICATION ---',
+'After establishing each major truth from Scripture, answer: "What does this mean for the believer?"',
+'Give practical applications concerning: prayer, obedience, faith, holiness, relationships, service, spiritual growth, trials, decision-making, witnessing, daily Christian living.',
+'Only include applications that genuinely arise from the biblical teaching.',
+'',
+'--- PRAYER ---',
+'End with Scripture-based prayer points. Each prayer point should correspond to something actually established in the sermon. Where appropriate, attach a supporting Scripture to each prayer point.',
+'',
+'--- FINAL CHECK — RUN THIS BEFORE YOU PRESENT THE SERMON ---',
+'* Is every major claim supported by Scripture?',
+'* Are biblical examples supported by several relevant passages?',
+'* Have I explained the Scriptures rather than merely listing them?',
+'* Have I avoided taking verses out of context?',
+'* Have I distinguished biblical truth from application?',
+'* Is Christ appropriately central?',
+'* Can a preacher actually minister this sermon from the material?',
+'* Is the teaching strong enough for both a new believer and a mature Christian?',
+'* Are there enough Scriptures to establish the subject thoroughly?',
+'',
+'--- THE SERMON I AM ASKING FOR ---',
+'SUBJECT: {SUBJECT}',
+'MAIN TEXT: {MAIN_TEXT}',
+'AUDIENCE/SETTING: {AUDIENCE}',
+'DESIRED EMPHASIS: {EMPHASIS}',
+'TITLE: {TITLE}',
+'PURPOSE I AM PREACHING WITH: {PURPOSE}'
+];
+
+/* One-line version for use in a hurry before ministration. */
+function quickSermonPrompt(){
+  const s=selectedStudyData();
+  if(!s.passage)return toast('Set a Scripture passage first');
+  const dir=((document.getElementById('sermonDirection')||{}).value||'').trim();
+  const title=((document.getElementById('sermonTitle')||{}).value||'').trim();
+  const subject=sermonSubject(s,title,dir);
+  const p='Prepare a complete sermon on '+subject.label+(s.passage?' ('+s.passage+')':'')+''
+   +'. Use the full Bible-centred sermon preparation standard: every major point must have multiple Scripture backings, and every biblical example must itself be established with several relevant passages. Explain the Scriptures, don\'t just list them. Use '+getBibleVersion()+', maintain biblical context, make it Christ-centred, practical and preach-ready, and finish with Scripture-based prayer points and a final charge.'
+   +' Include the plain biblical definition of the subject as "'+subject.question+'" before the teaching.'
+   +(title?' My title: '+title+'.':'')
+   +(dir?' My burden: '+dir+'.':'')
+   +' '+languageInstruction();
+  sendPromptToChatGPT(p,'Quick sermon prompt — '+subject.label);
+}
+function copyFullSermonStandard(){
+  const p=(typeof buildChatGPTSermonPrompt==='function')?buildChatGPTSermonPrompt():'';
+  if(!p)return toast('Set a Scripture passage first');
+  (async()=>{try{await navigator.clipboard.writeText(p)}catch(e){}
+    toast('Full-sermon standard copied ('+p.length.toLocaleString()+' characters)');
+  })();
+}
+function showFullSermonStandard(){
+  const p=(typeof buildChatGPTSermonPrompt==='function')?buildChatGPTSermonPrompt():'';
+  const box=document.getElementById('chatgptPromptPreview');
+  if(!box)return;
+  box.classList.remove('hidden');
+  box.textContent=p||'Set a Scripture passage first.';
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
 function buildChatGPTSermonPrompt(){
   const s=selectedStudyData();
   if(!s.passage)return '';
@@ -1654,6 +1871,8 @@ function buildChatGPTSermonPrompt(){
   const shelfList=shelf.map((r,i)=>(i+1)+'. '+r.ref+(r.why?' — '+r.why:'')).join('\n');
   const translation=getBibleVersion();
   const N=SERMON_SPEC.backingScriptures,P=SERMON_SPEC.prayerTargets;
+  const audience=((document.getElementById('sermonAudience')||{}).value||'').trim();
+  const standard=fullSermonStandardBlock({subject:subject,passage:s.passage,title:title,purpose:purpose,audience:audience,emphasis:dir,translation:translation,N:N,P:P});
 
   const studyNotes=[
     '1. OBSERVATION — what the text actually says: '+(s.obs||'(not recorded — derive it from the text itself)'),
@@ -1860,7 +2079,7 @@ passageAwareness(s,g),
 'DELIVERY: Give the finished sermon in full, in the order of the sections above, using clear headings. Do not ask me questions first and do not give an outline instead of the manuscript. Where my notes are silent on something the sermon needs, fill it from the text and say that you have done so.'
   ].join('\n');
 
-  return [spec,'',material,'',closing].join('\n');
+  return [spec,'','','=== MASTER FULL-SERMON STANDARD ===','',standard,'','',material,'',closing].join('\n');
 }
 
 /* ---------------------------------------------------------------------------
@@ -2034,6 +2253,7 @@ function strongsScan(){
   (state.journal||[]).forEach((x,i)=>add('Journal — '+(x.title||('#'+(i+1))),x,'text'));
   (state.meditations||[]).forEach((x,i)=>['scripture','reflection','impression','response'].forEach(k=>add('Meditation '+(x.ref||('#'+(i+1)))+' — '+k,x,k)));
   (state.prayers||[]).forEach((x,i)=>['request','testimony','verse'].forEach(k=>add('Prayer — '+(x.name||('#'+(i+1))),x,k)));
+  (state.visitors||[]).forEach((x,i)=>['note'].forEach(k=>add('Visitor — '+(x.name||('#'+(i+1))),x,k)));
   try{
     const keys=[];
     for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&/^jcrgm(TodayScriptureText|TodayScripture|ChatRefs:)/.test(k))keys.push(k)}
@@ -2291,6 +2511,11 @@ async function generateFullSermon(){
   if(!s.passage)return toast('Set a Scripture passage first');
   const box=document.getElementById('fullSermon');
   const dir=(document.getElementById('sermonDirection')?.value||'').trim();
+  const title=(document.getElementById('sermonTitle')?.value||'').trim();
+  const audience=(document.getElementById('sermonAudience')?.value||'').trim();
+  const subject=sermonSubject(s,title,dir);
+  const st=(typeof state!=='undefined'&&state&&state.studies)?state.studies.find(x=>x.passage===s.passage):null;
+  const ctx=(st&&Array.isArray(st.contextScriptures)?st.contextScriptures:[]).filter(Boolean).slice(0,25);
   const refs=getTwentyReferenceScriptures(s.passage,s);
   const sermonRefs=refs.slice(0,SERMON_SPEC.backingScriptures);
   const prayerRefs=refs.slice(SERMON_SPEC.backingScriptures,SERMON_SPEC.backingScriptures+SERMON_SPEC.prayerTargets);
@@ -2321,15 +2546,25 @@ async function generateFullSermon(){
   html+='<p><b>Main Scripture:</b> '+escHtml(s.passage)+' &nbsp; <span class="pill">'+escHtml(s.genre||'')+'</span> &nbsp; <span class="pill">'+escHtml(theme)+'</span></p>';
   html+='<div class="purposeBox"><b>🎯 Intended Purpose (the whole sermon aligns with this):</b><div style="margin-top:6px">'+escHtml(purpose)+'</div></div>';
   html+='<div class="sermonScripture"><b>Read:</b> '+escHtml(s.passage)+' — Stand and read the complete passage before preaching.</div>';
-  html+='<h3>📑 The Study Arranged In Order</h3><div class="studyOrderBox"><ol>'
-    +'<li><b>01 THE TEXT</b> — what it says</li>'
-    +'<li><b>02 THE MEANING</b> — what it meant</li>'
-    +'<li><b>03 THE CONTEXT</b> — setting & cross-references</li>'
-    +'<li><b>04 THE TRUTH</b> — central theology in one sentence</li>'
-    +'<li><b>05 THE MOVEMENT</b> — 3 preaching points from the text</li>'
-    +'<li><b>06 THE RESPONSE</b> — what hearers must do</li>'
-    +'<li><b>07 THE SUPPORT</b> — the '+sermonRefs.length+' manuscript backing Scriptures with what they say (from a shelf of '+refs.length+')</li>'
-    +'<li><b>08 THE APPEAL</b> — call to respond</li></ol></div>';
+  html+='<h3>📑 The Master Preaching Order — 17 Parts</h3><div class="studyOrderBox"><ol>'
+    +'<li><b>01 SERMON TITLE</b> — carries the central truth, promises nothing the sermon does not teach</li>'
+    +'<li><b>02 MAIN TEXT</b> — '+escHtml(s.passage)+', explained in its context</li>'
+    +'<li><b>03 INTRODUCTION</b> — the need this text answers; the subject named before it is preached</li>'
+    +'<li><b>04 PLAIN BIBLICAL DEFINITION</b> — '+escHtml(subject.question)+' answered from Scripture, and what it is not</li>'
+    +'<li><b>05 FOUNDATION IN SCRIPTURE</b> — the passages that establish the subject</li>'
+    +'<li><b>06 MAJOR TEACHING POINTS</b> — '+points.length+' points from the text, each moving the teaching forward</li>'
+    +'<li><b>07 BIBLICAL EXAMPLES</b> — people whose story establishes the truth</li>'
+    +'<li><b>08 EXPLANATION OF EACH EXAMPLE</b> — what happened, what it teaches</li>'
+    +'<li><b>09 SUPPORTING SCRIPTURES FOR EACH EXAMPLE</b> — several passages per example, not one</li>'
+    +'<li><b>10 PRACTICAL APPLICATION</b> — what this means for the believer</li>'
+    +'<li><b>11 WARNINGS AND CORRECTIONS</b> — what this teaching does not mean</li>'
+    +'<li><b>12 WHAT THE BELIEVER MUST DO</b> — the response, plainly stated</li>'
+    +'<li><b>13 CHRIST-CENTRED APPLICATION</b> — where the text leads us to Christ</li>'
+    +'<li><b>14 CONCLUSION</b> — return to the text and the central truth</li>'
+    +'<li><b>15 FINAL CHARGE</b> — the charge to the congregation</li>'
+    +'<li><b>16 PRAYER POINTS</b> — '+SERMON_SPEC.prayerTargets+' targets, each anchored to a Scripture</li>'
+    +'<li><b>17 FINAL DECLARATIONS</b> — only what the text itself declares</li></ol>'
+    +'<p class="small muted" style="margin-top:8px">Parts 03–14 are built below from your study. Parts 07–09, 11, 12, 15 and 17 need a preacher\'s judgement on this text — the app lights the path and ChatGPT (see “Send to ChatGPT”) writes them out in full under the master standard.</p></div>';
   html+=noteBlock('O — Observation',s.obs,'Record what the text actually says.');
   html+=noteBlock('I — Interpretation',s.interp,'State the author\'s meaning and purpose.');
   html+=noteBlock('C — Context',s.context,'Place the passage in its book, historical and biblical setting.');
@@ -2340,6 +2575,16 @@ async function generateFullSermon(){
   html+='<p>Today we are not studying '+escHtml(s.passage)+' merely to gain information. We are coming before God to hear His Word and respond to it — and His purpose for us in this message is clear: <b>'+escHtml(purpose)+'</b></p>';
   html+='<h3>Central Truth</h3><p><b>'+escHtml(big)+'</b></p>';
   html+='<h3>Understanding the Text</h3><p>'+escHtml(meaning)+'</p>';
+  html+='<h3>Plain Biblical Definition — '+escHtml(subject.question)+'</h3>'
+    +'<div class="purposeBox"><b>A. SIMPLE DEFINITION (as you would say it to a child):</b> '+(s.theology?escHtml(s.theology):'state it in one sentence a new believer can repeat.')+'</div>'
+    +'<div class="purposeBox" style="margin-top:8px"><b>B. BIBLICAL DEFINITION:</b> let the text itself define the word or subject — the act, the command, the promise or the person named in '+escHtml(s.passage)+' — and answer the question before you preach it.</div>'
+    +'<p class="small muted">C. SCRIPTURAL FOUNDATION: the passages below in the Biblical Witness section, plus your context shelf ('+escHtml((ctx&&ctx.length?ctx.join(', '):'add cross-references in your study'))+').</p>';
+  html+='<h3>Warnings and Corrections — What This Teaching Does Not Mean</h3><ul>'
+    +subject.not.map(x=>'<li>'+escHtml(x)+'</li>').join('')
+    +'<li>Do not promise from this text what God has not promised in it. Say what He said — no more.</li>'
+    +'<li>Do not turn the text into a slogan. It is a revelation of God before it is a demand on you.</li>'
+    +'<li>Do not preach morality without Christ: obedience is the fruit of the gospel, never its price.</li></ul>'
+    +'<p class="small muted">Questions the message must answer: '+escHtml((subject.qs||[]).join(' • '))+'</p>';
   html+='<h3>The Preaching Movement — 3 Points From the Text</h3>';
   points.forEach((p,i)=>{
     const sub=refs.slice(i*2,i*2+2).join(' • ');
@@ -2358,7 +2603,18 @@ async function generateFullSermon(){
   html+='<h3>The Biblical Truth</h3><p>'+escHtml(truth)+'</p>';
   html+='<h3>Practical Application — Respond to the Purpose</h3><p>'+escHtml(application)+'</p>';
   html+='<p>Do not leave the Word in the notebook. In obedience to our purpose — <b>'+escHtml(purpose)+'</b> — let it become a decision, a practice, a prayer and a changed way of living this week.</p>';
+  html+='<h3>What the Believer Must Do</h3><ul>'
+    +'<li><b>Believe</b> what this text says about God — and act as a person who believes it.</li>'
+    +'<li><b>Repent</b> of whatever in you contradicts it, by name, before God.</li>'
+    +'<li><b>Obey</b> — do the one thing this text requires of you this week, not eventually.</li>'
+    +'<li><b>Pray</b> — pray the prayer points below, in your own words, until they are yours.</li>'
+    +'<li><b>Tell</b> — carry this word to one person in your house, work or street.</li></ul>'
+    +'<p class="small muted">Purpose of the message: <b>'+escHtml(purpose)+'</b> — every response above must serve it.</p>';
+  html+='<h3>Christ-Centred Application</h3>'
+    +'<p>We come to this text as people who stand on this side of the cross and the empty tomb. Whatever this passage requires of us is met only in Christ: He is the obedience we have not rendered, the Substitute who bore our failure, the risen Lord who sends His Spirit to make obedience possible, and the Intercessor who prays for us now (2 Corinthians 5:21; Romans 5:19; Hebrews 4:14-16; John 14:26). Preach the demand of this text, and then preach Christ as the One who fulfils it in us and for us.</p>'
+    +'<p class="small muted">Do not force a messianic reading the passage does not carry. Where the text does not lead to Christ, do not drag Him in by the hair — preach Christ from the whole counsel of God instead.</p>';
   html+='<h3>Conclusion & Appeal</h3><p>Return to '+escHtml(s.passage)+' and repeat the central truth: <b>'+escHtml(big)+'</b> The goal is not simply to remember the sermon. The goal is to respond to God through His Word. If this Word has spoken to you, respond now — stand, lift your hand, come forward, surrender that area — and let God fulfil His purpose in you.</p>';
+  html+='<h3>Final Charge</h3><p>And now, in the fear of God and in the light of '+escHtml(s.passage)+': <b>'+escHtml(big)+'</b> I charge you — do not leave this service the same person you came in. Take the word you have heard, obey it in your house before you obey it anywhere else, and let it be said of us as it was said of those who heard Him: they did what the Word said.</p>';
   html+='<h3>'+SERMON_SPEC.prayerTargets+' Prayer Targets — Inline With the Message</h3><p class="muted">Each target arises from the message and is anchored to a Scripture.</p>';
   prayers.forEach((p,i)=>{
     const pr=prayerRefs[i]||refs[i]||'';
@@ -2371,6 +2627,21 @@ async function generateFullSermon(){
       +'</div>';
   });
   html+='<h3>Closing Prayer</h3><p>'+escHtml(prayerSeed+' Let this Word remain alive in us, guide our steps and produce fruit that brings glory to Jesus Christ. Amen.')+'</p>';
+  html+='<h3>Final Declarations — only what this text declares</h3><ul>'
+    +'<li>Declare what God says of Himself here — nothing more, nothing less.</li>'
+    +'<li>Declare what He says of His people here, in the words of the text, not in the words of the moment.</li>'
+    +'<li>Refuse the temptation to declare what the text does not promise: no guaranteed healing, wealth, ease or victory this side of the text.</li>'
+    +'<li>Where a declaration is made, it is made as <b>'+escHtml(big)+'</b> — sung, prayed and obeyed, not shouted to force God\'s hand.</li></ul>';
+  html+='<h3>Preacher\u2019s Final Check — run this before you stand up</h3><ol class="muted small">'
+    +'<li>Is every major claim supported by Scripture?</li>'
+    +'<li>Are the biblical examples supported by several relevant passages?</li>'
+    +'<li>Have I explained the Scriptures rather than merely listing them?</li>'
+    +'<li>Have I avoided taking verses out of context?</li>'
+    +'<li>Have I distinguished biblical truth from application?</li>'
+    +'<li>Is Christ appropriately central?</li>'
+    +'<li>Can I actually minister this sermon from this material'+(audience?' to the '+escHtml(audience)+'?':'?')+'</li>'
+    +'<li>Is it strong enough for both a new believer and a mature Christian?</li>'
+    +'<li>Are there enough Scriptures to establish the subject thoroughly?</li></ol>';
   html+='<div class="purposeBox"><b>PREACHER\'S ONE-LINE SUMMARY:</b> '+escHtml(big)+' — Purpose: '+escHtml(purpose)+'</div>';
   html+='<p class="small muted">Want a longer, fully-written manuscript? Click “💬 Send to ChatGPT” above — your study, notes and '+refs.length+' shelf Scriptures travel with it, and ChatGPT returns the full manuscript shaped to the master preaching standard (subject definition, exactly '+SERMON_SPEC.backingScriptures+' backing Scriptures, exactly '+SERMON_SPEC.prayerTargets+' prayer targets).</p>';
   html+='</article>';
@@ -5418,6 +5689,561 @@ function renderHistory(){
       +'<p class="small muted">Public-domain historic statements of faith, for teaching and comparison. Verify against an authoritative edition before using them in a service. A creed is a servant of Scripture, never its master.</p>';
   }
 }
+/* ---------- ministry: receiving visitors & the church's duty ------------ */
+
+const VISITOR_STAGES=[
+ 'First visit — not yet contacted',
+ 'Contacted (message sent)',
+ 'Spoke with them by phone',
+ 'Visited them where they stay',
+ 'Returned a 2nd time',
+ 'Attending a small group',
+ 'In new-believers class',
+ 'Joined the church',
+ 'Gone quiet — keep praying'
+];
+
+const VISITOR_WORD=[
+ {r:'Leviticus 19:34',t:"But the stranger that dwelleth with you shall be unto you as one born among you, and thou shalt love him as thyself; for ye were strangers in the land of Egypt.",n:'God sets the standard by our own story — we were all strangers once.'},
+ {r:'Deuteronomy 10:18-19',t:"He doth execute the judgment of the fatherless and widow, and loveth the stranger, in giving him food and raiment. Love ye therefore the stranger.",n:'God feeds the stranger — and then tells us to do it.'},
+ {r:'Hebrews 13:2',t:"Be not forgetful to entertain strangers: for thereby some have entertained angels unawares.",n:'The visitor may be more than a visitor.'},
+ {r:'Matthew 25:35',t:"I was a stranger, and ye took me in.",n:'Christ identifies Himself with the stranger at your door.'},
+ {r:'Genesis 18:2',t:"...and he ran to meet them from the tent door, and bowed himself toward the ground.",n:'Abraham ran. Welcome is motion, not waiting.'},
+ {r:'Romans 12:13',t:"...distributing to the necessity of saints; given to hospitality.",n:'Hospitality is a commanded grace, not a personality type.'},
+ {r:'1 Peter 4:9',t:"Use hospitality one to another without grudging.",n:'Welcome without the sigh behind it.'},
+ {r:'Romans 15:7',t:"Wherefore receive ye one another, as Christ also received us to the glory of God.",n:'The measure of our welcome is how Christ received us.'},
+ {r:'James 2:1-4',t:"...have not the faith of our Lord Jesus Christ... with respect of persons... and ye have respect to him that weareth the gay clothing...",n:'Seating people by their clothes is sin, and it is named.'},
+ {r:'1 Corinthians 14:23-25',t:"...will they not say that ye are mad?... and thus falling down on his face he will worship God, and report that God is in you of a truth.",n:'The test of a service: what does the outsider conclude?'},
+ {r:'3 John 1:5',t:"Beloved, thou doest faithfully whatsoever thou doest to the brethren, and to strangers.",n:'Love shown to strangers is recorded in heaven as faithfulness.'},
+ {r:'Matthew 5:47',t:"And if ye salute your brethren only, what do ye more than others? do not even the publicans so?",n:'Greeting only our own friends is what the world already does.'},
+ {r:'Luke 14:12-14',t:"...when thou makest a feast, call the poor, the maimed, the lame, the blind... for they cannot recompense thee.",n:'Invite the ones who cannot pay you back.'},
+ {r:'Isaiah 58:7',t:"...and that thou bring the poor that are cast out to thy house? when thou seest the naked, that thou cover him...",n:'Bringing people home is true fasting.'},
+ {r:'Zechariah 7:10',t:"And oppress not the widow, nor the fatherless, the stranger, nor the poor.",n:'Neglect of the stranger is named with oppression.'},
+ {r:'Ephesians 2:19',t:"Now therefore ye are no more strangers and foreigners, but fellowcitizens with the saints.",n:'This is what we are turning them into — family.'}
+];
+
+/* The welcome handbook — the order a visitor passes through, and what the
+   house must do at each point. Each block can build its own prompt. */
+const VISITOR_SOP=[
+{n:'1. Before the service — prepare the house',
+ p:'Welcome is decided before anyone arrives. A visitor should never have to be brave to find a seat.',
+ items:[
+  'Pray by name for the strangers God will send today — and mean it.',
+  'Greeter team in place: two at the main door, one inside the door, one at the welcome desk. Nobody arrives to an empty door.',
+  'Walk the visitor route yourself: gate, parking, doorway, seating, toilets, children room. Fix whatever confuses you.',
+  'Signage that a stranger can follow without asking anyone: service times, toilets, children, offering box, exit.',
+  'Welcome desk stocked: visitor cards, pens, spare Bibles, water, tissues, a small gift.',
+  "Children's ministry ready: check-in register, two adults per class, toilet escort plan, medical and allergy notes.",
+  'Keep the back rows and aisle seats free. Shy visitors, the elderly and nursing mothers take them — do not pack the church from the front and strand a visitor at the back.',
+  'Brief preacher and song leaders: welcome the visitor without embarrassing them.',
+  'Money rule: no second basket aimed at visitors, and never announce who gave what.'
+ ]},
+{n:'2. Arrival — the first 90 seconds',
+ p:"The visitor decides in a minute and a half whether this house is safe. Everything else is commentary.",
+ items:[
+  'Go to them. Do not wait for them to find you (Genesis 18:2).',
+  'Give your name first, then ask theirs — and use their name twice in the first minute.',
+  'Ask one real question: Where are you coming from? Who invited you? How did you hear about us?',
+  'Give them a seat and sit with them, or hand them to a member who will sit with them. Never leave a visitor alone in a pew.',
+  'Do not interrogate. No Are-you-saved cross-examination at the door; no questions about their former church.',
+  'Favour no one by clothing. Watch the visitor who came alone, the widow, the teenager, the poor and the wealthy alike (James 2:1-4).',
+  "Take their children to class personally and tell the parent exactly where you will bring them after the service."
+ ]},
+{n:'3. During the service — the pulpit and the pew',
+ p:'The service must make the guest able to follow, sing, hear, and conclude that God is truly here.',
+ items:[
+  'Public welcome, 45 seconds, plain: who we are, what we believe, that visitors are not obliged to give, and that they may stay seated when we greet.',
+  'Never force visitors to stand or speak. Offer it and honour a refusal: "If you are visiting and comfortable, you may stand — if not, remain seated, you are most welcome." Never hand a stranger a microphone unasked.',
+  'Explain what is not obvious: when we stand, what communion is and who should take it (1 Corinthians 11:27-29), that the children are safe, where the toilets are.',
+  'Give the passage and the page, and put a Bible in the hand of anyone who has none.',
+  'Preach to the stranger without exposing them: "someone here today is visiting", never "you, sister, in the pink dress".',
+  'Never use the pulpit for jokes about other churches, and never fight church politics in front of visitors.',
+  'Keep the word central. The aim is 1 Corinthians 14:25 — the outsider falls down and says God is truly among you.'
+ ]},
+{n:'4. After the service — the seven-minute rule',
+ p:'The usher\'s duty is not finished when the last prayer ends. It finishes seven minutes later.',
+ items:[
+  'Someone must stay with every visitor for at least seven minutes after the benediction. Assign the person before the service, not after.',
+  'Where the church can: tea or a plate of food, shared with them, not merely served to them.',
+  'Introduce them to two people by name and role. Two, not ten, and never to the whole crowd at once.',
+  'Walk with them to the gate or the car. Ask permission for their phone number. Ask what they thought — then listen without defending.',
+  'Give the welcome pack on the way out: what we believe, service times, pastor\'s number, the next step, and a small gift where your church uses one.',
+  'If they came for prayer, pray with them there and then. Do not send a needy person home with "come next week".',
+  'Record them in the tracker the same day: date, name, who spoke to them, what they need.'
+ ]},
+{n:'5. The follow-up ladder — the church\'s duty after they leave',
+ p:'Most visitors are lost in the silence of the following week, not in the service. This ladder is the church\'s responsibility, not the visitor\'s.',
+ items:[
+  'Same day: recorded in the tracker; one warm greeting on WhatsApp only if they gave permission.',
+  'Within 24–48 hours: a short message from the person who actually met them, naming the church and themselves. "Thank you for worshipping with us. You are welcome any time. May God bless you."',
+  'Within 7 days: a 3–5 minute phone call — not a sales script. How did you find the service? Do you have a Bible? Is there anything we can pray for? Where do you stay?',
+  'Days 8–14: a home visit by two people — man with man, woman with woman, never one person alone. Twenty minutes, pray in the home, refuse food if it burdens the family.',
+  'Days 21–30: invite them to the small group or home fellowship nearest their house, and to the next belonging or new-believers class. The nearest member should make the invitation.',
+  'Days 30–60: give them something to do — ushering, choir, children, cleaning, tech, prayer. The fastest way to lose a new convert is to give them nothing to carry.',
+  'Days 60–90: baptism and membership according to your order, for those who have believed (Acts 2:41). Disciple them; do not merely count them.',
+  'If they go quiet: three honest contacts, then a letter, then hand them to God in prayer and keep the door open (Luke 15:4).'
+ ]}
+];
+
+const CHURCH_DUTY=[
+{n:'The pastor and leadership',
+ items:[
+  'The pastor is the chief welcomer. Delegate the ministry, never the responsibility.',
+  'Appoint a welcome coordinator and put the ministry in the church budget — hospitality is a line item, or it is only a sentiment (Romans 12:13).',
+  'Report monthly to the church: visitors received → contacted → returned → in a group → baptized. A church that cannot count its visitors cannot keep them.',
+  'Preach and teach the whole congregation every year: this is not one team\'s duty (Hebrews 13:2; 1 Peter 4:9; Romans 15:7).',
+  'Rebuke partiality plainly from the pulpit (James 2:1-9) — without humiliating the poor or flattering the rich.',
+  'Break up cliques by name and by habit: "our table" churches lose visitors within three weeks.',
+  'Keep a written welcome policy: what we promise, who is accountable, how we handle money requests, and how we handle difficult persons.'
+ ]},
+{n:'The congregation — the members\' duty',
+ items:[
+  'Be the first to speak, not the first to be spoken to.',
+  'Sit somewhere different once a month and greet somebody you do not know.',
+  'Feed someone after the service; invite a visitor into your home once a term (1 Peter 4:9).',
+  'Never leave a visitor standing alone at the door after the benediction.',
+  'Do not hand visitors to the pastor as a duty — you are the church they are meeting.'
+ ]},
+{n:"Children's safety and safeguarding",
+ items:[
+  'No adult alone with a child, ever. Two-adult rule in every class and every room.',
+  'Children\'s workers known to parents, registered, and vetted; a named child protection officer in the church.',
+  'Check-in and check-out by the same adult; a written toilet and nappy policy; no photograph of a child published without a parent\'s consent.',
+  'No unsupervised access to children for any visitor, however respectable, until cleared by leadership. A suit and an accent are not a clearance.'
+ ]},
+{n:'Access, language and dignity',
+ items:[
+  'The elderly and disabled: a seat near the door or front, help with steps, a person to sit with them.',
+  'The deaf: front seats, notes, a written outline, an interpreter where possible.',
+  'The blind and those who cannot read: read aloud, large print, a reader beside them.',
+  'Language: in a multilingual congregation give the reading and the invitation in the language of the people present (English with a Bemba or Nyanja summary where that serves the room).',
+  'Food, transport and clothing quietly arranged by deacons — never announced as a spectacle.'
+ ]},
+{n:'Money, records and honesty',
+ items:[
+  'Visitors are never obliged to give, and are told so publicly.',
+  'Accounts are read to the church. No seed-sowing scheme, no miracle-money pressure, no widow emptied "to receive her breakthrough".',
+  'Contact details are used for pastoral care only — never sold, shared or used for politics — and deleted when a person asks.',
+  'Attendance and giving records kept privately and lawfully. What is written about a person must be true and necessary.',
+  'The welcome pack is honest: no promise of health, wealth or ease that Scripture does not promise.'
+ ]}
+];
+
+const VISITOR_HARD=[
+{n:'The visitor who asks for money',
+ do:['Listen fully, then pray with them before discussing anything.','Give food, transport or a written referral rather than cash where possible.','Use the deacons\' fund with two witnesses and a written record.','Be consistent — the same answer to the same request.'],
+ never:['Never open the church purse alone, without counsel.','Never promise what you cannot deliver.','Never decide by your emotions, and never shame them publicly.']},
+{n:'The one who wants to preach or teach',
+ do:['Honour the gift and receive the person kindly.','Test the spirits (1 John 4:1) and ask about their church, their pastor and their submission.','Invite them to serve under authority after the elders have interviewed them.'],
+ never:['Never hand the pulpit to a stranger.','Never argue with them publicly or compare ministries from the platform.']},
+{n:'The flatterer who divides',
+ do:['Be wary of the man who praises you and separates you (Romans 16:17-18; 2 John 9-11).','Keep counsel in the plural — elders together, never one lonely leader.','Bless them, keep the door open, but give them no private following.'],
+ never:['Never confide church weaknesses in a stranger out of loneliness.','Never let a new person gather a faction around their own gifting.']},
+{n:'The drunk, the addicted, the unclean',
+ do:['Receive the person while refusing the sin.','Take them to a leader, feed them, and arrange safe transport — never let a drunk person drive or walk home at night.','Visit them during the week and put them on the prayer list by name.'],
+ never:['Never humiliate them or use them as an illustration.','Never let them wander alone with the children.','Never promise secrecy about abuse or danger.']},
+{n:'Mental illness, shouting, disruption',
+ do:['Go with a second person, speak low and slow, remove the audience.','Take them outside gently and keep their dignity above the order of service.','Involve family, refer to medical care, and pray over them privately.'],
+ never:['Never mock, mob, or label them ("demon" or "mad") — least of all from the pulpit.','Never physically restrain anyone except to protect a person from immediate harm.']},
+{n:'Aggression, threats, weapons',
+ do:['Have an ushers\' protocol ready before it is needed.','Move children and the elderly away first, then call for help.','Contact police or security, write down what happened the same day, and report to the pastor.'],
+ never:['Never tackle a violent person alone.','Never put a known dangerous person over children, money, or the door.']},
+{n:'Violence and abuse in the home',
+ do:['Believe the report enough to act, and make safety first — a place of safety, medical care, police where the law requires.','Keep it confidential among the very few who must know.','Counsel the abuser separately and hold them accountable.'],
+ never:['Never send an abused wife or child back into danger for the sake of "peace in the home".','Never counsel a couple together in front of the one who is hurting the other.','Never promise to keep a crime secret.']},
+{n:'Private counsel with the opposite sex, or with a child',
+ do:['Meet in daylight, in an open or glass-walled place, with a second adult present.','Keep written notes minimal and factual; refer serious matters to leadership.'],
+ never:['Never transport, house or counsel alone — no private meetings with a child, ever.']},
+{n:'The stranger with eyes on the children',
+ do:['Apply the visitor policy: no unsupervised access, no overnight stays, no help in the children\'s wing until vetted.','Watch who lingers near the toilet block and the class doors.','When in doubt, be kind and firm and involve the child protection officer.'],
+ never:['Never assume respectability from dress, accent, money or Bible knowledge.']},
+{n:'Cameras, phones and livestreams',
+ do:['Announce a plain recording policy and give a designated place for photography.','Protect the visitor who must not be seen — some are hiding from violence.'],
+ never:['Never photograph or post a visitor or a child without consent.','Never livestream a prayer line, a counselling moment, or a person weeping.']},
+{n:'Gossip, false reports and church conflict in front of visitors',
+ do:['Hear the matter, verify it, then go privately (Matthew 18:15-17).','Separate seating and quiet peace-making when two families have quarrelled.'],
+ never:['Never spread it in the welcome meeting.','Never force a public reconciliation to keep appearances.']}
+];
+
+const VISITOR_FORGOTTEN=[
+ {n:'The deaf and hard of hearing',w:'A front seat, the notes in their hand, and a person who will write the outline for them.'},
+ {n:'The blind and the non-reader',w:'Read the passage aloud twice, offer large print, and sit a reader beside them.'},
+ {n:'The elderly',w:'Transport, a seat by the door, help to the toilet, and a young person assigned to them for the day.'},
+ {n:'The single mother',w:'Help with the children, no judgment, and food without a lecture.'},
+ {n:'The teenager who came alone',w:'Youth must greet youth. An adult-only welcome reads as a trap to a young person.'},
+ {n:'The returning backslider',w:'No shame, no public story-telling. Luke 15 is a father running, not a court sitting.'},
+ {n:'The stranger from another church',w:'Honour their church, never criticise it, never poach from it. Bless them and send them home stronger.'},
+ {n:'The foreigner and refugee',w:'Language, papers, food, and help with letters to offices — the law of the stranger is God\'s law.'},
+ {n:'The very poor',w:'Food, clothes and dignity. Never use a poor person as a testimony specimen or a fundraising illustration.'},
+ {n:'The very rich',w:'Warn them, do not flatter them. James 2 rebukes the flattery of the rich as much as the neglect of the poor.'},
+ {n:'The one sent to test you',w:'Answer with Scripture, keep your temper, and stay courteous. Truth does not need a fight.'},
+ {n:'The one who never comes back',w:'Bless them anyway. We do not salute only our brethren (Matthew 5:47).'}
+];
+
+const VISITOR_PROMISE=[
+ 'You will be greeted at the door and called by your name.',
+ 'You will not be asked for money, and giving is not expected of you.',
+ 'You will not be made to stand, speak or be prayed over in public under pressure.',
+ 'Your children will be safe, and returned to you by the person who took them.',
+ 'Your prayer request will be kept privately and prayed over by name.',
+ 'You will be told plainly what we believe, even where it is uncomfortable.',
+ 'You will not be pestered, phoned at midnight, or visited without invitation.',
+ 'You will be loved and welcomed whether you return or never come again.'
+];
+
+const VISITOR_KIT=[
+ 'Visitor cards and a box to return them (name, contact, area, how they heard, prayer need).',
+ 'Welcome pack: what we believe, service times, pastor\'s number, next step, small gift.',
+ 'Spare Bibles and reading glasses on the welcome desk.',
+ 'Children\'s check-in register, name labels and allergy notes.',
+ 'Water, tissues, and a quiet corner with a chair for someone who begins to weep.',
+ 'Umbrella or shade at the door for the rainy season; a fan or water point in the heat.',
+ 'A deacons\' fund envelope and a written record book for requests for help.',
+ 'The visitor tracker open on a phone or paper, filled in before anyone goes home.'
+];
+
+function renderVisitors(){
+  const el=document.getElementById('visitorsBody');if(!el)return;
+  let h='<div class="card wide" style="margin-top:6px"><h3>The word we stand on — God and the stranger</h3>'
+   +'<div class="muted small">Every duty below is drawn from these Scriptures, not from church fashion.</div>'
+   +VISITOR_WORD.map(w=>'<div class="libItem"><b>'+esc(w.r)+'</b> <span class="small muted">— '+esc(w.n)+'</span><div class="verse" style="margin-top:4px">'+esc(w.t)+'</div></div>').join('')
+   +'</div>';
+
+  h+='<div class="card wide" style="margin-top:12px"><h3>The welcome handbook — what happens at every stage</h3>'
+   +VISITOR_SOP.map((s,i)=>'<div class="libItem"><b>'+esc(s.n)+'</b><div class="small muted">'+esc(s.p)+'</div>'
+     +'<div class="relatedActions"><button class="btn" onclick="vToggle(\'s'+i+'\')">Open</button>'
+     +'<button class="btn primary" onclick="vPrompt('+i+')">Build this stage into a prompt</button></div>'
+     +'<div id="v_s'+i+'" class="hidden" style="margin-top:8px"><ul>'+s.items.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div></div>').join('')
+   +'</div>';
+
+  h+='<div class="card wide" style="margin-top:12px"><h3>The church\'s responsibility as a body</h3>'
+   +CHURCH_DUTY.map((s,i)=>'<div class="libItem"><b>'+esc(s.n)+'</b>'
+     +'<div class="relatedActions"><button class="btn" onclick="vToggle(\'c'+i+'\')">Open</button>'
+     +'<button class="btn primary" onclick="vDutyPrompt('+i+')">Build a policy prompt</button></div>'
+     +'<div id="v_c'+i+'" class="hidden" style="margin-top:8px"><ul>'+s.items.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div></div>').join('')
+   +'</div>';
+
+  h+='<div class="card wide" style="margin-top:12px"><h3>Handling difficult visitors — with wisdom and safety</h3>'
+   +'<div class="muted small">Kindness is not naivety. These are the visitors who test a church, and the protocol that protects the sheep.</div>'
+   +VISITOR_HARD.map((s,i)=>'<div class="libItem"><b>'+esc(s.n)+'</b>'
+     +'<div class="relatedActions"><button class="btn" onclick="vToggle(\'h'+i+'\')">Open</button>'
+     +'<button class="btn primary" onclick="vHardPrompt('+i+')">Build a protocol prompt</button></div>'
+     +'<div id="v_h'+i+'" class="hidden" style="margin-top:8px"><b class="small">Do</b><ul>'+s.do.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>'
+     +'<b class="small">Never</b><ul>'+s.never.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div></div>').join('')
+   +'</div>';
+
+  h+='<div class="grid" style="margin-top:12px"><div class="card"><h3>The visitors we forget</h3>'
+   +VISITOR_FORGOTTEN.map(f=>'<div class="small" style="margin-bottom:6px"><b>'+esc(f.n)+'</b> — '+esc(f.w)+'</div>').join('')
+   +'</div><div class="card"><h3>What we promise every visitor</h3><ol class="muted small">'
+   +VISITOR_PROMISE.map(p=>'<li>'+esc(p)+'</li>').join('')+'</ol>'
+   +'<h3>Welcome desk kit</h3><ul class="muted small">'+VISITOR_KIT.map(p=>'<li>'+esc(p)+'</li>').join('')+'</ul></div></div>';
+
+  el.innerHTML=h;
+  renderVisitorList();
+  renderVisitorStageOptions();
+}
+
+function vToggle(k){const e=document.getElementById('v_'+k);if(e)e.classList.toggle('hidden')}
+
+/* ---------- prompts the minister can send to ChatGPT ------------------- */
+function vPrompt(i){
+  const s=VISITOR_SOP[i];if(!s)return;
+  const p=['You are a careful, Bible-centred pastor helping me receive visitors in my church.',
+  'STAGE OF THE VISIT: '+s.n,
+  'WHAT THIS STAGE IS FOR: '+s.p,
+  'WHAT WE ALREADY DO: '+s.items.join(' | '),
+  '',
+  'GIVE ME:',
+  '1. A practical Standard Operating Procedure for this stage — who does what, in what order, on the day.',
+  '2. The exact words to use: a greeter script, usher instructions, and a 45-second pulpit welcome that does not embarrass a visitor.',
+  '3. The duties of each person: pastor, welcome coordinator, greeter, usher, member, small-group leader.',
+  '4. The mistakes that make visitors leave and never return at this stage, with the correction.',
+  '5. A short Scripture they can be given at this stage, quoted in full.',
+  '6. A prayer to pray over this part of the ministry.',
+  '',
+  'RULES: honour the visitor\'s dignity at every point; never pressure a visitor to speak, stand or give; never promise what Scripture does not promise; keep Christ and the gospel central; quote every Scripture in full; make it usable by a small village church and a large city church alike.',
+  '',
+  languageInstruction(),
+  '',
+  'Write it all out in full, ready to print and hand to my team this week.'].join('\n');
+  sendPromptToChatGPT(p,'Welcome stage — '+s.n);
+}
+
+function vDutyPrompt(i){
+  const s=CHURCH_DUTY[i];if(!s)return;
+  const p=['You are a careful, Bible-centred pastor helping me write the church\'s duty into a workable policy.',
+  'AREA OF RESPONSIBILITY: '+s.n,
+  'WHAT SCRIPTURE REQUIRES OF US: '+s.items.join(' | '),
+  '',
+  'GIVE ME:',
+  '1. A written policy for this area, in plain language, that our elders can adopt and our members can understand.',
+  '2. Who is accountable by role, and what is reported to the church, and how often.',
+  '3. The Scriptures that establish this duty, quoted in full and briefly explained.',
+  '4. The common failures of churches in this area, and the safeguard against each one.',
+  '5. A one-page summary to print for the notice board and the welcome team.',
+  '',
+  'RULES: keep the stranger\'s dignity and the sheep\'s safety first; hold to Scripture, not church fashion; be honest about money and records; quote every Scripture in full; make it workable in a Zambian congregation of any size.',
+  '',
+  languageInstruction(),
+  '',
+  'Write it out in full, ready for our leadership meeting.'].join('\n');
+  sendPromptToChatGPT(p,'Church duty — '+s.n);
+}
+
+function vHardPrompt(i){
+  const s=VISITOR_HARD[i];if(!s)return;
+  const p=['You are a careful, Bible-centred pastor helping me prepare for a difficult visitor, so that we show mercy without endangering the flock.',
+  'SITUATION: '+s.n,
+  'WHAT WE ALREADY DO: '+s.do.join(' | '),
+  'WHAT WE MUST NEVER DO: '+s.never.join(' | '),
+  '',
+  'GIVE ME:',
+  '1. A step-by-step protocol for the first ten minutes, and for the following week.',
+  '2. The exact words to use — kind, firm, and free of insult.',
+  '3. The boundary lines: what we will do, what we will not do, and how we say no without shaming.',
+  '4. Safeguarding and legal steps to take, and what must be written down and reported to leadership.',
+  '5. The Scriptures that guide the case, quoted in full, with one line of application each.',
+  '6. How to pray for this person, and how to keep the door open without opening the church to harm.',
+  '',
+  'RULES: never counsel alone; never conceal abuse or danger; protect children, the elderly and the vulnerable above the smooth running of the service; never promise secrecy about a crime; distinguish between the sinner and the sin; keep Christ and the gospel central; quote every Scripture in full.',
+  '',
+  languageInstruction(),
+  '',
+  'Write it out in full, ready for our ushers and elders.'].join('\n');
+  sendPromptToChatGPT(p,'Handling a difficult visitor — '+s.n);
+}
+
+function welcomeTeamPrompt(){
+  const p=['You are a senior pastor and church-planting strategist writing a complete welcome ministry for my church.',
+  '',
+  'MY CONTEXT: I am a Bible-centred pastor in Zambia. Our services are English with the local languages present. Visitors include first-timers, people from other churches, the poor, the elderly, teenagers, foreigners, and people coming with real trouble.',
+  '',
+  'WHAT WE ALREADY HOLD:',
+  VISITOR_SOP.map(s=>s.n+' — '+s.items.join('; ')).join('\n'),
+  '',
+  'OUR CHURCH DUTIES:',
+  CHURCH_DUTY.map(s=>s.n+' — '+s.items.join('; ')).join('\n'),
+  '',
+  'GIVE ME, IN FULL:',
+  '1. A welcome ministry charter: the vision, the Scriptures, and the promises we make to every visitor.',
+  '2. Roles and duties: welcome coordinator, greeters, ushers, welcome desk, children\'s ministry, deacons, small-group leaders, and the pastor\'s own part.',
+  '3. The first-90-seconds SOP, word for word.',
+  '4. A 45-second pulpit welcome script, plus a version for a service where no visitor stands, plus a version for a small congregation.',
+  '5. The seven-minute rule after the benediction, and how it is enforced and reported.',
+  '6. A full 90-day follow-up ladder with dates, who contacts them, what is said, and what is offered.',
+  '7. A welcome pack: contents, a one-page doctrinal summary, service times, and the clear next step for a new believer.',
+  '8. A monthly visitor report template: received → contacted → returned → in a group → baptized, with what the numbers must trigger.',
+  '9. Safeguarding policy: children\'s check-in, the two-adult rule, vetting, photography, and the child protection officer.',
+  '10. The difficult-visitor protocol: money, preachers, the drunk, the mentally ill, aggression, abuse in the home, cameras, and the person who will not leave.',
+  '11. A preaching outline on hospitality to strangers, from Hebrews 13:2, Matthew 25:35 and James 2:1-9, with the gospel at the centre.',
+  '12. A budget line and a 12-month plan to build this ministry, in a church of my size.',
+  '',
+  'RULES: never pressure a visitor to give, stand, speak or be photographed; never promise health, wealth or ease; keep the visitor\'s dignity and the children\'s safety above attendance numbers; never speak evil of another church from the pulpit; distinguish the person from the sin; keep Christ, the cross and repentance central; quote every Scripture in full; write so a young believer can carry it out without me.',
+  '',
+  languageInstruction(),
+  '',
+  'Write everything out in full, ready to print and hand to my team.'].join('\n');
+  sendPromptToChatGPT(p,'Welcome ministry — complete');
+}
+
+function welcomeScriptPrompt(){
+  const p=['You are helping me welcome visitors from the pulpit without embarrassing them.',
+  'GIVE ME:',
+  '1. A 45-second public welcome, word for word: who we are, what we believe, that visitors are not obliged to give, and what happens next in the service.',
+  '2. The same welcome for a service where visitors are asked to remain seated.',
+  '3. A shorter 20-second version for a service that is running late.',
+  '4. Three things to say and three things never to say when visitors are present.',
+  '5. One Scripture on the stranger to read before the welcome, quoted in full.',
+  'RULES: warm, plain, unhurried; never expose the visitor; never ask a stranger for money; never criticise another church; keep the focus on Christ and His word.',
+  '',
+  languageInstruction(),
+  '',
+  'Write everything out word for word.'].join('\n');
+  sendPromptToChatGPT(p,'Pulpit welcome script');
+}
+
+function welcomePackPrompt(){
+  const p=['You are writing a welcome pack for first-time visitors to my Bible-centred church in Zambia.',
+  'GIVE ME:',
+  '1. A one-page welcome letter from the pastor — warm, plain, and honest about who we are.',
+  '2. What we believe, in one page, in sentences a non-reader can follow if it is read to them.',
+  '3. Service times, what happens in a service, what to wear, where the children go, and where the toilets are.',
+  '4. The next step for a new believer: the class, the small group, the prayer meeting, and how to be baptized.',
+  '5. A page of Scriptures for the visitor who is suffering — grief, sickness, poverty, fear, family trouble — each quoted in full.',
+  '6. What we promise you as a visitor, and what we will never do.',
+  '7. A small printed card to go with it: our address, our phone, and one verse.',
+  'RULES: no promise of health or wealth; no pressure to give; no membership pressure on a first visit; honour the poor and the elderly; keep Christ crucified at the centre; quote every Scripture in full.',
+  '',
+  languageInstruction(),
+  '',
+  'Write it out in full, ready to be printed as a booklet.'].join('\n');
+  sendPromptToChatGPT(p,'Welcome pack');
+}
+
+function welcomeReport(){
+  const list=visitorState();
+  if(!list.length)return toast('No visitors recorded yet — add them in the tracker first');
+  const counts=VISITOR_STAGES.map((s,i)=>s+' — '+list.filter(x=>Number(x.stage)===i).length+' person(s)');
+  const need=list.filter(x=>(x.stage===0||x.stage===1||x.stage===2)&&(!x.log||!x.log.length)); 
+  toast(list.length+' visitor(s) recorded');
+  const p=['You are helping me review the care of visitors in my church.',
+  'VISITORS RECORDED: '+list.length,
+  'BY STAGE: '+counts.join('; '),
+  'WAITING FOR A FIRST TOUCH: '+(need.map(x=>x.name).join(', ')||'none'),
+  'PEOPLE TO PRAY FOR: '+list.map(x=>x.name+(x.note?(' ('+x.note+')'):'')).join('; '),
+  '',
+  'GIVE ME:',
+  '1. A review of where we are losing people, based on these stages, and what to do about it this month.',
+  '2. A prioritised action list for this week: who to call, who to visit, who to invite into a group, and by when.',
+  '3. A short message for each stage, ready to send.',
+  '4. A prayer for our visitors by name.',
+  '5. Three changes to our welcome that would keep more of these people.',
+  'RULES: keep the visitor\'s dignity first; never pressure; no gimmicks; base everything on Scripture and quote it in full.',
+  '',
+  languageInstruction(),
+  '',
+  'Write it out in full.'].join('\n');
+  sendPromptToChatGPT(p,'Visitor care report');
+}
+
+/* ---------- visitor tracker (saved on this device) ---------------------- */
+function visitorState(){if(!Array.isArray(state.visitors))state.visitors=[];return state.visitors}
+function vVal(id){return ((document.getElementById(id)||{}).value||'').trim()}
+function visitorClearForm(){['vName','vDate','vVia','vPhone','vArea','vNote'].forEach(k=>{const e=document.getElementById(k);if(e)e.value=''});}
+function renderVisitorStageOptions(){
+  const s=document.getElementById('vStage');if(!s)return;
+  if(!s.options||!s.options.length)s.innerHTML=VISITOR_STAGES.map((x,i)=>'<option value="'+i+'">'+esc(x)+'</option>').join('');
+}
+function visitorAdd(){
+  const name=vVal('vName');
+  if(!name)return toast('Write the visitor\'s name first');
+  const rec={id:'v'+Date.now(),name:name,date:vVal('vDate')||new Date().toISOString().slice(0,10),via:vVal('vVia'),phone:vVal('vPhone'),area:vVal('vArea'),
+    stage:Number(vVal('vStage'))||0,note:vVal('vNote'),log:[],added:new Date().toISOString()};
+  visitorState().unshift(rec);
+  save();renderVisitorList();visitorClearForm();updateExtraKpis();
+  toast('Visitor saved — follow the ladder: message within 48 hours');
+}
+function visitorStage(i,v){
+  const x=visitorState()[i];if(!x)return;
+  const from=Number(x.stage)||0, to=Number(v)||0;
+  x.stage=to;
+  x.log=(x.log||[]).concat([new Date().toISOString().slice(0,10)+' — moved from "'+VISITOR_STAGES[from]+'" to "'+VISITOR_STAGES[to]+'"']);
+  save();renderVisitorList();toast('Stage updated');
+  if(to>=5&&to<=7)toast('Good — now give them something to carry');
+}
+function visitorLog(i){
+  const x=visitorState()[i];if(!x)return;
+  const t=prompt('What happened? (call, visit, message, prayer, attendance)');
+  if(!t)return;
+  x.log=(x.log||[]).concat([new Date().toISOString().slice(0,10)+' — '+t]);
+  save();renderVisitorList();
+}
+function visitorDel(i){
+  const x=visitorState()[i];if(!x)return;
+  if(!confirm('Remove '+x.name+' from the visitor tracker?'))return;
+  visitorState().splice(i,1);save();renderVisitorList();updateExtraKpis();toast('Removed');
+}
+function visitorPray(i){
+  const x=visitorState()[i];if(!x)return;
+  prayerState().unshift({id:'pr'+Date.now(),name:x.name,request:'Visitor — welcome and discipleship'+(x.note?(': '+x.note):''),cat:'Church & ministry',verse:'',
+    date:new Date().toISOString().slice(0,10),status:'waiting',lastPrayed:'',answered:'',testimony:''});
+  save();updateExtraKpis();toast(x.name+' added to the Prayer & Care list');
+}
+function visitorPlan(i){
+  const x=visitorState()[i];if(!x)return;
+  const today=new Date(),d=n=>{const t=new Date(today.getTime()+n*864e5);return t.toISOString().slice(0,10)};
+  const p=['You are a careful, Bible-centred pastor helping me follow up a visitor in my church.',
+  'VISITOR: '+x.name,
+  'FIRST CAME: '+x.date+'   •   CURRENT STAGE: '+VISITOR_STAGES[Number(x.stage)||0],
+  'HOW WE MET THEM: '+(x.via||'not recorded'),
+  'WHERE THEY STAY: '+(x.area||'not recorded'),
+  'WHAT WE KNOW: '+(x.note||'nothing recorded yet'),
+  'OUR CONTACTS SO FAR: '+((x.log||[]).join(' | ')||'none yet'),
+  '',
+  'GIVE ME:',
+  '1. A dated follow-up plan from today ('+d(0)+') to 90 days ('+d(90)+'): who does what, on which day.',
+  '2. A warm message to send within 48 hours, and a 3–5 minute phone-call script.',
+  '3. A preparation note for the home visit: who must go (two, same sex), what to say, what not to say, how long to stay.',
+  '4. What to offer them next, in the right order: prayer, a Bible, a small group, a class, service, baptism.',
+  '5. The Scriptures to leave with them, quoted in full, chosen for what we know of their situation.',
+  '6. A prayer for this person by name, and one thing we must be careful about with them.',
+  '',
+  'RULES: never pressure or pester; the visitor\'s dignity first; never promise health or wealth; never visit alone; be honest; keep Christ and the gospel central; quote every Scripture in full.',
+  '',
+  languageInstruction(),
+  '',
+  'Write it out in full.'].join('\n');
+  sendPromptToChatGPT(p,'Follow-up plan — '+x.name);
+}
+function visitorMsg(i,kind){
+  const x=visitorState()[i];if(!x)return;
+  const warm='Warm, short, plain, no manipulation, no money, no pressure to return. Sign with my name and our church.';
+  const map={
+   sms:['Write a short SMS/WhatsApp message to a first-time visitor.','Within 48 hours, under 60 words, warm and plain. '+warm],
+   call:['Write a 3–5 minute phone-call script.','Include how to open, three questions to ask, how to close, and how to note the answers. '+warm],
+   letter:['Write a short pastoral letter on paper.','Half a page: thank them for coming, what we believe in two lines, the next step, and one Scripture quoted in full. '+warm],
+   visit:['Write a home-visit preparation note.','Who goes, what is carried, how long we stay, what we ask, what we never do, and the prayer to pray in the home. '+warm],
+   invite:['Write an invitation to the next step.','Either the nearest small group, the new-believers class, or the next service — with the day, the time, and what to expect. '+warm]
+  }[kind]||['Write a short follow-up message.',' '+warm];
+  const p=['You are a careful, Bible-centred pastor writing to a visitor in my church.',
+  'VISITOR: '+x.name+' — first came '+x.date+', currently '+VISITOR_STAGES[Number(x.stage)||0]+'.',
+  'WHAT WE KNOW: '+(x.note||'nothing yet'),
+  '',
+  'TASK: '+map[0],
+  map[1],
+  'Give me two versions: one for a person who is rejoicing, and one for a person who is suffering.',
+  'RULES: quote every Scripture in full; never promise health, wealth or ease; never mention offerings; keep Christ central.',
+  '',
+  languageInstruction(),
+  '',
+  'Write it out ready to send.'].join('\n');
+  sendPromptToChatGPT(p,'Message to '+x.name+' ('+kind+')');
+}
+function visitorPrintCard(i){
+  const x=visitorState()[i];if(!x)return;
+  openPrintable('Visitor — '+x.name,'<h1>'+esc(x.name)+'</h1>'
+   +'<p class="small">First came: '+esc(x.date)+' • Stage: '+esc(VISITOR_STAGES[Number(x.stage)||0])+' • Met through: '+esc(x.via||'—')+' • Area: '+esc(x.area||'—')+' • Phone: '+esc(x.phone||'—')+'</p>'
+   +'<h2>What we know</h2><p>'+esc(x.note||'—')+'</p>'
+   +'<h2>Contacts so far</h2><ul>'+((x.log||[]).map(l=>'<li>'+esc(l)+'</li>').join('')||'<li>None yet</li>')+'</ul>'
+   +'<h2>Follow-up ladder</h2><ol>'+VISITOR_SOP[4].items.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol>'
+   +'<h2>What we promise this visitor</h2><ol>'+VISITOR_PROMISE.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol>');
+}
+function printWelcomeChecklist(){
+  openPrintable('Visitors & Welcome — checklist',
+    '<h1>Receiving Visitors — Sunday Checklist</h1>'
+   +'<h2>Before the service</h2><ul>'+VISITOR_SOP[0].items.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ul>'
+   +'<h2>Arrival — the first 90 seconds</h2><ul>'+VISITOR_SOP[1].items.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ul>'
+   +'<h2>During the service</h2><ul>'+VISITOR_SOP[2].items.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ul>'
+   +'<h2>After the service — the seven-minute rule</h2><ul>'+VISITOR_SOP[3].items.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ul>'
+   +'<h2>The follow-up ladder</h2><ol>'+VISITOR_SOP[4].items.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol>'
+   +'<h2>Welcome desk kit</h2><ul>'+VISITOR_KIT.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ul>'
+   +'<h2>What we promise every visitor</h2><ol>'+VISITOR_PROMISE.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol>');
+}
+function renderVisitorList(){
+  const el=document.getElementById('visitorList');if(!el)return;
+  const list=visitorState();
+  if(!list.length){el.innerHTML='<div class="muted small" style="margin-top:10px">No visitors recorded yet. Add each one on the day — a name written down is the beginning of discipleship.</div>';return}
+  const byStage=VISITOR_STAGES.map((s,i)=>({s:s,n:list.filter(x=>Number(x.stage)===i).length})).filter(x=>x.n);
+  el.innerHTML='<div class="highlightNote" style="margin-top:10px"><b>'+list.length+' visitor(s)</b> — '+byStage.map(x=>esc(x.n+' '+x.s)).join(' • ')+'</div>'
+   +list.map((x,i)=>'<div class="libItem"><b>'+esc(x.name)+'</b> <span class="small muted">'+esc(x.date||'')+(x.via?(' • '+esc(x.via)):'')+(x.area?(' • '+esc(x.area)):'')+(x.phone?(' • '+esc(x.phone)):'')+'</span>'
+   +'<div class="small muted" style="margin-top:4px">'+esc(x.note||'')+'</div>'
+   +'<div style="margin-top:6px"><label class="small">Stage</label> <select onchange="visitorStage('+i+',this.value)">'
+     +VISITOR_STAGES.map((s,si)=>'<option value="'+si+'"'+(Number(x.stage)===si?' selected':'')+'>'+esc(s)+'</option>').join('')+'</select></div>'
+   +'<div class="relatedActions">'
+     +'<button class="btn primary" onclick="visitorPlan('+i+')">Follow-up plan</button>'
+     +'<button class="btn" onclick="visitorMsg('+i+',\'sms\')">Message</button>'
+     +'<button class="btn" onclick="visitorMsg('+i+',\'call\')">Call script</button>'
+     +'<button class="btn" onclick="visitorMsg('+i+',\'visit\')">Home visit</button>'
+     +'<button class="btn" onclick="visitorMsg('+i+',\'letter\')">Letter</button>'
+     +'<button class="btn" onclick="visitorLog('+i+')">Add contact</button>'
+     +'<button class="btn" onclick="visitorPray('+i+')">Prayer list</button>'
+     +'<button class="btn" onclick="visitorPrintCard('+i+')">Print card</button>'
+     +'<button class="btn danger" onclick="visitorDel('+i+')">Delete</button>'
+   +'</div>'
+   +((x.log||[]).length?('<div class="small muted" style="margin-top:6px">'+x.log.map(l=>'• '+esc(l)).join('<br>')+'</div>'):'')
+   +'</div>').join('');
+}
+
 function renderOccasions(){
   const el=document.getElementById('occasionsBody');if(!el)return;
   el.innerHTML=OCCASIONS.map((o,i)=>'<div class="libItem"><b>'+esc(o.n)+'</b><div class="small muted">'+esc(o.p)+'</div>'
@@ -5629,6 +6455,7 @@ function renderSectionHook(id){
     else if(id==='occasions')renderOccasions();
     else if(id==='archive'){renderArchive();renderSermonStudySelect&&renderSermonStudySelect()}
     else if(id==='prayer')renderPrayer();
+    else if(id==='visitors')renderVisitors();
     else if(id==='offline'){offlineBookList();refreshOfflineStatus();renderReadPrefsUI()}
     else if(id==='settings'){renderReadPrefsUI();refreshOfflineStatus();try{initVoices()}catch(e){}}
     else if(id==='dashboard')updateExtraKpis();
@@ -5686,5 +6513,5 @@ setTimeout(restoreChurchEmail, 800);
 setTimeout(restoreChurchEmail, 2000);
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42533afdbbcda14',t:'MTc5MDYyNDIzOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a45c7060fc3667d4',t:'MTc5MTIwMzQ0MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42533afdbbcda14',t:'MTc5MDYyNDIzOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a45d30b96996da14',t:'MTc5MTIxMTMxOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
