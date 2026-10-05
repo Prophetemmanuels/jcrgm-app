@@ -487,6 +487,7 @@ body{font-size:calc(16px * var(--readSize,1));line-height:var(--readLH,1.55);let
         <button class="btn primary" onclick="generateFullSermon()">Generate Full Sermon</button>
         <button class="btn" style="background:#10a37f;border-color:#10a37f;color:#fff;font-weight:800" onclick="openChatGPTWithStudy()">💬 Send to ChatGPT</button>
         <button class="btn" onclick="copyFullSermon()">Copy Sermon</button>
+        <button class="btn" onclick="readAloud(document.getElementById('fullSermon').innerText)">🔊 Read aloud</button>
       </div>
     </div>
     <div id="fullSermon" class="sermonOutput">
@@ -554,6 +555,7 @@ body{font-size:calc(16px * var(--readSize,1));line-height:var(--readLH,1.55);let
 <button class="btn" onclick="revealMemory()">Reveal</button>
 <button class="btn good" onclick="memoryGrade(true)">I remembered</button>
 <button class="btn danger" onclick="memoryGrade(false)">I need review</button>
+<button class="btn" onclick="readVerseFromBox('memoryReview')">🔊 Read aloud</button>
 <button class="btn" onclick="memoryHint()">Hint — reveal next</button>
 </div>
 <div class="small muted" id="memoryProgress"></div></div>
@@ -941,16 +943,25 @@ body{font-size:calc(16px * var(--readSize,1));line-height:var(--readLH,1.55);let
 <select id="readMotion" onchange="setReadPref('motion',this.value)"><option value="1">Full animation</option><option value="0">Reduced motion</option></select>
 <div class="actions"><button class="btn" onclick="resetReadPrefs()">Reset to defaults</button></div>
 </div>
-<div class="card"><h2>Language &amp; reading aloud</h2>
-<p class="muted">Choose the language you preach and teach in. Every sermon, teaching prompt, hard-question answer and ministry occasion is written in that language.</p>
+<div class="card"><h2>Voice Studio — realistic reading aloud</h2>
+<p class="muted">Choose the language you preach in, and the voice that reads to you. Every reading-out in this app — Scripture, study sections, sermons, prayers — uses the most realistic voice your device offers, and never a robotic or novelty voice when a natural one exists.</p>
 <label>Language of delivery</label>
 <select id="deliveryLangSelect" onchange="setDeliveryLang(this.value)"></select>
-<label style="margin-top:10px">Read-aloud voice</label>
+<label style="margin-top:10px">Reading engine</label>
+<select id="ttsEngine" onchange="setTtsEngine(this.value)">
+  <option value="auto">Automatic — best realistic voice available</option>
+  <option value="browser">Browser / device voice (works offline)</option>
+  <option value="neural">Studio neural voice (most realistic · English)</option>
+</select>
+<div id="voiceQuality" class="purposeBox" style="margin-top:10px"></div>
+<label>Voice</label>
 <select id="ttsVoice" onchange="saveTtsPrefs()"></select>
-<label>Read-aloud speed — <span id="ttsRateLabel">0.95×</span></label>
+<label>Reading speed — <span id="ttsRateLabel">0.95×</span></label>
 <input id="ttsRate" type="range" min="0.6" max="1.4" step="0.05" value="0.95" class="range" oninput="saveTtsPrefs()">
-<div class="actions"><button class="btn" onclick="readAloud('Be still, and know that I am God. I will be exalted among the nations.')">🔊 Test voice</button><button class="btn" onclick="stopReadAloud()">⏹ Stop</button></div>
-<p class="small muted">If no voice is listed, this browser has not loaded its voices yet — reload the app, or use a browser that supports speech.</p>
+<div class="actions"><button class="btn primary" onclick="ttsPreview()">🔊 Preview this voice</button><button class="btn" onclick="ttsStop()">⏹ Stop</button><button class="btn" onclick="refreshVoicesNow()">↻ Re-scan device voices</button></div>
+<p class="small muted">Preview reads Psalm 23:1 exactly as the app will read Scripture to you. ★★★ marks a natural neural voice, ★★ a good voice, ★ a basic one.</p>
+<div id="voiceHelp" class="highlightNote" style="display:none"></div>
+<div class="targetCard" id="neuralPanel" style="margin-top:12px"></div>
 </div>
 <div class="card"><h2>Full backup &amp; restore</h2>
 <p class="muted">Your notes, studies, memory verses, meditation records, journal, sermons, prayer list, settings and reading preferences — in one file you can move to another device.</p>
@@ -1240,7 +1251,7 @@ let s=document.getElementById('sBook');s.innerHTML=BOOKS.map(b=>'<option>'+b+'</
 let mb=document.getElementById('memBook');if(mb)mb.innerHTML=BOOKS.map(b=>'<option>'+b+'</option>').join('');let tb=document.getElementById('todayBook');if(tb)tb.innerHTML=BOOKS.map(b=>'<option>'+b+'</option>').join('');
 }
 function passageValue(){let b=document.getElementById('sBook').value,c=document.getElementById('sChapter').value||1,v=document.getElementById('sVerse').value.trim();return b+' '+c+(v?':'+v:'')}
-async function loadScripture(){let ref=passageValue();currentRef=ref;let box=document.getElementById('scriptureResult');box.innerHTML='<div class="muted">Loading Scripture…</div>';try{let d=await fetchPassage(ref);box.innerHTML='<div class="scriptureText">'+esc(d.text)+'</div><div class="scriptureMeta"><span class="pill">'+esc(d.ref)+'</span><span class="pill">'+esc(d.ver)+'</span></div>'}catch(e){if(e&&e.code==='LICENSED'){licensedPendingRef=ref;box.innerHTML=licensedFallbackHTML(ref,getBibleVersion(),'reader')}else{box.innerHTML='<b>Could not load this passage.</b><p class="muted">Check your internet connection, then try again. You can still open the reference directly in Logos or Bible.com.</p>'}}}
+async function loadScripture(){let ref=passageValue();currentRef=ref;let box=document.getElementById('scriptureResult');box.innerHTML='<div class="muted">Loading Scripture…</div>';try{let d=await fetchPassage(ref);box.innerHTML='<div class="scriptureText">'+esc(d.text)+'</div><div class="scriptureMeta"><span class="pill">'+esc(d.ref)+'</span><span class="pill">'+esc(d.ver)+'</span></div><div class="actions" style="margin-top:8px"><button class="btn" onclick="readVerseFromBox(&#39;scriptureResult&#39;)">🔊 Read aloud</button><button class="btn" onclick="ttsStop()">⏹ Stop</button></div>'}catch(e){if(e&&e.code==='LICENSED'){licensedPendingRef=ref;box.innerHTML=licensedFallbackHTML(ref,getBibleVersion(),'reader')}else{box.innerHTML='<b>Could not load this passage.</b><p class="muted">Check your internet connection, then try again. You can still open the reference directly in Logos or Bible.com.</p>'}}}
 function licensedLinks(ref,ver){const bg=(ver==='AMPC'?'AMPC':'NKJV');return '<div class="actions"><a class="btn primary" target="_blank" rel="noopener noreferrer" href="https://www.biblegateway.com/passage/?search='+encodeURIComponent(ref)+'&version='+bg+'">Read in '+ver+' on BibleGateway</a><a class="btn" target="_blank" rel="noopener noreferrer" href="'+youVersionUrl(ref)+'">Open in YouVersion</a><a class="btn" target="_blank" rel="noopener noreferrer" href="'+logosUrl(ref)+'">Open in Logos</a></div>'}
 function licensedFallbackHTML(ref,ver,target){return '<b>'+esc(ver)+' is a licensed translation.</b><p class="muted">Free Bible APIs cannot auto-load '+esc(ver)+' text (copyright). Open the passage below, then paste the text here to continue in the app.</p>'+licensedLinks(ref,ver)+'<br><label>Paste the '+esc(ver)+' text of '+esc(ref)+'</label><textarea id="licensedPaste_'+target+'" placeholder="Paste the passage text here…"></textarea><br><br><button class="btn primary" onclick="useLicensedText(\''+target+'\')">Use This Text</button>'}
 function useLicensedText(target){const ta=document.getElementById('licensedPaste_'+target),txt=((ta&&ta.value)||'').trim();if(!txt)return toast('Paste the passage text first');const ver=getBibleVersion(),ref=licensedPendingRef||currentRef;if(target==='reader'){currentRef=ref;document.getElementById('scriptureResult').innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(ref)+'</span><span class="pill">'+esc(ver)+' (pasted)</span></div>'}else if(target==='memory'){document.getElementById('memRef').value=ref;document.getElementById('memText').value=txt;document.getElementById('memoryScriptureResult').innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(ref)+'</span><span class="pill">'+esc(ver)+' (pasted)</span></div><br><button class="btn primary" onclick="saveMemory()">Save This Scripture</button>'}else if(target==='today'){localStorage.setItem('jcrgmTodayScripture',ref);localStorage.setItem('jcrgmTodayScriptureText',txt);localStorage.setItem('jcrgmTodayScriptureVer',ver+' (pasted)');document.getElementById('todayScriptureResult').innerHTML='<div class="scriptureText">'+esc(txt)+'</div><div class="scriptureMeta"><span class="pill">'+esc(ref)+'</span><span class="pill">'+esc(ver)+' (pasted)</span></div>'}toast(ver+' text loaded')}
@@ -3133,17 +3144,17 @@ let GUIDED_STEPS=[
 const SIGHT_JOURNEY=GUIDED_STEPS;
 window._journeyName='Opening Sight into the Spirit Realm';
 let guidedIdx=-1,guidedTimer=null,guidedInt=null,guidedRemaining=0;
-function voiceScore(v){let s=0;const nm=((v.name||'')+' '+(v.voiceURI||''));if(/^en/i.test(v.lang||''))s+=10;if(/natural|neural/i.test(nm))s+=10;if(/online/i.test(nm))s+=8;if(/google uk english female|google us english/i.test(nm))s+=7;if(/google/i.test(nm))s+=4;if(/samantha|siri|zira|aria|jenny|sonia|serena|moira|tessa|kate|victoria|karen|fiona|david|guy|mark/i.test(nm))s+=3;if(v.localService===false)s+=2;return s}
-function refreshGuidedVoices(){try{if(!window.speechSynthesis)return;const sel=document.getElementById('guidedVoiceName');if(!sel)return;const vs=speechSynthesis.getVoices()||[];if(!vs.length){if(!sel.options.length)sel.innerHTML='<option>Loading voices…</option>';return}const saved=localStorage.getItem('jcrgmGuidedVoice')||'';const keep=((sel.dataset.touched==='1'&&sel.value)?sel.value:saved);const ranked=[...vs].sort((a,b)=>voiceScore(b)-voiceScore(a));sel.innerHTML=ranked.map(v=>'<option value="'+esc(guidedVoiceKey(v))+'">'+(voiceScore(v)>=15?'★ ':'')+esc(v.name)+' ('+esc(v.lang)+')</option>').join('');const vals=[...sel.options].map(o=>o.value);if(keep&&vals.includes(keep))sel.value=keep;else sel.selectedIndex=0;const pr=document.getElementById('guidedPace'),savedRate=localStorage.getItem('jcrgmGuidedRate');if(pr&&savedRate){pr.value=savedRate;const pl=document.getElementById('guidedPaceLabel');if(pl)pl.textContent=(+savedRate).toFixed(2)+'×'}const sr=document.getElementById('scriptureRate'),savedScr=localStorage.getItem('jcrgmScriptureRate');if(sr&&savedScr){sr.value=savedScr;const lb=document.getElementById('scriptureRateLabel');if(lb)lb.textContent=(+savedScr).toFixed(2)+'×'}}catch(e){}}
+function voiceScore(v,lang){try{return ttsRank(v,lang||ttsTargetLang()).score}catch(e){return 0}}
+function refreshGuidedVoices(){try{if(!window.speechSynthesis)return;const sel=document.getElementById('guidedVoiceName');if(!sel)return;const pool=ttsVoices(ttsTargetLang());if(!pool.length){if(!sel.options.length)sel.innerHTML='<option>Loading voices\u2026</option>';return}const saved=localStorage.getItem('jcrgmGuidedVoice')||'';const keep=((sel.dataset.touched==='1'&&sel.value)?sel.value:saved);sel.innerHTML=pool.slice(0,60).map(x=>'<option value="'+esc(guidedVoiceKey(x.v))+'">'+esc(ttsVoiceLabel(x.v,ttsTargetLang()))+'</option>').join('');const vals=[...sel.options].map(o=>o.value);if(keep&&vals.includes(keep))sel.value=keep;else sel.selectedIndex=0;const pr=document.getElementById('guidedPace'),savedRate=localStorage.getItem('jcrgmGuidedRate');if(pr&&savedRate){pr.value=savedRate;const pl=document.getElementById('guidedPaceLabel');if(pl)pl.textContent=(+savedRate).toFixed(2)+'\u00d7'}const sr=document.getElementById('scriptureRate'),savedScr=localStorage.getItem('jcrgmScriptureRate');if(sr&&savedScr){sr.value=savedScr;const lb=document.getElementById('scriptureRateLabel');if(lb)lb.textContent=(+savedScr).toFixed(2)+'\u00d7'}}catch(e){}}
 let speakToken=0;
 function guidedVoiceKey(v){return (v.name||'')+'||'+(v.lang||'')}
 function saveGuidedPrefs(){try{const sel=document.getElementById('guidedVoiceName');if(sel&&sel.value){localStorage.setItem('jcrgmGuidedVoice',sel.value);sel.dataset.touched='1'}const pace=document.getElementById('guidedPace');if(pace&&pace.value)localStorage.setItem('jcrgmGuidedRate',pace.value)}catch(e){}}
 function guidedVoiceChanged(){saveGuidedPrefs();if(!window.speechSynthesis)return toast('Voice saved');if(((document.getElementById('guidedVoice')||{}).value)==='off')return toast('Voice saved (guidance is Silent)');speakGuided('This is the voice that will guide your meditation. Be still, and know that I am God.');toast('Voice changed — listen…')}
-function pickCalmVoice(){try{const vs=(window.speechSynthesis?speechSynthesis.getVoices():[])||[];if(!vs.length)return null;const sel=document.getElementById('guidedVoiceName');const want=((sel&&sel.value)||localStorage.getItem('jcrgmGuidedVoice')||'');return vs.find(v=>guidedVoiceKey(v)===want)||vs.find(v=>(v.name||'')===String(want).split('||')[0])||[...vs].sort((a,b)=>voiceScore(b)-voiceScore(a))[0]||null}catch(e){return null}}
+function pickCalmVoice(){try{const pool=ttsVoices(ttsTargetLang());if(!pool.length)return null;const sel=document.getElementById('guidedVoiceName');const want=((sel&&sel.value)||localStorage.getItem('jcrgmGuidedVoice')||'');if(want){const hit=pool.find(x=>guidedVoiceKey(x.v)===want);if(hit)return hit.v;const byName=pool.find(x=>String(x.v.name)===String(want).split('||')[0]);if(byName)return byName.v}return pool[0].v}catch(e){return null}}
 function updateGuidedPaceLabel(v){const lb=document.getElementById('guidedPaceLabel');if(lb)lb.textContent=(+v).toFixed(2)+'×';saveGuidedPrefs()}
 function updateScriptureRateLabel(v){const lb=document.getElementById('scriptureRateLabel');if(lb)lb.textContent=(+v).toFixed(2)+'×';try{localStorage.setItem('jcrgmScriptureRate',v)}catch(e){}}
 function scriptureRate(){let r=parseFloat(((document.getElementById('scriptureRate')||{}).value)||localStorage.getItem('jcrgmScriptureRate')||'.75');if(!(r>0))r=.75;return r}
-function speakGuided(text,scrText){try{if(!window.speechSynthesis)return;if(((document.getElementById('guidedVoice')||{}).value)==='off')return;try{speechSynthesis.cancel()}catch(e){}const tk=++speakToken;setTimeout(()=>{try{if(tk!==speakToken)return;try{speechSynthesis.resume()}catch(e){}const v=pickCalmVoice();let rate=parseFloat((((document.getElementById('guidedPace')||{}).value))||'.95')||.95;const sRate=scriptureRate();const queue=(String(text).match(/[^.!?]+[.!?]+/g)||[text]).map(s=>({p:s.trim(),r:rate})).filter(o=>o.p);if(scrText){(String(scrText).match(/[^.!?]+[.!?]+/g)||[scrText]).map(s=>s.trim()).filter(Boolean).forEach(q=>queue.push({p:q,r:sRate}))}if(!queue.length)queue.push({p:String(text),r:rate});queue.forEach(o=>{const u=new SpeechSynthesisUtterance(o.p);u.rate=o.r;u.pitch=1;if(v){u.voice=v;if(v.lang)u.lang=v.lang}speechSynthesis.speak(u)})}catch(e){}},90)}catch(e){}}
+function speakGuided(text,scrText){try{if(!window.speechSynthesis)return;if(((document.getElementById('guidedVoice')||{}).value)==='off')return;try{speechSynthesis.cancel()}catch(e){}const tk=++speakToken;setTimeout(()=>{try{if(tk!==speakToken)return;try{speechSynthesis.resume()}catch(e){}const v=pickCalmVoice();let rate=parseFloat((((document.getElementById('guidedPace')||{}).value))||'.95')||.95;const sRate=scriptureRate();const cl=t=>naturalizeForSpeech(t).replace(/\s+/g,' ');const queue=(cl(text).match(/[^.!?]+[.!?]+/g)||[cl(text)]).map(s=>({p:s.trim(),r:rate})).filter(o=>o.p&&/[A-Za-z0-9]/.test(o.p));if(scrText){(cl(scrText).match(/[^.!?]+[.!?]+/g)||[cl(scrText)]).map(s=>s.trim()).filter(q=>q&&/[A-Za-z0-9]/.test(q)).forEach(q=>queue.push({p:q,r:sRate}))}if(!queue.length)queue.push({p:cl(text),r:rate});queue.forEach(o=>{const u=new SpeechSynthesisUtterance(o.p);u.rate=o.r;u.pitch=1;if(v){u.voice=v;if(v.lang)u.lang=v.lang}speechSynthesis.speak(u)})}catch(e){}},90)}catch(e){}}
 function testGuidedVoice(){saveGuidedPrefs();if(!window.speechSynthesis)return toast('Voice not supported in this browser');if(((document.getElementById('guidedVoice')||{}).value)==='off')return toast('Spoken guidance is set to Silent');speakGuided('Be still, and know that I am God. Listen to the difference. First, my guiding voice. Now, the Scripture quoting speed.','Thy word is a lamp unto my feet, and a light unto my path.');toast('Playing sample — try different voices')}
 try{if(window.speechSynthesis){speechSynthesis.onvoiceschanged=refreshGuidedVoices;refreshGuidedVoices()}}catch(e){}
 function verseMood(text, ref){
@@ -4178,7 +4189,8 @@ function deliveryLang(){
 }
 function deliveryLanguageName(){return deliveryLang()[0]}
 function setDeliveryLang(code){
-  try{localStorage.setItem('jcrgmDeliveryLang',code)}catch(e){}
+  try{localStorage.setItem('jcrgmDeliveryLang',code);localStorage.setItem('jcrgmTtsLang',code)}catch(e){}
+  try{initVoices()}catch(e){}
   const sel=document.getElementById('deliveryLangSelect');if(sel)sel.value=code;
   toast('Sermons and teaching will be written in '+deliveryLang()[0]);
   renderToolkit();
@@ -4218,8 +4230,6 @@ function renderReadPrefsUI(){
   const lbl=document.getElementById('readSizeLabel');if(lbl)lbl.textContent=Math.round((+p.size||1)*100)+'%';
 }
 
-/* ---------- read aloud ------------------------------------------------- */
-let ttsQueue=[],ttsActive=false,ttsEndTimer=null;
 function ttsEngine(){
   try{
     if(typeof speechSynthesis!=='undefined'&&speechSynthesis)return speechSynthesis;
@@ -4228,59 +4238,470 @@ function ttsEngine(){
   return null;
 }
 function ttsAvailable(){return !!ttsEngine()}
-function pickVoice(lang,prefName){
+function pickVoice(lang,prefName){return ttsPickBest(lang)}
+function splitSpeech(t){return ttsChunks(naturalizeForSpeech(t)).map(x=>x.text)}
+function refreshVoicesNow(){
   try{
-    const syn=ttsEngine();if(!syn)return null;
-    const vs=syn.getVoices()||[];if(!vs.length)return null;
-    if(prefName){const v=vs.find(x=>x.name===prefName);if(v)return v}
-    const base=String(lang||'en').toLowerCase().split('-')[0];
-    return vs.find(v=>String(v.lang||'').toLowerCase()===String(lang||'').toLowerCase())
-        || vs.find(v=>String(v.lang||'').toLowerCase().startsWith(base))
-        || vs.find(v=>String(v.lang||'').toLowerCase().startsWith('en')) || vs[0];
-  }catch(e){return null}
+    const syn=ttsEngine();
+    if(syn&&typeof syn.getVoices==='function'){
+      const vs=syn.getVoices()||[];
+      toast(vs.length?vs.length+' voices found on this device — the most realistic is selected automatically':'No device voices loaded yet — reload this page once');
+    }
+    initVoices();
+  }catch(e){}
 }
-function stopReadAloud(){
-  try{ttsQueue=[];ttsActive=false;const syn=ttsEngine();if(syn)syn.cancel()}catch(e){}
-  const b=document.getElementById('readAloudBtn');if(b)b.textContent='🔊 Read aloud';
-  if(ttsEndTimer){clearTimeout(ttsEndTimer);ttsEndTimer=null}
+/* ---------- realistic reading aloud ------------------------------------ */
+/* Ranking: prefer the voices that actually sound human (neural / natural /
+   cloud engines), never the novelty voices, and never the robotic fallbacks. */
+const TTS_NOVELTY=/^(albert|bad news|bahh|bells|boing|bubbles|cellos|deranged|good news|hysterical|jester|junior|organ|superstar|trinoids|whisper|wobble|zarvox|eddy|flo|grandma|grandpa|reed|rocko|sandy|shelley)\b/i;
+const TTS_JUNK=/espeak|e-speak|\bcompact\b|fallback|robot|pico\b|festival|flite|mbrola|\bsam\b|novelty/i;
+const TTS_NAMES_NATURAL=/\b(natural|neural|premium|enhanced|siri|studio|online)\b/i;
+const TTS_NAMES_GOOD=/aria|jenny|guy|ryan|sonia|libby|emma|ava\b|andrew|brian|serena|samantha|karen|moira|tessa|fiona|daniel|allison|susan|zoe|joanna|matthew|olivia|ellie|noelle|marissa|linda|amelie|audrey|denise|vivienne|thomas|henri|neerja|prabhat|swara|ravi|xiaoxiao|yunxi|yunjian|nanami|keita|hina|yeri|sunhi|hyunsu|sora\b|nora|salli|joey|kimberly|ivy|justin|kendra|ruth|stephen|astrid|ingrid|hanna|marlene|emily|mary\b|yelda|filiz|lucia|mia\b|miguel|penelope|catalina|enrique|pablo|vitoria|ricardo|camila|diego|francisca|jorge|isabela|mateo|luciana|laura|antonio|isidora|sebastian|carlos/i;
+const TTS_TIER_LABEL={3:'Realistic — natural neural voice',2:'Good — clear, human-sounding',1:'Basic — sounds robotic'};
+const TTS_TIER_STARS={3:'★★★',2:'★★',1:'★'};
+
+function ttsTargetLang(){
+  const v=localStorage.getItem('jcrgmTtsLang');
+  return v||deliveryLang()[2]||'en';
+}
+function ttsRank(v,langWant){
+  const name=String((v&&v.name)||''),uri=String((v&&v.voiceURI)||''),hay=name+' '+uri;
+  const vlang=String((v&&v.lang)||'').toLowerCase().replace('_','-');
+  const want=String(langWant||'en').toLowerCase().replace('_','-'),base=want.split('-')[0];
+  let s=0;const why=[];
+  if(vlang&&vlang===want){s+=40}
+  else if(vlang&&vlang.split('-')[0]===base){s+=30}
+  else if(vlang&&vlang.split('-')[0]==='en'&&/^en/.test(base)){s+=20}
+  else if(vlang){s-=25}
+  if(TTS_NAMES_NATURAL.test(hay)){s+=60;why.push('named natural/neural')}
+  if(TTS_NAMES_GOOD.test(name)){s+=35;why.push('known-good voice')}
+  if(v&&v.localService===false){s+=12;why.push('cloud engine')}
+  if(/google/i.test(hay)){s+=18;why.push('Google engine')}
+  if(/microsoft/i.test(hay)&&!/desktop|\bsapi\b/i.test(hay)){s+=8}
+  if(/desktop|\bsapi\b|microsoft.*(david|zira|hazel|mark)\b/i.test(hay)){s-=45;why.push('old desktop engine')}
+  if(TTS_JUNK.test(hay)){s-=90;why.push('robotic engine')}
+  if(TTS_NOVELTY.test(name)){s-=160;why.push('novelty voice')}
+  if(!vlang){s-=20}
+  const tier=s>=85?3:(s>=45?2:1);
+  return {score:s,tier:tier,why:why};
+}
+function ttsVoices(langWant){
+  const syn=ttsEngine();if(!syn)return [];
+  let vs=[];try{vs=syn.getVoices()||[]}catch(e){return []}
+  const want=langWant||ttsTargetLang();
+  const base=String(want).toLowerCase().split('-')[0];
+  const ranked=vs.map(v=>{const r=ttsRank(v,want);return {v:v,r:r}});
+  const same=ranked.filter(x=>String(x.v.lang||'').toLowerCase().replace('_','-').split('-')[0]===base);
+  const pool=(same.length?same:ranked).sort((a,b)=>b.r.score-a.r.score);
+  return pool;
+}
+function ttsPickBest(langWant){
+  const pool=ttsVoices(langWant);
+  if(!pool.length)return null;
+  const want=String(langWant||ttsTargetLang()).toLowerCase();
+  const saved=localStorage.getItem('jcrgmTtsVoice')||'';
+  const savedLang=localStorage.getItem('jcrgmTtsLang')||'';
+  if(saved){
+    const hit=pool.find(x=>String(x.v.name)===saved&&(!savedLang||String(x.v.lang).toLowerCase()===savedLang.toLowerCase()));
+    if(hit)return hit.v;
+    const byName=pool.find(x=>String(x.v.name)===saved);
+    if(byName)return byName.v;
+  }
+  return pool[0].v;
+}
+function ttsCurrent(){
+  const v=ttsPickBest();
+  if(!v)return {voice:null,tier:1,label:''};
+  const r=ttsRank(v,ttsTargetLang());
+  return {voice:v,tier:r.tier,label:(v.name||'')+' ('+(v.lang||'')+')'+(r.tier===3?' — realistic':(r.tier===2?' — good':''))};
+}
+function ttsVoiceLabel(v,langWant){
+  const r=ttsRank(v,langWant||ttsTargetLang());
+  return TTS_TIER_STARS[r.tier]+' '+(v.name||'')+' ('+(v.lang||'')+')';
+}
+/* Turn what is on the page into what a person would actually say aloud. */
+function naturalizeForSpeech(text){
+  let s=String(text==null?'':text);
+  try{
+    s=s.replace(/[\u{1F000}-\u{1FAFF}\u{1F1E6}-\u{1F1FF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{20E3}\u{2300}-\u{23FF}\u{2190}-\u{21FF}\u{2500}-\u{257F}\u{25A0}-\u{25FF}\u{2400}-\u{243F}]/gu,' ');
+  }catch(e){
+    s=s.replace(/[★☆✓✗→←⇒]/g,' ');
+  }
+  s=s.replace(/[•·▪▫◦°✓✗★☆●○▲▼►▸«»“”„‟]/g,' ');
+  s=s.replace(/\*\*|__|`{1,3}|#{1,6}\s?/g,' ');
+  s=s.replace(/&quot;/gi,'"').replace(/&amp;/gi,' and ').replace(/&nbsp;/gi,' ').replace(/&[a-z]+;/gi,' ');
+  s=s.replace(/\s*[—–]\s*/g,', ').replace(/\s*-\s*/g,'-');
+  s=s.replace(/\[[^\]]{0,60}\]/g,' ');
+  s=s.replace(/\bPs\.\s*/gi,'Psalm ').replace(/\bPsa\.\s*/gi,'Psalm ').replace(/\bGen\.\s*/gi,'Genesis ').replace(/\bExod?\.\s*/gi,'Exodus ').replace(/\bMatt\.\s*/gi,'Matthew ').replace(/\bRom\.\s*/gi,'Romans ').replace(/\bCor\.\s*/gi,'Corinthians ').replace(/\bThess\.\s*/gi,'Thessalonians ').replace(/\bHeb\.\s*/gi,'Hebrews ').replace(/\bRev\.\s*/gi,'Revelation ');
+  s=s.replace(/\bOT\b/g,'Old Testament').replace(/\bNT\b/g,'New Testament');
+  s=s.replace(/\bv\.\s*/g,'verse ').replace(/\bvs\.\s*/gi,'verses ').replace(/\bvv\.\s*/gi,'verses ');
+  s=s.replace(/\be\.g\.\s*/gi,'for example ').replace(/\bi\.e\.\s*/gi,'that is ').replace(/\betc\.\s*/gi,'and so on ');
+  s=s.replace(/\bc\.\s*(?=\d)/g,'around ');
+  s=s.replace(/\b(Psalm|Psalms|Obadiah|Philemon|Jude|Song of Solomon|2 John|3 John)\b\s*(\d+)\s*:\s*(\d+)\s*[–—-]\s*(\d+)/gi,(m,bk,c1,v1,v2)=>bk+' '+c1+' verses '+v1+' to '+v2);
+  s=s.replace(/\b(Psalm|Psalms|Obadiah|Philemon|Jude|Song of Solomon|2 John|3 John)\b\s*(\d+)\s*:\s*(\d+)/gi,(m,bk,c1,v1)=>bk+' '+c1+' verse '+v1);
+  s=s.replace(/\b(\d+)\s*:\s*(\d+)\s*[–—-]\s*(\d+)/g,' chapter $1 verses $2 to $3');
+  s=s.replace(/\b(\d+)\s*:\s*(\d+)/g,' chapter $1 verse $2');
+  s=s.replace(/(\d)\s*×/g,'$1 times').replace(/×/g,' times ');
+  s=s.replace(/\s*&\s*/g,' and ');
+  s=s.replace(/\s*\/\s*/g,' or ');
+  s=s.replace(/[=|_]{3,}/g,'. ').replace(/[<>]{2,}/g,' ');
+  s=s.replace(/\s*[=]\s*/g,' ').replace(/\s*\|\s*/g,' ').replace(/(?<![A-Za-z0-9])_(?![A-Za-z0-9])/g,' ');
+  s=s.replace(/\s*[\u2022\u00b7]\s*/g,' ');
+  s=s.replace(/\s*\n\s*\n\s*/g,'. ').replace(/\s*\n\s*/g,'. ');
+  s=s.replace(/\s*\.\s*\.\s*/g,'. ').replace(/,\s*,/g,',').replace(/\s{2,}/g,' ');
+  return s.trim();
+}
+/* Split text for natural delivery: sentence-sized chunks with breathing room. */
+function ttsChunks(text){
+  const paras=String(text||'').split(/\n{2,}/);
+  const out=[];
+  paras.forEach((p,pi)=>{
+    const flat=String(p).replace(/\s+/g,' ').trim();
+    if(!flat)return;
+    const sentences=flat.match(/[^.!?]+[.!?]+["'”’)\]]*|[^.!?]+$/g)||[flat];
+    let buf='';
+    const flush=gap=>{if(buf.trim()){out.push({text:buf.trim(),gap:gap});buf=''}};
+    sentences.forEach(sn=>{
+      if((buf+sn).length>300)flush(140);
+      buf+=sn;
+    });
+    if(buf.trim())out.push({text:buf.trim(),gap:pi<paras.length-1?320:140});
+  });
+  return out.filter(x=>/[A-Za-z0-9]/.test(x.text)).slice(0,600);
+}
+/* The browser-voice player: short chunks, natural pauses, no cut-off. */
+const TTS={queue:[],i:0,playing:false,syn:null,voice:null,rate:.95,timer:null,keep:null,errors:0};
+function ttsSetBtn(on){
+  const b=document.getElementById('readAloudBtn');
+  if(!b)return;
+  b.textContent=on?'⏹ Stop reading':'🔊 Read aloud';
+  try{b.title=on?'Stop reading':('Read aloud now — '+(ttsCurrent().label||'browser voice'))}catch(e){}
+}
+function ttsStop(){
+  TTS.playing=false;TTS.queue=[];TTS.i=0;
+  if(TTS.timer){clearTimeout(TTS.timer);TTS.timer=null}
+  if(TTS.keep){clearInterval(TTS.keep);TTS.keep=null}
+  try{const syn=ttsEngine();if(syn)syn.cancel()}catch(e){}
+  try{stopNeural()}catch(e){}
+  ttsSetBtn(false);
+}
+function stopReadAloud(){ttsStop()}
+function ttsStart(chunks,lang){
+  const syn=ttsEngine();
+  if(!syn)return toast('This browser cannot read aloud');
+  if(!chunks||!chunks.length)return toast('Nothing to read here');
+  ttsStop();
+  TTS.syn=syn;TTS.queue=chunks;TTS.i=0;TTS.playing=true;TTS.errors=0;
+  TTS.voice=ttsPickBest(lang||ttsTargetLang());
+  TTS.rate=parseFloat(localStorage.getItem('jcrgmTtsRate')||'0.95')||0.95;
+  const cur=ttsCurrent();
+  if(TTS.voice){try{localStorage.setItem('jcrgmTtsVoice',TTS.voice.name||'');localStorage.setItem('jcrgmTtsLang',TTS.voice.lang||'')}catch(e){}}
+  ttsSetBtn(true);
+  if(cur.tier===1&&!localStorage.getItem('jcrgmVoiceWarning')){
+    try{localStorage.setItem('jcrgmVoiceWarning','1')}catch(e){}
+    toast('Only a basic voice is installed — Settings → Voice Studio can add a realistic one');
+  }
+  try{TTS.keep=setInterval(()=>{try{if(TTS.playing&&syn.paused)syn.resume()}catch(e){}},4000)}catch(e){}
+  ttsStep();
+}
+function ttsStep(){
+  if(!TTS.playing)return;
+  const item=TTS.queue[TTS.i];
+  if(!item){ttsStop();return}
+  let u;
+  try{u=new SpeechSynthesisUtterance(item.text)}catch(e){ttsStop();return}
+  u.rate=TTS.rate;u.pitch=1;u.volume=1;
+  if(TTS.voice){u.voice=TTS.voice;if(TTS.voice.lang)u.lang=TTS.voice.lang}
+  u.onend=()=>{if(!TTS.playing)return;TTS.i++;TTS.timer=setTimeout(ttsStep,item.gap||140)};
+  u.onerror=ev=>{
+    if(!TTS.playing)return;
+    const code=(ev&&ev.error)||'';
+    if(code==='interrupted'||code==='canceled')return;
+    TTS.errors++;
+    TTS.i++;
+    if(TTS.errors>3){ttsStop();toast('The voice stopped unexpectedly — try another voice in Voice Studio');return}
+    TTS.timer=setTimeout(ttsStep,120);
+  };
+  try{TTS.syn.speak(u)}catch(e){ttsStop()}
 }
 function speakParts(parts,lang){
-  if(!ttsAvailable())return toast('This browser cannot read aloud');
-  stopReadAloud();
-  const voice=pickVoice(lang,localStorage.getItem('jcrgmTtsVoice')||'');
-  const rate=parseFloat(localStorage.getItem('jcrgmTtsRate')||'0.95')||0.95;
-  const syn=ttsEngine();if(!syn)return toast('This browser cannot read aloud');
-  ttsActive=true;
-  const b=document.getElementById('readAloudBtn');if(b)b.textContent='⏹ Stop reading';
-  parts.filter(Boolean).forEach(text=>{
-    const u=new SpeechSynthesisUtterance(String(text));
-    u.rate=rate;u.pitch=1;if(voice){u.voice=voice;if(voice.lang)u.lang=voice.lang}
-    u.onend=()=>{if(ttsActive&&!syn.speaking){ttsActive=false;if(b)b.textContent='🔊 Read aloud'}};
-    syn.speak(u);
-  });
-  toast('Reading aloud — press Stop to end');
+  if(typeof parts==='string')return ttsStart(ttsChunks(naturalizeForSpeech(parts)),lang);
+  const chunks=(parts||[]).map(p=>typeof p==='string'?{text:p,gap:140}:p).filter(x=>x&&x.text);
+  ttsStart(chunks,lang);
 }
-function readAloud(text,lang){speakParts(splitSpeech(text),lang||deliveryLang()[2])}
-function splitSpeech(t){
-  const clean=String(t||'').replace(/\s+/g,' ').trim();
-  if(!clean)return [];
-  const parts=clean.match(/[^.!?]+[.!?]+["'”’)]*|[^.!?]+$/g)||[clean];
-  const out=[];let buf='';
-  parts.forEach(p=>{buf+=p;if(buf.length>240){out.push(buf.trim());buf=''}});
-  if(buf.trim())out.push(buf.trim());
-  return out.slice(0,400);
-}
-function readPage(){
-  if(ttsActive)return stopReadAloud();
-  const sec=document.querySelector('.section.show');
-  if(!sec)return toast('Open a section first');
-  const text=String(sec.innerText||'').replace(/\s+/g,' ').trim();
-  if(!text||text.length<20)return toast('Nothing to read here');
-  readAloud(text.slice(0,9000));
+function readAloud(text,lang){
+  const mode=ttsEngineMode();
+  const raw=String(text==null?'':text);
+  if(!raw.trim())return toast('Nothing to read here');
+  if(mode==='auto'&&NEURAL.status==='ready'&&neuralAvailableForLang()&&localStorage.getItem('jcrgmNeuralPreferred')==='1')return neuralSpeak(raw);
+  if(mode==='neural'){
+    if(NEURAL.status==='ready')return neuralSpeak(raw);
+    if(NEURAL.status==='loading'){toast('The studio voice is still downloading — reading with your device voice for now')}
+    else{toast('Studio voice not installed yet — using your device voice. Settings → Voice Studio installs it.')}
+  }
+  return speakParts(ttsChunks(naturalizeForSpeech(raw)),lang||ttsTargetLang());
 }
 function readVerseFromBox(id){
-  const el=document.getElementById(id);if(!el)return toast('Nothing to read');
+  const el=document.getElementById(id);
+  if(!el)return toast('Nothing to read');
   readAloud(el.innerText||'');
+}
+function sectionReadableText(sec){
+  try{
+    const c=sec.cloneNode(true);
+    c.querySelectorAll('button,select,input,textarea,script,style,nav,svg,.actions,.relatedActions,.studyToolbar,.progress,.toast').forEach(n=>{try{n.remove()}catch(e){}});
+    let t=c.innerText||c.textContent||'';
+    return t;
+  }catch(e){return String(sec.innerText||'')}
+}
+function readPage(){
+  if(TTS.playing||neuralPlaying)return ttsStop();
+  const sec=document.querySelector('.section.show');
+  if(!sec)return toast('Open a section first');
+  const text=sectionReadableText(sec).trim();
+  if(!text||text.length<20)return toast('Nothing to read here');
+  readAloud(text.slice(0,14000));
+}
+
+/* ---------- Voice Studio ------------------------------------------------- */
+function ttsEngineMode(){return localStorage.getItem('jcrgmTtsEngine')||'auto'}
+function setTtsEngine(mode){
+  try{localStorage.setItem('jcrgmTtsEngine',mode)}catch(e){}
+  const e=document.getElementById('ttsEngine');if(e)e.value=mode;
+  renderVoiceStudio();
+  if(mode==='neural'&&NEURAL.status!=='ready'){toast('Studio voice selected — press “Download studio voice” to install it');}
+  else toast('Reading engine: '+(mode==='neural'?'Studio neural voice':mode==='browser'?'Browser voice':'Automatic (best available)'));
+}
+function renderVoiceStudio(){
+  try{
+    const mode=ttsEngineMode();
+    const cur=ttsCurrent();
+    const status=document.getElementById('voiceQuality');
+    if(status){
+      const tier=cur.tier||1;
+      status.innerHTML='<b>Now reading with:</b> '+(cur.voice?esc(cur.voice.name||'')+' ('+esc(cur.voice.lang||'')+')':'no voice detected')
+        +' <span class="pill" style="'+(tier===3?'border-color:var(--green);color:var(--green)':tier===2?'':'border-color:var(--red);color:var(--red)')+'">'+TTS_TIER_STARS[tier]+' '+TTS_TIER_LABELS(tier)+'</span>';
+    }
+    const sel=document.getElementById('ttsVoice');
+    if(sel){
+      const lang=ttsTargetLang();
+      const pool=ttsVoices(lang);
+      if(pool.length){
+        sel.innerHTML=pool.map(x=>'<option value="'+esc(x.v.name)+'" data-lang="'+esc(x.v.lang||'')+'">'+esc(ttsVoiceLabel(x.v,lang))+'</option>').join('');
+        const best=ttsPickBest(lang);
+        if(best)sel.value=best.name||'';
+      }else{
+        sel.innerHTML='<option value="">No voices found yet</option>';
+      }
+    }
+    const help=document.getElementById('voiceHelp');
+    if(help){
+      const pool=ttsVoices(ttsTargetLang());
+      const bestTier=pool.length?pool[0].r.tier:1;
+      help.style.display=(bestTier>=3)?'none':'block';
+      if(bestTier<3)help.innerHTML='<b>Your device has no realistic voice installed yet.</b> This is a browser/device setting, not an app fault — the app will always use the best voice it is given.<ul>'
+        +'<li><b>Android:</b> Settings → General management → Text-to-speech → install the Google Speech Services voices, then set “Google” as the engine. Restart this app.</li>'
+        +'<li><b>Windows:</b> use Microsoft Edge, or in Windows Settings → Time &amp; language → Speech add the “Natural” voices. The Edge “Online (Natural)” voices are the most realistic.</li>'
+        +'<li><b>iPhone / iPad:</b> Settings → Accessibility → Spoken Content → Voices, then download the “Enhanced” or “Premium” version of a voice.</li>'
+        +'<li><b>Mac:</b> System Settings → Accessibility → Spoken Content → System Voice → Manage Voices, and download an Enhanced/Premium voice.</li>'
+        +'<li><b>Linux / Chrome:</b> install speech-dispatcher voices (espeak-ng is robotic — install a better engine), or use the Studio voice below.</li>'
+        +'<li><b>Any device:</b> the Studio voice (neural) below gives a realistic reader even where your device has none.</li></ul>';
+    }
+    const np=document.getElementById('neuralPanel');
+    if(np){
+      const langOk=neuralAvailableForLang();
+      np.innerHTML='<b>Studio voice — realistic neural reading (optional)</b>'
+        +'<p class="small muted">A true neural voice that runs in this browser. It downloads about 90&nbsp;MB once, needs no account and no key, then works with no internet. English only.</p>'
+        +(langOk?'':'<p class="small" style="color:var(--red)">Your delivery language is '+esc(deliveryLang()[0])+'. The studio voice is English only — use browser voices for '+esc(deliveryLang()[0])+'.</p>')
+        +'<div class="row3"><div><label>Studio voice</label><select id="neuralVoice" onchange="neuralPickVoice(this.value)" '+(langOk?'':'disabled')+'>'
+          +NEURAL_VOICES.map(x=>'<option value="'+x[0]+'"'+(NEURAL.voice===x[0]?' selected':'')+'>'+esc(x[1])+'</option>').join('')
+        +'</select></div>'
+        +'<div><label>Status</label><div id="neuralStatus" class="small muted">'+esc(neuralStatusText())+'</div></div>'
+        +'<div><label>&nbsp;</label><div class="actions">'
+          +(NEURAL.status==='ready'
+            ?'<button class="btn good" onclick="neuralTest()">🔊 Hear it</button><button class="btn danger" onclick="neuralForget()">Remove from this device</button>'
+            :'<button class="btn primary" onclick="neuralDownload()" '+(langOk?'':'disabled')+'>⬇ Download studio voice <span id="neuralProgress"></span></button>')
+        +'</div></div></div>';
+    }
+  }catch(e){console.warn('voice studio',e)}
+}
+function TTS_TIER_LABELS(t){return TTS_TIER_LABEL[t]||''}
+function pickTtsVoice(name,lang){
+  try{
+    localStorage.setItem('jcrgmTtsVoice',name||'');
+    localStorage.setItem('jcrgmTtsLang',lang||'');
+    if(lang)localStorage.setItem('jcrgmTtsLang',lang);
+    const v=ttsPickBest(ttsTargetLang());
+    if(v){localStorage.setItem('jcrgmTtsVoice',v.name||'');localStorage.setItem('jcrgmTtsLang',v.lang||'')}
+    renderVoiceStudio();
+    const r=v?ttsRank(v,ttsTargetLang()):{tier:1};
+    toast(r.tier===3?'Realistic voice selected: '+(v.name||''):'Voice selected: '+(v.name||''));
+  }catch(e){}
+}
+function saveTtsPrefs(){
+  const sel=document.getElementById('ttsVoice');
+  if(sel&&sel.value){
+    const opt=sel.options[sel.selectedIndex];
+    pickTtsVoice(sel.value,(opt&&opt.dataset&&opt.dataset.lang)||'');
+  }
+  const r=((document.getElementById('ttsRate')||{}).value||'0.95');
+  try{localStorage.setItem('jcrgmTtsRate',r)}catch(e){}
+  const lbl=document.getElementById('ttsRateLabel');if(lbl)lbl.textContent=(+r).toFixed(2)+'×';
+}
+function ttsPreview(){
+  const lang=ttsTargetLang();
+  const sample='The Lord is my shepherd; I shall not want. He maketh me to lie down in green pastures. Psalm 23 verse 1.';
+  if(ttsEngineMode()==='neural'&&NEURAL.status==='ready')return neuralSpeak(sample);
+  speakParts(ttsChunks(naturalizeForSpeech(sample)),lang);
+}
+/* ---------- optional: neural studio voice (runs in the browser) --------- */
+const NEURAL={status:'off',tts:null,voice:'af_heart',pct:0,err:'',loading:null};
+const NEURAL_VOICES=[
+ ['af_heart','Heart — American female, warm'],
+ ['af_bella','Bella — American female, bright'],
+ ['af_nicole','Nicole — American female, calm'],
+ ['bf_emma','Emma — British female'],
+ ['bf_isabella','Isabella — British female'],
+ ['am_michael','Michael — American male'],
+ ['am_onyx','Onyx — American male, deep'],
+ ['am_liam','Liam — American male, warm'],
+ ['bm_george','George — British male'],
+ ['bm_lewis','Lewis — British male']
+];
+function neuralAvailableForLang(){return String(deliveryLang()[2]||'en').toLowerCase().split('-')[0]==='en'}
+function neuralStatusText(){
+  if(NEURAL.status==='ready')return 'Installed and ready — works offline';
+  if(NEURAL.status==='loading')return 'Downloading… '+(NEURAL.pct?NEURAL.pct+'%':'starting');
+  if(NEURAL.err)return NEURAL.err;
+  return 'Not installed';
+}
+function neuralPickVoice(v){
+  NEURAL.voice=v||'af_heart';
+  try{localStorage.setItem('jcrgmNeuralVoice',NEURAL.voice)}catch(e){}
+  toast('Studio voice set');
+}
+async function neuralDownload(){
+  if(NEURAL.status==='loading')return;
+  await neuralLoad();
+}
+async function neuralLoad(){
+  if(NEURAL.status==='ready')return true;
+  if(NEURAL.loading)return NEURAL.loading;
+  if(!neuralAvailableForLang()){NEURAL.err='Studio voices are English only.';renderVoiceStudio();return false}
+  NEURAL.status='loading';NEURAL.err='';NEURAL.pct=0;renderVoiceStudio();
+  toast('Downloading the studio voice — about 90 MB, once. Keep the screen on.');
+  NEURAL.loading=new Promise(resolve=>{
+    let settled=false;
+    const finish=ok=>{if(settled)return;settled=true;clearTimeout(guard);NEURAL.loading=null;NEURAL.status=ok?'ready':'off';renderVoiceStudio();resolve(ok)};
+    const guard=setTimeout(()=>{if(!settled){NEURAL.err='The download did not finish — check your connection and try again.';finish(false)}},300000);
+    (async()=>{
+      try{
+        if(!window.__kokoro){
+          await new Promise((res,rej)=>{
+            const s=document.createElement('script');
+            s.type='module';
+            s.textContent="import { KokoroTTS } from 'https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm'; window.__kokoro={KokoroTTS:KokoroTTS}; window.dispatchEvent(new Event('kokoro-ready'));";
+            s.onerror=()=>rej(new Error('the engine script was blocked'));
+            window.addEventListener('kokoro-ready',()=>res(),{once:true});
+            document.head.appendChild(s);
+          });
+        }
+        const K=(window.__kokoro||{}).KokoroTTS;
+        if(!K)throw new Error('the engine did not start');
+        const call=opts=>K.from_pretrained('onnx-community/Kokoro-82M-v1.0-ONNX',opts);
+        const onProg=p=>{try{const pc=p&&typeof p.progress==='number'?Math.round(p.progress*100):0;if(pc&&pc!==NEURAL.pct){NEURAL.pct=pc;const el=document.getElementById('neuralProgress');if(el)el.textContent=pc+'%';const st=document.getElementById('neuralStatus');if(st)st.textContent='Downloading… '+pc+'%'}}catch(e){}};
+        let tts=null;
+        const hasGpu=(typeof navigator!=='undefined')&&('gpu' in navigator);
+        if(hasGpu){try{tts=await call({dtype:'q8',device:'webgpu',progress_callback:onProg})}catch(e){tts=null}}
+        if(!tts)tts=await call({dtype:'q8',device:'wasm',progress_callback:onProg});
+        if(!tts)throw new Error('the engine could not load the voice model');
+        NEURAL.tts=tts;
+        try{localStorage.setItem('jcrgmNeuralPreferred','1')}catch(e){}
+        toast('Studio voice ready — it will be used for reading aloud from now on');
+        finish(true);
+      }catch(e){
+        NEURAL.err='Could not install the studio voice ('+(e&&e.message||'unknown error')+'). Browser voices will be used instead.';
+        finish(false);
+      }
+    })();
+  });
+  return NEURAL.loading;
+}
+let neuralAudio=null,neuralPlaying=false;
+function stopNeural(){neuralPlaying=false;try{if(neuralAudio){neuralAudio.pause();neuralAudio.onended=null;neuralAudio.onerror=null;neuralAudio.src=''}}catch(e){}}
+async function neuralSpeak(text){
+  const raw=String(text==null?'':text).trim();
+  if(!raw)return toast('Nothing to read here');
+  if(NEURAL.status!=='ready'){
+    const ok=await neuralLoad();
+    if(!ok)return readAloudViaBrowser(raw);
+  }
+  ttsStop();
+  const chunks=ttsChunks(naturalizeForSpeech(raw));
+  if(!chunks.length)return toast('Nothing to read here');
+  neuralPlaying=true;ttsSetBtn(true);
+  const rate=parseFloat(localStorage.getItem('jcrgmTtsRate')||'0.95')||0.95;
+  const voice=localStorage.getItem('jcrgmNeuralVoice')||NEURAL.voice;
+  let voiced=false;
+  for(let i=0;i<chunks.length;i++){
+    if(!neuralPlaying)break;
+    let url='';
+    try{
+      const a=await NEURAL.tts.generate(String(chunks[i].text),{voice:voice});
+      const blob=a&&a.toBlob?a.toBlob():(a&&a.toWav?new Blob([a.toWav()],{type:'audio/wav'}):null);
+      if(!blob)throw new Error('no audio produced');
+      url=URL.createObjectURL(blob);
+      await new Promise(res=>{
+        neuralAudio=new Audio(url);
+        try{neuralAudio.playbackRate=Math.max(.6,Math.min(1.6,rate))}catch(e){}
+        neuralAudio.onended=()=>res();
+        neuralAudio.onerror=()=>res();
+        neuralAudio.play().catch(()=>res());
+      });
+      if(!voiced){voiced=true}
+    }catch(e){
+      if(!voiced){neuralPlaying=false;ttsSetBtn(false);NEURAL.err='The studio voice failed on this device — browser voices will be used.';renderVoiceStudio();return readAloudViaBrowser(raw)}
+      break;
+    }finally{
+      try{if(url)setTimeout(()=>URL.revokeObjectURL(url),1500)}catch(e){}
+    }
+    if(i<chunks.length-1&&neuralPlaying)await new Promise(r=>setTimeout(r,chunks[i].gap||140));
+  }
+  neuralPlaying=false;ttsSetBtn(false);
+}
+function readAloudViaBrowser(text){return speakParts(ttsChunks(naturalizeForSpeech(text)),ttsTargetLang())}
+function neuralTest(){
+  if(NEURAL.status!=='ready')return toast('Download the studio voice first');
+  neuralSpeak('The Lord is my shepherd; I shall not want. He leadeth me beside the still waters.');
+}
+function neuralForget(){
+  if(!confirm('Remove the studio voice from this device? It can be downloaded again at any time.'))return;
+  NEURAL.status='off';NEURAL.tts=null;NEURAL.pct=0;NEURAL.err='';
+  try{localStorage.removeItem('jcrgmNeuralPreferred');localStorage.removeItem('jcrgmNeuralVoice')}catch(e){}
+  try{if(window.caches&&caches.keys)caches.keys().then(ks=>ks.forEach(k=>{if(/transformers|onnx|kokoro|hf/i.test(k))caches.delete(k)}))}catch(e){}
+  renderVoiceStudio();toast('Studio voice removed — browser voices will be used');
+}
+function initVoices(){
+  try{
+    const savedEng=localStorage.getItem('jcrgmTtsEngine');const e=document.getElementById('ttsEngine');if(e)e.value=savedEng||'auto';
+    const nv=localStorage.getItem('jcrgmNeuralVoice');if(nv)NEURAL.voice=nv;
+    const lang=deliveryLang()[2]||'en';
+    if(!localStorage.getItem('jcrgmTtsLang'))try{localStorage.setItem('jcrgmTtsLang',lang)}catch(e){}
+    const best=ttsPickBest(ttsTargetLang());
+    if(best){
+      try{localStorage.setItem('jcrgmTtsVoice',best.name||'');localStorage.setItem('jcrgmTtsLang',best.lang||'')}catch(e){}
+    }
+    const r=document.getElementById('ttsRate');if(r)r.value=localStorage.getItem('jcrgmTtsRate')||'0.95';
+    const rl=document.getElementById('ttsRateLabel');if(rl)rl.textContent=(+((r&&r.value)||0.95)).toFixed(2)+'×';
+    renderVoiceStudio();
+    ttsSetBtn(false);
+    const syn=ttsEngine();
+    if(syn){
+      const re=()=>{renderVoiceStudio();ttsSetBtn(false)};
+      try{syn.onvoiceschanged=re}catch(e){}
+      setTimeout(re,1200);
+    }
+  }catch(e){console.warn('initVoices',e)}
 }
 
 /* ---------- offline Scripture (IndexedDB) ------------------------------ */
@@ -5106,7 +5527,7 @@ function renderSectionHook(id){
     else if(id==='archive'){renderArchive();renderSermonStudySelect&&renderSermonStudySelect()}
     else if(id==='prayer')renderPrayer();
     else if(id==='offline'){offlineBookList();refreshOfflineStatus();renderReadPrefsUI()}
-    else if(id==='settings'){renderReadPrefsUI();refreshOfflineStatus()}
+    else if(id==='settings'){renderReadPrefsUI();refreshOfflineStatus();try{initVoices()}catch(e){}}
     else if(id==='dashboard')updateExtraKpis();
   }catch(e){console.warn('section hook',e)}
 }
@@ -5124,14 +5545,7 @@ function initExtras(){
     const pc=document.getElementById('prayCat');
     if(pc&&!pc.options.length)pc.innerHTML=PRAYER_CATS.map(c=>'<option>'+esc(c)+'</option>').join('');
   }catch(e){}
-  try{
-    const t=document.getElementById('ttsVoice');if(t&&ttsAvailable()){
-      const syn=ttsEngine();
-      const fill=()=>{const vs=(syn&&syn.getVoices())||[];t.innerHTML='<option value="">Automatic (best match)</option>'+vs.map(v=>'<option value="'+esc(v.name)+'">'+esc(v.name)+' ('+esc(v.lang)+')</option>').join('');t.value=localStorage.getItem('jcrgmTtsVoice')||''};
-      fill();try{syn.onvoiceschanged=fill}catch(e){}
-    }
-  }catch(e){}
-  try{const r=document.getElementById('ttsRate');if(r)r.value=localStorage.getItem('jcrgmTtsRate')||'0.95'}catch(e){}
+  try{initVoices()}catch(e){}
   try{if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
   try{
     const badge=document.getElementById('swStatus');
@@ -5163,5 +5577,5 @@ setTimeout(restoreChurchEmail, 800);
 setTimeout(restoreChurchEmail, 2000);
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42533afdbbcda14',t:'MTc5MDYyNDIzOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a45c1950e9dc1636',t:'MTc5MTE5OTg3NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42533afdbbcda14',t:'MTc5MDYyNDIzOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
