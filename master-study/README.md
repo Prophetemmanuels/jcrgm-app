@@ -1,12 +1,12 @@
-# JCRGM Master Study (subfolder app)
+# JCRGM Master Study
 
-This is a separate app for an existing JCRGM GitHub Pages site. Put the entire `master-study/` folder beside your current root `index.html`; do not rename or overwrite the existing homepage.
+This app belongs in the `master-study/` subfolder beside your site's root `index.html`. In the ready-to-upload ZIP, the included root `index.html` is a copy of your uploaded JCRGM homepage with one added tile linking to `./master-study/index.html`. Use that copy if you want the homepage link automatically; otherwise keep your current root homepage and add the link shown below.
 
-The app route will be `https://YOUR-ACCOUNT.github.io/YOUR-REPOSITORY/master-study/` (or end the URL with `master-study/index.html`). Its own `index.html`, `manifest.json`, `sw.js`, icons, and audio folder are contained here. The app service worker scope is limited to `/master-study/`, so it does not replace the existing site's root `service-worker.js`.
+Upload this whole folder, not only `index.html`. The app HTML is under 1 MB. Ten natural-sounding, AI-generated English MP3 lessons are in `audio/` and load only when played, improving phone load time. They are synthetic narration, not a human recording.
 
-`index.html` is about 678 KB. Ten AI-generated, natural-sounding voice lessons are stored as separate MP3 files in `audio/`, each loaded only when played. This keeps first load quick and avoids a multi-megabyte HTML file. Upload the complete folder, including all ten MP3s.
+The app's `manifest.json`, `icons/`, and `sw.js` are local to this subfolder. Its service worker scope is `/master-study/` and does not replace the site's root `service-worker.js`. The first app shell is cached quickly; each selected lesson can be cached for offline playback after it is fetched once. Bible APIs and external study links may still need internet.
 
-To link from the existing homepage, add this tile inside an existing `.nav-grid`:
+Optional homepage tile (add inside an existing `.nav-grid`):
 
 ```html
 <a class="tile" href="./master-study/index.html" aria-label="Open JCRGM Master Study">
@@ -19,4 +19,4 @@ To link from the existing homepage, add this tile inside an existing `.nav-grid`
 </a>
 ```
 
-GitHub Pages uses HTTPS, so the app's manifest and subfolder service worker can run there. The app shell caches first; each audio lesson is cached on first successful play. Online Bible APIs and external research resources still need connectivity unless Scripture has been cached or imported.
+Notes and lesson progress remain in the browser on the current device. Back up in Settings & Data.
