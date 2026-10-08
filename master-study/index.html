@@ -657,7 +657,7 @@ body{font-size:calc(16px * var(--readSize,1));line-height:var(--readLH,1.55);let
     <label>Scripture quoting speed — <span id="scriptureRateLabel">0.75×</span> <span class="small muted">(slower reading whenever the guide quotes the Bible)</span></label>
     <input id="scriptureRate" class="range" type="range" min="0.5" max="1.2" step="0.05" value="0.75" oninput="updateScriptureRateLabel(this.value)">
   </div>
-  <p class="small muted">The active Voice Studio voice is shared with Read Aloud and guided meditation. By default, speech uses the best voice already installed on your browser/device—no extra downloads or account setup. Optional Studio or cloud voices can be selected in Settings, but are never required. The Voice Teacher lessons below remain their own prerecorded MP3s.</p>
+  <p class="small muted">The active Voice Studio voice is shared with Read Aloud and guided meditation. Phones can expose less natural voices than computers, so the app now prioritizes enhanced/online system voices when available. The default browser/device voice still works immediately with no app download. If it still sounds poor, an optional natural English Studio voice can be installed once (about 90 MB) only after you tap Install; it then runs on the device. Voice Teacher lessons remain their own prerecorded MP3s.</p>
   <br>
   <div class="actions">
     <button class="btn primary" onclick="startGuided()">▶ Begin Journey</button>
@@ -1135,7 +1135,7 @@ body{font-size:calc(16px * var(--readSize,1));line-height:var(--readLH,1.55);let
 <div class="actions"><button class="btn" onclick="resetReadPrefs()">Reset to defaults</button></div>
 </div>
 <div class="card"><h2>Voice Studio — realistic reading aloud</h2>
-<p class="muted">Read Aloud now starts with the best voice already available from your browser/device—no app model download, API key, account, or setup. The same selected system voice is used across reading and guided meditation. Optional Studio and cloud voices remain available in Voice Studio, but they are not required to read aloud. The original Voice Teacher MP3 lessons remain unchanged.</p>
+<p class="muted">On phones, built-in voices can sound flatter than computer voices. Read Aloud now gives enhanced/online system voices priority when your phone exposes them, then falls back to its built-in voice. No app model download, API key, account or setup is needed for the default. If it still sounds poor, you can install the optional natural English Studio voice once (about 90 MB); it runs on-device afterward and is never downloaded unless you tap Install. Voice Teacher MP3 lessons remain unchanged.</p>
 <label>Language of delivery</label>
 <select id="deliveryLangSelect" onchange="setDeliveryLang(this.value)"></select>
 <label style="margin-top:10px">Reading engine</label>
@@ -1146,7 +1146,7 @@ body{font-size:calc(16px * var(--readSize,1));line-height:var(--readLH,1.55);let
   <option value="elevenlabs">Optional ElevenLabs v4 cloud voice — Worker and account setup required</option>
 </select>
 <div id="voiceQuality" class="purposeBox" style="margin-top:10px"></div>
-<label>Voice for reading aloud</label>
+<label>Voice for reading aloud — most natural available first</label>
 <select id="ttsVoice" onchange="saveTtsPrefs(true)"></select>
 <label>Reading speed — <span id="ttsRateLabel">0.95×</span></label>
 <input id="ttsRate" type="range" min="0.6" max="1.4" step="0.05" value="0.95" class="range" oninput="saveTtsPrefs(false)">
@@ -4891,6 +4891,7 @@ function ttsEngine(){
   return null;
 }
 function ttsAvailable(){return !!ttsEngine()}
+function ttsIsMobile(){try{const ua=String(navigator.userAgent||'');const d=navigator.userAgentData;return !!(d&&d.mobile)||/Android|iPhone|iPod|iPad/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)}catch(e){return false}}
 function pickVoice(lang,prefName){return ttsPickBest(lang)}
 function splitSpeech(t){return ttsChunks(naturalizeForSpeech(t)).map(x=>x.text)}
 function refreshVoicesNow(){
@@ -4912,7 +4913,7 @@ const TTS_NOVELTY=/^(albert|bad news|bahh|bells|boing|bubbles|cellos|deranged|go
 const TTS_JUNK=/espeak|e-speak|\bcompact\b|fallback|robot|pico\b|festival|flite|mbrola|\bsam\b|novelty/i;
 const TTS_NAMES_NATURAL=/\b(natural|neural|premium|enhanced|siri|studio|online)\b/i;
 const TTS_NAMES_GOOD=/aria|jenny|guy|ryan|sonia|libby|emma|ava\b|andrew|brian|serena|samantha|karen|moira|tessa|fiona|daniel|allison|susan|zoe|joanna|matthew|olivia|ellie|noelle|marissa|linda|amelie|audrey|denise|vivienne|thomas|henri|neerja|prabhat|swara|ravi|xiaoxiao|yunxi|yunjian|nanami|keita|hina|yeri|sunhi|hyunsu|sora\b|nora|salli|joey|kimberly|ivy|justin|kendra|ruth|stephen|astrid|ingrid|hanna|marlene|emily|mary\b|yelda|filiz|lucia|mia\b|miguel|penelope|catalina|enrique|pablo|vitoria|ricardo|camila|diego|francisca|jorge|isabela|mateo|luciana|laura|antonio|isidora|sebastian|carlos/i;
-const TTS_TIER_LABEL={3:'Realistic — natural neural voice',2:'Good — clear, human-sounding',1:'Basic — sounds robotic'};
+const TTS_TIER_LABEL={3:'Realistic — natural/enhanced voice',2:'Good — clear, human-sounding',1:'Basic — sounds robotic'};
 const TTS_TIER_STARS={3:'★★★',2:'★★',1:'★'};
 
 function ttsTargetLang(){
@@ -4929,15 +4930,15 @@ function ttsRank(v,langWant){
   else if(vlang&&vlang.split('-')[0]==='en'&&/^en/.test(base)){s+=20}
   else if(vlang){s-=25}
   if(TTS_NAMES_NATURAL.test(hay)){s+=60;why.push('named natural/neural')}
-  if(TTS_NAMES_GOOD.test(name)){s+=35;why.push('known-good voice')}
-  if(v&&v.localService===false){s+=12;why.push('cloud engine')}
-  if(/google/i.test(hay)){s+=18;why.push('Google engine')}
+  if(TTS_NAMES_GOOD.test(name)){s+=50;why.push('known-good voice')}
+  if(v&&v.localService===false){s+=35;why.push('enhanced online system voice')}
+  if(/google/i.test(hay)){s+=28;why.push('Google engine')}
   if(/microsoft/i.test(hay)&&!/desktop|\bsapi\b/i.test(hay)){s+=8}
   if(/desktop|\bsapi\b|microsoft.*(david|zira|hazel|mark)\b/i.test(hay)){s-=45;why.push('old desktop engine')}
   if(TTS_JUNK.test(hay)){s-=90;why.push('robotic engine')}
   if(TTS_NOVELTY.test(name)){s-=160;why.push('novelty voice')}
   if(!vlang){s-=20}
-  const tier=s>=85?3:(s>=45?2:1);
+  const tier=s>=80?3:(s>=45?2:1);
   return {score:s,tier:tier,why:why};
 }
 function ttsVoices(langWant){
@@ -5428,6 +5429,13 @@ async function cloudPreviewSelected(){
   return cloudSpeak('The Lord is my shepherd; I shall not want. He leads me beside the still waters.',parseFloat(localStorage.getItem('jcrgmTtsRate')||'0.95'));
 }
 function ttsEngineMode(){return localStorage.getItem('jcrgmTtsEngine')||'browser'}
+function showPhoneStudioOptions(){
+  NEURAL.panelOpen=true;
+  renderVoiceStudio();
+  const p=document.getElementById('neuralPanel');
+  try{if(p&&p.scrollIntoView)p.scrollIntoView({behavior:'smooth',block:'center'})}catch(e){}
+}
+function useStudioVoice(){setTtsEngine('neural')}
 function setTtsEngine(mode){
   const allowed=['elevenlabs','neural','auto','browser'];if(!allowed.includes(mode))mode='neural';
   if(mode==='elevenlabs'){const details=document.getElementById('elevenCloudDetails');if(details)details.open=true;}
@@ -5517,6 +5525,13 @@ function renderVoiceStudio(){
       }else if(studio){
         help.style.display=(NEURAL.status==='ready')?'none':'block';
         if(NEURAL.status!=='ready')help.innerHTML='<b>For consistent natural-sounding English, install the Studio voice below.</b> The first install is about 90 MB; use Wi-Fi if possible. It does not download while the homepage opens, and the voice is generated on this device.';
+      }else if(ttsIsMobile()){
+        help.style.display='block';
+        const current=cur.voice?esc((cur.voice.name||'Device voice')+' ('+(cur.voice.lang||'')+')'):'No named system voice';
+        const upgrade=neuralAvailableForLang()
+          ?'For a more natural English voice, you can install the optional on-device Studio voice once (about 90 MB). It runs on this phone after installation; it may be slower on lower-powered phones. Nothing downloads unless you tap Install.'
+          :'Studio is English-only. For '+esc(deliveryLang()[0])+', enable a natural voice in your phone text-to-speech settings or use the optional online voice service.';
+        help.innerHTML='<b>Phone voice: '+current+'.</b> Phone browsers often expose less natural speech than desktop browsers. This version now favors enhanced and online system voices when your phone provides them, then falls back to its built-in voice. '+upgrade+'<div class="actions" style="margin-top:8px"><button class="btn" onclick="showPhoneStudioOptions()">'+(NEURAL.status==='ready'?'Show installed Studio voice':'Show optional natural-voice option')+'</button></div>';
       }else{
         help.style.display=(bestTier>=3)?'none':'block';
         if(bestTier<3)help.innerHTML='<b>Using the best voice already available on this device.</b> Voice quality is controlled by the browser and operating system. Try another listed voice or choose a more natural voice already enabled in device text-to-speech settings. This app will not download a model automatically.';
@@ -5525,7 +5540,7 @@ function renderVoiceStudio(){
     }
     const np=document.getElementById('neuralPanel');
     if(np){
-      np.style.display=(mode==='neural')?'block':'none';
+      np.style.display=(mode==='neural'||NEURAL.panelOpen)?'block':'none';
       const langOk=neuralAvailableForLang();
       np.innerHTML='<b>'+ (cloudMode?'On-device fallback — Kokoro Studio voice':'Studio voice — natural English reading') +'</b>'
         +'<p class="small muted">A neural voice generated on this device. Install about 90&nbsp;MB once; no account, API key or paid speech service is needed. The same selected voice can read Scripture, study pages, sermons, prayers and meditation guidance. The Voice Teacher lessons remain their own pre-recorded MP3 narrator; an MP3 alone is not a reusable speech model for arbitrary text. English only; lower-powered phones may take longer to prepare or speak.</p>'
@@ -5536,7 +5551,7 @@ function renderVoiceStudio(){
         +'<div><label>Status</label><div id="neuralStatus" class="small muted">'+esc(neuralStatusText())+'</div></div>'
         +'<div><label>&nbsp;</label><div class="actions">'
           +(NEURAL.status==='ready'
-            ?'<button class="btn good" onclick="neuralTest()">🔊 Hear it</button><button class="btn danger" onclick="neuralForget()">Remove from this device</button>'
+            ?'<button class="btn good" onclick="neuralTest()">🔊 Hear it</button>'+(mode==='neural'?'<span class="pill">Active for Read Aloud</span>':'<button class="btn primary" onclick="useStudioVoice()">Use Studio for reading</button>')+'<button class="btn danger" onclick="neuralForget()">Remove from this device</button>'
             :NEURAL.status==='loading'
               ?'<button class="btn" disabled>Preparing Studio voice <span id="neuralProgress"></span></button>'
               :'<button class="btn primary" onclick="neuralDownload()" '+(langOk?'':'disabled')+'>⬇ Install Studio voice (~90 MB) <span id="neuralProgress"></span></button>')
@@ -5579,7 +5594,7 @@ function ttsPreview(){
   speakParts(ttsChunks(naturalizeForSpeech(sample)),lang);
 }
 /* ---------- recommended: local neural Studio voice --------------------- */
-const NEURAL={status:'off',tts:null,voice:'af_heart',pct:0,err:'',loading:null};
+const NEURAL={status:'off',tts:null,voice:'af_heart',pct:0,err:'',loading:null,panelOpen:false};
 const NEURAL_VOICES=[
  ['af_heart','Heart — American female, warm'],
  ['af_bella','Bella — American female, bright'],
@@ -5768,7 +5783,7 @@ function neuralTest(){
 function neuralForget(){
   if(!confirm('Remove the studio voice from this device? It can be downloaded again at any time.'))return;
   NEURAL.status='off';NEURAL.tts=null;NEURAL.pct=0;NEURAL.err='';
-  try{localStorage.removeItem('jcrgmNeuralPreferred');localStorage.removeItem('jcrgmNeuralVoice');localStorage.removeItem('jcrgmNeuralConsent')}catch(e){}
+  try{if(ttsEngineMode()==='neural')localStorage.setItem('jcrgmTtsEngine','browser');localStorage.removeItem('jcrgmNeuralPreferred');localStorage.removeItem('jcrgmNeuralVoice');localStorage.removeItem('jcrgmNeuralConsent')}catch(e){}
   try{if(window.caches&&caches.keys)caches.keys().then(ks=>ks.forEach(k=>{if(/transformers|onnx|kokoro|hf/i.test(k))caches.delete(k)}))}catch(e){}
   renderVoiceStudio();try{refreshGuidedVoices()}catch(e){}toast('Studio voice removed — choose Browser mode if you want to use the phone voice');
 }
@@ -5810,7 +5825,7 @@ function runVoiceDiscovery(attempt){
 function initVoices(){
   try{
     let savedEng='';try{savedEng=localStorage.getItem('jcrgmTtsEngine')||''}catch(e){}
-    try{if(localStorage.getItem('jcrgmVoiceModeMigration')!=='browser-no-download-default-v1'){savedEng='browser';localStorage.setItem('jcrgmTtsEngine','browser');localStorage.setItem('jcrgmVoiceModeMigration','browser-no-download-default-v1')}}catch(e){}
+    try{if(localStorage.getItem('jcrgmVoiceModeMigration')!=='browser-phone-natural-voice-v2'){savedEng='browser';localStorage.setItem('jcrgmTtsEngine','browser');localStorage.removeItem('jcrgmTtsVoice');localStorage.removeItem('jcrgmTtsLang');localStorage.removeItem('jcrgmGuidedVoice');localStorage.setItem('jcrgmVoiceModeMigration','browser-phone-natural-voice-v2')}}catch(e){}
     const e=document.getElementById('ttsEngine');if(e)e.value=savedEng||'browser';
     const nv=localStorage.getItem('jcrgmNeuralVoice');if(nv)NEURAL.voice=nv;
     const lang=deliveryLang()[2]||'en';
