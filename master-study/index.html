@@ -650,14 +650,14 @@ body{font-size:calc(16px * var(--readSize,1));line-height:var(--readLH,1.55);let
     <div><label>Spoken guidance</label><select id="guidedVoice"><option value="on" selected>Voice on</option><option value="off">Silent (text only)</option></select></div>
   </div>
   <div class="row" style="margin-top:10px">
-    <div><label>Voice — Studio voice for English</label><select id="guidedVoiceName" onchange="guidedVoiceChanged()"><option value="">Checking voices…</option></select></div>
+    <div><label>Voice — select a speaker</label><select id="guidedVoiceName" onchange="guidedVoiceChanged()"><option value="">Checking voices…</option></select></div>
     <div><label>Voice speed — <span id="guidedPaceLabel">0.95×</span> <span class="small muted">(guide narration)</span></label><input id="guidedPace" class="range" type="range" min="0.5" max="1.5" step="0.05" value="0.95" oninput="updateGuidedPaceLabel(this.value)"></div>
   </div>
   <div style="margin-top:10px">
     <label>Scripture quoting speed — <span id="scriptureRateLabel">0.75×</span> <span class="small muted">(slower reading whenever the guide quotes the Bible)</span></label>
     <input id="scriptureRate" class="range" type="range" min="0.5" max="1.2" step="0.05" value="0.75" oninput="updateScriptureRateLabel(this.value)">
   </div>
-  <p class="small muted">For consistent natural-sounding English narration, install the Studio voice once in Settings → Voice Studio (about 90 MB). The same selected neural voice will speak the guidance and quoted Scripture; the two speed sliders still control their pacing. Device voices vary by phone and are used for other languages or if you explicitly choose Browser mode.</p>
+  <p class="small muted">The active Voice Studio voice is shared with Read Aloud and guided meditation. By default, speech uses the best voice already installed on your browser/device—no extra downloads or account setup. Optional Studio or cloud voices can be selected in Settings, but are never required. The Voice Teacher lessons below remain their own prerecorded MP3s.</p>
   <br>
   <div class="actions">
     <button class="btn primary" onclick="startGuided()">▶ Begin Journey</button>
@@ -1135,22 +1135,35 @@ body{font-size:calc(16px * var(--readSize,1));line-height:var(--readLH,1.55);let
 <div class="actions"><button class="btn" onclick="resetReadPrefs()">Reset to defaults</button></div>
 </div>
 <div class="card"><h2>Voice Studio — realistic reading aloud</h2>
-<p class="muted">For the most consistent, natural-sounding English reading on phones, this app uses its neural Studio voice instead of relying on each phone’s built-in voice. The same selected Studio voice is used for Read Aloud, Scripture, study sections, sermons, prayers and meditation guidance. Install it once per browser/device (about 90 MB); it is not downloaded when the page opens. Other delivery languages use the best matching voice available from the device because the Studio model is English-only.</p>
+<p class="muted">Read Aloud now starts with the best voice already available from your browser/device—no app model download, API key, account, or setup. The same selected system voice is used across reading and guided meditation. Optional Studio and cloud voices remain available in Voice Studio, but they are not required to read aloud. The original Voice Teacher MP3 lessons remain unchanged.</p>
 <label>Language of delivery</label>
 <select id="deliveryLangSelect" onchange="setDeliveryLang(this.value)"></select>
 <label style="margin-top:10px">Reading engine</label>
 <select id="ttsEngine" onchange="setTtsEngine(this.value)">
-  <option value="neural" selected>Studio neural voice (recommended · English)</option>
-  <option value="auto">Automatic — Studio for English; device voice for other languages</option>
-  <option value="browser">Browser / device voice (quality varies by phone)</option>
+  <option value="browser" selected>Built-in browser/device voice — no app download (recommended)</option>
+  <option value="neural">Optional on-device Studio voice — Kokoro (downloads about 90 MB)</option>
+  <option value="auto">Automatic — use an already-ready Studio voice; otherwise browser/device voice</option>
+  <option value="elevenlabs">Optional ElevenLabs v4 cloud voice — Worker and account setup required</option>
 </select>
 <div id="voiceQuality" class="purposeBox" style="margin-top:10px"></div>
-<label>Device voice <span class="small muted">(used only with Browser mode or for non-English)</span></label>
-<select id="ttsVoice" onchange="saveTtsPrefs()"></select>
+<label>Voice for reading aloud</label>
+<select id="ttsVoice" onchange="saveTtsPrefs(true)"></select>
 <label>Reading speed — <span id="ttsRateLabel">0.95×</span></label>
-<input id="ttsRate" type="range" min="0.6" max="1.4" step="0.05" value="0.95" class="range" oninput="saveTtsPrefs()">
+<input id="ttsRate" type="range" min="0.6" max="1.4" step="0.05" value="0.95" class="range" oninput="saveTtsPrefs(false)">
 <div class="actions"><button class="btn primary" onclick="ttsPreview()">🔊 Preview this voice</button><button class="btn" onclick="ttsStop()">⏹ Stop</button><button class="btn" onclick="refreshVoicesNow()">↻ Re-scan device voices</button></div>
-<p class="small muted">Preview uses the active reading engine. When Studio is selected, it previews the same neural voice used for English Read Aloud and meditation guidance.</p>
+<p class="small muted">Preview uses the selected voice. Browser/device mode reads aloud immediately with an already-available system voice; it does not download a model. The selected voice is shared with guided meditation.</p>
+<details id="elevenCloudDetails" class="highlightNote" style="margin-top:12px">
+  <summary><b>Optional cloud voice: ElevenLabs v4 (requires Worker setup and API credits)</b></summary>
+  <div style="margin-top:10px">
+    <p class="small muted">Deploy the bundled <code>elevenlabs-worker/</code> Cloudflare Worker, configure its provider secret and Turnstile protection, then paste only its public base URL below. The ElevenLabs API key stays in Cloudflare and is never stored in this browser.</p>
+    <label for="elevenEndpoint">Cloudflare Worker base URL</label>
+    <input id="elevenEndpoint" type="url" autocomplete="url" placeholder="https://your-worker.your-account.workers.dev">
+    <div class="actions" style="margin-top:8px"><button class="btn" onclick="saveElevenLabsEndpoint()">🔐 Save and connect</button><button class="btn" onclick="refreshCloudVoices()">↻ Refresh cloud voices</button></div>
+    <div id="elevenStatus" class="small muted" role="status" aria-live="polite" style="margin-top:8px">Cloud voice is not configured.</div>
+    <label class="check" style="margin-top:10px"><input id="elevenCloudConsent" type="checkbox" onchange="saveCloudSpeechConsent(this.checked)"><span>I understand that cloud Read Aloud sends the selected text to ElevenLabs through my Worker and consumes API credits. I will not send sensitive notes unless I am comfortable sharing them with the provider.</span></label>
+    <div id="elevenTurnstileMount" style="margin-top:8px"></div>
+  </div>
+</details>
 <div id="voiceHelp" class="highlightNote" style="display:none"></div>
 <div class="targetCard" id="neuralPanel" style="margin-top:12px"></div>
 </div>
@@ -3669,30 +3682,40 @@ function voiceScore(v,lang){try{return ttsRank(v,lang||ttsTargetLang()).score}ca
 let guidedVoiceRetryCount=0,guidedVoiceRetryTimer=null;
 function refreshGuidedVoices(){
   const sel=document.getElementById('guidedVoiceName');if(!sel)return;
-  if(neuralShouldUse()){
+  if(ttsEngineMode()==='elevenlabs'){
+    const voices=CLOUD.voices||[];
+    if(voices.length){
+      sel.disabled=false;sel.innerHTML=voices.map(v=>'<option value="'+esc(v.voice_id)+'">'+esc(cloudVoiceLabel(v))+'</option>').join('');
+      const chosen=cloudCurrentVoiceId();sel.value=voices.some(v=>v.voice_id===chosen)?chosen:voices[0].voice_id;
+    }else{
+      sel.disabled=true;sel.innerHTML='<option value="">'+esc(cloudEndpoint()?(CLOUD.error?'Cloud voices unavailable — check Voice Studio':'Loading cloud voices…'):'Connect the secure Worker in Voice Studio first')+'</option>';
+    }
+  }else if(neuralShouldUse()){
     const id=localStorage.getItem('jcrgmNeuralVoice')||NEURAL.voice;
-    const v=NEURAL_VOICES.find(x=>x[0]===id);
-    sel.disabled=true;
-    sel.innerHTML='<option value="studio">'+esc(v?v[1]:'Studio neural voice')+(NEURAL.status==='ready'?' — active':' — install in Voice Studio')+'</option>';
-    return;
+    sel.disabled=false;
+    sel.innerHTML=NEURAL_VOICES.map(x=>'<option value="'+x[0]+'">'+esc(x[1])+'</option>').join('');
+    sel.value=NEURAL_VOICES.some(x=>x[0]===id)?id:NEURAL_VOICES[0][0];
+  }else{
+    const syn=ttsEngine();
+    if(!syn||typeof syn.getVoices!=='function'){
+      sel.disabled=true;sel.innerHTML='<option value="">Device speech is unavailable in this browser</option>';
+    }else{
+      const pool=ttsVoices(ttsTargetLang());
+      if(!pool.length){
+        sel.disabled=true;
+        const msg=guidedVoiceRetryCount>=5?'No voices found — tap Re-scan, or enable a system voice in device settings.':'Checking for device voices…';
+        sel.innerHTML='<option value="">'+esc(msg)+'</option>';
+      }else{
+        sel.disabled=false;guidedVoiceRetryCount=0;
+        if(guidedVoiceRetryTimer){clearTimeout(guidedVoiceRetryTimer);guidedVoiceRetryTimer=null}
+        const saved=localStorage.getItem('jcrgmGuidedVoice')||'';
+        const keep=((sel.dataset.touched==='1'&&sel.value)?sel.value:saved);
+        sel.innerHTML=pool.slice(0,60).map(x=>'<option value="'+esc(guidedVoiceKey(x.v))+'">'+esc(ttsVoiceLabel(x.v,ttsTargetLang()))+'</option>').join('');
+        const vals=[...sel.options].map(o=>o.value);
+        if(keep&&vals.includes(keep))sel.value=keep;else sel.selectedIndex=0;
+      }
+    }
   }
-  const syn=ttsEngine();
-  if(!syn||typeof syn.getVoices!=='function'){
-    sel.disabled=true;sel.innerHTML='<option value="">Device speech is unavailable in this browser</option>';return;
-  }
-  sel.disabled=false;
-  const pool=ttsVoices(ttsTargetLang());
-  if(!pool.length){
-    const msg=guidedVoiceRetryCount>=5?'No voices found — tap Re-scan, or enable a system voice in device settings.':'Checking for device voices…';
-    sel.innerHTML='<option value="">'+esc(msg)+'</option>';return;
-  }
-  guidedVoiceRetryCount=0;
-  if(guidedVoiceRetryTimer){clearTimeout(guidedVoiceRetryTimer);guidedVoiceRetryTimer=null}
-  const saved=localStorage.getItem('jcrgmGuidedVoice')||'';
-  const keep=((sel.dataset.touched==='1'&&sel.value)?sel.value:saved);
-  sel.innerHTML=pool.slice(0,60).map(x=>'<option value="'+esc(guidedVoiceKey(x.v))+'">'+esc(ttsVoiceLabel(x.v,ttsTargetLang()))+'</option>').join('');
-  const vals=[...sel.options].map(o=>o.value);
-  if(keep&&vals.includes(keep))sel.value=keep;else sel.selectedIndex=0;
   const pr=document.getElementById('guidedPace'),savedRate=localStorage.getItem('jcrgmGuidedRate');
   if(pr&&savedRate){pr.value=savedRate;const pl=document.getElementById('guidedPaceLabel');if(pl)pl.textContent=(+savedRate).toFixed(2)+'×'}
   const sr=document.getElementById('scriptureRate'),savedScr=localStorage.getItem('jcrgmScriptureRate');
@@ -3700,8 +3723,44 @@ function refreshGuidedVoices(){
 }
 let speakToken=0;
 function guidedVoiceKey(v){return (v.name||'')+'||'+(v.lang||'')}
-function saveGuidedPrefs(){try{const sel=document.getElementById('guidedVoiceName');if(sel&&sel.value&&sel.value!=='studio'){localStorage.setItem('jcrgmGuidedVoice',sel.value);sel.dataset.touched='1'}const pace=document.getElementById('guidedPace');if(pace&&pace.value)localStorage.setItem('jcrgmGuidedRate',pace.value)}catch(e){}}
-function guidedVoiceChanged(){saveGuidedPrefs();if(((document.getElementById('guidedVoice')||{}).value)==='off')return toast('Voice saved (guidance is Silent)');if(neuralShouldUse()){speakGuided('This is the Studio voice that will guide your meditation. Be still, and know that I am God.');return}if(!window.speechSynthesis)return toast('Voice saved');speakGuided('This is the voice that will guide your meditation. Be still, and know that I am God.');toast('Voice changed — listen…')}
+function saveGuidedPrefs(){
+  try{
+    const sel=document.getElementById('guidedVoiceName');
+    const neuralChoice=sel&&neuralShouldUse()&&NEURAL_VOICES.some(x=>x[0]===sel.value);
+    if(sel&&sel.value&&sel.value!=='studio'&&!neuralChoice){
+      if(ttsEngineMode()==='elevenlabs')cloudSetVoice(sel.value,false);
+      else{
+        localStorage.setItem('jcrgmGuidedVoice',sel.value);
+        if(!neuralShouldUse()){
+          const hit=ttsVoices(ttsTargetLang()).find(x=>guidedVoiceKey(x.v)===sel.value);
+          if(hit){localStorage.setItem('jcrgmTtsVoice',hit.v.name||'');localStorage.setItem('jcrgmTtsLang',hit.v.lang||'')}
+        }
+      }
+      sel.dataset.touched='1';
+    }
+    const pace=document.getElementById('guidedPace');if(pace&&pace.value)localStorage.setItem('jcrgmGuidedRate',pace.value);
+  }catch(e){}
+}
+function guidedVoiceChanged(){
+  const sel=document.getElementById('guidedVoiceName');
+  saveGuidedPrefs();
+  if(ttsEngineMode()==='elevenlabs'){
+    if(sel&&sel.value)cloudSetVoice(sel.value,true);
+    if(((document.getElementById('guidedVoice')||{}).value)==='off')return toast('Voice saved (guidance is Silent)');
+    speakGuided('This is the selected cloud voice that will guide your meditation. Be still, and know that I am God.');
+    return toast('ElevenLabs voice selected — previewing if cloud consent is enabled…');
+  }
+  if(neuralShouldUse()){
+    if(sel&&NEURAL_VOICES.some(x=>x[0]===sel.value))neuralPickVoice(sel.value);
+    if(((document.getElementById('guidedVoice')||{}).value)==='off')return toast('Voice saved (guidance is Silent)');
+    speakGuided('This is the selected Studio voice that will guide your meditation. Be still, and know that I am God.');
+    return toast(NEURAL.status==='ready'?'Studio voice changed — listen…':'Preparing the selected Studio voice…');
+  }
+  try{renderVoiceStudio()}catch(e){}
+  if(((document.getElementById('guidedVoice')||{}).value)==='off')return toast('Voice saved (guidance is Silent)');
+  if(!window.speechSynthesis)return toast('Voice saved');
+  speakGuided('This is the voice that will guide your meditation. Be still, and know that I am God.');toast('Voice changed — listen…');
+}
 function pickCalmVoice(){try{const pool=ttsVoices(ttsTargetLang());const sel=document.getElementById('guidedVoiceName');const want=((sel&&sel.value)||localStorage.getItem('jcrgmGuidedVoice')||'');if(want){const hit=pool.find(x=>guidedVoiceKey(x.v)===want);if(hit)return hit.v;const byName=pool.find(x=>String(x.v.name)===String(want).split('||')[0]);if(byName)return byName.v}return pool[0].v}catch(e){return null}}
 function updateGuidedPaceLabel(v){const lb=document.getElementById('guidedPaceLabel');if(lb)lb.textContent=(+v).toFixed(2)+'×';saveGuidedPrefs()}
 function updateScriptureRateLabel(v){const lb=document.getElementById('scriptureRateLabel');if(lb)lb.textContent=(+v).toFixed(2)+'×';try{localStorage.setItem('jcrgmScriptureRate',v)}catch(e){}}
@@ -3719,6 +3778,7 @@ function speakGuided(text,scrText){
   try{
     if(((document.getElementById('guidedVoice')||{}).value)==='off')return;
     const parts=guidedSpeechParts(text,scrText);
+    if(ttsEngineMode()==='elevenlabs')return cloudSpeakParts(parts);
     if(neuralShouldUse())return neuralSpeakParts(parts);
     if(!window.speechSynthesis)return;
     try{speechSynthesis.cancel()}catch(e){}
@@ -3726,7 +3786,20 @@ function speakGuided(text,scrText){
     setTimeout(()=>{try{if(tk!==speakToken)return;try{speechSynthesis.resume()}catch(e){}const v=pickCalmVoice();parts.forEach(o=>{const u=new SpeechSynthesisUtterance(o.text);u.rate=o.rate;u.pitch=1;if(v){u.voice=v;if(v.lang)u.lang=v.lang}speechSynthesis.speak(u)})}catch(e){}},90);
   }catch(e){}
 }
-function testGuidedVoice(){saveGuidedPrefs();if(((document.getElementById('guidedVoice')||{}).value)==='off')return toast('Spoken guidance is set to Silent');if(neuralShouldUse()){speakGuided('Be still, and know that I am God. Listen to the difference. First, my guiding voice. Now, the Scripture quoting speed.','Thy word is a lamp unto my feet, and a light unto my path.');return toast(NEURAL.status==='ready'?'Playing Studio voice sample — try the speed sliders':'Preparing the Studio voice; tap Test Voice again when ready')}if(!window.speechSynthesis)return toast('Voice not supported in this browser');speakGuided('Be still, and know that I am God. Listen to the difference. First, my guiding voice. Now, the Scripture quoting speed.','Thy word is a lamp unto my feet, and a light unto my path.');toast('Playing sample — try different device voices')}
+function testGuidedVoice(){
+  saveGuidedPrefs();
+  if(((document.getElementById('guidedVoice')||{}).value)==='off')return toast('Spoken guidance is set to Silent');
+  if(ttsEngineMode()==='elevenlabs'){
+    speakGuided('Be still, and know that I am God. Listen to the selected narrator. Now hear a slower Scripture reading.','Thy word is a lamp unto my feet, and a light unto my path.');
+    return toast('Testing the cloud voice. Cloud consent and a ready Worker are required.');
+  }
+  if(neuralShouldUse()){
+    speakGuided('Be still, and know that I am God. Listen to the difference. First, my guiding voice. Now, the Scripture quoting speed.','Thy word is a lamp unto my feet, and a light unto my path.');
+    return toast(NEURAL.status==='ready'?'Playing Studio voice sample — try the speed sliders':'Preparing the Studio voice; tap Test Voice again when ready');
+  }
+  if(!window.speechSynthesis)return toast('Voice not supported in this browser');
+  speakGuided('Be still, and know that I am God. Listen to the difference. First, my guiding voice. Now, the Scripture quoting speed.','Thy word is a lamp unto my feet, and a light unto my path.');toast('Playing sample — try different device voices');
+}
 /* Voice lists are refreshed after the speech ranking helpers initialize. */
 function verseMood(text, ref){
   const t=String(text||'')+' '+String(ref||'');
@@ -3928,6 +4001,7 @@ let guidedStarting=false;
 async function startGuided(){
   const wantsSpeech=((document.getElementById('guidedVoice')||{}).value)!=='off';
   if(wantsSpeech&&neuralShouldUse())neuralPrimeAudio();
+  if(wantsSpeech&&ttsEngineMode()==='elevenlabs')cloudPrimeAudio();
   if(guidedStarting)return;
   if(wantsSpeech&&neuralShouldUse()&&NEURAL.status!=='ready'){
     guidedStarting=true;
@@ -4957,7 +5031,7 @@ function ttsSetBtn(on){
   const b=document.getElementById('readAloudBtn');
   if(!b)return;
   b.textContent=on?'⏹ Stop reading':'🔊 Read aloud';
-  try{b.title=on?'Stop reading':(neuralShouldUse()?(NEURAL.status==='ready'?'Read aloud with the selected Studio neural voice':'Read aloud with the Studio voice; first use needs a one-time install of about 90 MB'):('Read aloud now — '+(ttsCurrent().label||'device voice')))}catch(e){}
+  try{b.title=on?'Stop reading':(ttsEngineMode()==='elevenlabs'?'Read aloud with the connected ElevenLabs voice':(neuralShouldUse()?(NEURAL.status==='ready'?'Read aloud with the selected Studio neural voice':'Read aloud with the Studio voice; first use needs a one-time install of about 90 MB'):('Read aloud now — '+(ttsCurrent().label||'device voice'))))}catch(e){}
 }
 function ttsStop(){
   TTS.playing=false;TTS.queue=[];TTS.i=0;
@@ -4965,6 +5039,7 @@ function ttsStop(){
   if(TTS.keep){clearInterval(TTS.keep);TTS.keep=null}
   try{const syn=ttsEngine();if(syn)syn.cancel()}catch(e){}
   try{stopNeural()}catch(e){}
+  try{stopCloudSpeech()}catch(e){}
   ttsSetBtn(false);
 }
 function stopReadAloud(){ttsStop()}
@@ -4977,11 +5052,11 @@ function ttsStart(chunks,lang){
   TTS.voice=ttsPickBest(lang||ttsTargetLang());
   TTS.rate=parseFloat(localStorage.getItem('jcrgmTtsRate')||'0.95')||0.95;
   const cur=ttsCurrent();
-  if(TTS.voice){try{localStorage.setItem('jcrgmTtsVoice',TTS.voice.name||'');localStorage.setItem('jcrgmTtsLang',TTS.voice.lang||'')}catch(e){}}
+  if(TTS.voice){try{localStorage.setItem('jcrgmTtsVoice',TTS.voice.name||'');localStorage.setItem('jcrgmTtsLang',TTS.voice.lang||'');if(ttsEngineMode()==='browser'||ttsEngineMode()==='auto')localStorage.setItem('jcrgmGuidedVoice',guidedVoiceKey(TTS.voice))}catch(e){}}
   ttsSetBtn(true);
   if(cur.tier===1&&!localStorage.getItem('jcrgmVoiceWarning')){
     try{localStorage.setItem('jcrgmVoiceWarning','1')}catch(e){}
-    toast('Only a basic voice is installed — Settings → Voice Studio can add a realistic one');
+    toast('Using the best voice already installed on this device; choose another listed voice or enable a natural system voice in accessibility settings.');
   }
   try{TTS.keep=setInterval(()=>{try{if(TTS.playing&&syn.paused)syn.resume()}catch(e){}},4000)}catch(e){}
   ttsStep();
@@ -5015,7 +5090,8 @@ function readAloud(text,lang){
   const mode=ttsEngineMode();
   const raw=String(text==null?'':text);
   if(!raw.trim())return toast('Nothing to read here');
-  if(neuralAvailableForLang()&&mode!=='browser')return neuralSpeak(raw);
+  if(mode==='elevenlabs')return cloudSpeak(raw,parseFloat(localStorage.getItem('jcrgmTtsRate')||'0.95'),lang||ttsTargetLang());
+  if(neuralShouldUse())return neuralSpeak(raw);
   if(mode==='neural'&&!neuralAvailableForLang())toast('Studio voice is English-only; using the best matching device voice for '+deliveryLang()[0]+'.');
   return speakParts(ttsChunks(naturalizeForSpeech(raw)),lang||ttsTargetLang());
 }
@@ -5033,7 +5109,7 @@ function sectionReadableText(sec){
   }catch(e){return String(sec.innerText||'')}
 }
 function readPage(){
-  if(TTS.playing||neuralPlaying)return ttsStop();
+  if(TTS.playing||neuralPlaying||CLOUD.playing||CLOUD.loading)return ttsStop();
   const sec=document.querySelector('.section.show');
   if(!sec)return toast('Open a section first');
   const text=sectionReadableText(sec).trim();
@@ -5042,26 +5118,349 @@ function readPage(){
 }
 
 /* ---------- Voice Studio ------------------------------------------------- */
-function ttsEngineMode(){return localStorage.getItem('jcrgmTtsEngine')||(neuralAvailableForLang()?'neural':'auto')}
+const CLOUD={
+  config:null,configEndpoint:'',voices:[],defaultVoiceId:'',voicesEndpoint:'',voicesLoading:false,
+  voicesPromise:null,error:'',run:0,abort:null,audio:null,audioUrl:'',audioFinish:null,audioContext:null,audioSource:null,
+  turnstileWidget:null,turnstileScript:null,turnstileResolve:null,turnstileReject:null,turnstileEndpoint:''
+};
+function cloudEndpoint(){try{return String(localStorage.getItem('jcrgmElevenEndpoint')||'').trim().replace(/\/+$/,'')}catch(e){return ''}}
+function cloudUrl(path){const base=cloudEndpoint();return base?base+'/'+String(path||'').replace(/^\/+/, ''):''}
+function cloudMode(){return ttsEngineMode()==='elevenlabs'}
+function cloudSetVoice(id,refresh){
+  const voiceId=String(id||'').trim();if(!voiceId)return;
+  try{localStorage.setItem('jcrgmElevenVoice',voiceId);localStorage.setItem('jcrgmTtsVoice',voiceId);localStorage.setItem('jcrgmGuidedVoice',voiceId)}catch(e){}
+  if(refresh!==false){try{renderVoiceStudio()}catch(e){};try{refreshGuidedVoices()}catch(e){}}
+}
+function cloudCurrentVoiceId(){
+  const saved=(()=>{try{return localStorage.getItem('jcrgmElevenVoice')||''}catch(e){return ''}})();
+  if(saved&&CLOUD.voices.some(v=>v.voice_id===saved))return saved;
+  if(CLOUD.defaultVoiceId&&CLOUD.voices.some(v=>v.voice_id===CLOUD.defaultVoiceId))return CLOUD.defaultVoiceId;
+  return CLOUD.voices.length?CLOUD.voices[0].voice_id:'';
+}
+function cloudVoiceLabel(v){
+  const labels=v&&v.labels&&typeof v.labels==='object'?v.labels:{};
+  const details=[labels.gender,labels.accent,labels.language||labels.locale].filter(Boolean).map(x=>String(x));
+  return String((v&&v.name)||'Voice')+(details.length?' — '+details.join(' · '):'');
+}
+function cloudStatusText(){
+  if(!cloudEndpoint())return 'Not connected. Deploy the bundled secure Worker, then paste its HTTPS base URL here.';
+  if(CLOUD.voicesLoading)return 'Connecting to the secure speech proxy and loading your available voices…';
+  if(CLOUD.error)return 'Connection needs attention: '+esc(CLOUD.error);
+  if(CLOUD.config&&!CLOUD.config.api_configured)return 'Worker found, but its ELEVENLABS_API_KEY secret is missing.';
+  if(CLOUD.config&&!CLOUD.config.turnstile_configured)return 'Provider key detected. Configure both Turnstile keys in Cloudflare before generating speech.';
+  if(CLOUD.voices.length)return 'Connected to ElevenLabs '+esc((CLOUD.config&&CLOUD.config.model_id)||'v4')+' — '+CLOUD.voices.length+' account voice'+(CLOUD.voices.length===1?'':'s')+' available. The API key remains on the Worker.';
+  if(CLOUD.config&&CLOUD.config.ready)return 'Secure Worker is ready. Refresh cloud voices to load your voice list.';
+  return 'Cloud voice is not configured.';
+}
+function renderCloudStatus(){
+  const input=document.getElementById('elevenEndpoint');
+  if(input&&!input.dataset.initialized){input.value=cloudEndpoint();input.dataset.initialized='1'}
+  const consent=document.getElementById('elevenCloudConsent');
+  if(consent&&!consent.dataset.initialized){try{consent.checked=localStorage.getItem('jcrgmElevenConsent')==='1'}catch(e){}consent.dataset.initialized='1'}
+  const status=document.getElementById('elevenStatus');
+  if(status)status.innerHTML=cloudStatusText();
+}
+function saveCloudSpeechConsent(checked){
+  try{if(checked)localStorage.setItem('jcrgmElevenConsent','1');else localStorage.removeItem('jcrgmElevenConsent')}catch(e){}
+  toast(checked?'Cloud speech consent saved on this device.':'Cloud speech consent removed.');
+}
+async function cloudLoadConfig(force){
+  const endpoint=cloudEndpoint();
+  if(!endpoint)throw new Error('Save the secure Worker URL first.');
+  if(!force&&CLOUD.config&&CLOUD.configEndpoint===endpoint)return CLOUD.config;
+  const response=await fetch(endpoint+'/config',{method:'GET',mode:'cors',cache:'no-store'});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(data.message||'The Worker configuration route returned HTTP '+response.status+'.');
+  CLOUD.config=data;CLOUD.configEndpoint=endpoint;CLOUD.error='';
+  return data;
+}
+async function cloudLoadVoices(force){
+  const endpoint=cloudEndpoint();
+  if(!endpoint)throw new Error('Save the secure Worker URL first.');
+  if(!force&&CLOUD.voices.length&&CLOUD.voicesEndpoint===endpoint)return CLOUD.voices;
+  if(CLOUD.voicesPromise&&!force)return CLOUD.voicesPromise;
+  CLOUD.voicesLoading=true;CLOUD.error='';renderCloudStatus();
+  const promise=(async()=>{
+    await cloudLoadConfig(false);
+    const response=await fetch(endpoint+'/voices',{method:'GET',mode:'cors',cache:'no-store'});
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(data.message||'The voice list returned HTTP '+response.status+'.');
+    const voices=Array.isArray(data.voices)?data.voices.filter(v=>v&&v.voice_id).slice(0,100):[];
+    if(!voices.length)throw new Error('No voices are available to this ElevenLabs API key.');
+    if(endpoint!==cloudEndpoint())return [];
+    CLOUD.voices=voices;CLOUD.defaultVoiceId=String(data.default_voice_id||'');CLOUD.voicesEndpoint=endpoint;CLOUD.error='';
+    const current=cloudCurrentVoiceId();if(current)cloudSetVoice(current,false);
+    return voices;
+  })();
+  CLOUD.voicesPromise=promise;
+  try{return await promise}catch(error){CLOUD.error=String(error&&error.message||'Cloud voice list unavailable.').slice(0,240);throw error}
+  finally{if(CLOUD.voicesPromise===promise)CLOUD.voicesPromise=null;CLOUD.voicesLoading=false;renderCloudStatus();}
+}
+async function refreshCloudVoices(){
+  const endpointInput=document.getElementById('elevenEndpoint');
+  if(endpointInput&&endpointInput.value.trim()!==cloudEndpoint())return saveElevenLabsEndpoint();
+  CLOUD.config=null;CLOUD.voices=[];CLOUD.voicesEndpoint='';CLOUD.error='';
+  try{await cloudLoadVoices(true);renderVoiceStudio();refreshGuidedVoices();toast('Cloud voice list refreshed.')}catch(error){renderCloudStatus();toast('Cloud voice connection failed: '+String(error&&error.message||'check your Worker setup').slice(0,180))}
+}
+async function saveElevenLabsEndpoint(){
+  const input=document.getElementById('elevenEndpoint');
+  const raw=String((input&&input.value)||'').trim().replace(/\/+$/,'');
+  if(!raw)return toast('Paste your Cloudflare Worker HTTPS base URL first.');
+  let parsed;try{parsed=new URL(raw)}catch(e){return toast('Enter a valid Cloudflare Worker URL.');}
+  if(parsed.protocol!=='https:'||parsed.username||parsed.password||parsed.search||parsed.hash||parsed.pathname!=='/')return toast('Use the Worker HTTPS origin only (no credentials, path, query, or fragment).');
+  const endpoint=parsed.origin;
+  try{localStorage.setItem('jcrgmElevenEndpoint',endpoint)}catch(e){return toast('This browser cannot save the Worker URL.');}
+  if(input){input.value=endpoint;input.dataset.initialized='1'}
+  CLOUD.config=null;CLOUD.configEndpoint='';CLOUD.voices=[];CLOUD.voicesEndpoint='';CLOUD.error='';renderCloudStatus();
+  try{
+    await cloudLoadConfig(true);
+    await cloudLoadVoices(true);
+    setTtsEngine('elevenlabs');
+    renderVoiceStudio();refreshGuidedVoices();
+    if(CLOUD.config&&!CLOUD.config.turnstile_configured)toast('Voice list connected. Finish Turnstile setup in Cloudflare before speech generation.');
+    else toast('Secure ElevenLabs connection verified. Select a cloud voice and enable consent before reading.');
+  }catch(error){
+    CLOUD.error=String(error&&error.message||'Connection failed.').slice(0,240);renderCloudStatus();
+    toast('Could not connect to the voice proxy: '+CLOUD.error);
+  }
+}
+function loadCloudTurnstileScript(){
+  if(window.turnstile)return Promise.resolve();
+  if(CLOUD.turnstileScript)return CLOUD.turnstileScript;
+  CLOUD.turnstileScript=new Promise((resolve,reject)=>{
+    const script=document.createElement('script');
+    script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    script.async=true;script.defer=true;
+    script.onload=()=>window.turnstile?resolve():reject(new Error('Turnstile did not initialize.'));
+    script.onerror=()=>reject(new Error('Could not load Cloudflare Turnstile. Check your connection or content blocker.'));
+    document.head.appendChild(script);
+  });
+  return CLOUD.turnstileScript;
+}
+async function cloudTurnstileToken(){
+  const cfg=CLOUD.config||await cloudLoadConfig(false);
+  if(!cfg.turnstile_required||!cfg.turnstile_configured||!cfg.turnstile_site_key)throw new Error('Turnstile protection is not fully configured on the Worker.');
+  await loadCloudTurnstileScript();
+  const mount=document.getElementById('elevenTurnstileMount');
+  if(!mount)throw new Error('Turnstile mount point is missing.');
+  if(CLOUD.turnstileEndpoint!==cloudEndpoint()){CLOUD.turnstileWidget=null;CLOUD.turnstileEndpoint=cloudEndpoint();mount.innerHTML=''}
+  if(CLOUD.turnstileWidget===null){
+    CLOUD.turnstileWidget=window.turnstile.render(mount,{
+      sitekey:cfg.turnstile_site_key,size:'invisible',execution:'execute',
+      callback:token=>{const resolve=CLOUD.turnstileResolve;CLOUD.turnstileResolve=null;CLOUD.turnstileReject=null;if(resolve)resolve(token)},
+      'error-callback':()=>{const reject=CLOUD.turnstileReject;CLOUD.turnstileResolve=null;CLOUD.turnstileReject=null;if(reject)reject(new Error('Turnstile security check failed.'))},
+      'expired-callback':()=>{const reject=CLOUD.turnstileReject;CLOUD.turnstileResolve=null;CLOUD.turnstileReject=null;if(reject)reject(new Error('Turnstile token expired.'))}
+    });
+  }
+  return new Promise((resolve,reject)=>{
+    CLOUD.turnstileResolve=resolve;CLOUD.turnstileReject=reject;
+    try{window.turnstile.reset(CLOUD.turnstileWidget);window.turnstile.execute(CLOUD.turnstileWidget)}catch(error){CLOUD.turnstileResolve=null;CLOUD.turnstileReject=null;reject(new Error('Could not start the Turnstile check.'))}
+  });
+}
+function cloudPrimeAudio(){
+  try{
+    const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return null;
+    if(!CLOUD.audioContext)CLOUD.audioContext=new Ctx();
+    if(CLOUD.audioContext.state==='suspended')CLOUD.audioContext.resume().catch(()=>{});
+    return CLOUD.audioContext;
+  }catch(e){return null}
+}
+function stopCloudSpeech(){
+  CLOUD.run++;
+  try{if(CLOUD.abort)CLOUD.abort.abort()}catch(e){}CLOUD.abort=null;
+  try{if(CLOUD.audio){CLOUD.audio.pause();CLOUD.audio.currentTime=0;CLOUD.audio.onended=null;CLOUD.audio.onerror=null}}catch(e){}
+  try{if(CLOUD.audioSource){const source=CLOUD.audioSource;CLOUD.audioSource=null;source.onended=null;source.stop()}}catch(e){}
+  if(CLOUD.audioFinish){const finish=CLOUD.audioFinish;CLOUD.audioFinish=null;try{finish(false)}catch(e){}}
+  if(CLOUD.audioUrl){try{URL.revokeObjectURL(CLOUD.audioUrl)}catch(e){}CLOUD.audioUrl=''}
+  if(CLOUD.turnstileReject){const reject=CLOUD.turnstileReject;CLOUD.turnstileResolve=null;CLOUD.turnstileReject=null;try{reject(new Error('Speech was stopped.'))}catch(e){}}
+  CLOUD.audio=null;CLOUD.playing=false;CLOUD.loading=false;
+}
+function cloudTextChunks(text,maxChars){
+  const max=maxChars||4500;
+  const flat=String(text||'').replace(/\s+/g,' ').trim();if(!flat)return [];
+  const sentences=flat.match(/[^.!?]+[.!?]+["'”’\u2019)\]]*|[^.!?]+$/g)||[flat];
+  const out=[];let buffer='';
+  const flush=()=>{if(buffer.trim())out.push(buffer.trim());buffer=''};
+  for(let sentence of sentences){
+    sentence=sentence.trim();if(!sentence)continue;
+    if(sentence.length>max){
+      flush();let words=sentence.split(/\s+/),part='';
+      for(const word of words){if(part&&part.length+word.length+1>max){out.push(part);part=''}part+=(part?' ':'')+word;}
+      if(part)out.push(part);continue;
+    }
+    if(buffer&&buffer.length+sentence.length+1>max)flush();
+    buffer+=(buffer?' ':'')+sentence;
+  }
+  flush();return out;
+}
+function cloudSpeechChunks(parts){
+  const defaultRate=parseFloat(localStorage.getItem('jcrgmTtsRate')||'0.95')||0.95;
+  const out=[];let buffer='',rate=null;const max=4500;
+  const flush=()=>{if(buffer.trim())out.push({text:buffer.trim(),rate:rate||defaultRate});buffer='';rate=null};
+  (Array.isArray(parts)?parts:[]).forEach(part=>{
+    const raw=typeof part==='string'?part:String((part&&part.text)||'');
+    if(!raw.trim())return;
+    const clean=naturalizeForSpeech(raw).replace(/\s+/g,' ').trim();
+    const partRate=Math.max(.6,Math.min(1.4,parseFloat(part&&part.rate)||defaultRate));
+    for(const sentence of cloudTextChunks(clean,max)){
+      if(buffer&&(partRate!==rate||buffer.length+sentence.length+1>max))flush();
+      if(rate===null)rate=partRate;
+      buffer+=(buffer?' ':'')+sentence;
+    }
+  });
+  flush();return out;
+}
+async function requestCloudAudio(chunk,index,chunks,voiceId,language,runId){
+  const token=await cloudTurnstileToken();
+  if(runId!==CLOUD.run)throw new Error('Speech was stopped.');
+  const controller=new AbortController();CLOUD.abort=controller;
+  try{
+    const response=await fetch(cloudUrl('tts'),{
+      method:'POST',mode:'cors',cache:'no-store',signal:controller.signal,
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        text:chunk.text,voice_id:voiceId,language_code:String(language||'').slice(0,2),turnstile_token:token,
+        previous_text:index>0?chunks[index-1].text.slice(-500):'',
+        next_text:index<chunks.length-1?chunks[index+1].text.slice(0,500):''
+      })
+    });
+    if(!response.ok){const data=await response.json().catch(()=>({}));throw new Error(data.message||data.error||('Speech proxy returned HTTP '+response.status+'.'));}
+    const blob=await response.blob();
+    if(!blob||!blob.size||(!/^audio\//i.test(blob.type)&&blob.type!=='application/octet-stream'))throw new Error('The speech proxy did not return playable audio.');
+    return blob;
+  }finally{if(CLOUD.abort===controller)CLOUD.abort=null;}
+}
+async function playCloudAudio(source,rate,runId){
+  if(source instanceof Blob){
+    const context=cloudPrimeAudio();
+    if(context){
+      try{
+        const bytes=await source.arrayBuffer();
+        const buffer=await context.decodeAudioData(bytes.slice(0));
+        if(runId!==CLOUD.run)return false;
+        if(context.state==='suspended')await context.resume();
+        return await new Promise((resolve,reject)=>{
+          let done=false;const node=context.createBufferSource();node.buffer=buffer;
+          node.playbackRate.value=Math.max(.6,Math.min(1.4,parseFloat(rate)||.95));node.connect(context.destination);CLOUD.audioSource=node;
+          const finish=(ok,error)=>{if(done)return;done=true;node.onended=null;if(CLOUD.audioSource===node)CLOUD.audioSource=null;if(CLOUD.audioFinish===cancel)CLOUD.audioFinish=null;if(error)reject(error);else resolve(!!ok)};
+          const cancel=()=>{try{node.stop()}catch(e){}finish(false)};
+          CLOUD.audioFinish=cancel;node.onended=()=>finish(true);
+          if(runId!==CLOUD.run)return finish(false);
+          try{node.start(0)}catch(error){finish(false,new Error('The browser could not start the generated audio.'))}
+        });
+      }catch(error){if(runId!==CLOUD.run)return false;/* Fall back to the HTML audio element if Web Audio decoding is unavailable. */}
+    }
+  }
+  return new Promise((resolve,reject)=>{
+    const isBlob=source instanceof Blob;
+    const url=isBlob?URL.createObjectURL(source):String(source||'');
+    if(!url)return reject(new Error('No audio source was returned.'));
+    const audio=new Audio(url);CLOUD.audio=audio;CLOUD.audioUrl=isBlob?url:'';
+    try{audio.playbackRate=Math.max(.6,Math.min(1.4,parseFloat(rate)||.95))}catch(e){}
+    let done=false;
+    const finish=(ok,error)=>{
+      if(done)return;done=true;audio.onended=null;audio.onerror=null;
+      if(CLOUD.audio===audio)CLOUD.audio=null;
+      if(CLOUD.audioUrl===url){try{URL.revokeObjectURL(url)}catch(e){}CLOUD.audioUrl=''}
+      if(CLOUD.audioFinish===cancel)CLOUD.audioFinish=null;
+      if(error)reject(error);else resolve(!!ok);
+    };
+    const cancel=()=>finish(false);CLOUD.audioFinish=cancel;
+    audio.onended=()=>finish(true);
+    audio.onerror=()=>finish(false,new Error('The browser could not play the generated audio.'));
+    if(runId!==CLOUD.run)return finish(false);
+    const play=audio.play();if(play&&typeof play.catch==='function')play.catch(error=>finish(false,new Error('Audio playback was blocked: '+String(error&&error.message||'tap Read Aloud again'))));
+  });
+}
+async function cloudOfferFallback(parts,error){
+  stopCloudSpeech();
+  const detail=String(error&&error.message||error||'unknown provider error').slice(0,180);
+  const canNeural=neuralAvailableForLang();
+  const target=canNeural?'the on-device Studio voice':'the browser/device voice';
+  let use=false;try{use=window.confirm('ElevenLabs speech could not finish ('+detail+'). Use '+target+' for this reading instead?')}catch(e){}
+  if(!use){toast('Premium cloud speech stopped. Choose another Voice Studio engine or retry when the proxy is ready.');return false;}
+  if(canNeural)return neuralSpeakParts(parts);
+  return speakParts(parts,ttsTargetLang());
+}
+async function cloudSpeakParts(parts,languageOverride){
+  const chunks=cloudSpeechChunks(parts);
+  if(!chunks.length)return toast('Nothing to read here');
+  if(!cloudEndpoint())return toast('Set and connect the secure ElevenLabs Worker URL in Settings → Voice Studio first.');
+  let consent=false;try{consent=localStorage.getItem('jcrgmElevenConsent')==='1'}catch(e){}
+  if(!consent)return toast('Enable the cloud-speech consent box in Settings → Voice Studio before sending text online.');
+  if(typeof navigator!=='undefined'&&navigator.onLine===false)return cloudOfferFallback(parts,new Error('No internet connection.'));
+  ttsStop();cloudPrimeAudio();const runId=++CLOUD.run;CLOUD.loading=true;CLOUD.playing=false;ttsSetBtn(true);
+  try{
+    const cfg=await cloudLoadConfig(false);
+    if(!cfg.ready)throw new Error(!cfg.api_configured?'The Worker has no ElevenLabs API key secret.':'The Worker needs both Turnstile keys before it can generate speech.');
+    const voiceId=cloudCurrentVoiceId();if(!voiceId)throw new Error('Choose an ElevenLabs voice in Voice Studio.');
+    const language=languageOverride||ttsTargetLang()||deliveryLang()[2]||'en';
+    for(let i=0;i<chunks.length;i++){
+      if(runId!==CLOUD.run)return false;
+      CLOUD.loading=true;CLOUD.playing=false;renderCloudStatus();
+      const blob=await requestCloudAudio(chunks[i],i,chunks,voiceId,language,runId);
+      if(runId!==CLOUD.run)return false;
+      CLOUD.loading=false;CLOUD.playing=true;ttsSetBtn(true);
+      const ended=await playCloudAudio(blob,chunks[i].rate,runId);
+      if(runId!==CLOUD.run||!ended)return false;
+      CLOUD.playing=false;
+      if(i<chunks.length-1)await new Promise(resolve=>setTimeout(resolve,140));
+    }
+    if(runId===CLOUD.run){CLOUD.loading=false;CLOUD.playing=false;ttsSetBtn(false);renderCloudStatus();}
+    return true;
+  }catch(error){
+    if(runId!==CLOUD.run)return false;
+    CLOUD.error=String(error&&error.message||'Speech generation failed.').slice(0,240);renderCloudStatus();
+    return cloudOfferFallback(parts,error);
+  }finally{
+    if(runId===CLOUD.run){CLOUD.loading=false;CLOUD.playing=false;ttsSetBtn(false)}
+  }
+}
+async function cloudSpeak(text,rate,language){return cloudSpeakParts([{text:String(text==null?'':text),rate:rate}],language)}
+async function cloudPreviewSelected(){
+  const voice=CLOUD.voices.find(v=>v.voice_id===cloudCurrentVoiceId());
+  if(voice&&voice.preview_url){
+    ttsStop();const runId=++CLOUD.run;CLOUD.playing=true;ttsSetBtn(true);
+    try{await playCloudAudio(voice.preview_url,1,runId)}catch(error){toast('The provider sample could not play. Try Preview this voice again.');}
+    if(runId===CLOUD.run){CLOUD.playing=false;ttsSetBtn(false)}
+    return;
+  }
+  return cloudSpeak('The Lord is my shepherd; I shall not want. He leads me beside the still waters.',parseFloat(localStorage.getItem('jcrgmTtsRate')||'0.95'));
+}
+function ttsEngineMode(){return localStorage.getItem('jcrgmTtsEngine')||'browser'}
 function setTtsEngine(mode){
+  const allowed=['elevenlabs','neural','auto','browser'];if(!allowed.includes(mode))mode='neural';
+  if(mode==='elevenlabs'){const details=document.getElementById('elevenCloudDetails');if(details)details.open=true;}
+  if(mode==='elevenlabs'&&!cloudEndpoint()){
+    const previous=localStorage.getItem('jcrgmTtsEngine')||'browser';
+    const select=document.getElementById('ttsEngine');if(select)select.value=previous;
+    toast('Connect the secure Worker URL in Voice Studio before selecting ElevenLabs.');return;
+  }
   try{localStorage.setItem('jcrgmTtsEngine',mode)}catch(e){}
   const e=document.getElementById('ttsEngine');if(e)e.value=mode;
+  if(mode==='elevenlabs'&&cloudEndpoint()&&!CLOUD.voices.length&&!CLOUD.voicesLoading){cloudLoadVoices(false).then(()=>{renderVoiceStudio();refreshGuidedVoices()}).catch(()=>{renderVoiceStudio();refreshGuidedVoices()})}
   renderVoiceStudio();try{refreshGuidedVoices()}catch(e){}
-  if(!TTS.playing&&!neuralPlaying)ttsSetBtn(false);
-  if(mode==='neural'&&!neuralAvailableForLang())toast('Studio voice is English-only. The selected device voice will be used for '+deliveryLang()[0]+'.');
+  if(!TTS.playing&&!neuralPlaying&&!CLOUD.playing&&!CLOUD.loading)ttsSetBtn(false);
+  if(mode==='elevenlabs')toast('ElevenLabs cloud voice selected. Online text delivery and provider credit use require the consent box.');
+  else if(mode==='neural'&&!neuralAvailableForLang())toast('Studio voice is English-only. The selected device voice will be used for '+deliveryLang()[0]+'.');
   else if(mode==='neural'&&NEURAL.status!=='ready')toast('Studio voice selected. Install it below (about 90 MB once) for natural English reading everywhere in the app.');
   else if(mode==='browser')toast('Phone/browser voice selected — sound quality varies by device.');
-  else if(mode==='auto')toast('Automatic mode uses the Studio neural voice for English and the best matching device voice for other languages.');
-  else toast('Studio neural voice selected for English reading.');
+  else if(mode==='auto')toast('Automatic mode uses an already-ready Studio voice; otherwise it uses your best available browser/device voice without downloading a model.');
+  else toast('On-device Studio voice selected for English reading.');
 }
 function renderVoiceStudio(){
   try{
     const mode=ttsEngineMode();
     const cur=ttsCurrent();
     const studio=neuralShouldUse();
+    const cloudMode=mode==='elevenlabs';
+    if(cloudMode&&cloudEndpoint()&&!CLOUD.voices.length&&!CLOUD.voicesLoading&&!CLOUD.error){cloudLoadVoices(false).then(()=>{if(ttsEngineMode()==='elevenlabs'){renderVoiceStudio();refreshGuidedVoices()}}).catch(()=>{renderVoiceStudio();refreshGuidedVoices()})}
     const status=document.getElementById('voiceQuality');
     if(status){
-      if(studio){
+      if(cloudMode){
+        const picked=CLOUD.voices.find(v=>v.voice_id===cloudCurrentVoiceId());
+        status.innerHTML='<b>ElevenLabs online narrator:</b> '+(picked?esc(cloudVoiceLabel(picked)):'Choose a connected voice')+'. Cloud synthesis uses your secure Worker and provider credits; on-device and browser alternatives remain available.';
+      }else if(studio){
         const id=localStorage.getItem('jcrgmNeuralVoice')||NEURAL.voice;
         const selected=NEURAL_VOICES.find(x=>x[0]===id);
         const label=selected?selected[1]:'Studio neural voice';
@@ -5069,7 +5468,7 @@ function renderVoiceStudio(){
         else if(NEURAL.status==='loading')status.innerHTML='<b>Preparing the Studio voice:</b> '+esc(neuralStatusText())+'. Keep this page open.';
         else status.innerHTML='<b>Studio neural voice selected, but not installed yet.</b> Install it below (about 90 MB once). English Read Aloud and meditation guidance will use it; the app will not quietly switch to a robotic phone voice.';
       }else if(!cur.voice){
-        status.innerHTML='<b>No device voice detected.</b> For English, select and install the Studio voice below. For other languages, enable a system speech voice in your phone settings.';
+        status.innerHTML='<b>No system speech voice is listed yet.</b> Read Aloud will still try your browser’s default voice. If silent, enable a text-to-speech voice in device accessibility settings, then tap Re-scan. No app model download is required.';
       }else{
         const tier=cur.tier||1;
         const prefix=(mode==='neural'&&!neuralAvailableForLang())?'Studio voice is English-only; using device voice for '+esc(deliveryLang()[0])+'. <br><b>Device voice:</b> ':'<b>Device voice:</b> ';
@@ -5080,36 +5479,56 @@ function renderVoiceStudio(){
     const sel=document.getElementById('ttsVoice');
     if(sel){
       const lang=ttsTargetLang();
-      const pool=ttsVoices(lang);
-      sel.disabled=studio;
-      if(pool.length){
-        sel.innerHTML=pool.map(x=>'<option value="'+esc(x.v.name)+'" data-lang="'+esc(x.v.lang||'')+'">'+esc(ttsVoiceLabel(x.v,lang))+'</option>').join('');
-        const best=ttsPickBest(lang);
-        if(best)sel.value=best.name||'';
+      sel.disabled=false;
+      if(cloudMode){
+        const voices=CLOUD.voices;
+        if(voices.length){
+          sel.innerHTML=voices.map(v=>'<option value="'+esc(v.voice_id)+'">'+esc(cloudVoiceLabel(v))+'</option>').join('');
+          const preferred=cloudCurrentVoiceId();sel.value=voices.some(v=>v.voice_id===preferred)?preferred:voices[0].voice_id;
+        }else{
+          sel.innerHTML='<option value="">'+esc(cloudEndpoint()?(CLOUD.error?'Cloud voices unavailable — see status above':'Loading voices from your secure Worker…'):'Connect a secure Worker to load cloud voices')+'</option>';
+          sel.disabled=true;
+        }
+      }else if(studio){
+        const id=localStorage.getItem('jcrgmNeuralVoice')||NEURAL.voice;
+        sel.innerHTML=NEURAL_VOICES.map(x=>'<option value="'+x[0]+'">'+esc(x[1])+'</option>').join('');
+        sel.value=NEURAL_VOICES.some(x=>x[0]===id)?id:NEURAL_VOICES[0][0];
       }else{
-        const engine=ttsEngine();
-        const msg=!engine?'Device speech is unavailable in this browser':(jcrgmVoiceRetryCount>=5?'No voices found — tap Re-scan or enable a system voice':'Checking device speech voices…');
-        sel.innerHTML='<option value="">'+esc(msg)+'</option>';
+        const pool=ttsVoices(lang);
+        if(pool.length){
+          sel.innerHTML=pool.map(x=>'<option value="'+esc(x.v.name)+'" data-lang="'+esc(x.v.lang||'')+'">'+esc(ttsVoiceLabel(x.v,lang))+'</option>').join('');
+          const best=ttsPickBest(lang);
+          if(best)sel.value=best.name||'';
+        }else{
+          const engine=ttsEngine();
+          const msg=!engine?'Device speech is unavailable in this browser':(jcrgmVoiceRetryCount>=5?'No voices found — tap Re-scan or enable a system voice':'Checking device speech voices…');
+          sel.innerHTML='<option value="">'+esc(msg)+'</option>';
+          sel.disabled=!engine;
+        }
       }
     }
     const help=document.getElementById('voiceHelp');
     if(help){
       const pool=ttsVoices(ttsTargetLang());
       const bestTier=pool.length?pool[0].r.tier:1;
-      if(studio){
+      if(cloudMode){
+        help.style.display='block';
+        help.innerHTML='<b>Cloud voice is active.</b> The voice list comes from the ElevenLabs API key on your Worker. Text is sent online only after you enable the consent checkbox; generation uses provider credits. For private/offline English, switch to the on-device Studio voice.';
+      }else if(studio){
         help.style.display=(NEURAL.status==='ready')?'none':'block';
         if(NEURAL.status!=='ready')help.innerHTML='<b>For consistent natural-sounding English, install the Studio voice below.</b> The first install is about 90 MB; use Wi-Fi if possible. It does not download while the homepage opens, and the voice is generated on this device.';
       }else{
         help.style.display=(bestTier>=3)?'none':'block';
-        if(bestTier<3)help.innerHTML='<b>The selected device voice may sound robotic.</b> Phone voices are controlled by the operating system. For natural English, select Studio neural voice and install it below. For other languages, install an Enhanced/Premium system voice in your phone settings.';
+        if(bestTier<3)help.innerHTML='<b>Using the best voice already available on this device.</b> Voice quality is controlled by the browser and operating system. Try another listed voice or choose a more natural voice already enabled in device text-to-speech settings. This app will not download a model automatically.';
         else help.innerHTML='';
       }
     }
     const np=document.getElementById('neuralPanel');
     if(np){
+      np.style.display=(mode==='neural')?'block':'none';
       const langOk=neuralAvailableForLang();
-      np.innerHTML='<b>Studio voice — recommended natural English reading</b>'
-        +'<p class="small muted">A neural voice generated on this device. Install about 90&nbsp;MB once; no account, API key or paid speech service is needed. The same selected voice can read Scripture, study pages, sermons, prayers and meditation guidance. English only; lower-powered phones may take longer to prepare or speak.</p>'
+      np.innerHTML='<b>'+ (cloudMode?'On-device fallback — Kokoro Studio voice':'Studio voice — natural English reading') +'</b>'
+        +'<p class="small muted">A neural voice generated on this device. Install about 90&nbsp;MB once; no account, API key or paid speech service is needed. The same selected voice can read Scripture, study pages, sermons, prayers and meditation guidance. The Voice Teacher lessons remain their own pre-recorded MP3 narrator; an MP3 alone is not a reusable speech model for arbitrary text. English only; lower-powered phones may take longer to prepare or speak.</p>'
         +(langOk?'':'<p class="small" style="color:var(--red)">Your delivery language is '+esc(deliveryLang()[0])+'. This Studio model is English-only; a realistic voice in this language requires an installed natural system voice or an online speech service.</p>')
         +'<div class="row3"><div><label>Studio voice</label><select id="neuralVoice" onchange="neuralPickVoice(this.value)" '+(langOk?'':'disabled')+'>'
           +NEURAL_VOICES.map(x=>'<option value="'+x[0]+'"'+(NEURAL.voice===x[0]?' selected':'')+'>'+esc(x[1])+'</option>').join('')
@@ -5123,12 +5542,15 @@ function renderVoiceStudio(){
               :'<button class="btn primary" onclick="neuralDownload()" '+(langOk?'':'disabled')+'>⬇ Install Studio voice (~90 MB) <span id="neuralProgress"></span></button>')
         +'</div></div></div>';
     }
+    try{renderCloudStatus()}catch(e){}
     try{refreshGuidedVoices()}catch(e){}
   }catch(e){console.warn('voice studio',e)}
 }
 function TTS_TIER_LABELS(t){return TTS_TIER_LABEL[t]||''}
 function pickTtsVoice(name,lang){
   try{
+    if(ttsEngineMode()==='elevenlabs')return cloudSetVoice(name,true);
+    if(neuralShouldUse()&&NEURAL_VOICES.some(x=>x[0]===name))return neuralPickVoice(name);
     localStorage.setItem('jcrgmTtsVoice',name||'');
     localStorage.setItem('jcrgmTtsLang',lang||'');
     if(lang)localStorage.setItem('jcrgmTtsLang',lang);
@@ -5152,7 +5574,8 @@ function saveTtsPrefs(){
 function ttsPreview(){
   const lang=ttsTargetLang();
   const sample='The Lord is my shepherd; I shall not want. He maketh me to lie down in green pastures. Psalm 23 verse 1.';
-  if(neuralAvailableForLang()&&ttsEngineMode()!=='browser')return neuralSpeak(sample);
+  if(ttsEngineMode()==='elevenlabs')return cloudPreviewSelected();
+  if(neuralShouldUse())return neuralSpeak(sample);
   speakParts(ttsChunks(naturalizeForSpeech(sample)),lang);
 }
 /* ---------- recommended: local neural Studio voice --------------------- */
@@ -5170,7 +5593,7 @@ const NEURAL_VOICES=[
  ['bm_lewis','Lewis — British male']
 ];
 function neuralAvailableForLang(){return String(deliveryLang()[2]||'en').toLowerCase().split('-')[0]==='en'}
-function neuralShouldUse(){return neuralAvailableForLang()&&ttsEngineMode()!=='browser'}
+function neuralShouldUse(){const mode=ttsEngineMode();return neuralAvailableForLang()&&(mode==='neural'||(mode==='auto'&&NEURAL.status==='ready'))}
 function neuralStatusText(){
   if(NEURAL.status==='ready')return 'Installed and ready on this device';
   if(NEURAL.status==='loading')return 'Preparing… '+(NEURAL.pct?NEURAL.pct+'%':'starting');
@@ -5387,13 +5810,16 @@ function runVoiceDiscovery(attempt){
 function initVoices(){
   try{
     let savedEng='';try{savedEng=localStorage.getItem('jcrgmTtsEngine')||''}catch(e){}
-    try{if(localStorage.getItem('jcrgmVoiceModeMigration')!=='studio-neural-default-v1'){savedEng=neuralAvailableForLang()?'neural':'auto';localStorage.setItem('jcrgmTtsEngine',savedEng);localStorage.setItem('jcrgmVoiceModeMigration','studio-neural-default-v1')}}catch(e){}
-    const e=document.getElementById('ttsEngine');if(e)e.value=savedEng||(neuralAvailableForLang()?'neural':'auto');
+    try{if(localStorage.getItem('jcrgmVoiceModeMigration')!=='browser-no-download-default-v1'){savedEng='browser';localStorage.setItem('jcrgmTtsEngine','browser');localStorage.setItem('jcrgmVoiceModeMigration','browser-no-download-default-v1')}}catch(e){}
+    const e=document.getElementById('ttsEngine');if(e)e.value=savedEng||'browser';
     const nv=localStorage.getItem('jcrgmNeuralVoice');if(nv)NEURAL.voice=nv;
     const lang=deliveryLang()[2]||'en';
     if(!localStorage.getItem('jcrgmTtsLang'))try{localStorage.setItem('jcrgmTtsLang',lang)}catch(e){}
     const best=ttsPickBest(ttsTargetLang());
-    if(best){try{localStorage.setItem('jcrgmTtsVoice',best.name||'');localStorage.setItem('jcrgmTtsLang',best.lang||'')}catch(e){}}
+    if(best){
+      try{localStorage.setItem('jcrgmTtsVoice',best.name||'');localStorage.setItem('jcrgmTtsLang',best.lang||'')}catch(e){}
+      try{const savedGuided=localStorage.getItem('jcrgmGuidedVoice')||'';const pool=ttsVoices(ttsTargetLang());if(!pool.some(x=>guidedVoiceKey(x.v)===savedGuided))localStorage.setItem('jcrgmGuidedVoice',guidedVoiceKey(best))}catch(e){}
+    }
     const r=document.getElementById('ttsRate');if(r)r.value=localStorage.getItem('jcrgmTtsRate')||'0.95';
     const rl=document.getElementById('ttsRateLabel');if(rl)rl.textContent=(+((r&&r.value)||0.95)).toFixed(2)+'×';
     const syn=ttsEngine();if(syn)bindVoiceListEvents(syn);
@@ -6894,12 +7320,27 @@ function initExtras(){
     }
   }catch(e){}
 }
-function saveTtsPrefs(){
-  const v=((document.getElementById('ttsVoice')||{}).value||'');
+function saveTtsPrefs(voiceChanged){
+  const sel=document.getElementById('ttsVoice');
+  const v=((sel||{}).value||'');
   const r=((document.getElementById('ttsRate')||{}).value||'0.95');
-  try{localStorage.setItem('jcrgmTtsVoice',v);localStorage.setItem('jcrgmTtsRate',r)}catch(e){}
+  try{localStorage.setItem('jcrgmTtsRate',r)}catch(e){}
+  const changedVoice=voiceChanged===true||((voiceChanged!==false)&&!!(sel&&document.activeElement===sel));
+  if(changedVoice&&v&&ttsEngineMode()==='elevenlabs')cloudSetVoice(v,true);
+  else if(changedVoice&&v&&neuralShouldUse()&&NEURAL_VOICES.some(x=>x[0]===v))neuralPickVoice(v);
+  else if(changedVoice&&v){
+    const option=sel.options[sel.selectedIndex];
+    const lang=(option&&option.dataset&&option.dataset.lang)||'';
+    const pool=ttsVoices(lang||ttsTargetLang());
+    const hit=pool.find(x=>x.v.name===v&&(!lang||String(x.v.lang||'').toLowerCase()===lang.toLowerCase()))||pool.find(x=>x.v.name===v);
+    try{
+      localStorage.setItem('jcrgmTtsVoice',v);
+      if(lang)localStorage.setItem('jcrgmTtsLang',lang);
+      if(hit)localStorage.setItem('jcrgmGuidedVoice',guidedVoiceKey(hit.v));
+    }catch(e){}
+    try{refreshGuidedVoices()}catch(e){}
+  }
   const lbl=document.getElementById('ttsRateLabel');if(lbl)lbl.textContent=(+r).toFixed(2)+'×';
-  toast('Voice settings saved');
 }
 
 try{initExtras()}catch(e){console.warn('extras',e)}

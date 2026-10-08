@@ -1,0 +1,22 @@
+name = "jcrgm-elevenlabs-tts"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+[vars]
+# Origin only: scheme + host, with no repository path or trailing slash.
+# Example GitHub Pages origin: https://your-account.github.io
+ALLOWED_ORIGINS = "https://YOUR-ACCOUNT.github.io"
+ELEVENLABS_MODEL_ID = "eleven_v4"
+ELEVENLABS_DEFAULT_VOICE_ID = "JBFqnCBsd6RMkjVDRZzb"
+# Turnstile's site key is public; its secret is added with `wrangler secret put`.
+TURNSTILE_SITE_KEY = "PASTE_YOUR_PUBLIC_TURNSTILE_SITE_KEY_HERE"
+
+# Cloudflare's per-location rate-limit binding. Choose a namespace ID unique to your account.
+[[ratelimits]]
+name = "TTS_RATE_LIMITER"
+namespace_id = "901001"
+
+[ratelimits.simple]
+limit = 20
+period = 60
