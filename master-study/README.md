@@ -1,22 +1,13 @@
-# JCRGM Master Study (subfolder app)
+# JCRGM Master Study app (deployed in `master-study/`)
 
-This is a separate app for an existing JCRGM GitHub Pages site. Put the entire `master-study/` folder beside your current root `index.html`; do not rename or overwrite the existing homepage.
+This folder is the Bible study app. Keep the repository's homepage `index.html` at the root; this app's own `index.html` stays here as `master-study/index.html`.
 
-The app route will be `https://YOUR-ACCOUNT.github.io/YOUR-REPOSITORY/master-study/` (or end the URL with `master-study/index.html`). Its own `index.html`, `manifest.json`, `sw.js`, icons, and audio folder are contained here. The app service worker scope is limited to `/master-study/`, so it does not replace the existing site's root `service-worker.js`.
+The companion root `README_UPLOAD.md` explains the ready-to-upload homepage integration. That root homepage replaces the existing **JCRGM Master Study** tile in **Study & Prayer** with **Master Bible Study** and points it to `./master-study/index.html`. Do not add a second tile elsewhere.
 
-`index.html` is about 678 KB. Ten AI-generated, natural-sounding voice lessons are stored as separate MP3 files in `audio/`, each loaded only when played. This keeps first load quick and avoids a multi-megabyte HTML file. Upload the complete folder, including all ten MP3s.
+Upload this complete folder, including `audio/`, `icons/`, `manifest.json`, `sw.js`, and this README. The app service worker is scoped to the subfolder; retain the existing root `service-worker.js`.
 
-To link from the existing homepage, add this tile inside an existing `.nav-grid`:
+## Read Aloud voice
 
-```html
-<a class="tile" href="./master-study/index.html" aria-label="Open JCRGM Master Study">
-  <span class="t-ico c-indigo">📖</span>
-  <span class="t-txt">
-    <span class="t-name">Master Bible Study</span>
-    <span class="t-sub">Guided Bible study, memory, prayer, and teaching</span>
-  </span>
-  <span class="t-ext">→</span>
-</a>
-```
+For English, live Read Aloud, Scripture, study pages, sermon/prayer text, and guided meditation use the same selected neural Studio voice. The first install is about 90 MB; the app asks before an on-demand install. Use Wi-Fi if possible. The model runs on the phone and requires no account, API key, or paid speech API; lower-powered phones may take longer to prepare or speak. The model is English-only, so other delivery languages use the best matching voice installed on the device. The ten narrated course lessons remain separate natural-sounding MP3s in `audio/` and still load only when played.
 
-GitHub Pages uses HTTPS, so the app's manifest and subfolder service worker can run there. The app shell caches first; each audio lesson is cached on first successful play. Online Bible APIs and external research resources still need connectivity unless Scripture has been cached or imported.
+For the app URL, open `https://YOUR-ACCOUNT.github.io/YOUR-REPOSITORY/master-study/` (or end with `master-study/index.html`).

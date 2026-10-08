@@ -13,4 +13,8 @@ The Study & Prayer tile now reads **Master Bible Study** and opens `./master-stu
 
 After GitHub Pages publishes, the app URL is `https://YOUR-ACCOUNT.github.io/YOUR-REPOSITORY/master-study/` (or `.../master-study/index.html`).
 
-The root homepage remains the site's `/index.html`; the Bible app is `/master-study/index.html`. The app HTML is about 678 KB. Ten MP3 lessons are separate and load only when played.
+The root homepage remains the site's `/index.html`; the Bible app is `/master-study/index.html`. The app HTML is about 686 KB. Ten MP3 lessons are separate and load only when played.
+
+## Realistic Read Aloud voice
+
+In English, Read Aloud and guided meditation now use the same neural Studio voice instead of the phone's built-in voice. The app asks before the first approximately 90 MB install; use Wi-Fi. The model is generated on the phone and uses no paid speech API or API key. The download is on demand and does not slow the first page opening. If your first Read Aloud or Begin Journey tap installs the model, tap that control again after setup; future page loads restore the saved model when it is first used. Lower-powered phones may take longer. The Studio model is English-only; other selected delivery languages still rely on the best matching voice installed on the phone.

@@ -1,4 +1,4 @@
-const CACHE_NAME = "jcrgm-master-study-shell-v2";
+const CACHE_NAME = "jcrgm-master-study-shell-v3";
 const APP_SHELL = [
   "./index.html",
   "./manifest.json",
