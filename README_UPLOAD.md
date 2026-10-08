@@ -1,22 +1,16 @@
-# Upload these files to your existing GitHub Pages repository
+# Correct GitHub upload for the Master Bible Study tile
 
-This is the ready-to-upload layout. It keeps your current homepage and adds one working link to the Bible study app.
+This bundle is tailored to your uploaded JCRGM homepage. The new app **replaces the existing “JCRGM Master Study” tile inside the “Study & Prayer” category**; it does not add another tile elsewhere.
 
-## Files to upload
+## Upload
 
-At the **repository root**, upload:
+1. Extract the ZIP.
+2. Upload/commit its root `index.html` to the **repository root**, replacing the current `index.html` with this updated copy.
+3. Upload the complete `master-study/` folder beside it. Do not move the app's `index.html` to the repository root and do not omit the `audio/` folder.
+4. Keep the other existing site files, especially the current root `service-worker.js`.
 
-- `index.html` — your uploaded JCRGM homepage, preserved with one extra **Master Bible Study** tile in the Church Growth & Discipleship section. It links to `./master-study/index.html`.
-- the entire `master-study/` folder — app, ten separate audio files, icons, manifest, and its scoped service worker. Do not upload only the app's HTML.
+The Study & Prayer tile now reads **Master Bible Study** and opens `./master-study/index.html`. The app has its own `master-study/sw.js` and PWA manifest scoped to that subfolder, so the two pages and workers remain separate.
 
-Keep the other files already in your repo, especially the existing root `service-worker.js`; this package does not replace it. The study app uses its own `master-study/sw.js`, whose scope is only the `master-study/` path.
+After GitHub Pages publishes, the app URL is `https://YOUR-ACCOUNT.github.io/YOUR-REPOSITORY/master-study/` (or `.../master-study/index.html`).
 
-## GitHub Pages address
-
-After pushing, open `https://YOUR-ACCOUNT.github.io/YOUR-REPOSITORY/master-study/` or `.../master-study/index.html`. The new tile on the homepage opens that same app.
-
-The two `index.html` files are separate routes: `/index.html` remains the homepage and `/master-study/index.html` is the Bible study. GitHub Pages serves both.
-
-## Performance and voices
-
-The study app HTML is about 678 KB. Narrated MP3 lessons are separate and load only when played; the service worker caches each lesson after first successful playback. The device voice pickers now refresh both controls, retry briefly, and offer a **Re-scan voices** button instead of remaining stuck on a loading label.
+The root homepage remains the site's `/index.html`; the Bible app is `/master-study/index.html`. The app HTML is about 678 KB. Ten MP3 lessons are separate and load only when played.
