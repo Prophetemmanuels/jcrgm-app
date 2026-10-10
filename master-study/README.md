@@ -1,6 +1,6 @@
 # JCRGM MASTER STUDY — Complete Edition
 
-This package is optimized for GitHub and phones. The `index.html` app is kept separate from its ten Voice Teacher lesson MP3s. Each lesson loads on demand, keeping the initial app open quick. The secure optional ElevenLabs proxy source is included in `elevenlabs-worker/`; deploying it is separate and is not required for Read Aloud.
+This package is optimized for GitHub and phones, including older iOS Safari such as the iPhone 7: mobile navigation is tap-friendly, controls stack under their copy, and the app avoids a newer regular-expression feature that stopped its script from running on older Safari. The `index.html` app is kept separate from its ten Voice Teacher lesson MP3s. Each lesson loads on demand, keeping the initial app open quick. The secure optional ElevenLabs proxy source is included in `elevenlabs-worker/`; deploying it is separate and is not required for Read Aloud.
 
 ## Publish on GitHub
 
