@@ -1218,6 +1218,14 @@ textarea.tl-in{min-height:64px;resize:vertical;}
   .tl-contact .tl-btn{margin:0 6px 6px 0;}
 }
 html.perf-lite .tl-overlay{-webkit-backdrop-filter:none;backdrop-filter:none;}
+/* Yango private rides */
+.tl-btn-yango{background:linear-gradient(135deg,#232323,#000) !important;color:#ffd60a !important;border-color:rgba(255,214,10,.6) !important;box-shadow:0 3px 14px rgba(0,0,0,.5);}
+.tl-btn-yango:hover{filter:brightness(1.18);}
+.tl-yangorow{display:flex;align-items:center;flex-wrap:wrap;background:rgba(255,255,255,.05);border:1px dashed rgba(255,214,10,.45);border-radius:12px;padding:10px 12px;margin:10px 0 2px;}
+.tl-yangorow .tl-btn{margin:0 12px 6px 0;}
+.tl-yangonote{flex:1 1 220px;min-width:0;font-size:11.5px;color:#c9d4f2;line-height:1.6;}
+.tl-yangonote b{color:#ffe38a;}
+
 </style>
 <noscript><style>#welcomeGate{display:none !important}</style></noscript>
 <script>
@@ -2606,6 +2614,11 @@ else init();
           <button type="button" class="tl-btn" id="tlClear">🧹 Clear form</button>
         </div>
         <p class="tl-note">Tap a <b>Send</b> button — WhatsApp opens with your request already typed; just press send. The request is also saved to the <b>Movement Board</b> on this device so you can track it.</p>
+        <div class="tl-yangorow">
+          <button type="button" class="tl-btn tl-btn-yango" id="tlYango">🚕 Open Yango App</button>
+          <span class="tl-yangonote">Need a <b>private ride right now</b>? Yango taxis operate across Lusaka — one tap opens the Yango app on your phone. Yango fares are shown before you ride and are paid <b>directly to Yango</b>, not to the church.</span>
+        </div>
+
         <div class="tl-callrow">
           <span>Urgent? Call the lines directly:</span>
           <a class="tl-call" href="tel:0979554970">📞 0979 554 970</a>
@@ -2675,6 +2688,15 @@ else init();
           <p class="tl-note" style="color:#5b6b87;">For funerals and emergencies, please call the line directly instead of waiting for a WhatsApp reply.</p>
         </div>
         <div class="tl-card">
+          <h3 class="tl-h">🚕 Yango — private rides across Lusaka</h3>
+          <div class="tl-contact">
+            <span class="tl-cnum">🚕 Yango ride-hailing</span>
+            <button type="button" class="tl-btn tl-btn-yango" id="tlYango2">🚕 Open Yango App</button>
+            <a class="tl-btn" href="https://yango.com/en_zm/rider/" target="_blank" rel="noopener noreferrer">🌐 Get the app / info</a>
+          </div>
+          <p class="tl-note" style="color:#5b6b87;">Yango operates in Lusaka, Kitwe, Ndola and Solwezi. Use it when you need a private car quickly — the fare is shown before you ride and is <b>paid directly to Yango</b>, not to the church. For church-organised transport, always use the request form so the Movement Board keeps track of every trip.</p>
+        </div>
+        <div class="tl-card">
           <h3 class="tl-h">📋 Transport guidelines</h3>
           <ul class="tl-guide">
             <li><b>Book early</b> — at least 24 hours ahead for groups of 10 or more.</li>
@@ -2685,6 +2707,7 @@ else init();
             <li><b>Keep your phone on</b> — the driver or coordinator will call or WhatsApp to confirm the trip and pickup point.</li>
             <li><b>Be on time</b> — vehicles wait a maximum of 10 minutes at the pickup point, so the whole programme keeps flowing.</li>
             <li><b>Return trips</b> — tick “Return trip needed” so the Desk schedules the pick-up back as well.</li>
+            <li><b>Yango</b> — for private rides across Lusaka, tap “🚕 Open Yango App”; those fares are paid directly to Yango, not to the church.</li>
           </ul>
         </div>
       </div>
@@ -2923,6 +2946,35 @@ function clearForm(){
   toast("🧹 Form cleared.");
 }
 
+/* ---------------- Yango private rides ---------------- */
+function openYango(){
+  /* Opens the Yango ride-hailing app (works across Lusaka).
+     1) Tries the app directly via its yango:// link.
+     2) If the app did not open, falls back to Yango's official
+        app link, which opens the app when installed and
+        otherwise redirects to the right app store / Yango
+        Zambia page. */
+  var ua=navigator.userAgent||"";
+  var isAndroid=/android/i.test(ua);
+  var isIOS=/iPad|iPhone|iPod/.test(ua);
+  var fallback = isAndroid ? "https://play.google.com/store/apps/details?id=com.yandex.yango&hl=en"
+               : isIOS     ? "https://apps.apple.com/us/app/yango-taxi-food-delivery/id1437157286"
+                           : "https://yango.com/en_zm/rider/";
+  var left=false;
+  function mark(){ left=true; }
+  document.addEventListener("visibilitychange",mark);
+  window.addEventListener("pagehide",mark);
+  try{ window.location.href="yango://"; }catch(e){}
+  setTimeout(function(){
+    if(left||document.hidden) return;
+    try{
+      window.location.href="https://yango.go.link/route?ref=jcrgm&lang=en&adj_fallback="+encodeURIComponent(fallback);
+    }catch(e){
+      try{ window.location.href=fallback; }catch(e2){}
+    }
+  },1100);
+}
+
 /* ---------------- board ---------------- */
 function tripDT(t){ return (t.date||"")+" "+(t.time||""); }
 function isUpcoming(t,nowStr){
@@ -3092,6 +3144,8 @@ function init(){
     });
   });
   var cl=byId("tlClear"); if(cl) cl.addEventListener("click",clearForm);
+  var yg1=byId("tlYango");   if(yg1) yg1.addEventListener("click",openYango);
+  var yg2=byId("tlYango2");  if(yg2) yg2.addEventListener("click",openYango);
 
   /* board: filters */
   var board=byId("tlPanelBoard");
@@ -3750,5 +3804,5 @@ document.addEventListener("visibilitychange", function(){ if(!document.hidden) u
   });
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42464b8feb390cf',t:'MTc5MDYxNTc2MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4337504cc34b578',t:'MTc5MDc3MzcxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a472883ecf5eb56c',t:'MTc5MTQzNTEwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4bdfc7e3810d498',t:'MTc5MjIyNjI5OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42464b8feb390cf',t:'MTc5MDYxNTc2MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4337504cc34b578',t:'MTc5MDc3MzcxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a472883ecf5eb56c',t:'MTc5MTQzNTEwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
