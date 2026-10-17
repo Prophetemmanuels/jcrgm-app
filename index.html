@@ -2948,31 +2948,50 @@ function clearForm(){
 
 /* ---------------- Yango private rides ---------------- */
 function openYango(){
-  /* Opens the Yango ride-hailing app (works across Lusaka).
-     1) Tries the app directly via its yango:// link.
-     2) If the app did not open, falls back to Yango's official
-        app link, which opens the app when installed and
-        otherwise redirects to the right app store / Yango
-        Zambia page. */
+  /* Opens the Yango ride-hailing app DIRECTLY on phones.
+     Deep link confirmed from Yango's official AppMetrica
+     redirector: scheme yandexyango://, package com.yandex.yango.
+     Fallbacks: the Android intent link carries its own store
+     fallback; iOS falls back to Yango's official link
+     (universal link → app, otherwise the App Store). */
   var ua=navigator.userAgent||"";
   var isAndroid=/android/i.test(ua);
-  var isIOS=/iPad|iPhone|iPod/.test(ua);
-  var fallback = isAndroid ? "https://play.google.com/store/apps/details?id=com.yandex.yango&hl=en"
-               : isIOS     ? "https://apps.apple.com/us/app/yango-taxi-food-delivery/id1437157286"
-                           : "https://yango.com/en_zm/rider/";
+  var isIOS=/iPad|iPhone|iPod/.test(ua)||("MacIntel"===(navigator.platform||"")&&navigator.maxTouchPoints>1);
+  var APPMETRICA="https://2187871.redirect.appmetrica.yandex.com/route?ref=jcrgm&appmetrica_tracking_id=1179283486394045767&lang=en";
+  var PLAY="https://play.google.com/store/apps/details?id=com.yandex.yango&hl=en";
   var left=false;
   function mark(){ left=true; }
   document.addEventListener("visibilitychange",mark);
   window.addEventListener("pagehide",mark);
-  try{ window.location.href="yango://"; }catch(e){}
-  setTimeout(function(){
-    if(left||document.hidden) return;
+
+  if(isAndroid){
+    /* 1) intent link — opens the Yango app instantly; if it is not
+          installed, Chrome itself follows S.browser_fallback_url. */
     try{
-      window.location.href="https://yango.go.link/route?ref=jcrgm&lang=en&adj_fallback="+encodeURIComponent(fallback);
-    }catch(e){
-      try{ window.location.href=fallback; }catch(e2){}
-    }
-  },1100);
+      window.location.href="intent://route?ref=jcrgm#Intent;scheme=yandexyango;package=com.yandex.yango;S.browser_fallback_url="+encodeURIComponent(PLAY)+";end";
+    }catch(e){}
+    /* 2) browsers that ignore intent links (e.g. Firefox) — official link */
+    setTimeout(function(){
+      if(left||document.hidden) return;
+      try{ window.location.href=APPMETRICA; }catch(e){}
+    },1600);
+    return;
+  }
+
+  if(isIOS){
+    /* 1) open the Yango app directly via its scheme */
+    try{ window.location.href="yandexyango://route?ref=jcrgm"; }catch(e){}
+    /* 2) if the app did not open — Yango's official link opens the
+          app (universal link) or takes you to the App Store */
+    setTimeout(function(){
+      if(left||document.hidden) return;
+      try{ window.location.href=APPMETRICA; }catch(e){}
+    },1400);
+    return;
+  }
+
+  /* Desktop — Yango Zambia rider page */
+  try{ window.location.href="https://yango.com/en_zm/rider/"; }catch(e){}
 }
 
 /* ---------------- board ---------------- */
@@ -3804,5 +3823,5 @@ document.addEventListener("visibilitychange", function(){ if(!document.hidden) u
   });
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42464b8feb390cf',t:'MTc5MDYxNTc2MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4337504cc34b578',t:'MTc5MDc3MzcxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a472883ecf5eb56c',t:'MTc5MTQzNTEwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42464b8feb390cf',t:'MTc5MDYxNTc2MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4337504cc34b578',t:'MTc5MDc3MzcxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a472883ecf5eb56c',t:'MTc5MTQzNTEwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4c103c2bed3e7d8',t:'MTc5MjI1ODA1Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
