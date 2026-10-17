@@ -1064,6 +1064,160 @@ body.mm-noscroll{overflow:hidden;}
   .mm-ses-name{flex-basis:100px;}
 }
 html.perf-lite .mm-overlay{-webkit-backdrop-filter:none;backdrop-filter:none;}
+
+/* ============================================================
+   🚌 TRANSPORT & LOGISTICS DESK — member movements,
+   pickups, fares & coordination (requests go to the
+   church WhatsApp lines).
+   ============================================================ */
+body.tl-noscroll{overflow:hidden;}
+.tl-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:150;display:none;
+  background:rgba(7,13,34,.86);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);padding:14px;}
+.tl-overlay.open{display:flex;justify-content:center;align-items:stretch;animation:tlFade .25s ease both;}
+@keyframes tlFade{from{opacity:0;}to{opacity:1;}}
+.tl-wrap{width:100%;max-width:780px;display:flex;flex-direction:column;overflow:hidden;
+  background:linear-gradient(165deg,#0d1735 0%,#101d44 45%,#1b2f6b 100%);
+  border:1px solid rgba(212,175,55,.5);border-radius:18px;
+  box-shadow:0 26px 80px rgba(2,6,20,.65),0 0 46px rgba(255,215,0,.10);}
+.tl-head{display:flex;align-items:center;justify-content:space-between;
+  padding:13px 16px;border-bottom:1px solid rgba(255,215,0,.28);
+  background:linear-gradient(180deg,rgba(255,215,0,.12),rgba(255,215,0,0));}
+.tl-title{display:flex;align-items:center;min-width:0;margin-right:10px;}
+.tl-title b{display:block;font-size:16px;color:#fff;letter-spacing:.3px;line-height:1.25;}
+.tl-title small{display:block;font-size:10.5px;color:#c9d4f2;letter-spacing:.4px;}
+.tl-ico{font-size:21px;margin-right:10px;filter:drop-shadow(0 0 8px rgba(255,215,0,.45));}
+.tl-close{width:auto;padding:8px 13px;margin:0;border-radius:11px;border:1px solid rgba(255,255,255,.32);
+  background:rgba(255,255,255,.12);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.tl-close:hover{background:rgba(255,255,255,.24);}
+.tl-body{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0;}
+.tl-body::-webkit-scrollbar{width:8px;}
+.tl-body::-webkit-scrollbar-thumb{background:rgba(255,215,0,.35);border-radius:99px;}
+/* tabs */
+.tl-tabs{display:flex;padding:10px 14px 0;border-bottom:1px solid rgba(255,215,0,.25);}
+.tl-tab{width:auto;flex:1 1 0;padding:11px 6px;margin:0 4px;border-radius:11px 11px 0 0;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-bottom:none;
+  color:#c9d4f2;font-weight:700;font-size:12px;letter-spacing:.4px;cursor:pointer;font-family:inherit;
+  line-height:1.3;transition:background .2s,color .2s;}
+.tl-tab:hover{background:rgba(255,255,255,.12);}
+.tl-tab.active{color:#2a1e02;background:linear-gradient(135deg,#ffd700,#c9960a);box-shadow:0 -3px 14px rgba(255,190,0,.25);}
+.tl-count{display:inline-block;min-width:17px;padding:1px 6px;margin-left:5px;border-radius:99px;
+  background:rgba(0,0,0,.20);font-size:10.5px;font-weight:800;}
+.tl-panel{display:none;padding:14px 16px 8px;}
+.tl-panel.active{display:block;animation:fadeUp .35s ease both;}
+/* buttons */
+.tl-overlay .tl-btn{width:auto;padding:10px 14px;margin:0;border-radius:11px;border:1px solid rgba(255,255,255,.24);
+  background:rgba(255,255,255,.10);color:#fff;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;
+  line-height:1.3;text-decoration:none;display:inline-block;transition:background .2s,border-color .2s,transform .12s;}
+.tl-overlay a.tl-btn{text-decoration:none;}
+.tl-overlay .tl-btn:hover{background:rgba(255,255,255,.20);}
+.tl-overlay .tl-btn:active{transform:scale(.97);}
+.tl-btn-gold{background:linear-gradient(135deg,#ffd700,#c9960a) !important;color:#2a1e02 !important;
+  border-color:rgba(255,215,0,.75) !important;box-shadow:0 3px 12px rgba(255,190,0,.28);}
+.tl-btn-wa{background:linear-gradient(135deg,#2fe174,#128c4b) !important;color:#fff !important;
+  border-color:rgba(72,220,130,.7) !important;box-shadow:0 3px 12px rgba(18,140,75,.30);}
+.tl-btn-danger{background:rgba(220,53,69,.16);border-color:rgba(248,113,133,.5);color:#ffd6dc;}
+.tl-armed{background:#dc3545 !important;color:#fff !important;border-color:#dc3545 !important;animation:tlPulseArm 1s ease-in-out infinite;}
+@keyframes tlPulseArm{50%{filter:brightness(1.3);}}
+/* form */
+.tl-card{background:linear-gradient(170deg,#fdfefe,#eef3fb);border:1px solid #dbe3f0;border-radius:14px;
+  padding:14px 14px 16px;margin:10px 0;box-shadow:0 4px 14px rgba(4,10,28,.16);}
+.tl-h{font-size:15px;font-weight:800;color:#16295e;margin:0 0 10px;letter-spacing:.2px;}
+.tl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px 12px;}
+.tl-field{display:flex;flex-direction:column;min-width:0;}
+.tl-full{grid-column:1 / -1;}
+.tl-lab{font-size:10.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#44536b;margin:0 0 5px 2px;}
+.tl-in{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #d7dfec;background:#fff;
+  color:#1e2a3a;font-size:16px;font-family:inherit;}
+.tl-in:focus{outline:none;border-color:#c9960a;box-shadow:0 0 0 3px rgba(255,215,0,.18);}
+.tl-in.tl-bad{border-color:#dc3545;box-shadow:0 0 0 3px rgba(220,53,69,.15);}
+textarea.tl-in{min-height:64px;resize:vertical;}
+.tl-check{display:flex;align-items:center;padding:8px 2px;color:#1e2a3a;font-size:13.5px;font-weight:600;}
+.tl-check input{width:18px;height:18px;margin-right:9px;accent-color:#c9960a;}
+/* preview */
+.tl-preview{background:#0e1836;border:1px solid rgba(255,215,0,.35);border-radius:12px;padding:12px 14px;margin:12px 0;}
+.tl-preview-head{font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:#ffe38a;font-weight:800;margin-bottom:7px;}
+.tl-preview-txt{font-size:12.5px;color:#e7ecfa;line-height:1.65;white-space:pre-wrap;word-break:break-word;}
+.tl-sendrow{display:flex;flex-wrap:wrap;margin:4px 0 2px;}
+.tl-sendrow .tl-btn{margin:4px 8px 4px 0;}
+.tl-note{font-size:11.5px;color:#a9b7dc;line-height:1.65;margin:10px 2px 4px;}
+.tl-callrow{display:flex;flex-wrap:wrap;align-items:center;margin:10px 0 2px;}
+.tl-callrow span{font-size:12px;color:#c9d4f2;margin-right:10px;}
+.tl-call{width:auto;padding:7px 12px;margin:0 6px 6px 0;border-radius:99px;border:1px solid rgba(255,215,0,.45);
+  background:rgba(255,215,0,.10);color:#ffe38a;font-size:12.5px;font-weight:700;text-decoration:none;display:inline-block;}
+.tl-call:hover{background:rgba(255,215,0,.2);}
+/* board */
+.tl-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin:10px 0 12px;}
+.tl-sumcell{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:12px;
+  padding:9px 8px;text-align:center;}
+.tl-sumnum{font-size:17px;font-weight:800;color:#ffe38a;line-height:1.2;word-break:break-word;}
+.tl-sumlab{font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:#a9b7dc;margin-top:3px;}
+.tl-filters{display:flex;flex-wrap:wrap;margin:0 0 8px;}
+.tl-fbtn{width:auto;padding:7px 13px;margin:0 6px 6px 0;border-radius:99px;border:1px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.08);color:#c9d4f2;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.tl-fbtn.active{background:linear-gradient(135deg,#ffd700,#c9960a);color:#2a1e02;border-color:rgba(255,215,0,.6);}
+.tl-trip{background:linear-gradient(170deg,#fdfefe,#eef3fb);border:1px solid #dbe3f0;border-left:5px solid #c9960a;
+  border-radius:13px;padding:11px 13px;margin:9px 0;box-shadow:0 3px 12px rgba(4,10,28,.14);}
+.tl-trip[data-st="Confirmed"]{border-left-color:#1e8e4f;}
+.tl-trip[data-st="In Transit"]{border-left-color:#1f6fb8;}
+.tl-trip[data-st="Completed"]{border-left-color:#7c8aa5;opacity:.8;}
+.tl-trip[data-st="Cancelled"]{border-left-color:#dc3545;opacity:.62;}
+.tl-trip-top{display:flex;align-items:center;flex-wrap:wrap;}
+.tl-when{font-weight:800;color:#1e2a3a;font-size:13.5px;margin-right:8px;}
+.tl-badge{font-size:10px;font-weight:800;letter-spacing:.6px;border-radius:99px;padding:3px 9px;
+  text-transform:uppercase;border:1px solid transparent;}
+.tl-b-scheduled{background:#fff3cd;color:#8a6d00;border-color:#ffe08a;}
+.tl-b-confirmed{background:#e2f7e9;color:#116939;border-color:#b7e8c8;}
+.tl-b-intransit{background:#e3effc;color:#12508f;border-color:#bcd8f5;}
+.tl-b-completed{background:#eceff4;color:#4a5872;border-color:#d5dbe6;}
+.tl-b-cancelled{background:#fde3e5;color:#a02332;border-color:#f8c1c7;}
+.tl-pill{font-size:11.5px;font-weight:700;color:#33415e;background:rgba(31,60,136,.08);
+  border:1px solid rgba(31,60,136,.16);border-radius:99px;padding:3px 10px;}
+.tl-trip-top .tl-pill{margin-left:6px;}
+.tl-trip-top .tl-firstpill{margin-left:auto;}
+.tl-route{font-size:13px;color:#1e2a3a;margin:6px 0 3px;font-weight:700;line-height:1.5;}
+.tl-pt{font-weight:500;color:#5b6b87;}
+.tl-sub{font-size:12px;color:#5b6b87;line-height:1.6;}
+.tl-notes{font-size:12px;color:#5b6b87;background:rgba(31,60,136,.05);border-radius:8px;padding:6px 9px;margin-top:6px;line-height:1.55;}
+.tl-trip-ctl{display:flex;align-items:center;flex-wrap:wrap;margin-top:8px;}
+.tl-stsel{width:auto;padding:5px 9px;margin:0;border-radius:9px;border:1.5px solid #cfd9ea;background:#fff;
+  font-size:12px;font-weight:700;color:#1e2a3a;font-family:inherit;}
+.tl-xbtn{width:auto;padding:5px 10px;margin-left:8px;font-size:11px;border-radius:9px;border:1px solid rgba(220,53,69,.4);
+  background:rgba(220,53,69,.08);color:#c0392b;font-weight:700;cursor:pointer;font-family:inherit;}
+.tl-xbtn:hover{background:rgba(220,53,69,.16);}
+.tl-empty{text-align:center;padding:26px 14px;background:rgba(255,255,255,.05);border:1px dashed rgba(255,215,0,.4);
+  border-radius:16px;margin:10px 0;color:#c9d4f2;font-size:13px;line-height:1.7;}
+.tl-empty b{color:#fff;}
+/* guidelines */
+.tl-step{display:flex;align-items:flex-start;margin:10px 0;}
+.tl-stepnum{flex:0 0 30px;width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#ffd700,#c9960a);color:#2a1e02;font-weight:800;font-size:14px;margin-right:10px;}
+.tl-steptxt{font-size:13px;color:#33415e;line-height:1.65;padding-top:4px;}
+.tl-steptxt b{color:#16295e;}
+.tl-guide{padding-left:20px;margin:0;}
+.tl-guide li{font-size:13px;color:#33415e;line-height:1.7;margin:7px 0;}
+.tl-contact{display:flex;align-items:center;flex-wrap:wrap;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,215,0,.3);border-radius:13px;padding:11px 13px;margin:8px 0;}
+.tl-cnum{font-size:15.5px;font-weight:800;color:#fff;margin-right:auto;margin-bottom:4px;}
+.tl-contact .tl-btn{margin:0 0 0 8px;}
+/* toast */
+#tlToast{position:fixed;left:50%;bottom:24px;z-index:220;transform:translate(-50%,18px);
+  background:#0d1735;color:#ffe38a;border:1px solid rgba(255,215,0,.65);border-radius:14px;
+  padding:11px 18px;font-size:13px;font-weight:600;line-height:1.5;max-width:86vw;text-align:center;
+  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s,transform .3s,visibility .3s;
+  box-shadow:0 14px 40px rgba(2,6,20,.6),0 0 24px rgba(255,215,0,.14);}
+#tlToast.show{opacity:1;visibility:visible;transform:translate(-50%,0);}
+.tl-overlay *{-webkit-tap-highlight-color:rgba(0,0,0,0);}
+@media (max-width:560px){
+  .tl-overlay{padding:8px;}
+  .tl-head{padding:11px 12px;}
+  .tl-title b{font-size:14.5px;}
+  .tl-tabs{padding:8px 10px 0;}
+  .tl-tab{font-size:10.5px;padding:9px 3px;margin:0 3px;}
+  .tl-panel{padding:10px 11px 6px;}
+  .tl-cnum{font-size:14px;width:100%;margin-bottom:8px;}
+  .tl-contact .tl-btn{margin:0 6px 6px 0;}
+}
+html.perf-lite .tl-overlay{-webkit-backdrop-filter:none;backdrop-filter:none;}
 </style>
 <noscript><style>#welcomeGate{display:none !important}</style></noscript>
 <script>
@@ -1221,11 +1375,12 @@ html.perf-lite .mm-overlay{-webkit-backdrop-filter:none;backdrop-filter:none;}
   </div>
 
   <div class="nav-group" data-accent="emerald">
-    <div class="nav-group-head"><span class="ng-ico">🕊</span><span class="ng-title">Giving &amp; Events</span><span class="ng-rule"></span><span class="ng-count">4 portals</span></div>
+    <div class="nav-group-head"><span class="ng-ico">🕊</span><span class="ng-title">Giving &amp; Events</span><span class="ng-rule"></span><span class="ng-count">5 portals</span></div>
     <div class="nav-grid">
       <button type="button" class="tile" onclick="openMusicManager()" aria-label="Open the Event Music Manager"><span class="t-ico c-violet">🎶</span><span class="t-txt"><span class="t-name">Event Music Manager</span><span class="t-sub">Songs for every session — weddings, graduations &amp; more</span></span></button>
       <button type="button" class="tile" onclick="showTithes()"><span class="t-ico c-gold">💰</span><span class="t-txt"><span class="t-name">Partnership &amp; Offerings</span><span class="t-sub">Cheerful giving</span></span></button>
       <button type="button" class="tile" onclick="window.location.href='Church Calendar.html'"><span class="t-ico c-indigo">📅</span><span class="t-txt"><span class="t-name">Church Calendar</span><span class="t-sub">Holy convocations</span></span></button>
+      <button type="button" class="tile" onclick="openTransportDesk()" aria-label="Open the Transport and Logistics Desk"><span class="t-ico c-teal">🚌</span><span class="t-txt"><span class="t-name">Transport &amp; Logistics</span><span class="t-sub">Pickups, fares &amp; member movements</span></span></button>
       <button type="button" class="tile" onclick="makePayment()"><span class="t-ico c-green">💳</span><span class="t-txt"><span class="t-name">Make Payments</span><span class="t-sub">Dues, building &amp; projects</span></span></button>
     </div>
   </div>
@@ -2340,6 +2495,704 @@ else init();
 })();
 </script>
 
+<!-- ============================================================
+     🚌 TRANSPORT & LOGISTICS DESK — JCRGM
+     Member movements: request transport (pickup location,
+     people, fare…) and send the details straight to the
+     church WhatsApp lines 0979 554 970 / 0978 548 813.
+     The Movement Board tracks every trip on this device.
+     ============================================================ -->
+<div id="transportDesk" class="tl-overlay" role="dialog" aria-modal="true" aria-label="Transport and Logistics Desk">
+  <div class="tl-wrap">
+    <div class="tl-head">
+      <div class="tl-title"><span class="tl-ico">🚌</span><span><b>Transport &amp; Logistics Desk</b><small>Member movements · pickups · fares · coordination</small></span></div>
+      <button type="button" class="tl-close" onclick="closeTransportDesk()">✕ Close</button>
+    </div>
+    <div class="tl-tabs" role="tablist">
+      <button type="button" class="tl-tab active" id="tlTabReq" role="tab" aria-selected="true">📝 Request Transport</button>
+      <button type="button" class="tl-tab" id="tlTabBoard" role="tab" aria-selected="false">🚌 Movement Board<span class="tl-count" id="tlBoardCount"></span></button>
+      <button type="button" class="tl-tab" id="tlTabInfo" role="tab" aria-selected="false">ℹ️ Guidelines &amp; Contacts</button>
+    </div>
+    <div class="tl-body">
+
+      <!-- ============ TAB 1: REQUEST TRANSPORT ============ -->
+      <div class="tl-panel active" id="tlPanelReq">
+        <div class="tl-card">
+          <div class="tl-grid">
+            <div class="tl-field tl-full">
+              <label class="tl-lab" for="tlName">Member / group name *</label>
+              <input id="tlName" class="tl-in" type="text" maxlength="70" placeholder="e.g. Kabwata Cell Group — Jane Phiri" autocomplete="name">
+            </div>
+            <div class="tl-field">
+              <label class="tl-lab" for="tlPhone">Your phone (WhatsApp) *</label>
+              <input id="tlPhone" class="tl-in" type="tel" maxlength="18" placeholder="09XX XXX XXX" autocomplete="tel">
+            </div>
+            <div class="tl-field">
+              <label class="tl-lab" for="tlPeople">Number of people *</label>
+              <input id="tlPeople" class="tl-in" type="number" min="1" max="200" inputmode="numeric" placeholder="e.g. 12">
+            </div>
+            <div class="tl-field">
+              <label class="tl-lab" for="tlPickup">Pickup location (area) *</label>
+              <input id="tlPickup" class="tl-in" type="text" maxlength="70" list="tlAreas" placeholder="e.g. Kabwata">
+            </div>
+            <div class="tl-field">
+              <label class="tl-lab" for="tlPoint">Pickup point / landmark</label>
+              <input id="tlPoint" class="tl-in" type="text" maxlength="90" placeholder="e.g. Kulima Tower bus stop">
+            </div>
+            <div class="tl-field">
+              <label class="tl-lab" for="tlDest">Destination *</label>
+              <input id="tlDest" class="tl-in" type="text" maxlength="90" list="tlDests" value="JCRGM Church — Lusaka">
+            </div>
+            <div class="tl-field">
+              <label class="tl-lab" for="tlDate">Pickup date *</label>
+              <input id="tlDate" class="tl-in" type="date">
+            </div>
+            <div class="tl-field">
+              <label class="tl-lab" for="tlTime">Pickup time *</label>
+              <input id="tlTime" class="tl-in" type="time">
+            </div>
+            <div class="tl-field">
+              <label class="tl-lab" for="tlVehicle">Vehicle needed</label>
+              <select id="tlVehicle" class="tl-in">
+                <option>Any available</option>
+                <option>Car (up to 4)</option>
+                <option>Van (6–8)</option>
+                <option>Minibus (14–16)</option>
+                <option>Bus (25–33)</option>
+                <option>Big Bus (60+)</option>
+                <option>Truck (goods / instruments)</option>
+              </select>
+            </div>
+            <div class="tl-field">
+              <label class="tl-lab" for="tlPurpose">Purpose of the trip</label>
+              <select id="tlPurpose" class="tl-in">
+                <option>Sunday Service</option>
+                <option>Midweek Service</option>
+                <option>Allnight / Crossover</option>
+                <option>Wedding</option>
+                <option>Funeral / Memorial</option>
+                <option>Graduation</option>
+                <option>Conference / Convention</option>
+                <option>Hospital Visit</option>
+                <option>Airport Transfer</option>
+                <option>Outreach / Evangelism</option>
+                <option>Choir / Ministry Duty</option>
+                <option>Shopping / Errands</option>
+                <option>Other (see notes)</option>
+              </select>
+            </div>
+            <div class="tl-field">
+              <label class="tl-lab" for="tlFare">Transport fare (ZMW)</label>
+              <input id="tlFare" class="tl-in" type="number" min="0" step="1" inputmode="numeric" placeholder="e.g. 250 — leave blank if to be agreed">
+            </div>
+            <div class="tl-field tl-full">
+              <label class="tl-lab" for="tlNotes">Special needs / notes</label>
+              <textarea id="tlNotes" class="tl-in" maxlength="300" placeholder="e.g. choir instruments, elderly members, luggage, gate colour…"></textarea>
+            </div>
+            <label class="tl-check tl-full"><input type="checkbox" id="tlReturn"> Return trip needed — pick-up back after the service / event</label>
+          </div>
+        </div>
+
+        <div class="tl-preview">
+          <div class="tl-preview-head">📨 WhatsApp message preview — this is exactly what the Transport Desk receives</div>
+          <div class="tl-preview-txt" id="tlPreview"></div>
+        </div>
+
+        <div class="tl-sendrow">
+          <button type="button" class="tl-btn tl-btn-wa" id="tlSendA">💬 Send to 0979 554 970</button>
+          <button type="button" class="tl-btn tl-btn-wa" id="tlSendB">💬 Send to 0978 548 813</button>
+          <button type="button" class="tl-btn" id="tlSaveOnly">💾 Save to board only</button>
+          <button type="button" class="tl-btn" id="tlCopy">📋 Copy details</button>
+          <button type="button" class="tl-btn" id="tlClear">🧹 Clear form</button>
+        </div>
+        <p class="tl-note">Tap a <b>Send</b> button — WhatsApp opens with your request already typed; just press send. The request is also saved to the <b>Movement Board</b> on this device so you can track it.</p>
+        <div class="tl-callrow">
+          <span>Urgent? Call the lines directly:</span>
+          <a class="tl-call" href="tel:0979554970">📞 0979 554 970</a>
+          <a class="tl-call" href="tel:0978548813">📞 0978 548 813</a>
+        </div>
+
+        <datalist id="tlAreas">
+          <option value="Kabwata"></option><option value="Chilenje"></option><option value="Kamwala"></option>
+          <option value="Libala"></option><option value="Chawama"></option><option value="John Laing"></option>
+          <option value="Misisi"></option><option value="Kanyama"></option><option value="Matero"></option>
+          <option value="George Compound"></option><option value="Mandevu"></option><option value="Marapodi"></option>
+          <option value="Baulen"></option><option value="Chaisa"></option><option value="Zingalume"></option>
+          <option value="Chipata Compound"></option><option value="Kalingalinga"></option><option value="Mtendere"></option>
+          <option value="Kaunda Square"></option><option value="Chamba Valley"></option><option value="Garden Compound"></option>
+          <option value="Avondale"></option><option value="Northmead"></option><option value="Rhodes Park"></option>
+          <option value="Chelston"></option><option value="Airport area"></option><option value="Meanwood"></option>
+          <option value="Ibex Hill"></option><option value="Ng'ombe"></option><option value="Chilanga"></option>
+          <option value="Emmasdale"></option><option value="Light Industrial"></option>
+        </datalist>
+        <datalist id="tlDests">
+          <option value="JCRGM Church — Lusaka"></option>
+          <option value="As directed (see notes)"></option>
+          <option value="Lusaka Airport"></option>
+          <option value="Hospital (specify in notes)"></option>
+          <option value="Funeral house (specify in notes)"></option>
+        </datalist>
+      </div>
+
+      <!-- ============ TAB 2: MOVEMENT BOARD ============ -->
+      <div class="tl-panel" id="tlPanelBoard">
+        <div class="tl-sum" id="tlSum"></div>
+        <div class="tl-filters">
+          <button type="button" class="tl-fbtn active" data-f="all">All trips</button>
+          <button type="button" class="tl-fbtn" data-f="upcoming">Upcoming</button>
+          <button type="button" class="tl-fbtn" data-f="past">Past</button>
+          <button type="button" class="tl-fbtn" data-f="done">Completed</button>
+        </div>
+        <div id="tlTrips"></div>
+        <div class="tl-sendrow">
+          <button type="button" class="tl-btn" id="tlCopyBoard">📋 Copy board summary</button>
+          <button type="button" class="tl-btn tl-btn-danger" id="tlClearDone">🧹 Clear completed</button>
+        </div>
+        <p class="tl-note">This board is saved on this device — the Transport Desk can track every pickup, headcount and fare, then copy the summary to WhatsApp for the drivers and coordinators.</p>
+      </div>
+
+      <!-- ============ TAB 3: GUIDELINES & CONTACTS ============ -->
+      <div class="tl-panel" id="tlPanelInfo">
+        <div class="tl-card">
+          <h3 class="tl-h">🧭 How the Transport Desk works</h3>
+          <div class="tl-step"><span class="tl-stepnum">1</span><span class="tl-steptxt"><b>Fill the request form</b> — pickup location, number of people, date, time and the fare offered. The message builds itself as you type.</span></div>
+          <div class="tl-step"><span class="tl-stepnum">2</span><span class="tl-steptxt"><b>Send it on WhatsApp</b> to 0979 554 970 or 0978 548 813 — one tap opens WhatsApp with the request already typed. Just press send.</span></div>
+          <div class="tl-step"><span class="tl-stepnum">3</span><span class="tl-steptxt"><b>The Desk confirms</b> the vehicle, fare and pickup time with you on the same number.</span></div>
+          <div class="tl-step"><span class="tl-stepnum">4</span><span class="tl-steptxt"><b>Be at the pickup point 10 minutes early</b> with your group. The driver calls when he is close.</span></div>
+        </div>
+        <div class="tl-card">
+          <h3 class="tl-h">📞 Transport lines</h3>
+          <div class="tl-contact">
+            <span class="tl-cnum">📞 0979 554 970</span>
+            <a class="tl-btn" href="tel:0979554970">📞 Call</a>
+            <a class="tl-btn tl-btn-wa" href="https://wa.me/260979554970" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+          </div>
+          <div class="tl-contact">
+            <span class="tl-cnum">📞 0978 548 813</span>
+            <a class="tl-btn" href="tel:0978548813">📞 Call</a>
+            <a class="tl-btn tl-btn-wa" href="https://wa.me/260978548813" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+          </div>
+          <p class="tl-note" style="color:#5b6b87;">For funerals and emergencies, please call the line directly instead of waiting for a WhatsApp reply.</p>
+        </div>
+        <div class="tl-card">
+          <h3 class="tl-h">📋 Transport guidelines</h3>
+          <ul class="tl-guide">
+            <li><b>Book early</b> — at least 24 hours ahead for groups of 10 or more.</li>
+            <li><b>Fares</b> — the fare you enter is your offer; the Desk confirms the final fare with the driver before the trip. Fares are shared fairly among passengers where possible.</li>
+            <li><b>Priority seating</b> — the elderly, the sick, expectant mothers and children are seated first.</li>
+            <li><b>Children</b> — under 12 must travel with an adult who remains responsible for them.</li>
+            <li><b>Instruments &amp; goods</b> — declare them in the notes so the right vehicle is sent (truck / extra space).</li>
+            <li><b>Keep your phone on</b> — the driver or coordinator will call or WhatsApp to confirm the trip and pickup point.</li>
+            <li><b>Be on time</b> — vehicles wait a maximum of 10 minutes at the pickup point, so the whole programme keeps flowing.</li>
+            <li><b>Return trips</b> — tick “Return trip needed” so the Desk schedules the pick-up back as well.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div id="tlToast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   🚌 TRANSPORT & LOGISTICS DESK — JCRGM
+   Member movements made professional:
+     • Tab 1  Request Transport — a guided form (pickup
+       location, people, fare, vehicle, purpose…) that builds
+       a ready-made WhatsApp message and sends it to the
+       church lines 0979554970 / 0978548813.
+     • Tab 2  Movement Board — every trip on record with
+       pickup, headcount, fare and status; saved on this
+       device (localStorage) and shareable to WhatsApp.
+     • Tab 3  Guidelines & contacts.
+   Written to work on older iPhones too (no modern JS syntax).
+   ============================================================ */
+(function(){
+"use strict";
+
+/* ---------------- config ---------------- */
+var WA_A="260979554970", WA_B="260978548813";
+var LS_KEY="jcrgm_transport_board_v1";
+var STATUSES=["Scheduled","Confirmed","In Transit","Completed","Cancelled"];
+
+/* ---------------- helpers ---------------- */
+function byId(i){ return document.getElementById(i); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function uid(p){ return (p||"id")+"_"+Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
+function p2(n){ return (n<10?"0":"")+n; }
+function thousands(n){
+  var s=String(Math.round(Number(n)||0)), out="", c=0;
+  for(var i=s.length-1;i>=0;i--){ out=s.charAt(i)+out; c++; if(c%3===0&&i>0) out=","+out; }
+  return out;
+}
+function fmtZMW(v){ return "ZMW "+thousands(v); }
+function todayISO(){
+  var d=new Date();
+  return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate());
+}
+function nowStamp(){
+  var d=new Date();
+  return todayISO()+" "+p2(d.getHours())+":"+p2(d.getMinutes());
+}
+function defaultTime(){
+  var d=new Date(Date.now()+45*60*1000);
+  var h=d.getHours(), m=d.getMinutes();
+  m = m<15?15 : m<30?30 : m<45?45 : 0;
+  if(m===0) h=(h+1)%24;
+  return p2(h)+":"+p2(m);
+}
+function fmtDateHuman(iso){
+  if(!iso) return "";
+  var p=String(iso).split("-");
+  if(p.length!==3) return iso;
+  var d=new Date(parseInt(p[0],10),parseInt(p[1],10)-1,parseInt(p[2],10));
+  var dys=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  var mos=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return dys[d.getDay()]+" "+d.getDate()+" "+mos[d.getMonth()]+" "+d.getFullYear();
+}
+function closestAttr(el,attr){
+  while(el && el!==document){
+    if(el.getAttribute && el.getAttribute(attr)!=null) return el;
+    el=el.parentNode;
+  }
+  return null;
+}
+function copyText(t,cb){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(function(){ cb(true); },function(){ legacyCopy(t,cb); });
+  } else legacyCopy(t,cb);
+}
+function legacyCopy(t,cb){
+  var ta=document.createElement("textarea");
+  ta.value=t; ta.style.position="fixed"; ta.style.left="-9999px";
+  document.body.appendChild(ta);
+  try{ ta.focus(); ta.select(); }catch(e){}
+  var ok=false;
+  try{ ok=document.execCommand("copy"); }catch(e){}
+  try{ document.body.removeChild(ta); }catch(e){}
+  cb(ok);
+}
+
+/* ---------------- state ---------------- */
+var TL={ trips:[], filter:"all", confirmId:null, confirmAt:0, clearDoneAt:0, lastSig:"" };
+
+function loadState(){
+  try{
+    var raw=localStorage.getItem(LS_KEY);
+    if(raw){
+      var d=JSON.parse(raw);
+      if(d && d.v===1 && d.trips) TL.trips=d.trips;
+    }
+  }catch(e){}
+}
+function saveState(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify({v:1,trips:TL.trips})); }
+  catch(e){ toast("⚠️ Could not save the board (storage full)."); }
+}
+
+/* ---------------- toast ---------------- */
+var toastTimer=null;
+function toast(msg,ms){
+  var el=byId("tlToast"); if(!el) return;
+  el.innerHTML=msg;
+  el.classList.add("show");
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){ el.classList.remove("show"); },ms||2800);
+}
+
+/* ---------------- tabs ---------------- */
+function setTab(which){
+  var tabs=["Req","Board","Info"], i;
+  for(i=0;i<tabs.length;i++){
+    var b=byId("tlTab"+tabs[i]), p=byId("tlPanel"+tabs[i]);
+    if(!b||!p) continue;
+    var on=(which===tabs[i]);
+    if(on){ b.classList.add("active"); p.classList.add("active"); b.setAttribute("aria-selected","true"); }
+    else{ b.classList.remove("active"); p.classList.remove("active"); b.setAttribute("aria-selected","false"); }
+  }
+  if(which==="Board") renderBoard();
+}
+
+/* ---------------- form ---------------- */
+function formFields(){
+  return {
+    name:(byId("tlName").value||"").trim(),
+    phone:(byId("tlPhone").value||"").trim(),
+    pickup:(byId("tlPickup").value||"").trim(),
+    point:(byId("tlPoint").value||"").trim(),
+    dest:(byId("tlDest").value||"").trim(),
+    date:byId("tlDate").value||"",
+    time:byId("tlTime").value||"",
+    people:parseInt(byId("tlPeople").value,10),
+    vehicle:byId("tlVehicle").value||"Any available",
+    purpose:byId("tlPurpose").value||"Sunday Service",
+    fare:(byId("tlFare").value||"").trim(),
+    notes:(byId("tlNotes").value||"").trim(),
+    ret:byId("tlReturn").checked
+  };
+}
+function readForm(){
+  var f=formFields();
+  var ids=["tlName","tlPhone","tlPickup","tlDate","tlTime","tlPeople"];
+  for(var i=0;i<ids.length;i++) byId(ids[i]).classList.remove("tl-bad");
+  var bad=[];
+  if(!f.name) bad.push(["tlName","your name / group name"]);
+  if(f.phone.replace(/\D/g,"").length<9) bad.push(["tlPhone","a valid phone number (09… or 07…)"]);
+  if(!f.pickup) bad.push(["tlPickup","the pickup location"]);
+  if(!f.date) bad.push(["tlDate","the pickup date"]);
+  if(!f.time) bad.push(["tlTime","the pickup time"]);
+  if(!(f.people>=1)) bad.push(["tlPeople","the number of people"]);
+  if(bad.length){
+    byId(bad[0][0]).classList.add("tl-bad");
+    try{ byId(bad[0][0]).focus(); }catch(e){}
+    toast("⚠️ Please fill in "+bad[0][1]+".");
+    return null;
+  }
+  f.people=Math.min(f.people,200);
+  if(!f.dest) f.dest="JCRGM Church — Lusaka";
+  return f;
+}
+function buildMessage(f,preview){
+  function orDash(v,ph){ return v? v : (preview? ph : "—"); }
+  var L=[];
+  L.push("🚌 JCRGM TRANSPORT REQUEST");
+  L.push("──────────────────────");
+  L.push("👤 Name: "+orDash(f.name,"(your name)"));
+  L.push("📞 Phone: "+orDash(f.phone,"(your phone)"));
+  L.push("📍 Pickup: "+orDash(f.pickup,"(pickup area)")+(f.point?" — "+f.point:""));
+  L.push("🏁 Destination: "+orDash(f.dest,"(destination)"));
+  L.push("📅 Date: "+(f.date?fmtDateHuman(f.date):(preview?"(date)":"—")));
+  L.push("🕘 Time: "+orDash(f.time,"(time)"));
+  L.push("👥 People: "+(f.people>=1?f.people:(preview?"(number)":"—")));
+  L.push("🚐 Vehicle: "+f.vehicle);
+  L.push("🎯 Purpose: "+f.purpose);
+  if(f.fare!=="") L.push("💰 Fare offered: "+fmtZMW(f.fare));
+  else L.push("💰 Fare: to be agreed with the Transport Desk");
+  if(f.ret) L.push("↩️ Return trip: YES — pick-up back needed");
+  if(f.notes) L.push("📝 Notes: "+f.notes);
+  L.push("──────────────────────");
+  L.push("Sent from the JCRGM website — Transport & Logistics Desk");
+  return L.join("\n");
+}
+function updatePreview(){
+  var el=byId("tlPreview"); if(!el) return;
+  var f=formFields();
+  if(!f.name && !f.pickup && !f.phone){
+    el.textContent="Your request message will appear here as you fill the form below — then one tap sends it to the church WhatsApp lines.";
+    return;
+  }
+  el.textContent=buildMessage(f,true);
+}
+function sigOf(f){
+  return [f.name,f.phone,f.pickup,f.point,f.dest,f.date,f.time,f.people,f.vehicle,f.purpose,f.fare,f.notes,f.ret?"1":""].join("|");
+}
+function saveTripFromForm(f){
+  var s=sigOf(f);
+  if(TL.lastSig===s) return false;            /* same request already saved */
+  TL.lastSig=s;
+  TL.trips.push({
+    id:uid("trip"), name:f.name, phone:f.phone, pickup:f.pickup, point:f.point,
+    dest:f.dest, date:f.date, time:f.time, people:f.people, vehicle:f.vehicle,
+    purpose:f.purpose, fare:f.fare, notes:f.notes, ret:f.ret,
+    status:"Scheduled", created:Date.now()
+  });
+  saveState(); renderBoard();
+  return true;
+}
+function sendTo(num,label){
+  var f=readForm(); if(!f) return;
+  saveTripFromForm(f);
+  var url="https://wa.me/"+num+"?text="+encodeURIComponent(buildMessage(f,false));
+  var w=null;
+  try{ w=window.open(url,"_blank"); }catch(e){}
+  if(!w) toast("⚠️ Pop-up blocked — tap 📋 Copy details and send them to "+label+" on WhatsApp.",3600);
+  else toast("✅ Opening WhatsApp for "+label+" — just press send. Also saved to your Movement Board.",3600);
+}
+function clearForm(){
+  var ids=["tlName","tlPhone","tlPickup","tlPoint","tlPeople","tlFare","tlNotes"];
+  for(var i=0;i<ids.length;i++){ byId(ids[i]).value=""; byId(ids[i]).classList.remove("tl-bad"); }
+  byId("tlDest").value="JCRGM Church — Lusaka";
+  byId("tlVehicle").selectedIndex=0;
+  byId("tlPurpose").selectedIndex=0;
+  byId("tlReturn").checked=false;
+  byId("tlDate").value=todayISO();
+  byId("tlTime").value=defaultTime();
+  updatePreview();
+  toast("🧹 Form cleared.");
+}
+
+/* ---------------- board ---------------- */
+function tripDT(t){ return (t.date||"")+" "+(t.time||""); }
+function isUpcoming(t,nowStr){
+  if(t.status==="Completed"||t.status==="Cancelled") return false;
+  return tripDT(t)>=nowStr;
+}
+function sortedTrips(){
+  var list=TL.trips.slice();
+  list.sort(function(a,b){
+    var x=tripDT(a), y=tripDT(b);
+    if(x<y) return -1;
+    if(x>y) return 1;
+    return (a.created||0)-(b.created||0);
+  });
+  return list;
+}
+function renderBoard(){
+  var nowStr=nowStamp();
+  var list=sortedTrips();
+  var shown=list;
+  if(TL.filter==="upcoming") shown=list.filter(function(t){ return isUpcoming(t,nowStr); });
+  else if(TL.filter==="past") shown=list.filter(function(t){ return !isUpcoming(t,nowStr); });
+  else if(TL.filter==="done") shown=list.filter(function(t){ return t.status==="Completed"; });
+
+  /* summary (whole board) */
+  var ppl=0, fr=0, upc=0, i;
+  for(i=0;i<list.length;i++){
+    ppl+=list[i].people||0;
+    if(list[i].fare!==""&&list[i].fare!=null) fr+=Number(list[i].fare)||0;
+    if(isUpcoming(list[i],nowStr)) upc++;
+  }
+  var sum=byId("tlSum");
+  if(sum){
+    sum.innerHTML=
+      '<div class="tl-sumcell"><div class="tl-sumnum">'+list.length+'</div><div class="tl-sumlab">Trips</div></div>'+
+      '<div class="tl-sumcell"><div class="tl-sumnum">'+ppl+'</div><div class="tl-sumlab">People</div></div>'+
+      '<div class="tl-sumcell"><div class="tl-sumnum">'+esc(fmtZMW(fr))+'</div><div class="tl-sumlab">Total fares</div></div>'+
+      '<div class="tl-sumcell"><div class="tl-sumnum">'+upc+'</div><div class="tl-sumlab">Upcoming</div></div>';
+  }
+  var cnt=byId("tlBoardCount");
+  if(cnt) cnt.textContent=list.length?String(list.length):"";
+
+  /* trip cards */
+  var host=byId("tlTrips");
+  if(!host) return;
+  if(!shown.length){
+    host.innerHTML='<div class="tl-empty">🚌<br>'+(list.length
+      ?'No trips match this filter.'
+      :'No trips on the board yet.<br>Requests you send from <b>Request Transport</b> are saved here automatically — the Transport Desk can also save call-in requests with <b>💾 Save to board only</b>.')+'</div>';
+    return;
+  }
+  var h="";
+  for(i=0;i<shown.length;i++) h+=tripHTML(shown[i]);
+  host.innerHTML=h;
+}
+function tripHTML(t){
+  var st=t.status||"Scheduled";
+  var fareTxt=(t.fare!==""&&t.fare!=null)?fmtZMW(t.fare):"Fare TBA";
+  var armed=(TL.confirmId===t.id && (Date.now()-TL.confirmAt)<3200);
+  var h='<div class="tl-trip" data-st="'+esc(st)+'" data-id="'+t.id+'">';
+  h+='<div class="tl-trip-top">';
+  h+='<span class="tl-when">📅 '+esc(fmtDateHuman(t.date))+' · '+esc(t.time||"--:--")+'</span>';
+  h+='<span class="tl-badge tl-b-'+st.toLowerCase().replace(/\s+/g,"")+'">'+esc(st)+'</span>';
+  h+='<span class="tl-pill tl-firstpill">👥 '+t.people+'</span>';
+  h+='<span class="tl-pill">💰 '+esc(fareTxt)+'</span>';
+  h+='</div>';
+  h+='<div class="tl-route">📍 '+esc(t.pickup)+(t.point?' <span class="tl-pt">('+esc(t.point)+')</span>':'')+' → 🏁 '+esc(t.dest||"—")+'</div>';
+  h+='<div class="tl-sub">'+esc(t.purpose||"")+(t.vehicle&&t.vehicle!=="Any available"?" · "+esc(t.vehicle):"")+(t.ret?" · ↩️ return trip":"")+' · 👤 '+esc(t.name)+(t.phone?" · 📞 "+esc(t.phone):"")+'</div>';
+  if(t.notes) h+='<div class="tl-notes">📝 '+esc(t.notes)+'</div>';
+  h+='<div class="tl-trip-ctl"><select class="tl-stsel" data-id="'+t.id+'" aria-label="Update trip status">';
+  for(var i=0;i<STATUSES.length;i++)
+    h+='<option'+(STATUSES[i]===st?" selected":"")+'>'+STATUSES[i]+'</option>';
+  h+='</select>';
+  h+='<button type="button" class="tl-xbtn'+(armed?' tl-armed':'')+'" data-act="deltrip" title="Remove this trip">'+(armed?'✕ Sure?':'✕ Remove')+'</button>';
+  h+='</div></div>';
+  return h;
+}
+function removeTrip(id){
+  for(var i=0;i<TL.trips.length;i++) if(TL.trips[i].id===id){ TL.trips.splice(i,1); break; }
+  TL.confirmId=null;
+  saveState(); renderBoard();
+  toast("🗑 Trip removed from the board.");
+}
+function boardText(){
+  var nowStr=nowStamp(), list=sortedTrips(), L=[];
+  L.push("🚌 JCRGM TRANSPORT — MOVEMENT BOARD");
+  L.push("──────────────────────");
+  if(!list.length) L.push("(no trips on the board)");
+  for(var i=0;i<list.length;i++){
+    var t=list[i];
+    L.push("");
+    L.push((i+1)+") "+fmtDateHuman(t.date)+" · "+(t.time||"--:--")+" — "+(t.status||"Scheduled"));
+    L.push("   📍 "+t.pickup+(t.point?" ("+t.point+")":"")+" → "+(t.dest||"—"));
+    L.push("   👥 "+t.people+" · 💰 "+((t.fare!==""&&t.fare!=null)?fmtZMW(t.fare):"TBA")+" · "+(t.purpose||""));
+    L.push("   👤 "+t.name+(t.phone?" ("+t.phone+")":""));
+    if(t.notes) L.push("   📝 "+t.notes);
+  }
+  var ppl=0,fr=0;
+  for(var k=0;k<list.length;k++){
+    ppl+=list[k].people||0;
+    if(list[k].fare!==""&&list[k].fare!=null) fr+=Number(list[k].fare)||0;
+  }
+  L.push("");
+  L.push("TOTALS: "+list.length+" trip(s) · "+ppl+" people · "+fmtZMW(fr)+" ("+countUpcoming(nowStr)+" upcoming)");
+  return L.join("\n");
+}
+function countUpcoming(nowStr){
+  var n=0;
+  for(var i=0;i<TL.trips.length;i++) if(isUpcoming(TL.trips[i],nowStr)) n++;
+  return n;
+}
+
+/* ---------------- open / close ---------------- */
+window.openTransportDesk=function(){
+  var ov=byId("transportDesk");
+  if(!ov) return;
+  ov.classList.add("open");
+  document.body.classList.add("tl-noscroll");
+  setTab("Req");   /* always open on the request form — members first */
+  var d=byId("tlDate"), t=byId("tlTime");
+  if(d && !d.value) d.value=todayISO();
+  if(t && !t.value) t.value=defaultTime();
+  updatePreview();
+  renderBoard();
+};
+window.closeTransportDesk=function(){
+  var ov=byId("transportDesk");
+  if(ov) ov.classList.remove("open");
+  document.body.classList.remove("tl-noscroll");
+};
+
+/* ---------------- init ---------------- */
+function init(){
+  if(window.__jcrgmTLInit) return;
+  window.__jcrgmTLInit=true;
+
+  loadState();
+
+  /* tabs */
+  var t1=byId("tlTabReq"), t2=byId("tlTabBoard"), t3=byId("tlTabInfo");
+  if(t1) t1.addEventListener("click",function(){ setTab("Req"); });
+  if(t2) t2.addEventListener("click",function(){ setTab("Board"); });
+  if(t3) t3.addEventListener("click",function(){ setTab("Info"); });
+
+  /* live preview */
+  var req=byId("tlPanelReq");
+  if(req){
+    req.addEventListener("input",updatePreview);
+    req.addEventListener("change",updatePreview);
+  }
+
+  /* send / save / copy / clear */
+  var sa=byId("tlSendA"); if(sa) sa.addEventListener("click",function(){ sendTo(WA_A,"0979 554 970"); });
+  var sb=byId("tlSendB"); if(sb) sb.addEventListener("click",function(){ sendTo(WA_B,"0978 548 813"); });
+  var so=byId("tlSaveOnly");
+  if(so) so.addEventListener("click",function(){
+    var f=readForm(); if(!f) return;
+    if(saveTripFromForm(f)) toast("💾 Saved to the Movement Board on this device.");
+    else toast("ℹ️ This exact request is already on the board.");
+  });
+  var cp=byId("tlCopy");
+  if(cp) cp.addEventListener("click",function(){
+    var f=readForm(); if(!f) return;
+    copyText(buildMessage(f,false),function(ok){
+      toast(ok?"📋 Details copied — paste them into WhatsApp (0979 554 970 / 0978 548 813)."
+              :"⚠️ Copy failed — please copy the preview text manually.");
+    });
+  });
+  var cl=byId("tlClear"); if(cl) cl.addEventListener("click",clearForm);
+
+  /* board: filters */
+  var board=byId("tlPanelBoard");
+  if(board){
+    board.addEventListener("click",function(e){
+      var t=e.target||e.srcElement;
+      var fb=closestAttr(t,"data-f");
+      if(fb){
+        TL.filter=fb.getAttribute("data-f");
+        var all=board.querySelectorAll(".tl-fbtn");
+        for(var i=0;i<all.length;i++){
+          if(all[i].getAttribute("data-f")===TL.filter) all[i].classList.add("active");
+          else all[i].classList.remove("active");
+        }
+        renderBoard();
+        return;
+      }
+      /* clear completed — two-tap */
+      var idEl=closestAttr(t,"id");
+      if(idEl && idEl.id==="tlClearDone"){
+        var armedC=(Date.now()-TL.clearDoneAt)<3200;
+        if(armedC){
+          var n=0;
+          for(var j=TL.trips.length-1;j>=0;j--) if(TL.trips[j].status==="Completed"){ TL.trips.splice(j,1); n++; }
+          TL.clearDoneAt=0;
+          saveState(); renderBoard();
+          toast("🧹 "+n+" completed trip"+(n===1?"":"s")+" cleared.");
+        }else{
+          TL.clearDoneAt=Date.now();
+          var cdb=byId("tlClearDone");
+          if(cdb){ cdb.classList.add("tl-armed"); cdb.textContent="🧹 Clear — sure?"; }
+          setTimeout(function(){
+            var b=byId("tlClearDone");
+            if(b){ b.classList.remove("tl-armed"); b.textContent="🧹 Clear completed"; }
+          },3300);
+        }
+        return;
+      }
+
+      /* delete trip — two-tap */
+      var btn=closestAttr(t,"data-act");
+      if(btn && btn.getAttribute("data-act")==="deltrip"){
+        var card=closestAttr(btn,"data-id");
+        if(!card) return;
+        var id=card.getAttribute("data-id");
+        var armed=(TL.confirmId===id && (Date.now()-TL.confirmAt)<3200);
+        if(armed){ removeTrip(id); }
+        else{
+          TL.confirmId=id; TL.confirmAt=Date.now();
+          btn.classList.add("tl-armed");
+          btn.textContent="✕ Sure?";
+          setTimeout(function(){
+            if(TL.confirmId===id){
+              TL.confirmId=null;
+              var b=document.querySelector('.tl-trip[data-id="'+id+'"] [data-act="deltrip"]');
+              if(b){ b.classList.remove("tl-armed"); b.textContent="✕ Remove"; }
+            }
+          },3300);
+        }
+        return;
+      }
+    });
+    /* status change */
+    board.addEventListener("change",function(e){
+      var t=e.target||e.srcElement;
+      var sel=closestAttr(t,"data-id");
+      if(!sel || !sel.classList || !sel.classList.contains("tl-stsel")) return;
+      var id=sel.getAttribute("data-id");
+      for(var i=0;i<TL.trips.length;i++)
+        if(TL.trips[i].id===id){ TL.trips[i].status=sel.value; break; }
+      saveState(); renderBoard();
+      toast("✅ Trip status updated to "+esc(sel.value)+".");
+    });
+    /* copy board */
+    var cb=byId("tlCopyBoard");
+    if(cb) cb.addEventListener("click",function(){
+      copyText(boardText(),function(ok){
+        toast(ok?"📋 Board summary copied — paste it into the drivers' / coordinators' WhatsApp group."
+                :"⚠️ Copy failed — please copy manually.");
+      });
+    });
+  }
+
+  /* Esc closes the desk */
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape"||e.keyCode===27){
+      var ov=byId("transportDesk");
+      if(ov && ov.classList.contains("open")) closeTransportDesk();
+    }
+  });
+
+  updatePreview();
+  renderBoard();
+}
+
+if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",init);
+else init();
+})();
+</script>
+
+
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){navigator.serviceWorker.register('service-worker.js').catch(function(){});}
@@ -2897,5 +3750,5 @@ document.addEventListener("visibilitychange", function(){ if(!document.hidden) u
   });
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42464b8feb390cf',t:'MTc5MDYxNTc2MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4337504cc34b578',t:'MTc5MDc3MzcxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a472883ecf5eb56c',t:'MTc5MTQzNTEwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4a718ea4f2fbb66',t:'MTc5MTk4NjI5MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42464b8feb390cf',t:'MTc5MDYxNTc2MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4337504cc34b578',t:'MTc5MDc3MzcxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a472883ecf5eb56c',t:'MTc5MTQzNTEwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4bdfc7e3810d498',t:'MTc5MjIyNjI5OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
