@@ -414,6 +414,26 @@ footer.foot h4{color:#fff;margin-bottom:8px}
  .wallt th{padding:3pt 3pt 2pt;font-size:6pt}
  .wallt td.box:after{content:"\2610";font-size:11pt;color:#222}
 }
+
+/* ============================================================
+   THE MONTHLY MINISTRATION SERIES  (tab: Monthly ministrations)
+   ============================================================ */
+.msc-in{width:100%;font:inherit;font-size:.92rem;padding:8px 11px;border:1px solid var(--line);border-radius:10px;background:#fdfcff;color:var(--ink)}
+.msc-in:focus{outline:2px solid var(--v-400);outline-offset:1px;background:#fff}
+.msc-note{min-height:58px;resize:vertical;font-size:.87rem}
+.msc-set{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px;margin-top:6px}
+.msc-set label{display:grid;gap:5px;font:700 .68rem/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);min-width:0}
+.msc-set label.wide{grid-column:1/-1}
+.msc-year{display:inline-flex;align-items:center;gap:6px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 6px}
+.msc-year button{width:30px;height:30px;border-radius:50%;border:0;background:var(--v-50);color:var(--v-600);font-size:1rem;line-height:1;cursor:pointer;font-weight:700}
+.msc-year button:hover{background:var(--v-100)}
+.msc-year b{min-width:64px;text-align:center;font-family:var(--serif);font-size:1.02rem;color:var(--v-700)}
+.msc-shape{font-size:.9rem;color:var(--ink-2);margin:10px 0 0}
+@media print{
+ .msc-in{border:1px solid #ccc;background:#fff}
+ .msc-set label{text-transform:none;letter-spacing:0;font-size:8pt;color:#333}
+ .msc-note{min-height:30pt}
+}
 </style>
 </head>
 <body>
@@ -446,6 +466,7 @@ footer.foot h4{color:#fff;margin-bottom:8px}
    <button class="tab" type="button" data-slide="pMidweek">Midweek &middot; The teaching<span class="n" id="tabNMid"></span></button>
    <button class="tab" type="button" data-slide="pMethods">Strategies</button>
    <button class="tab" type="button" data-slide="pCalendar">Church year</button>
+   <button class="tab" type="button" data-slide="pMonthly">Monthly ministrations<span class="n" id="tabNMon"></span></button>
    <button class="tab" type="button" data-slide="pPreach">Preaching &middot; The Sunday order</button>
    <button class="tab" type="button" data-slide="pWall">The 3-year sheet</button>
    <button class="tab" type="button" data-slide="pSettings">Settings</button>
@@ -608,6 +629,7 @@ footer.foot h4{color:#fff;margin-bottom:8px}
     </ol></div>
   </div>
   <div class="card" style="margin-top:14px"><div class="rule"></div><h3>Monthly ministrations, matched to the readings</h3>
+   <p class="small muted" style="margin:0 0 10px">Each month also carries its own <b>theme and theme scripture</b> for the pulpit, with a four-Sunday series beneath it and the topic you set for the year - see <button class="btn ghost sm" type="button" data-slide="pMonthly" style="padding:2px 8px;font-size:.78rem">Monthly ministrations</button>.</p>
    <div class="grid2" id="monthGrid"></div></div>
   <div class="card" style="margin-top:14px"><div class="rule"></div><h3>What the preacher carries from a week</h3>
    <div class="grid2">
@@ -619,6 +641,7 @@ footer.foot h4{color:#fff;margin-bottom:8px}
 </section>
 
 <section class="page" id="pPreach"><div class="wrap" id="preachBody"></div></section>
+<section class="page" id="pMonthly"><div class="wrap" id="monthlyBody"></div></section>
 
 <section class="page" id="pSettings">
  <div class="wrap" style="max-width:840px">
@@ -1796,6 +1819,7 @@ function gotoSection(id,opts){var el=D.getElementById(id);if(!el)return false;
  if(id==='pMidweek')renderMid(); if(id==='pWall')renderWall();
  if(id==='pProgress')renderProgress();
  try{if(id==='pPreach')renderPreach()}catch(e){}
+ if(id==='pMonthly')renderMonthly();
  S.openYear=cur;
  if(opts&&opts.scroll===false)return true;
  var to=Math.max(0,Math.round(el.getBoundingClientRect().top+W.pageYOffset-stickyOffset())),far=Math.abs(to-W.pageYOffset)>(W.innerHeight*2);
@@ -2186,6 +2210,296 @@ function renderCalendar(){
  D.getElementById('calTable').innerHTML=t||'<tr><td colspan="3" class="muted">No terms recorded - set the start Sunday in Settings.</td></tr>';
  var m=DATA.months.map(function(r){return '<div><h4>'+esc(r[0])+'</h4><p class="small">'+esc(r[1])+'</p><p class="small muted">'+esc(r[2])+'</p></div>'}).join('');
  D.getElementById('monthGrid').innerHTML=m}
+
+/* ==========================================================================
+   THE MONTHLY MINISTRATION SERIES  (tab: Monthly ministrations)
+   Every month of the year carries its own theme, its theme scripture, and a
+   four-Sunday spine. The twelve themes are perpetual: they do not change with
+   the year. What changes each year is the topic the minister is ministering on
+   - and it is written on the month itself, before the month arrives, so that
+   every year the church knows what the month carries and the next generation
+   inherits a worked calendar rather than an empty one.
+   ========================================================================== */
+var MSC_YEAR=(new Date()).getFullYear(),mscRendered=false;
+var MTH=[
+{mon:'January',th:'A New Beginning',x:'Isaiah 43:18-19',
+ v:'Remember ye not the former things, neither consider the things of old. Behold, I will do a new thing; now it shall spring forth; shall ye not know it?',
+ aim:'That the church enters the year consecrated: leaving what is behind, setting the Lord before her, and seeking first his kingdom.',
+ note:'Open the year with the whole church, not with a programme. The first month sets the appetite of the other eleven.',
+ s:[['Lamentations 3:22-23','his compassions fail not; they are new every morning: great is thy faithfulness'],['Joshua 1:8-9','be strong and of a good courage; the LORD thy God is with thee whithersoever thou goest'],['Philippians 3:13-14','this one thing I do, forgetting those things which are behind, and reaching forth unto those things which are before']],
+ sp:[['Forgetting what is behind','Philippians 3:13-14'],['A table before me','Psalm 23:5; Psalm 16:8'],['Seek ye first','Matthew 6:33'],['The acceptable year of the LORD','Isaiah 61:1-2']],
+ mem:'Joshua 1:9',memwhy:'the command that carries the promise of his presence',
+ decl:'This year the Lord does a new thing; it springs forth, and we walk in it.',
+ prac:'Fast the first week of the year as a church. Each member writes the one sentence the Lord is after this year, and the office keeps a copy for the year-end account.',
+ line:'Leave, set, seek, walk - the four moves of a year opened to God.'},
+
+{mon:'February',th:'The Love That Will Not Let Go',x:'Romans 8:38-39',
+ v:'For I am persuaded, that neither death, nor life, nor angels, nor principalities, nor powers, nor things present, nor things to come, nor height, nor depth, nor any other creature, shall be able to separate us from the love of God, which is in Christ Jesus our Lord.',
+ aim:'That the church, having been loved first, now loves - God with abandonment, one another with deeds, and the household with honour.',
+ note:'Take the month into the homes: love taught from the pulpit and then examined at the table is doctrine with hands.',
+ s:[['1 John 4:19','We love him, because he first loved us'],['John 3:16','God so loved the world, that he gave his only begotten Son'],['John 13:34-35','A new commandment I give unto you, That ye love one another']],
+ sp:[['The love that sought us','Luke 15:1-7'],['The love that keeps us','Romans 8:35-39'],['The love that serves','John 13:1-17'],['Love and the household','Ephesians 5:22-33']],
+ mem:'1 John 4:19',memwhy:'the order of love: he first, then us',
+ decl:'The love of God is shed abroad in our hearts by the Holy Ghost; we love, because he first loved us.',
+ prac:'Every household names one person to visit this month with food and prayer - especially the alone and the backslider. Marriages are blessed in the Sunday service.',
+ line:'Loved, kept, serving, honouring - the month the love of God becomes visible.'},
+
+{mon:'March',th:'Repentance and the Road to the Cross',x:'2 Chronicles 7:14',
+ v:'If my people, which are called by my name, shall humble themselves, and pray, and seek my face, and turn from their wicked ways; then will I hear from heaven, and will forgive their sin, and will heal their land.',
+ aim:'That the church turns: not a mood of sorrow, but a real turning - confessed sin, restored relationships, and the cross kept at the centre.',
+ note:'March is lenten ground. Keep the verse copying, shorten the portions where needed, and read the month with confession at the centre.',
+ s:[['Joel 2:12-13','turn unto the LORD your God: for he is gracious and merciful, slow to anger, and of great kindness'],['Psalm 51:10','Create in me a clean heart, O God; and renew a right spirit within me'],['1 John 1:9','If we confess our sins, he is faithful and just to forgive us our sins']],
+ sp:[['The voice that calls to turn','Isaiah 40:3-5'],['Repent, for the kingdom is at hand','Matthew 4:17'],['The blood of the covenant','Exodus 12:13; 1 Peter 1:18-19'],['It is finished','John 19:28-30']],
+ mem:'1 John 1:9',memwhy:'the promise that meets a turned heart',
+ decl:'If we confess our sins, he is faithful and just to forgive us, and to cleanse us from all unrighteousness.',
+ prac:'A week of prayer and fasting before Easter. Good Friday reads the passion from one gospel, in the dark, without music - only the word and the bread.',
+ line:'Turn, confess, believe the blood, behold the finished work.'},
+
+{mon:'April',th:'Risen Indeed',x:'1 Corinthians 15:20',
+ v:'But now is Christ risen from the dead, and become the firstfruits of them that slept.',
+ aim:'That the church lives out of the resurrection: not only believing it, but walking in newness of life, with the power of God at work in ordinary weeks.',
+ note:'Do not let Easter end on Sunday. The month carries the risen Christ into homes, fields and workplaces.',
+ s:[['Luke 24:5-6','He is not here, but is risen'],['John 11:25','I am the resurrection, and the life: he that believeth in me, though he were dead, yet shall he live'],['Romans 6:4','like as Christ was raised up from the dead by the glory of the Father, even so we also should walk in newness of life']],
+ sp:[['Why seek ye the living among the dead?','Luke 24:1-12'],['Peace be unto you','John 20:19-23'],['Known in the breaking of bread','Luke 24:28-35'],['The power of his resurrection','Philippians 3:7-11']],
+ mem:'Romans 6:4',memwhy:'the walk the resurrection creates',
+ decl:'Because he lives, we live also; death is swallowed up in victory.',
+ prac:'The Easter assembly reads the resurrection account aloud in four voices. Every testimony this month must name what God has raised in the testifier - a marriage, a calling, a hope.',
+ line:'Seen, sent, known, empowered - the month the empty tomb walks into the week.'},
+
+{mon:'May',th:'The Promise of the Father',x:'Acts 1:8',
+ v:'But ye shall receive power, after that the Holy Ghost is come upon you: and ye shall be witnesses unto me both in Jerusalem, and in all Judaea, and in Samaria, and unto the uttermost part of the earth.',
+ aim:'That the church waits for, receives and walks in the Holy Spirit - not as an excitement, but as power for witness and holiness.',
+ note:'Pentecost belongs to the whole church. Teach the doctrine of the Spirit as plainly as you celebrate him.',
+ s:[['Luke 24:49','tarry ye in the city of Jerusalem, until ye be endued with power from on high'],['Acts 2:17-18','I will pour out of my Spirit upon all flesh'],['John 16:13','when he, the Spirit of truth, is come, he will guide you into all truth']],
+ sp:[['Tarry until ye be endued','Luke 24:44-49'],['The promise poured out','Acts 2:1-13'],['The Spirit and the Word','John 16:12-15'],['Witnesses to the uttermost','Acts 1:6-11']],
+ mem:'Acts 1:8',memwhy:'the promise, the power and the purpose in one verse',
+ decl:'The promise is unto us and to our children; we are endued with power from on high.',
+ prac:'Pentecost Sunday: an all-night of prayer and waiting on God. During the month every service makes room for the gifts - and every testimony is tested by the Word.',
+ line:'Wait, receive, walk, witness - the month the church remembers she was never meant to serve alone.'},
+
+{mon:'June',th:'Faith That Pleases God',x:'Hebrews 11:6',
+ v:'But without faith it is impossible to please him: for he that cometh to God must believe that he is, and that he is a rewarder of them that diligently seek him.',
+ aim:'That the church learns to believe God again - for salvation, for healing, for provision, for the long wait - and to act on what she believes.',
+ note:'June is a month for testing faith at the table of ordinary need: rent, school fees, sickness, delay. The sermon must land where the questions live.',
+ s:[['Romans 10:17','faith cometh by hearing, and hearing by the word of God'],['Mark 9:23','If thou canst believe, all things are possible to him that believeth'],['Hebrews 12:2','looking unto Jesus the author and finisher of our faith']],
+ sp:[['Faith comes by hearing','Romans 10:8-17'],['Faith as a grain of mustard seed','Matthew 17:14-21'],['When the vision tarryeth','Habakkuk 2:1-4'],['The shield of faith','Ephesians 6:10-16']],
+ mem:'Hebrews 11:6',memwhy:'the two things faith must believe about God',
+ decl:'We walk by faith, not by sight; the just shall live by faith.',
+ prac:'Each member writes one promise to stand on this month; the cell groups pray them every Wednesday, and the church marks together when an answer comes.',
+ line:'Hear, believe, wait, stand - the month faith stops being a slogan.'},
+
+{mon:'July',th:'Free Indeed',x:'John 8:36',
+ v:'If the Son therefore shall make you free, ye shall be free indeed.',
+ aim:'That the church lives free - free from bondage to sin, fear and the accusations of the enemy - and walks in the wholeness of spirit, soul and body.',
+ note:'Deliverance is doctrine before it is ministry. Teach the cross, the blood and the name before the prayer line forms.',
+ s:[['Galatians 5:1','Stand fast therefore in the liberty wherewith Christ hath made us free'],['Exodus 3:7-9','I have heard their cry, and I am come down to deliver them'],['1 Thessalonians 5:23','your whole spirit and soul and body be preserved blameless unto the coming of our Lord Jesus Christ']],
+ sp:[['The cry that God hears','Exodus 2:23-25; 3:7-10'],['The blood that defeats the accuser','Revelation 12:10-11'],['Free indeed','John 8:31-36'],['Wholeness: spirit, soul and body','1 Thessalonians 5:23-24']],
+ mem:'John 8:36',memwhy:'the freedom the Son himself gives',
+ decl:'Whom the Son sets free is free indeed; where the Spirit of the Lord is, there is liberty.',
+ prac:'Prayer for deliverance after every evening service this month, with the Word read over the one being prayed for. Testimony Sunday at the end of the month.',
+ line:'Cry, blood, freedom, wholeness - the month chains break in the light of the Word.'},
+
+{mon:'August',th:'Jehovah Jireh',x:'Philippians 4:19',
+ v:'But my God shall supply all your need according to his riches in glory by Christ Jesus.',
+ aim:'That the church trusts God for daily bread and eternal riches, gives with open hands, and finds contentment in every state.',
+ note:'August touches money, therefore it touches the heart. Preach the God who provides before you preach the offering bag.',
+ s:[['Genesis 22:14','Jehovah-jireh - the LORD who provides'],['Psalm 23:1','The LORD is my shepherd; I shall not want'],['Matthew 6:33','seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you']],
+ sp:[['The God who sees','Genesis 16:13-14; 22:9-14'],['Bread from heaven','Exodus 16; John 6:25-35'],['Give, and it shall be given','Luke 6:38; 2 Corinthians 9:6-11'],['Content in every state','Philippians 4:10-13']],
+ mem:'Philippians 4:19',memwhy:'the supply that flows from his riches in glory',
+ decl:'The Lord is our shepherd; we shall not want. My God supplies all our need.',
+ prac:'First-fruits Sunday, given with a written testimony of the year. The month\u2019s giving is named for the widow, the orphan and the student - and the books are read aloud to the church.',
+ line:'Seen, fed, given, content - the month the church stops worrying and starts sowing.'},
+
+{mon:'September',th:'Wisdom and the Word',x:'James 1:5',
+ v:'If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him.',
+ aim:'That the church becomes a people of the Word - reading it, studying it, obeying it - and asks God for wisdom for the season of examinations and decisions.',
+ note:'The institution holds its examinations this month. Halve the portions for the students among you; the year does not move, the week does.',
+ s:[['Psalm 119:105','Thy word is a lamp unto my feet, and a light unto my path'],['Proverbs 4:7','Wisdom is the principal thing; therefore get wisdom: and with all thy getting get understanding'],['2 Timothy 2:15','Study to shew thyself approved unto God, a workman that needeth not to be ashamed']],
+ sp:[['The entrance of his words giveth light','Psalm 119:129-135'],['Wisdom is the principal thing','Proverbs 4:1-9'],['A workman approved','2 Timothy 2:1-15'],['The wise and foolish builders','Matthew 7:24-27']],
+ mem:'James 1:5',memwhy:'the promise that wisdom is given, not earned',
+ decl:'The Lord gives wisdom; out of his mouth come knowledge and understanding.',
+ prac:'Pray by name for every student and examiner. Leaders bring one written answer from the month\u2019s reading to the workers\u2019 meeting - the church is examined by the Word, not entertained.',
+ line:'Read, ask, study, build - the month the Bible becomes the household\u2019s first tool.'},
+
+{mon:'October',th:'Enter His Gates',x:'Psalm 100:4',
+ v:'Enter into his gates with thanksgiving, and into his courts with praise: be thankful unto him, and bless his name.',
+ aim:'That the church becomes a thankful, praising people - not because the month is easy, but because the Lord is good.',
+ note:'Praise is taught before it is felt. Spend the month teaching the church why we praise, then watch what God does with the sound.',
+ s:[['Psalm 34:1','I will bless the LORD at all times: his praise shall continually be in my mouth'],['1 Thessalonians 5:18','In every thing give thanks: for this is the will of God in Christ Jesus concerning you'],['Hebrews 13:15','the sacrifice of praise to God continually, that is, the fruit of our lips giving thanks to his name']],
+ sp:[['In everything give thanks','1 Thessalonians 5:12-24'],['The sacrifice of praise','Hebrews 13:15-16'],['Praise in the prison','Acts 16:16-34'],['A thankful heart and the peace of God','Philippians 4:4-9']],
+ mem:'Psalm 100:4',memwhy:'the way into the presence of God',
+ decl:'We enter his gates with thanksgiving and his courts with praise; the Lord is good, his mercy endureth for ever.',
+ prac:'Thanksgiving Sunday: every member brings a written testimony and one offering of praise. The youth lead the praise all month - and the elders are their disciples.',
+ line:'Thank, praise, sing, rest - the month the courts of heaven hear this church.'},
+
+{mon:'November',th:'Our Blessed Hope',x:'Titus 2:13',
+ v:'Looking for that blessed hope, and the glorious appearing of the great God and our Saviour Jesus Christ.',
+ aim:'That the church lives as a people who expect the Lord Jesus to return - urgent in witness, holy in conduct, comforted in grief.',
+ note:'Take the month to the bereaved, the sick and the backslider. Hope preached at a funeral is doctrine with a key in its hand.',
+ s:[['John 14:1-3','I will come again, and receive you unto myself'],['1 Thessalonians 4:16-17','the Lord himself shall descend from heaven... and so shall we ever be with the Lord'],['Matthew 25:13','Watch therefore, for ye know neither the day nor the hour']],
+ sp:[['The promise of his coming','John 14:1-6'],['The signs of the times','Matthew 24:1-14'],['Ready and watching','Matthew 25:1-13'],['Comfort one another','1 Thessalonians 4:13-18']],
+ mem:'Titus 2:13',memwhy:'the hope that trains us to live soberly and godly',
+ decl:'We look for the Saviour, the Lord Jesus Christ; our redemption draws nigh.',
+ prac:'Visitation month: the gospel in every member\u2019s household, and the invitation given to the backslider to come home before the year closes.',
+ line:'Promised, expected, watched for, awaited together - the month hope stands up and walks.'},
+
+{mon:'December',th:'Emmanuel: God With Us',x:'Matthew 1:23',
+ v:'Behold, a virgin shall be with child, and shall bring forth a son, and they shall call his name Emmanuel, which being interpreted is, God with us.',
+ aim:'That the church worships the incarnate Son - God with us in the village, the compound and the home - and closes the year at his feet.',
+ note:'Read the story, do not decorate around it. The nativity is a text before it is a programme.',
+ s:[['Isaiah 9:6','unto us a child is born, unto us a son is given: and the government shall be upon his shoulder'],['John 1:14','the Word was made flesh, and dwelt among us'],['Luke 2:10-11','I bring you good tidings of great joy... unto you is born this day in the city of David a Saviour, which is Christ the Lord']],
+ sp:[['The promise of a son','Isaiah 7:14; 9:1-7'],['The Word made flesh','John 1:1-14'],['Good tidings of great joy','Luke 2:8-20'],['We have seen his star','Matthew 2:1-12']],
+ mem:'Matthew 1:23',memwhy:'the name that holds the whole gospel',
+ decl:'Unto us a child is born; God is with us, and we are his people.',
+ prac:'The nativity read in one assembly on Christmas Sunday. Then write the year\u2019s account - what God said, who was taught, what remains - and fix next year\u2019s topics before the last meal of the year.',
+ line:'Promised, made flesh, announced, worshipped - the month heaven touches the ground.'}
+];
+function mscRec(y,m){var t=(S.mtopics&&S.mtopics[String(y)]&&S.mtopics[String(y)][m])||{};return t}
+function mscPut(y,m,f,v){if(!S.mtopics)S.mtopics={};var yy=S.mtopics[String(y)];if(!yy)yy=S.mtopics[String(y)]=[];var o=yy[m];if(!o)o=yy[m]={};o[f]=v;saveS()}
+function mscMonthText(y,m){
+ var o=MTH[m],r=mscRec(y,m),L=[];
+ L.push('JCRGM \u00b7 MONTHLY MINISTRATION');
+ L.push(o.mon.toUpperCase()+' '+y);
+ L.push('');
+ L.push('THEME: '+o.th);
+ L.push('THEME SCRIPTURE: '+(r.x||o.x));
+ L.push('"'+o.v+'"');
+ if(r.t)L.push('TOPIC FOR '+y+': '+r.t);
+ L.push('');
+ L.push('THE FOUR SUNDAYS OF THE SERIES:');
+ o.sp.forEach(function(s,i){L.push((i+1)+'. '+s[0]+' \u2014 '+s[1])});
+ L.push('');
+ L.push('AIM: '+o.aim);
+ L.push('MEMORY VERSE: '+o.mem+' ('+o.memwhy+')');
+ L.push('DECLARATION: '+o.decl);
+ if(r.n)L.push('NOTES: '+r.n);
+ return L.join('\n');
+}
+function mscSend(text){
+ var url='https://wa.me/'+(waDigits(S.wa)||'260979554970')+'?text='+encodeURIComponent(text),win=null;
+ try{win=W.open(url,'_blank','noopener')}catch(e){win=null}
+ if(!win)copyText(text,'The sheet is copied - paste it to the church.');
+}
+function renderMonthly(){
+ var body=D.getElementById('monthlyBody');if(!body)return;
+ mscRendered=true;
+ var y=MSC_YEAR,today=new Date(),cy=today.getFullYear(),cm=today.getMonth(),ho,hr;
+ var h='<div class="rule"></div><h1>Monthly ministrations</h1>';
+ h+='<p class="lead">Every month has its theme and its theme scripture - a series, not a scramble. The twelve themes stand year after year; what changes is the topic the minister is ministering on, and each year it is written on the month before the month arrives. The church always knows what the month carries, and the next generation inherits a worked calendar rather than an empty one.</p>';
+ /* rail */
+ h+='<div class="pch-rail">';
+ h+='<span class="msc-year"><button type="button" data-mscy="-1" aria-label="Earlier year">&lsaquo;</button><b>'+y+'</b><button type="button" data-mscy="1" aria-label="Later year">&rsaquo;</button></span>';
+ h+='<button class="btn sm ghost" type="button" data-mscgo="'+(y===cy?cm:0)+'">This month</button>';
+ h+='<button class="btn sm gold" type="button" data-mscprint="1">Print the monthly sheet</button>';
+ h+='<button class="btn sm ghost" type="button" data-msccopy="1">Copy the year</button>';
+ h+='<button class="btn sm ghost" type="button" data-mscsend="1">Send the month to the church</button>';
+ h+='<span class="muted small">Topics you type are saved on this device, for '+y+' only.</span>';
+ h+='</div>';
+ /* hero */
+ ho=MTH[y===cy?cm:0];hr=mscRec(y,y===cy?cm:0);
+ h+='<div class="pch-now">';
+ h+=' <div>';
+ h+='  <div class="lbl">'+(y===cy?'This month':'Opens the year')+' &middot; '+esc(ho.mon)+' '+y+'</div>';
+ h+='  <h2>'+esc(hr.t||ho.th)+'</h2>';
+ h+='  <div class="dt">'+esc(hr.x||ho.x)+' &middot; the theme of '+esc(ho.mon)+'</div>';
+ h+='  <div class="two">';
+ h+='   <div><b>Theme:</b> '+esc(ho.th)+'</div>';
+ h+='   <div><b>The shape of the series:</b> '+esc(ho.line)+'</div>';
+ h+='   <div><b>Declaration:</b> '+esc(ho.decl)+'</div>';
+ h+='  </div>';
+ h+=' </div>';
+ h+=' <div class="cd">';
+ h+='  <div class="num">4<span style="font-size:.42em"> Sundays</span></div>';
+ h+='  <div class="sub">in this month&rsquo;s series</div>';
+ h+='  <div class="post">Theme scripture: '+esc(hr.x||ho.x)+'<br>Memory verse: '+esc(ho.mem)+'</div>';
+ h+=' </div>';
+ h+='</div>';
+ /* month cards */
+ MTH.forEach(function(o,m){
+  var r=mscRec(y,m),isNow=(y===cy&&m===cm);
+  h+='<div class="card pch-mon" id="mscMon'+m+'">';
+  h+='<span class="pch-badge'+(isNow?' live':'')+'">'+esc(o.mon)+' &middot; '+(isNow?'This month':'Theme of the month')+(r.done?' &middot; ministered':'')+'</span>';
+  h+='<h3>'+esc(r.t||o.th)+'</h3>';
+  h+='<p class="aim"><b>The theme.</b> '+esc(o.th)+' &middot; <b class="pill" style="letter-spacing:0">'+esc(r.x||o.x)+'</b></p>';
+  h+='<p class="note">'+esc(o.note)+'</p>';
+  h+='<div class="pch-lbl">Theme scripture</div>';
+  h+='<div class="pch-verse">'+esc(o.v)+'<i>'+esc(r.x||o.x)+(r.x?' &middot; set for '+y:'')+'</i></div>';
+  h+='<div class="pch-lbl">Backing scriptures</div>';
+  h+='<ul class="pch-sup">'+o.s.map(function(s){return '<li><b>'+esc(s[0])+'</b> '+esc(s[1])+'</li>'}).join('')+'</ul>';
+  h+='<div class="pch-box aimb"><div class="pch-lbl">The aim of the month</div><p class="pch-p">'+esc(o.aim)+'</p></div>';
+  h+='<div class="pch-two">';
+  h+=' <div class="pch-box alb"><div class="pch-lbl">Declaration</div><p class="pch-decl">'+esc(o.decl)+'</p></div>';
+  h+=' <div class="pch-box revb"><div class="pch-lbl">Memory verse</div><p class="pch-p"><b>'+esc(o.mem)+'</b> &mdash; '+esc(o.memwhy)+'</p></div>';
+  h+='</div>';
+  h+='<div class="pch-box stb"><div class="pch-lbl">What the church does this month</div><p class="pch-p">'+esc(o.prac)+'</p></div>';
+  h+='<div class="pch-lbl">The four Sundays of the series</div>';
+  h+='<ol class="pch-pts">'+o.sp.map(function(s){return '<li><b>'+esc(s[0])+'</b><em>'+esc(s[1])+'</em></li>'}).join('')+'</ol>';
+  h+='<p class="msc-shape"><b>The shape.</b> '+esc(o.line)+'</p>';
+  h+='<div class="pch-lbl">Set for '+y+' (saved on this device)</div>';
+  h+='<div class="msc-set">';
+  h+=' <label>Topic I am ministering on<input class="msc-in" data-msc="t:'+m+'" value="'+esc(r.t||'')+'" placeholder="e.g. '+esc(o.th)+'"></label>';
+  h+=' <label>Theme scripture this year<input class="msc-in" data-msc="x:'+m+'" value="'+esc(r.x||'')+'" placeholder="'+esc(o.x)+'"></label>';
+  h+=' <label class="wide">Notes for the month<textarea class="msc-in msc-note" data-msc="n:'+m+'" placeholder="What the Lord is after, who carries the month, what to prepare.">'+esc(r.n||'')+'</textarea></label>';
+  h+='</div>';
+  h+='<div class="pch-foot">';
+  h+=' <label class="pch-chk"><input type="checkbox" data-mscdone="'+m+'"'+(r.done?' checked':'')+'> The theme was ministered this month</label>';
+  h+=' <button class="btn sm ghost" type="button" data-msccopy1="'+m+'">Copy the month</button>';
+  h+=' <button class="btn sm ghost" type="button" data-mscsend1="'+m+'">Send the month</button>';
+  h+='</div>';
+  h+='</div>';
+ });
+ /* the year at a glance */
+ h+='<div class="card"><div class="rule"></div><h3>The year at a glance</h3>';
+ h+='<div class="scroll-x"><table class="t pch-table"><thead><tr><th>Month</th><th>Theme</th><th>Theme scripture</th><th>Topic set for '+y+'</th></tr></thead><tbody>';
+ MTH.forEach(function(o,m){
+  var r=mscRec(y,m),isNow=(y===cy&&m===cm);
+  h+='<tr'+(isNow?' class="now"':'')+'><td><b><button class="btn ghost sm" type="button" data-mscgo="'+m+'" style="padding:3px 9px;font-size:.78rem">'+esc(o.mon)+'</button></b></td>';
+  h+='<td>'+esc(o.th)+'</td><td class="t">'+esc(r.x||o.x)+'</td><td>'+(r.t?esc(r.t):'<span class="muted">'+esc(o.th)+' (theme)</span>')+'</td></tr>';
+ });
+ h+='</tbody></table></div></div>';
+ /* how the series runs */
+ h+='<div class="grid2" style="margin-top:14px">';
+ h+='<div class="card"><div class="rule"></div><h3>What never changes</h3><p class="small muted">The month carries its <b>theme</b> and its <b>theme scripture</b> every year. January is always a new beginning; April is always the resurrection; December is always Emmanuel. A member who missed a year can still find the church on the map.</p></div>';
+ h+='<div class="card"><div class="rule"></div><h3>What changes every year</h3><p class="small muted">The <b>topic</b> you are ministering on - written on the month in the field above, and stored on this device. Write it before the month opens, send it to the church, and the whole month has one voice.</p></div>';
+ h+='<div class="card"><div class="rule"></div><h3>How the month runs</h3><p class="small muted">Four Sundays, four movements: the first opens the theme, the middle two unfold it from the texts, the last sends the church out with the declaration. Midweek takes the theme scripture and asks the three questions around it.</p></div>';
+ h+='<div class="card"><div class="rule"></div><h3>How it sits with the Bible plan</h3><p class="small muted">The three-year reading line keeps its course untouched. The monthly theme names the <b>ministration</b> - what the pulpit is carrying - while the week cards carry the <b>books</b>. Between them the church eats the whole Bible and hears one clear word every month.</p></div>';
+ h+='</div>';
+ h+='<p class="small muted" style="margin-top:12px"><span class="badge">12 themes &middot; 48 Sundays &middot; one topic per month, per year</span> Tick <b>The theme was ministered</b> and keep the notes; they are saved on this device and print with the sheet.</p>';
+ body.innerHTML=h;
+ var tn=D.getElementById('tabNMon');if(tn)tn.textContent=PREACH.months[cm].slice(0,3);
+}
+function mscWire(){
+ var host=D.getElementById('monthlyBody');if(!host||host.getAttribute('data-wire'))return;
+ host.setAttribute('data-wire','1');
+ host.addEventListener('click',function(ev){
+  var t=ev.target;if(!t.closest)return;
+  var b=t.closest('[data-mscy]');
+  if(b){MSC_YEAR=Math.max(2000,Math.min(2100,MSC_YEAR+(+b.getAttribute('data-mscy'))));renderMonthly();return}
+  var g=t.closest('[data-mscgo]');
+  if(g){var m=+g.getAttribute('data-mscgo'),el=D.getElementById('mscMon'+m);
+   if(el){var to=Math.max(0,Math.round(el.getBoundingClientRect().top+W.pageYOffset-stickyOffset()-10));
+    W.scrollTo({top:to,behavior:'smooth'});settleOn(el)}
+   return}
+  if(t.closest('[data-mscprint]')){printPage('pMonthly');return}
+  var c1=t.closest('[data-msccopy1]');
+  if(c1){copyText(mscMonthText(MSC_YEAR,+c1.getAttribute('data-msccopy1')),'The month is copied - paste it where the church will see it.');return}
+  var s1=t.closest('[data-mscsend1]');
+  if(s1){mscSend(mscMonthText(MSC_YEAR,+s1.getAttribute('data-mscsend1')));return}
+  if(t.closest('[data-msccopy]')){
+   var all=[];for(var i=0;i<12;i++)all.push(mscMonthText(MSC_YEAR,i));
+   copyText(all.join('\n\n--------------------\n\n'),'The year of monthly themes is copied.');return}
+  if(t.closest('[data-mscsend]')){mscSend(mscMonthText(MSC_YEAR,(new Date()).getMonth()));return}
+ });
+ host.addEventListener('change',function(ev){
+  var t=ev.target,ds=t.getAttribute?t.getAttribute('data-msc'):null;
+  if(ds){var p=ds.split(':');mscPut(MSC_YEAR,+p[1],p[0],t.value);toast('Saved for '+MTH[+p[1]].mon+' '+MSC_YEAR+'.','ok');return}
+  var dn=t.getAttribute?t.getAttribute('data-mscdone'):null;
+  if(dn!=null&&t.type==='checkbox'){mscPut(MSC_YEAR,+dn,'done',t.checked);
+   toast(t.checked?MTH[+dn].mon+' '+MSC_YEAR+' - the theme is marked ministered.':'Mark cleared for '+MTH[+dn].mon+'.','ok')}
+ });
+}
+mscWire();
+
 function renderSettings(){
  var st=$('#setStart');if(st)st.value=S.start||startSunday().toISOString().slice(0,10);
  var pc=$('#setPace');if(pc)pc.value=S.pace||'full';
@@ -2200,7 +2514,7 @@ function renderSettings(){
   if(v&&isNaN(new Date(v+'T12:00:00')))return toast('That start date cannot be read.','bad');
   var pv=parseInt($('#setPass').value,10);S.pass=(pv>0&&pv<100)?pv:1;
   S.start=v||null;S.pace=pc2;S.year=yr2;S.wa=waDigits(wa2)||'260979554970';S.mail=(ml2||'pedahzurministries@gmail.com').trim();S.who=(nm2||'').trim();
-  saveS();officeLinks();rerenderOpenYears();if(midRendered)renderMid();if(wallRendered)renderWall(WALLSHOWN);renderSunday();gotoSection('pYear'+S.year);
+  saveS();officeLinks();rerenderOpenYears();if(midRendered)renderMid();if(wallRendered)renderWall(WALLSHOWN);if(mscRendered)renderMonthly();renderSunday();gotoSection('pYear'+S.year);
   toast('Saved. The year now runs from '+fmtDay(startSunday())+'.','ok')};
  var br=$('#btnResetAll');if(br)br.onclick=function(){
   if(!W.confirm('Erase every tick and note for all three years on this device?'))return;
@@ -2781,11 +3095,12 @@ function boot(){
  $$('a[data-contact]').forEach(function(a){a.addEventListener('click',function(){copyText(a.getAttribute('data-contact'),'Copied '+a.getAttribute('data-contact')+' in case this device has no mail app.')})});
  renderMethods();renderCalendar();renderSettings();renderProgress();renderCycle();renderSunday();
  try{renderPreach()}catch(e){}
+ try{renderMonthly()}catch(e){}
  var y=+S.year||1;renderYear(y);
  $$('nav.tabs .tab').forEach(function(b){b.setAttribute('aria-current',String(b.getAttribute('data-slide')==='pSunday'))});
  if(DATA.canon.length!==66)toast('The canon table is incomplete.','bad');
 }
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot);else boot();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a38072382fb56c',t:'MTc4OTI2NDIzMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a38072382fb56c',t:'MTc4OTI2NDIzMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4c9b6a698e6b6da',t:'MTc5MjM0OTI2Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
