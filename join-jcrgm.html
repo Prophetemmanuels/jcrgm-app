@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Join JCRGM | Newcomer &amp; Membership Application</title>
+<meta name="description" content="Application for visitors and new persons wishing to join Jesus Christ Redeems Global Ministries. Complete the questionnaire, download it as a PDF and send it to WhatsApp 0979 554 970.">
+<meta name="theme-color" content="#101d44">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  [hidden]{display:none!important}
+  html{background:#0b1530}
+  body{
+    margin:0;min-height:100vh;color:#0f172a;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+    background:
+      radial-gradient(900px 460px at 88% -6%, rgba(255,215,0,.15), transparent 62%),
+      radial-gradient(760px 420px at -10% 10%, rgba(59,91,181,.32), transparent 60%),
+      linear-gradient(162deg,#0b1530,#101d44 40%,#16295e 100%);
+    background-attachment:fixed;
+    line-height:1.55;font-size:15px;
+    padding:0 0 calc(96px + env(safe-area-inset-bottom,0px));
+  }
+  .shell{max-width:760px;margin:0 auto;padding:22px 15px 0}
+
+  /* ---------------- header ---------------- */
+  .top{display:flex;gap:13px;align-items:center;color:#fff}
+  .top img{width:54px;height:54px;border-radius:15px;box-shadow:0 10px 24px rgba(0,0,0,.42),0 0 0 1px rgba(255,215,0,.28)}
+  .top h1{margin:0;font-size:18px;line-height:1.25;letter-spacing:-.01em;font-weight:800}
+  .top h1 span{background:linear-gradient(100deg,#ffe680,#ffd700 45%,#b8912c);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .top p{margin:3px 0 0;font-size:12px;color:rgba(255,255,255,.66);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+  .backlink{display:inline-flex;align-items:center;gap:6px;margin:16px 0 0;color:#ffe680;font-weight:700;font-size:13px;text-decoration:none}
+
+  /* ---------------- intro ---------------- */
+  .intro{margin:16px 0 0;border-radius:18px;padding:15px 16px;color:#fff;
+    background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.12);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .intro h2{margin:0 0 7px;font-size:15px}
+  .intro p{margin:0;font-size:13px;color:rgba(255,255,255,.78);line-height:1.6}
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:13px 0 0}
+  @media(max-width:520px){.flow{grid-template-columns:repeat(2,1fr)}}
+  .flow div{padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);font-size:11.5px;color:rgba(255,255,255,.85);line-height:1.35}
+  .flow b{display:block;color:#ffe680;font-size:10px;letter-spacing:.11em;text-transform:uppercase;margin-bottom:3px}
+
+  /* ---------------- resume ---------------- */
+  .resume{margin:14px 0 0;padding:12px 14px;border-radius:14px;background:#fff7ed;border:1px solid #fed7aa;
+    color:#9a3412;font-size:13px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .resume button{border:0;border-radius:9px;padding:7px 12px;font:700 12px/1 inherit;cursor:pointer}
+  .resume .yes{background:#9a3412;color:#fff}
+  .resume .no{background:#fff;color:#9a3412;border:1px solid #fdba74}
+
+  /* ---------------- progress ---------------- */
+  .progress{margin:16px 0 0}
+  .pbar{height:7px;border-radius:99px;background:rgba(255,255,255,.13);overflow:hidden}
+  .pbar div{height:100%;width:0;border-radius:99px;transition:width .35s cubic-bezier(.3,.9,.3,1);
+    background:linear-gradient(90deg,#ffe680,#ffd700 45%,#b8912c)}
+  .pmeta{display:flex;justify-content:space-between;align-items:center;margin:7px 2px 0;color:rgba(255,255,255,.8);font-size:12px;font-weight:600}
+  .pmeta b{color:#ffe680}
+
+  /* ---------------- cards / sections ---------------- */
+  .card{margin:14px 0 0;border-radius:18px;background:#fff;padding:16px 15px;
+    box-shadow:0 16px 40px rgba(6,12,30,.28)}
+  .sec-head{display:flex;gap:11px;align-items:flex-start;padding-bottom:11px;margin-bottom:14px;
+    border-bottom:1px solid #eef2f8}
+  .sec-ico{flex:0 0 36px;width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-size:18px;
+    background:linear-gradient(160deg,#fff7d6,#ffe680);border:1px solid #e9cf7d}
+  .sec-head h2{margin:0;font-size:15.5px;color:#101d44;letter-spacing:-.01em}
+  .sec-head p{margin:2px 0 0;font-size:12.5px;color:#64748b;line-height:1.5}
+
+  .teach{font-size:13px;color:#334155;margin:0 0 12px;line-height:1.62}
+  .teach b{color:#101d44}
+  .verse{margin:0 0 14px;padding:12px 14px;border-left:4px solid #ffd700;border-radius:0 12px 12px 0;
+    background:linear-gradient(100deg,#fffdf2,#fff);}
+  .verse blockquote{margin:0;font-size:13px;color:#1f2c46;font-style:italic;line-height:1.6}
+  .verse figcaption{margin-top:5px;font-size:11.5px;font-weight:800;letter-spacing:.05em;color:#b8912c;text-transform:uppercase}
+
+  /* ---------------- fields ---------------- */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 12px}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .field{min-width:0}
+  .field.wide{grid-column:1 / -1}
+  .lbl{display:block;font-size:12.5px;font-weight:700;color:#1f2c46;margin-bottom:4px;line-height:1.45}
+  .req{color:#dc2626}
+  .help{font-size:11.5px;color:#94a3b8;margin:-2px 0 5px;line-height:1.45}
+  input[type=text],input[type=tel],input[type=email],input[type=date],input[type=number],select,textarea{
+    width:100%;border:1.5px solid #dbe3ef;border-radius:11px;padding:10px 12px;font:inherit;font-size:14px;
+    color:#0f172a;background:#fff;transition:border-color .18s, box-shadow .18s;-webkit-appearance:none;appearance:none}
+  textarea{resize:vertical;min-height:64px;line-height:1.55}
+  select{background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 10px center;background-size:16px;padding-right:34px}
+  input:focus,select:focus,textarea:focus{outline:0;border-color:#1f3c88;box-shadow:0 0 0 3px rgba(31,60,136,.13)}
+  .field.bad input,.field.bad select,.field.bad textarea{border-color:#dc2626;background:#fff5f5}
+  .err{color:#dc2626;font-size:11.5px;font-weight:600;margin-top:4px}
+
+  .pills{display:flex;flex-wrap:wrap;gap:7px}
+  .pill{position:relative;cursor:pointer}
+  .pill input{position:absolute;opacity:0;pointer-events:none}
+  .pill span{display:block;padding:8px 12px;border-radius:99px;border:1.5px solid #dbe3ef;background:#fbfcfe;
+    font-size:12.5px;font-weight:600;color:#334155;transition:all .16s}
+  .pill input:checked + span{background:#101d44;border-color:#101d44;color:#ffe680}
+  .pill input:focus-visible + span{box-shadow:0 0 0 3px rgba(31,60,136,.2)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{cursor:pointer;position:relative}
+  .chip input{position:absolute;opacity:0;pointer-events:none}
+  .chip span{display:block;padding:7px 11px;border-radius:9px;border:1.5px solid #dbe3ef;background:#fbfcfe;
+    font-size:12px;font-weight:600;color:#334155}
+  .chip input:checked + span{background:linear-gradient(140deg,#fff7d6,#ffe680);border-color:#e0bf4a;color:#4a3b06}
+  .chip input:focus-visible + span{box-shadow:0 0 0 3px rgba(31,60,136,.2)}
+
+  .tickline{display:flex;gap:11px;align-items:flex-start;cursor:pointer;padding:12px 13px;border-radius:13px;
+    background:#fbfcfe;border:1.5px solid #e3e9f2;transition:all .17s}
+  .tickline:hover{border-color:#c9d5e8}
+  .tickline input{position:absolute;opacity:0;pointer-events:none}
+  .tick{flex:0 0 22px;width:22px;height:22px;border-radius:7px;border:2px solid #c3cee0;background:#fff;position:relative;transition:all .16s}
+  .tickline input:checked ~ .tick{background:#0f7a4a;border-color:#0f7a4a}
+  .tickline input:checked ~ .tick:after{content:"";position:absolute;left:6px;top:2px;width:6px;height:11px;
+    border:solid #fff;border-width:0 2.4px 2.4px 0;transform:rotate(45deg)}
+  .field.bad .tickline{border-color:#dc2626;background:#fff5f5}
+  .decl-txt{font-size:13px;color:#26324a;line-height:1.58}
+  .decl-txt b{color:#101d44}
+  .decl-txt i{color:#b8912c;font-style:normal;font-size:11.5px;font-weight:700;white-space:nowrap}
+
+  /* ---------------- nav ---------------- */
+  .nav{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));
+    background:linear-gradient(180deg,rgba(11,21,48,.15),rgba(11,21,48,.94) 45%);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+  .nav-in{max-width:760px;margin:0 auto;display:flex;gap:9px}
+  .btn{border:0;border-radius:14px;padding:14px 18px;font:800 14.5px/1.1 inherit;cursor:pointer;transition:transform .14s}
+  .btn:active{transform:scale(.985)}
+  .btn.ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.24);flex:0 0 auto}
+  .btn.main{flex:1 1 auto;color:#101d44;background:linear-gradient(135deg,#ffe680,#ffd700 48%,#b8912c);
+    box-shadow:0 10px 26px rgba(184,145,44,.36)}
+
+  /* ---------------- success ---------------- */
+  .ok-hero{text-align:center;padding:6px 0 2px}
+  .ok-hero .tick-big{width:66px;height:66px;border-radius:50%;margin:0 auto 10px;
+    background:linear-gradient(135deg,#34d399,#059669);color:#fff;font-size:34px;line-height:66px;
+    box-shadow:0 14px 30px rgba(5,150,105,.34)}
+  .ok-hero h2{margin:0;font-size:19px;color:#101d44}
+  .ok-hero p{margin:6px 0 0;font-size:13px;color:#64748b}
+  .refbox{margin:14px 0 0;padding:13px;border-radius:14px;background:linear-gradient(150deg,#101d44,#16295e);
+    color:#fff;text-align:center;border:1px solid rgba(255,215,0,.3)}
+  .refbox .lab{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.66)}
+  .refbox .val{font-size:19px;font-weight:800;letter-spacing:.04em;color:#ffe680;word-break:break-all}
+  .chip{display:inline-block;margin:12px auto 0;padding:7px 13px;border-radius:99px;font-size:12px;font-weight:700;
+    background:#eef4ff;color:#1e3a8a;border:1px solid #bfd3ff}
+  .chip.wait{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
+  .chip.ok{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
+  .center{text-align:center}
+
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:15px 0 0}
+  @media(max-width:480px){.actions{grid-template-columns:1fr}}
+  .action{display:flex;gap:10px;align-items:center;padding:13px;border-radius:14px;border:1.5px solid #e3e9f2;
+    background:#fbfcfe;cursor:pointer;font:700 13px/1.3 inherit;color:#101d44;text-align:left;transition:all .16s}
+  .action:hover{border-color:#c9d5e8;background:#f5f8fd}
+  .action .ai{font-size:18px;line-height:1}
+  .action small{display:block;font-weight:600;font-size:11px;color:#64748b;margin-top:1px}
+  .action.primary{background:linear-gradient(135deg,#ffe680,#ffd700 48%,#b8912c);border-color:#e0bf4a;color:#101d44}
+  .action.primary small{color:#6b5306}
+  .action.dark{background:#101d44;border-color:#101d44;color:#fff}
+  .action.dark small{color:rgba(255,255,255,.66)}
+  .action.wide{grid-column:1/-1}
+
+  /* ---------------- approval ---------------- */
+  .approve{margin:14px 0 0}
+  .approve h3{margin:0 0 4px;font-size:15px;color:#101d44}
+  .approve p{margin:0 0 11px;font-size:12.5px;color:#64748b;line-height:1.55}
+  .inline2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  @media(max-width:480px){.inline2{grid-template-columns:1fr}}
+  .checkout{margin:11px 0 0;padding:11px 13px;border-radius:11px;font-size:12.5px;font-weight:600}
+  .checkout.ok{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
+  .checkout.bad{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+  .locked{margin:14px 0 0;padding:14px;border-radius:14px;background:#f4f6fa;border:1px dashed #c8d3e4;
+    font-size:12.5px;color:#64748b;text-align:center}
+  .locked b{color:#101d44}
+  .proceed{margin:14px 0 0;display:block;text-align:center;text-decoration:none;padding:15px;border-radius:15px;
+    font-weight:800;font-size:14.5px;color:#101d44;background:linear-gradient(135deg,#ffe680,#ffd700 48%,#b8912c);
+    box-shadow:0 12px 26px rgba(184,145,44,.34)}
+
+  /* ---------------- leadership ---------------- */
+  .lead{margin:14px 0 0}
+  .leadtoggle{width:100%;padding:12px 14px;border-radius:12px;border:1.5px dashed #cbd5e1;background:#f8fafc;
+    font:700 12.5px/1.2 inherit;color:#475569;cursor:pointer;text-align:left}
+  .leadpanel{margin:10px 0 0;padding:2px 0 0}
+  .approw{padding:12px 0;border-bottom:1px solid #eef2f8}
+  .approw:last-child{border-bottom:0}
+  .approw-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline;font-size:13.5px;color:#101d44}
+  .appref{font-size:10.5px;letter-spacing:.04em;color:#94a3b8;font-weight:700}
+  .appmeta{font-size:11.5px;color:#64748b;margin-top:2px}
+  .appwhy{font-size:12px;color:#475569;margin-top:5px;line-height:1.5}
+  .appacts{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+  .mini{border:1px solid #dbe3ef;background:#fff;border-radius:9px;padding:7px 11px;font:700 11.5px/1 inherit;cursor:pointer;color:#1f3c88}
+  .mini.ok{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
+  .mini.no{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+  .appcode{margin:9px 0 0;padding:10px 12px;border-radius:10px;background:#f4f6fa;font-size:12px;color:#334155;line-height:1.6}
+  .appcode .code{display:inline-block;margin:4px 0;padding:5px 10px;border-radius:8px;background:#101d44;color:#ffe680;
+    font-weight:800;letter-spacing:.08em;font-size:13px}
+  .muted{color:#94a3b8;font-size:12px}
+
+  .foot{margin:16px 0 0;padding:0 4px;text-align:center;color:rgba(255,255,255,.5);font-size:11.5px;line-height:1.6}
+  .foot a{color:#ffe680;text-decoration:none;font-weight:700}
+
+  /* ---------------- toast ---------------- */
+  #toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translate(-50%,14px);
+    z-index:60;max-width:90vw;background:#0f172a;color:#fff;padding:11px 15px;border-radius:12px;
+    font-size:13px;font-weight:600;box-shadow:0 16px 34px rgba(6,12,30,.45);opacity:0;pointer-events:none;
+    transition:opacity .2s, transform .2s;text-align:center}
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ============ header ============ -->
+  <header class="top">
+    <img src="assets/icons/icon-192.png" alt="JCRGM">
+    <div>
+      <h1>Jesus Christ Redeems <span>Global Ministries</span></h1>
+      <p>Newcomer &amp; Membership Application</p>
+    </div>
+  </header>
+  <a class="backlink" href="index.html">← Back to the church app</a>
+
+  <section class="intro">
+    <h2>🕊️ Welcome — we are glad the Lord brought you here</h2>
+    <p>This is not a form to be rushed. It is the doorway into covenant with a house of God. Answer every
+      question truthfully; everything you write is treated with confidence by the pastoral team.
+      When you finish, download it as a <b>PDF</b> or send it straight to <b>WhatsApp 0979 554 970</b>.
+      Once the leadership has prayed over it and interviewed you, you will be approved — and only then
+      will membership registration open for you.</p>
+    <div class="flow">
+      <div><b>Step 1</b>Fill the questionnaire (6 parts)</div>
+      <div><b>Step 2</b>Download PDF &amp; send to WhatsApp</div>
+      <div><b>Step 3</b>Pastoral interview &amp; approval</div>
+      <div><b>Step 4</b>Register for membership</div>
+    </div>
+  </section>
+
+  <div class="resume" id="resumeBar" hidden>
+    <span id="resumeText">You have an unfinished application saved on this device.</span>
+    <button type="button" class="yes" id="resumeYes">Continue it</button>
+    <button type="button" class="no" id="resumeNo">Start fresh</button>
+  </div>
+
+  <!-- ============ form ============ -->
+  <div id="formWrap">
+    <div class="progress">
+      <div class="pbar"><div id="barFill"></div></div>
+      <div class="pmeta">
+        <span>Part <b id="stepNow">1</b> of 6 — <b id="stepName">About You</b></span>
+        <span id="statusChip" class="chip">📝 Not yet submitted</span>
+      </div>
+    </div>
+
+    <div id="formBody"></div>
+  </div>
+
+  <!-- ============ success / submission ============ -->
+  <div id="successWrap" hidden>
+    <div class="card">
+      <div class="ok-hero">
+        <div class="tick-big">✓</div>
+        <h2>Your application has been prepared</h2>
+        <p>Now send it to the pastoral office so the leadership can review it.</p>
+      </div>
+
+      <div class="refbox">
+        <div class="lab">Your reference number</div>
+        <div class="val" id="refOut">—</div>
+      </div>
+
+      <div class="center"><span id="statusChip2" class="chip wait">⏳ Pending pastoral review</span></div>
+
+      <div class="actions">
+        <button type="button" class="action primary" id="dlPdf">
+          <span class="ai">📄</span>
+          <span>Download as PDF<small>Save or print a copy</small></span>
+        </button>
+        <button type="button" class="action dark" id="waSend">
+          <span class="ai">💬</span>
+          <span>Send to WhatsApp<small>0979 554 970 · with the PDF</small></span>
+        </button>
+        <button type="button" class="action" id="waText">
+          <span class="ai">📲</span>
+          <span>Send summary only<small>If the PDF will not attach</small></span>
+        </button>
+        <button type="button" class="action" id="copySum">
+          <span class="ai">📋</span>
+          <span>Copy summary<small>Paste into any chat</small></span>
+        </button>
+        <button type="button" class="action" id="printForm">
+          <span class="ai">🖨️</span>
+          <span>Print / Save as PDF<small>Browser print dialog</small></span>
+        </button>
+        <button type="button" class="action" id="startNew">
+          <span class="ai">🔄</span>
+          <span>Start another<small>e.g. for a family member</small></span>
+        </button>
+      </div>
+
+      <p class="muted" style="margin:12px 0 0;text-align:center">
+        Reference <b id="refOut2">—</b> · Keep this number. You will need it, together with the approval code,
+        to unlock membership registration.
+      </p>
+    </div>
+
+    <!-- approval -->
+    <div class="card approve">
+      <h3>🔓 I have been approved</h3>
+      <p>After the pastoral interview, leadership will send you an <b>approval code</b> by WhatsApp or SMS.
+        Enter it below with your reference number to unlock membership registration.</p>
+      <div class="inline2">
+        <input type="text" id="chkRef" placeholder="Reference e.g. JCRGM-JOIN-2026-0001" autocomplete="off">
+        <input type="text" id="chkCode" placeholder="Approval code e.g. AP-XXXX-XXX" autocomplete="off">
+      </div>
+      <p></p>
+      <button type="button" class="btn main" id="chkBtn" style="width:100%">Verify approval</button>
+      <div class="checkout" id="chkOut" hidden></div>
+
+      <div class="locked" id="proceedLocked">
+        🔒 <b>Membership registration is locked</b><br>
+        It opens automatically once your application is approved. This protects the church register and
+        honours the order of the house.
+      </div>
+      <div id="proceedOpen" hidden>
+        <a class="proceed" id="proceedBtn" href="membership.html">➡️ Proceed to Membership Registration</a>
+      </div>
+    </div>
+
+    <!-- leadership -->
+    <div class="card lead">
+      <button type="button" class="leadtoggle" id="leadToggle" aria-expanded="false">
+        🔐 Leadership review (pastors &amp; membership desk only)
+      </button>
+      <div class="leadpanel" id="leadPanel" hidden>
+        <p class="muted" style="margin:8px 0 0">
+          Applications submitted on <b>this device</b> appear below. Approving one generates the code you send to
+          the applicant. Applications sent by WhatsApp appear in the church WhatsApp chat — review the attached PDF,
+          then send the applicant their code.
+        </p>
+        <div id="appsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ nav ============ -->
+  <div class="nav" id="navBar">
+    <div class="nav-in">
+      <button type="button" class="btn ghost" id="backBtn">← Back</button>
+      <button type="button" class="btn main" id="nextBtn">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<p class="foot">
+  Jesus Christ Redeems Global Ministries · Lusaka, Zambia<br>
+  WhatsApp <a href="https://wa.me/260979554970">0979 554 970</a> · <a href="mailto:pedahzurministries@gmail.com">pedahzurministries@gmail.com</a>
+</p>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="join-jcrgm.js"></script>
+<script>
+/* hide the bottom nav on the success screen */
+(function(){
+  var nav=document.getElementById('navBar'), form=document.getElementById('formWrap');
+  var obs=new MutationObserver(function(){
+    nav.style.display = form.hidden ? 'none' : '';
+  });
+  obs.observe(form,{attributes:true,attributeFilter:['hidden']});
+})();
+</script>
+</body>
+</html>

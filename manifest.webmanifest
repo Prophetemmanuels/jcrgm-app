@@ -6,13 +6,21 @@
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui", "browser"],
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
   "orientation": "any",
   "background_color": "#101d44",
   "theme_color": "#101d44",
   "lang": "en",
   "dir": "ltr",
-  "categories": ["lifestyle", "education", "social"],
+  "categories": [
+    "lifestyle",
+    "education",
+    "social"
+  ],
   "prefer_related_applications": false,
   "icons": [
     {
@@ -36,18 +44,40 @@
   ],
   "shortcuts": [
     {
+      "name": "Join JCRGM — Newcomer",
+      "short_name": "Join JCRGM",
+      "description": "Application for visitors and new persons wishing to join the ministry",
+      "url": "./join-jcrgm.html",
+      "icons": [
+        {
+          "src": "assets/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
       "name": "Transport Desk",
       "short_name": "Transport",
       "description": "Request church transport or a Yango ride",
       "url": "./index.html?open=transport",
-      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "assets/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Install / Share",
       "short_name": "Install",
       "description": "Install JCRGM on this device or share the link",
       "url": "./install.html",
-      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "assets/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }

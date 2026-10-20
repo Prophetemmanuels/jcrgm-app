@@ -9,7 +9,7 @@
    ============================================================ */
 'use strict';
 
-const CACHE_VERSION = 'jcrgm-v1.0.0';
+const CACHE_VERSION = 'jcrgm-v1.1.0';
 const RUNTIME = CACHE_VERSION + '-runtime';
 
 const SHELL = [
@@ -17,6 +17,8 @@ const SHELL = [
   './index.html',
   './install.html',
   './install.js',
+  './join-jcrgm.html',
+  './join-jcrgm.js',
   './manifest.webmanifest',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
