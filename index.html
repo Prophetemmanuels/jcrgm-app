@@ -23,8 +23,20 @@
 
 <!-- iOS -->
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="JCRGM">
+<meta name="application-name" content="JCRGM">
+<meta name="msapplication-TileColor" content="#101d44">
+<meta name="msapplication-TileImage" content="assets/icons/icon-192.png">
+
+<!-- ===== INSTALLABLE APP (PWA) — manifest + icons ===== -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon-180.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon-180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+<link rel="apple-touch-startup-image" href="assets/icons/icon-512.png">
 
 <style>
 /* ============================================================
@@ -1295,6 +1307,7 @@ html.perf-lite .tl-overlay{-webkit-backdrop-filter:none;backdrop-filter:none;}
 <button class="projector-btn" onclick="toggleProjector()">🖥 Toggle Projector Mode</button>
 <button id="soundToggle" class="projector-btn" onclick="toggleHeavenSound()">🔔 Heavenly Tone: On</button>
 <button class="projector-btn" onclick="openMusicManager()">🎵 Event Music</button>
+<button class="projector-btn" data-jcrgm-install-btn onclick="if(window.JCRGMInstall)JCRGMInstall.open()" title="Install this app on your phone, tablet or computer">📲 Install App</button>
 
 <div class="social-buttons" role="navigation" aria-label="Church ministries">
 
@@ -1456,7 +1469,7 @@ html.perf-lite .tl-overlay{-webkit-backdrop-filter:none;backdrop-filter:none;}
 </div>
 
 <footer>
-📞 <strong>Phone:</strong> 0979554970 &nbsp;|&nbsp; ✉ <strong>Email:</strong> <a id="footerEmailLink" href="/cdn-cgi/l/email-protection#cbbbaeafaaa3b1beb9a6a2a5a2b8bfb9a2aeb88baca6aaa2a7e5a8a4a6" class="map-link"><span class="__cf_email__" data-cfemail="a9d9cccdc8c1d3dcdbc4c0c7c0dadddbc0ccdae9cec4c8c0c587cac6c4">[email&#160;protected]</span></a><br>
+📞 <strong>Phone:</strong> 0979554970 &nbsp;|&nbsp; ✉ <strong>Email:</strong> <a id="footerEmailLink" href="mailto:pedahzurministries@gmail.com" class="map-link">pedahzurministries@gmail.com</a><br>
 📍 <strong>Location:</strong> <a id="footerMapLink" href="#" target="_blank" rel="noopener" class="map-link">Find Our Church on Google Maps</a><br>
 © <span id="year"></span> Jesus Christ Redeems Global Ministries — All Rights Reserved
 </footer>
@@ -3267,8 +3280,8 @@ else init();
 
 
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){navigator.serviceWorker.register('service-worker.js').catch(function(){});}
+<script>
+/* Service worker + install prompts are handled by install.js (loaded at the end of the page). */
 
 // ============================================================
 //  CHURCH CONFIG — SINGLE SOURCE OF TRUTH
@@ -3823,5 +3836,38 @@ document.addEventListener("visibilitychange", function(){ if(!document.hidden) u
   });
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a42464b8feb390cf',t:'MTc5MDYxNTc2MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4337504cc34b578',t:'MTc5MDc3MzcxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a472883ecf5eb56c',t:'MTc5MTQzNTEwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4c12762cf3f73a7',t:'MTc5MjI1OTUxMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+
+<!-- ================================================================
+     UNIVERSAL AUTO-INSTALLER — works on every phone, tablet & computer
+     • Android/Chrome/Edge: native one-tap install prompt
+     • iPhone/iPad: guided Share -> Add to Home Screen
+     • Desktop: one-click app window + Start menu / Dock icon
+     • Shows a friendly offer, remembers "later", auto-updates the app
+     ================================================================ -->
+<script src="install.js"
+        data-app-name="JCRGM"
+        data-full-name="Jesus Christ Redeems Global Ministries"
+        data-tagline="Church services, giving, transport desk and ministry tools — one tap, every time."
+        data-auto="1"
+        data-delay="12000"
+        data-snooze="14"
+        defer></script>
+<script>
+/* App shortcuts — long-press the installed icon for quick actions */
+(function(){
+  try{
+    var m=(location.search||'').match(/[?&]open=(transport|music|install)\b/);
+    if(!m) return;
+    var what=m[1];
+    function go(){
+      if(what==='transport' && typeof window.openTransportDesk==='function') window.openTransportDesk();
+      else if(what==='music' && typeof window.openMusicManager==='function') window.openMusicManager();
+      else if(what==='install' && window.JCRGMInstall) window.JCRGMInstall.open();
+    }
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){setTimeout(go,700);});
+    else setTimeout(go,700);
+  }catch(e){}
+})();
+</script>
+</body>
 </html>

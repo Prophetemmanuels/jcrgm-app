@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Install JCRGM | Jesus Christ Redeems Global Ministries</title>
+<meta name="description" content="Install the JCRGM app on your phone, tablet or computer in one tap — free, no app store needed.">
+<meta name="theme-color" content="#101d44">
+
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="JCRGM">
+
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{
+    --navy:#101d44; --navy-2:#16295e; --primary:#1f3c88; --gold:#ffd700; --gold-deep:#b8912c;
+    --ink:#0f172a; --muted:#64748b;
+  }
+  html{background:#0b1530}
+  body{
+    margin:0;min-height:100vh;color:#fff;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+    background:
+      radial-gradient(900px 480px at 85% -8%, rgba(255,215,0,.16), transparent 62%),
+      radial-gradient(760px 420px at -10% 12%, rgba(59,91,181,.34), transparent 60%),
+      linear-gradient(160deg,#0b1530,#101d44 42%,#16295e 100%);
+    padding:28px 18px calc(40px + env(safe-area-inset-bottom,0px));
+    line-height:1.55;
+  }
+  .shell{max-width:520px;margin:0 auto}
+  .logo{width:92px;height:92px;border-radius:24px;display:block;margin:6px auto 16px;
+    box-shadow:0 18px 40px rgba(0,0,0,.45),0 0 0 1px rgba(255,215,0,.28);}
+  h1{margin:0;text-align:center;font-size:23px;line-height:1.25;letter-spacing:-.015em;font-weight:800}
+  h1 .gold{background:linear-gradient(100deg,#ffe680,var(--gold) 45%,var(--gold-deep));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{text-align:center;color:rgba(255,255,255,.72);font-size:14px;margin:9px 0 0}
+  .pill{display:inline-flex;align-items:center;gap:7px;margin:16px auto 0;padding:7px 13px;
+    border-radius:999px;background:rgba(255,255,255,.09);border:1px solid rgba(255,215,0,.28);
+    font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#ffe680;
+    width:max-content;max-width:100%;}
+  .center{text-align:center}
+  .dot{width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 0 3px rgba(52,211,153,.22)}
+
+  .card{margin:22px 0 0;border-radius:20px;padding:16px;
+    background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.11);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .card h2{margin:0 0 10px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.62)}
+
+  .cta{display:block;width:100%;margin:18px 0 0;border:0;border-radius:16px;padding:17px 18px;cursor:pointer;
+    font:800 16px/1.15 inherit;color:var(--navy);
+    background:linear-gradient(135deg,#ffe680,var(--gold) 48%,var(--gold-deep));
+    box-shadow:0 14px 30px rgba(184,145,44,.36),0 0 0 1px rgba(255,255,255,.22) inset;
+    transition:transform .15s ease}
+  .cta:active{transform:translateY(1px) scale(.995)}
+  .cta small{display:block;font-weight:600;font-size:11.5px;opacity:.72;margin-top:4px;letter-spacing:.01em}
+  .ghost{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:10px 0 0;
+    border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.04);color:#fff;
+    border-radius:14px;padding:13px;font:700 13.5px/1 inherit;cursor:pointer}
+  .ghost:active{background:rgba(255,255,255,.12)}
+
+  .dev{display:flex;gap:11px;align-items:flex-start;padding:9px 0;font-size:13.5px;color:rgba(255,255,255,.86)}
+  .dev + .dev{border-top:1px solid rgba(255,255,255,.08)}
+  .dev .em{font-size:17px;line-height:1.3;flex:0 0 auto}
+  .dev b{color:#fff}
+  .dev span.small{display:block;color:rgba(255,255,255,.58);font-size:12px;margin-top:1px}
+
+  ol.steps{margin:6px 0 0;padding:0;list-style:none;counter-reset:s}
+  ol.steps li{position:relative;padding:0 0 0 34px;margin:0 0 11px;font-size:13.5px;color:rgba(255,255,255,.9)}
+  ol.steps li:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;
+    width:23px;height:23px;border-radius:50%;background:var(--gold);color:var(--navy);
+    font:800 12px/23px inherit;text-align:center}
+  .note{font-size:12px;color:rgba(255,255,255,.5);text-align:center;margin:18px 0 0;line-height:1.6}
+  .back{display:block;text-align:center;margin:22px 0 0;color:#ffe680;font-weight:700;font-size:13.5px;
+    text-decoration:none}
+  .hidden{display:none!important}
+  a{color:inherit}
+  .icon-svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <img class="logo" src="assets/icons/icon-512.png" alt="JCRGM logo" onerror="this.src='assets/icons/icon-192.png'">
+
+  <h1>Jesus Christ Redeems<br><span class="gold">Global Ministries</span></h1>
+  <p class="sub">Install the official app on this device — one tap, no app store, completely free.</p>
+
+  <div class="center"><span class="pill" id="statusPill"><span class="dot"></span><span id="pillText">Ready to install</span></span></div>
+
+  <button class="cta" id="mainBtn">
+    📲 Install JCRGM on this device
+    <small id="mainHint">Takes about 5 seconds</small>
+  </button>
+
+  <button class="ghost" id="shareBtn">
+    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 16V4"/><path d="M8 8l4-4 4 4"/><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg>
+    Send this install link to another phone
+  </button>
+
+  <div class="card">
+    <h2>Pick your device</h2>
+    <div class="dev"><span class="em">📱</span><div><b>iPhone / iPad</b><span class="small">Safari → Share → Add to Home Screen</span></div></div>
+    <div class="dev"><span class="em">🤖</span><div><b>Android phone or tablet</b><span class="small">Chrome / Edge / Samsung → ⋮ menu → Install app</span></div></div>
+    <div class="dev"><span class="em">💻</span><div><b>Windows, Mac, Linux</b><span class="small">Chrome or Edge → install icon in the address bar</span></div></div>
+    <div class="dev"><span class="em">📺</span><div><b>Chromebook / Android TV</b><span class="small">Chrome → Install app (works with a remote too)</span></div></div>
+  </div>
+
+  <div class="card hidden" id="stepsCard">
+    <h2>On this device, do this</h2>
+    <ol class="steps" id="stepsList"></ol>
+  </div>
+
+  <p class="note">Once installed, the icon sits on your home screen like any other app. It opens full-screen,
+    starts faster, and keeps the pages you've visited available when your data runs out.</p>
+
+  <a class="back" href="index.html">← Back to the JCRGM site</a>
+</div>
+
+<script src="install.js"
+        data-app-name="JCRGM"
+        data-full-name="Jesus Christ Redeems Global Ministries"
+        data-auto="0"></script>
+
+<script>
+(function(){
+  var P = (window.JCRGMInstall && JCRGMInstall.platform) || {};
+  var mainBtn  = document.getElementById('mainBtn');
+  var mainHint = document.getElementById('mainHint');
+  var pillText = document.getElementById('pillText');
+  var stepsCard= document.getElementById('stepsCard');
+  var stepsList= document.getElementById('stepsList');
+
+  function steps(){
+    if (P.inApp) return [
+      'Tap the button above — we’ll try to open your real browser.',
+      'If nothing happens, tap ⋯ (top corner) → <b>Open in browser</b>.',
+      'Then tap <b>Install</b> again on this page.'
+    ];
+    if (P.ios) return [
+      'Tap the <b>Share</b> button in Safari’s toolbar (square with an arrow).',
+      'Scroll down and tap <b>Add to Home Screen</b>.',
+      'Tap <b>Add</b> — done. The JCRGM icon is on your Home Screen.'
+    ];
+    if (P.android) return [
+      'Tap the <b>⋮</b> menu in the top-right corner.',
+      'Tap <b>Install app</b> (or <b>Add to Home screen</b>).',
+      'Confirm — the icon lands on your Home Screen and app drawer.'
+    ];
+    if (P.firefox) return [
+      'Open this page in <b>Chrome</b> or <b>Edge</b> on this computer.',
+      'Click the install icon in the address bar.',
+      'The app opens in its own window and is added to your apps list.'
+    ];
+    return [
+      'Click the <b>install</b> icon in the address bar (a ⊕ or small screen icon).',
+      'Click <b>Install</b>.',
+      'The app opens in its own window — pin it to your taskbar or Dock.'
+    ];
+  }
+
+  function paint(){
+    var list = steps(), i;
+    stepsList.innerHTML = '';
+    for (i = 0; i < list.length; i++) {
+      var li = document.createElement('li');
+      li.innerHTML = list[i];
+      stepsList.appendChild(li);
+    }
+    stepsCard.classList.remove('hidden');
+
+    if (JCRGMInstall) {
+      if (JCRGMInstall.isInstalled()) {
+        pillText.textContent = 'Already installed';
+        mainBtn.innerHTML = '✅ Open JCRGM<small>The app is already on this device</small>';
+        mainBtn.onclick = function(){ location.href = 'index.html'; };
+        document.getElementById('shareBtn').classList.remove('hidden');
+        return;
+      }
+      if (JCRGMInstall.canPrompt()) {
+        pillText.textContent = 'One-tap install ready';
+        mainHint.textContent = 'Your browser supports automatic install';
+      } else if (P.ios) {
+        pillText.textContent = 'Two taps on iPhone';
+        mainHint.textContent = 'We’ll show you exactly where to tap';
+      } else if (P.inApp) {
+        pillText.textContent = 'Open in a real browser';
+        mainHint.textContent = 'Tap to escape ' + P.inApp;
+      }
+    }
+    mainBtn.onclick = function(){ JCRGMInstall ? JCRGMInstall.open() : location.reload(); };
+  }
+
+  document.getElementById('shareBtn').onclick = function(){
+    if (window.JCRGMInstall) JCRGMInstall.share();
+  };
+
+  window.addEventListener('beforeinstallprompt', function(){ setTimeout(paint, 60); });
+  window.addEventListener('appinstalled', function(){ setTimeout(paint, 60); });
+  paint();
+})();
+</script>
+</body>
+</html>
