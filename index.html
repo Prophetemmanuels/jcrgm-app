@@ -1329,6 +1329,38 @@ body.ss-noscroll{overflow:hidden;}
   padding:10px 18px;font-size:13px;font-weight:700;max-width:88vw;text-align:center;
   opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s,transform .25s,visibility .25s;
   box-shadow:0 14px 40px rgba(2,6,20,.75);}
+
+/* Stamp Studio Password Gate (19922) */
+.ss-auth-gate{position:absolute;top:0;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at center,rgba(16,29,68,.96) 0%,rgba(6,10,25,.99) 100%);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding:16px;}
+.ss-auth-gate.unlocked{display:none !important;}
+.ss-auth-card{width:100%;max-width:400px;background:linear-gradient(165deg,#0d1735 0%,#132352 60%,#1a2e68 100%);
+  border:1.5px solid rgba(255,215,0,.55);border-radius:20px;padding:24px 22px;text-align:center;
+  box-shadow:0 24px 70px rgba(0,0,0,.8),0 0 40px rgba(255,215,0,.14);}
+.ss-auth-card.shake{animation:ssShake .38s ease;}
+@keyframes ssShake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-8px);}40%,80%{transform:translateX(8px);}}
+.ss-auth-badge{width:58px;height:58px;margin:0 auto 12px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,215,0,.25),rgba(201,150,10,.08));
+  border:1.5px solid rgba(255,215,0,.6);display:flex;align-items:center;justify-content:center;font-size:28px;
+  box-shadow:0 0 24px rgba(255,215,0,.25);}
+.ss-auth-title{font-size:18px;font-weight:800;color:#fff;margin:0 0 4px;letter-spacing:.3px;}
+.ss-auth-sub{font-size:12px;color:#c9d4f2;margin:0 0 16px;line-height:1.5;}
+.ss-auth-input-wrap{position:relative;margin-bottom:10px;}
+.ss-auth-in{width:100%;padding:12px 42px 12px 14px;border-radius:12px;border:1.5px solid rgba(255,215,0,.45);
+  background:rgba(5,10,25,.9);color:#ffe38a;font-size:22px;font-weight:800;letter-spacing:8px;text-align:center;font-family:inherit;}
+.ss-auth-in:focus{outline:none;border-color:#ffd700;box-shadow:0 0 0 3px rgba(255,215,0,.22);}
+.ss-auth-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none !important;border:none !important;
+  color:#93c5fd !important;font-size:16px;padding:6px !important;cursor:pointer;}
+.ss-auth-err{min-height:18px;font-size:12px;font-weight:700;color:#ff8585;margin-bottom:10px;}
+.ss-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px;}
+.ss-key{padding:10px 0 !important;border-radius:10px !important;border:1px solid rgba(255,255,255,.18) !important;
+  background:rgba(255,255,255,.07) !important;color:#fff !important;font-size:16px !important;font-weight:800 !important;cursor:pointer;}
+.ss-key:hover{background:rgba(255,215,0,.18) !important;border-color:rgba(255,215,0,.5) !important;}
+.ss-key:active{transform:scale(.96) !important;}
+.ss-auth-actions{display:flex;gap:8px;}
+.ss-auth-actions button{flex:1;padding:11px 14px !important;font-size:13.5px !important;}
+
 #ssToast.show{opacity:1;visibility:visible;transform:translate(-50%,0);}
 @media (max-width:860px){
   .ss-overlay{padding:4px;}
@@ -1572,7 +1604,7 @@ body.ss-noscroll{overflow:hidden;}
 </div>
 
 <footer>
-📞 <strong>Phone:</strong> 0979554970 &nbsp;|&nbsp; ✉ <strong>Email:</strong> <a id="footerEmailLink" href="/cdn-cgi/l/email-protection#e191848580899b94938c888f88929593888492a1868c80888dcf828e8c" class="map-link"><span class="__cf_email__" data-cfemail="adddc8c9ccc5d7d8dfc0c4c3c4ded9dfc4c8deedcac0ccc4c183cec2c0">[email&#160;protected]</span></a><br>
+📞 <strong>Phone:</strong> 0979554970 &nbsp;|&nbsp; ✉ <strong>Email:</strong> <a id="footerEmailLink" href="/cdn-cgi/l/email-protection#49392c2d2821333c3b242027203a3d3b202c3a092e24282025672a2624" class="map-link"><span class="__cf_email__" data-cfemail="f9899c9d9891838c8b949097908a8d8b909c8ab99e94989095d79a9694">[email&#160;protected]</span></a><br>
 📍 <strong>Location:</strong> <a id="footerMapLink" href="#" target="_blank" rel="noopener" class="map-link">Find Our Church on Google Maps</a><br>
 © <span id="year"></span> Jesus Christ Redeems Global Ministries — All Rights Reserved
 </footer>
@@ -2625,7 +2657,38 @@ else init();
      stamps, drag to position, and download stamped multi-page PDF.
      ============================================================ -->
 <div id="stampStudioModal" class="ss-overlay" role="dialog" aria-modal="true" aria-label="JCRGM Official Document Stamper">
-  <div class="ss-wrap">
+  <div class="ss-wrap" style="position:relative;">
+    <!-- 🔒 PASSWORD SECURITY GATE (19922) -->
+    <div id="ssAuthGate" class="ss-auth-gate">
+      <div id="ssAuthCard" class="ss-auth-card">
+        <div class="ss-auth-badge">🔒</div>
+        <h3 class="ss-auth-title">Authorized Access Only</h3>
+        <p class="ss-auth-sub">Enter the official JCRGM Stamp Security Password to access the Document Stamping Studio.</p>
+        <div class="ss-auth-input-wrap">
+          <input type="password" id="ssAuthInput" class="ss-auth-in" inputmode="numeric" maxlength="12" placeholder="•••••" autocomplete="off" />
+          <button type="button" class="ss-auth-eye" onclick="ssTogglePwVis()" title="Show / Hide Password">👁</button>
+        </div>
+        <div id="ssAuthError" class="ss-auth-err"></div>
+        <div class="ss-keypad">
+          <button type="button" class="ss-key" onclick="ssKeyTap('1')">1</button>
+          <button type="button" class="ss-key" onclick="ssKeyTap('2')">2</button>
+          <button type="button" class="ss-key" onclick="ssKeyTap('3')">3</button>
+          <button type="button" class="ss-key" onclick="ssKeyTap('4')">4</button>
+          <button type="button" class="ss-key" onclick="ssKeyTap('5')">5</button>
+          <button type="button" class="ss-key" onclick="ssKeyTap('6')">6</button>
+          <button type="button" class="ss-key" onclick="ssKeyTap('7')">7</button>
+          <button type="button" class="ss-key" onclick="ssKeyTap('8')">8</button>
+          <button type="button" class="ss-key" onclick="ssKeyTap('9')">9</button>
+          <button type="button" class="ss-key" onclick="ssKeyTap('C')" style="font-size:12px !important;color:#fca5a5 !important;">CLR</button>
+          <button type="button" class="ss-key" onclick="ssKeyTap('0')">0</button>
+          <button type="button" class="ss-key" onclick="ssKeyTap('B')">⌫</button>
+        </div>
+        <div class="ss-auth-actions">
+          <button type="button" class="ss-btn" onclick="closeStampStudio()">✕ Cancel</button>
+          <button type="button" class="ss-btn ss-btn-gold" onclick="ssVerifyPassword()">🔓 Unlock Stamp</button>
+        </div>
+      </div>
+    </div>
     <div class="ss-head">
       <div class="ss-title">
         <span class="ss-ico">🔖</span>
@@ -2642,6 +2705,7 @@ else init();
         <button type="button" class="ss-btn" onclick="ssAddStampToPage()">➕ Add Stamp</button>
         <button type="button" class="ss-btn" onclick="ssDownloadPagePng()">🖼 Page PNG</button>
         <button type="button" class="ss-btn ss-btn-gold" id="ssExportPdfBtn" onclick="ssExportStampedPdf()">⬇ Download Stamped PDF</button>
+        <button type="button" class="ss-btn" onclick="ssLockStudio()" title="Lock Stamp Studio">🔒 Lock</button>
         <button type="button" class="ss-btn" onclick="closeStampStudio()">✕ Close</button>
       </div>
     </div>
@@ -3671,14 +3735,72 @@ window.DOMMatrix = window.DOMMatrix || window.WebKitCSSMatrix || function(){};
     ssToast("🔖 Downloaded transparent Stamp PNG!");
   };
 
-  /* ---------- Open / Close Modal ---------- */
+  /* ---------- Password Gate (19922) & Open / Close Modal ---------- */
+  var SS_PASSCODE = "19922";
+  var ssUnlocked = false;
+
+  window.ssLockStudio = function(){
+    ssUnlocked = false;
+    var gate = byId("ssAuthGate");
+    var inp = byId("ssAuthInput");
+    var err = byId("ssAuthError");
+    if(gate) gate.classList.remove("unlocked");
+    if(inp){ inp.value = ""; inp.type = "password"; setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 60); }
+    if(err) err.textContent = "";
+  };
+
+  window.ssTogglePwVis = function(){
+    var inp = byId("ssAuthInput");
+    if(!inp) return;
+    inp.type = (inp.type === "password") ? "text" : "password";
+  };
+
+  window.ssKeyTap = function(k){
+    var inp = byId("ssAuthInput");
+    var err = byId("ssAuthError");
+    if(!inp) return;
+    if(err) err.textContent = "";
+    if(k === "C") inp.value = "";
+    else if(k === "B") inp.value = inp.value.slice(0, -1);
+    else if(inp.value.length < 12) inp.value += k;
+  };
+
+  window.ssVerifyPassword = function(){
+    var inp = byId("ssAuthInput");
+    var err = byId("ssAuthError");
+    var card = byId("ssAuthCard");
+    var gate = byId("ssAuthGate");
+    var val = inp ? String(inp.value || "").trim() : "";
+    if(val === SS_PASSCODE){
+      ssUnlocked = true;
+      if(gate) gate.classList.add("unlocked");
+      if(inp) inp.value = "";
+      if(err) err.textContent = "";
+      ssSwitchPage(SS.currentPage);
+      refreshAll();
+      ssToast("🔓 Official Stamp Studio Unlocked");
+    } else {
+      if(err) err.textContent = "⚠️ Incorrect password. Access denied.";
+      if(card){
+        card.classList.remove("shake");
+        void card.offsetWidth;
+        card.classList.add("shake");
+      }
+      if(inp){ inp.value = ""; try{ inp.focus(); }catch(e){} }
+    }
+  };
+
   window.openStampStudio = function(){
     var ov = byId("stampStudioModal");
     if(!ov) return;
     ov.classList.add("open");
     document.body.classList.add("ss-noscroll");
-    ssSwitchPage(SS.currentPage);
-    refreshAll();
+    if(!ssUnlocked){
+      ssLockStudio();
+    } else {
+      ssSwitchPage(SS.currentPage);
+      refreshAll();
+    }
   };
 
   window.closeStampStudio = function(){
@@ -3686,10 +3808,20 @@ window.DOMMatrix = window.DOMMatrix || window.WebKitCSSMatrix || function(){};
     if(!ov) return;
     ov.classList.remove("open");
     document.body.classList.remove("ss-noscroll");
+    ssLockStudio();
   };
 
   function initStampStudio(){
     initDefaultStamps();
+    var authInp = byId("ssAuthInput");
+    if(authInp){
+      authInp.addEventListener("keydown", function(e){
+        if(e.key === "Enter" || e.keyCode === 13){
+          e.preventDefault();
+          ssVerifyPassword();
+        }
+      });
+    }
     var fTop = byId("ssFileInputTop");
     var fSide = byId("ssFileInputSide");
     if(fTop) fTop.addEventListener("change", function(e){
@@ -5080,6 +5212,5 @@ document.addEventListener("visibilitychange", function(){ if(!document.hidden) u
   }catch(e){}
 })();
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a507cac349dd8df8',t:'MTc5MzAwMDIwNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
