@@ -364,6 +364,10 @@ label{
 /* =========================================================
    SCHEDULE
 ========================================================= */
+.print-head{
+    display:none;
+}
+
 .schedule-header{
     display:flex;
     justify-content:space-between;
@@ -737,22 +741,126 @@ footer{
    PRINT
 ========================================================= */
 @media print{
-    .no-print{ display:none!important; }
-    body{ background:#fff; }
-    .card{ box-shadow:none; border:1px solid #ddd; }
-    .container{ max-width:none; }
-    .main-grid{ display:block; }
-    header{
-        background:#17365d!important;
+
+    /* Only the generated schedule is printed, so it can be shared
+       with the groups as a clean sheet. */
+    @page{
+        margin:12mm;
+    }
+
+    body{
+        background:#fff;
+    }
+
+    body *{
+        visibility:hidden;
+    }
+
+    .print-target,
+    .print-target *{
+        visibility:visible;
+    }
+
+    .print-target{
+        position:absolute;
+        left:0;
+        top:0;
+        width:100%;
+        max-width:none;
+        margin:0;
+        padding:0;
+        border:0!important;
+        border-radius:0;
+        box-shadow:none;
+    }
+
+    .schedule-header,
+    .fresh-shuffle,
+    .shuffle-note,
+    .rotation-note,
+    .no-print{
+        display:none!important;
+    }
+
+    .print-head{
+        display:block!important;
+        text-align:center;
+        border-bottom:3px solid #17365d;
+        padding-bottom:10px;
+        margin-bottom:16px;
+    }
+
+    .print-head h1{
+        font-size:20px;
+        margin:0;
+        letter-spacing:.5px;
+        color:#17365d;
+    }
+
+    .print-head p{
+        margin:5px 0 0;
+        font-size:12px;
+        color:#475467;
+    }
+
+    .week{
+        break-inside:avoid;
+        page-break-inside:avoid;
+        border:1px solid #cbd5e1;
+        margin:0 0 10px;
+    }
+
+    .week-title{
+        background:#eef3f8!important;
+        print-color-adjust:exact;
+        -webkit-print-color-adjust:exact;
+        padding:8px 11px;
+    }
+
+    .date-main{ font-size:13px; }
+    .date-day{ font-size:11px; }
+
+    .group-pill,
+    .service-time-badge,
+    .mx-tag{
         print-color-adjust:exact;
         -webkit-print-color-adjust:exact;
     }
-    .fresh-shuffle,.shuffle-note,.rotation-note{ display:none!important; }
-    .group-grid{ grid-template-columns:1fr 1fr; }
-    .matrix{ font-size:10px; min-width:0; }
-    .matrix-wrap{ overflow:visible; }
-}
 
+    .service{
+        padding:9px 11px;
+    }
+
+    .service-top{
+        margin-bottom:8px;
+    }
+
+    .service-title{
+        font-size:12px;
+    }
+
+    .assignments{
+        grid-template-columns:repeat(3,1fr);
+        gap:5px;
+    }
+
+    .assignment{
+        font-size:10px;
+        padding:5px 7px;
+        background:#fafafa;
+        break-inside:avoid;
+    }
+
+    .assignment b{
+        font-size:9px;
+        margin-bottom:2px;
+    }
+
+    .assignment.unassigned{
+        color:#b42318;
+    }
+
+}
 </style>
 </head>
 <body>
@@ -948,7 +1056,7 @@ footer{
                 >
             </div>
 
-            <button class="primary" onclick="window.print()">Print / Save PDF</button>
+            <button class="primary" onclick="printSchedule()">Print / Save PDF</button>
             <button class="light" onclick="exportCSV()">Export CSV</button>
         </div>
     </div>
@@ -959,15 +1067,22 @@ footer{
 
     <div id="repeatGuard"></div>
 
-    <!-- GENERATED SCHEDULE -->
-    <div class="card">
-        <div class="schedule-header">
-            <h2>6. Generated Service Schedule</h2>
+    <!-- GENERATED SCHEDULE (this block is what gets printed) -->
+    <div class="card print-target">
+
+        <div class="print-head">
+            <h1>JCRGM SERVICE SCHEDULE</h1>
+            <p id="printSubtitle"></p>
         </div>
 
-        <div id="rotationMap" class="rotation-map"></div>
+        <div class="schedule-header no-print">
+            <h2>6. Generated Service Schedule</h2>
+            <button class="light" onclick="printSchedule()">Print / Save PDF</button>
+        </div>
 
-        <div id="sundayMatrix"></div>
+        <div id="rotationMap" class="rotation-map no-print"></div>
+
+        <div id="sundayMatrix" class="no-print"></div>
 
         <div id="schedule"></div>
     </div>
@@ -988,19 +1103,15 @@ footer{
 const responsibilities = [
 
     ["Service Leader","Coordinates the service and keeps the programme flowing."],
-    ["Opening Prayer","Leads the opening prayer and commits the service to God."],
-    ["Scripture Reading","Reads the appointed Scripture clearly."],
     ["Intercession","Leads congregational intercession."],
     ["Offering / Giving","Coordinates offering, giving and related arrangements."],
     ["Sermon / Word","Preaches or delivers the main Word where applicable."],
-    ["Holy Communion","Coordinates Holy Communion where scheduled."],
     ["Protocol / Ushering","Oversees seating, order and visitor assistance."],
     ["Security / Safety","Coordinates basic service safety and emergency readiness."],
     ["Time Keeper","Monitors programme timing and transitions."],
     ["Welcome / Hospitality","Welcomes visitors and supports hospitality."],
     ["Children / Sunday School","Coordinates children's ministry where applicable."],
     ["Testimonies","Coordinates and manages testimonies."],
-    ["Closing Prayer","Closes the service in prayer."],
     ["Service Review","Records issues, improvements and follow-up actions."]
 
 ];
@@ -2543,6 +2654,28 @@ function renderSchedule(){
         return;
     }
 
+    /* ---------- printed header ---------- */
+    const subtitle = document.getElementById("printSubtitle");
+
+    if(subtitle){
+
+        const monthValue = document.getElementById("month").value;
+
+        let monthLabel = "";
+
+        if(monthValue){
+            const [yy, mm] = monthValue.split("-").map(Number);
+            monthLabel = new Date(yy, mm - 1, 1).toLocaleDateString("en-US",{
+                month:"long", year:"numeric"
+            });
+        }
+
+        subtitle.textContent =
+            monthLabel +
+            (rotationMode() === "groups" ? " • Group Rotation" : " • All Pastors") +
+            " • " + schedule.length + " services";
+    }
+
     /* ---------- rotation map ---------- */
     mapBox.innerHTML = schedule
         .filter(item => item.isSunday)
@@ -2769,6 +2902,22 @@ function escapeHtml(value){
 }
 
 /* =========================================================
+   PRINT THE SCHEDULE ONLY
+   ---------------------------------------------------------
+   The printed page contains nothing but the generated
+   schedule, so it can be handed straight to the groups.
+========================================================= */
+function printSchedule(){
+
+    if(!schedule.length){
+        alert("Generate a schedule first, then print it.");
+        return;
+    }
+
+    window.print();
+}
+
+/* =========================================================
    EXPORT CSV
 ========================================================= */
 function exportCSV(){
@@ -2950,5 +3099,5 @@ function init(){
 init();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5568e67dc00b6da',t:'MTc5MzgyNjExMA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5568e67dc00b6da',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a556c4023c69b6da',t:'MTc5MzgyODMwNg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a556c4023c69b6da',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
