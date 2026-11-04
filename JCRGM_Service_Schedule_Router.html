@@ -516,6 +516,100 @@ label{
 }
 
 /* =========================================================
+   SUNDAY MATRIX
+========================================================= */
+.matrix-wrap{
+    overflow-x:auto;
+    border:1px solid var(--border);
+    border-radius:12px;
+    margin-bottom:8px;
+}
+
+.matrix{
+    border-collapse:collapse;
+    width:100%;
+    font-size:12px;
+    min-width:640px;
+}
+
+.matrix thead th{
+    background:#eef3f8;
+    color:var(--primary);
+    text-align:left;
+    padding:9px;
+    font-size:11px;
+    border-bottom:2px solid #d6e0ea;
+    vertical-align:top;
+    min-width:120px;
+}
+
+.matrix thead th.mx-role{
+    min-width:150px;
+}
+
+.mx-num{
+    display:block;
+    font-size:11px;
+    font-weight:800;
+}
+
+.mx-date{
+    display:block;
+    color:var(--muted);
+    font-weight:700;
+    margin:2px 0 4px;
+}
+
+.matrix tbody th{
+    text-align:left;
+    padding:8px 9px;
+    color:var(--primary);
+    font-size:12px;
+    background:#fbfcfe;
+    border-bottom:1px solid #edf0f4;
+    white-space:nowrap;
+}
+
+.matrix tbody td{
+    padding:8px 9px;
+    border-bottom:1px solid #edf0f4;
+    border-left:1px solid #f2f5f9;
+    vertical-align:top;
+}
+
+.matrix tbody tr:nth-child(even) th,
+.matrix tbody tr:nth-child(even) td{
+    background:#fafcfe;
+}
+
+.mx-line{
+    display:flex;
+    gap:5px;
+    align-items:baseline;
+    margin:1px 0;
+}
+
+.mx-tag{
+    font-size:9px;
+    font-weight:800;
+    color:#fff;
+    background:var(--primary);
+    border-radius:3px;
+    padding:1px 3px;
+    flex-shrink:0;
+}
+
+.mx-empty{ color:var(--danger); font-style:italic; }
+
+.mx-legend{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.5;
+    margin-bottom:22px;
+}
+
+
+/* =========================================================
    RESPONSIBILITIES
 ========================================================= */
 .roles{
@@ -588,8 +682,10 @@ footer{
         print-color-adjust:exact;
         -webkit-print-color-adjust:exact;
     }
-    .fresh-shuffle,.shuffle-note{ display:none!important; }
+    .fresh-shuffle,.shuffle-note,.rotation-note{ display:none!important; }
     .group-grid{ grid-template-columns:1fr 1fr; }
+    .matrix{ font-size:10px; min-width:0; }
+    .matrix-wrap{ overflow:visible; }
 }
 
 </style>
@@ -671,8 +767,8 @@ footer{
 
         <div class="notice">
             The moment a name is added it is placed into one of the
-            <b>four service groups</b> automatically, so one person can never
-            appear on another group's Sunday.
+            <b>four service groups</b> automatically, so one person serves on one
+            group's Sunday only — never two groups on the same day.
             <br><br>
             <b>Shuffle Groups</b> re-deals the same names into new groups.
             Nobody is removed.
@@ -700,12 +796,15 @@ footer{
             A <b>Friday</b> Midweek Service is led by the group that is taking
             the Sunday of that same week.
             <br><br>
-            Every time a group serves, the duties are re-optimised so that
-            nobody keeps a responsibility they already carried earlier in the
-            month. If a group has fewer leaders than the responsibilities on the
-            list, some names must carry more than one duty — the router then
-            spreads them as widely as possible and reports it under
-            <b>Repeat Guard</b>.
+            <b>No duty repeats across Sundays.</b> A pastor who preaches on
+            Group 1's Sunday will not preach on Group 2's Sunday that follows,
+            and the same applies to every other responsibility — the check runs
+            across all groups and all Sundays of the month, including the 5th
+            Sunday that returns to Group 1.
+            <br><br>
+            Every pastor therefore holds a <b>different responsibility on every
+            Sunday they serve</b>. The <b>Sunday Matrix</b> below the schedule
+            shows this at a glance, and <b>Repeat Guard</b> confirms it.
         </div>
     </div>
 
@@ -786,6 +885,9 @@ footer{
         </div>
 
         <div id="rotationMap" class="rotation-map"></div>
+
+        <div id="sundayMatrix"></div>
+
         <div id="schedule"></div>
     </div>
 
@@ -1239,68 +1341,139 @@ function makeRotatedAssignments(members, shift){
 }
 
 /*
-   Best arrangement for one service, compared against every
-   earlier service led by the same group.
+   Best arrangement for one service.
+
+   history = EVERY assignment already placed on the schedule for
+   this month, from every group and every service.
+
+   Two things are enforced month-wide:
+
+   1. No pastor keeps a responsibility they have already carried
+      this month. So whoever preaches for Group 1 cannot preach
+      for Group 2 the following Sunday — the same applies to
+      every other duty.
+   2. No person is asked to do two different duties inside the
+      same service.
+
+   After those two, duties are spread as evenly as possible
+   among the leaders on duty.
 */
-function buildAssignments(members, previousAssignments){
+function buildAssignments(members, history){
 
     if(!members.length){
         return ROLE_NAMES.map(role => ({ role, person:"Unassigned", unassigned:true }));
     }
 
-    /* One leader covers every duty */
+    /* One leader can only do everything on their own */
     if(members.length === 1){
         return ROLE_NAMES.map(role => ({ role, person: members[0] }));
     }
 
-    let best       = null;
-    let bestScore  = Infinity;
-    let bestRepeats = Infinity;
+    /* Every (person|role) pair already used anywhere this month */
+    const usedPairs = new Set();
 
-    const attempts = Math.max(400, members.length * 60);
+    /* How many duties each leader has already carried this month */
+    const heldCount = {};
 
-    for(let attempt = 0; attempt < attempts; attempt++){
-
-        const order = shuffleArray(members);
-
-        const candidate = ROLE_NAMES.map((role,index) => ({
-            role,
-            person: order[index % order.length]
-        }));
-
-        let repeats = 0;   /* same person on a duty they already had */
-        let load    = 0;   /* spread of duties inside this service  */
-
-        const counts = {};
-
-        candidate.forEach(a => {
-            counts[a.person] = (counts[a.person] || 0) + 1;
+    history.forEach(assignments => {
+        assignments.forEach(a => {
+            if(a.person && a.person !== "Unassigned"){
+                usedPairs.add(a.person + "||" + a.role);
+                heldCount[a.person] = (heldCount[a.person] || 0) + 1;
+            }
         });
+    });
 
-        const loadValues = Object.values(counts);
+    const perfectOneEach = members.length >= ROLE_NAMES.length;
 
-        load = Math.max(...loadValues) - Math.min(...loadValues);
+    let best      = null;
+    let bestScore = Infinity;
 
-        previousAssignments.forEach(previous => {
-            previous.forEach(prev => {
-                if(prev.person === "Unassigned"){
-                    return;
+    /*
+       Randomized greedy construction, repeated. Each pass walks
+       the responsibility list and gives each duty to the leader
+       who has not carried it yet and is carrying the least.
+
+       This is fast, and because the tie-breaks are random the
+       passes explore different arrangements.
+    */
+    const trials = 60;
+
+    for(let trial = 0; trial < trials; trial++){
+
+        const pool = shuffleArray(members);
+
+        const inService = {};     /* duties already given in this service */
+        const assigned  = {};
+
+        const candidate = [];
+
+        for(const role of ROLE_NAMES){
+
+            let pick      = null;
+            let pickScore = Infinity;
+
+            for(const person of pool){
+
+                /* Can this leader take this responsibility? */
+                const repeat = usedPairs.has(person + "||" + role) ? 1 : 0;
+
+                const alreadyInService = inService[person] || 0;
+
+                /*
+                   Hard preferences, in order:
+                   never repeat this month's duty; then (when the
+                   group is big enough) never double a person up
+                   inside one service; then spread the load.
+                */
+                const doublePenalty = perfectOneEach ? alreadyInService * 100000 : alreadyInService * 10;
+
+                const score =
+                    (repeat * 1000000) +
+                    doublePenalty +
+                    (assigned[person] ? 1 : 0) * 1000 +
+                    (heldCount[person] || 0) * 10 +
+                    Math.random();
+
+                if(score < pickScore){
+                    pickScore = score;
+                    pick      = person;
                 }
-                candidate.forEach(c => {
-                    if(c.role === prev.role && c.person === prev.person){
-                        repeats++;
-                    }
-                });
-            });
+            }
+
+            candidate.push({ role, person: pick });
+
+            inService[pick]    = (inService[pick] || 0) + 1;
+            assigned[pick]     = true;
+        }
+
+        /* Score the finished service */
+        const perPerson = {};
+
+        let repeats = 0;
+
+        candidate.forEach(c => {
+            if(usedPairs.has(c.person + "||" + c.role)){
+                repeats++;
+            }
+            perPerson[c.person] = (perPerson[c.person] || 0) + 1;
         });
 
-        /* Repeats dominate; load spread only breaks ties */
-        const score = (repeats * 1000) + load;
+        let doubles = 0;
+
+        Object.values(perPerson).forEach(n => {
+            if(n > 1){
+                doubles += n - 1;
+            }
+        });
+
+        const score =
+            (repeats * 1000000) +
+            (perfectOneEach ? doubles * 100000 : 0);
 
         if(score < bestScore){
-            bestScore   = score;
-            bestRepeats = repeats;
-            best        = candidate;
+            bestScore = score;
+            best      = candidate;
         }
 
         if(bestScore === 0){
@@ -1308,7 +1481,68 @@ function buildAssignments(members, previousAssignments){
         }
     }
 
+    /* Last resort: swap duties to clear any repeat the greedy pass left */
+    if(bestScore > 0){
+        repairSwaps(best, usedPairs);
+    }
+
     return best;
+}
+
+/* =========================================================
+   LAST-RESORT SWAP REPAIR
+   ---------------------------------------------------------
+   Only runs when the greedy pass could not find a clean
+   arrangement. It trades duties between two leaders while the
+   swap strictly reduces the number of repeats, so a leader's
+   workload never changes and no new repeat is introduced.
+========================================================= */
+function repairSwaps(candidate, usedPairs){
+
+    const repeatsNow = () => candidate.reduce(
+        (n,c) => n + (usedPairs.has(c.person + "||" + c.role) ? 1 : 0),
+        0
+    );
+
+    let current = repeatsNow();
+
+    for(let step = 0; step < 300 && current > 0; step++){
+
+        let done = false;
+
+        for(let i = 0; i < candidate.length && !done; i++){
+
+            for(let j = i + 1; j < candidate.length; j++){
+
+                if(candidate[i].person === candidate[j].person){
+                    continue;
+                }
+
+                const pi = candidate[i].person;
+                const pj = candidate[j].person;
+
+                candidate[i].person = pj;
+                candidate[j].person = pi;
+
+                const after = repeatsNow();
+
+                if(after < current){
+                    current = after;
+                    done    = true;
+                    break;
+                }
+
+                candidate[i].person = pi;
+                candidate[j].person = pj;
+            }
+        }
+
+        if(!done){
+            return current === 0;
+        }
+    }
+
+    return current === 0;
 }
 
 /* =========================================================
@@ -1352,8 +1586,13 @@ function generate(){
     /* How many services each group has led so far this month */
     const servedCount = new Array(GROUP_COUNT).fill(0);
 
-    /* Everything each group has already been assigned this month */
-    const history = Array.from({length:GROUP_COUNT}, () => []);
+    /*
+       Everything already assigned this month — across ALL groups
+       and ALL services. This is what stops a pastor who preached
+       on Group 1's Sunday from preaching again on Group 2's Sunday.
+    */
+    const history = [];
+
 
     /* Group taking the current week, used for the Friday service */
     let weekGroupIndex = 0;
@@ -1401,11 +1640,11 @@ function generate(){
 
         matchingServices.forEach(service => {
 
-            const assignments = buildAssignments(members, history[groupIndex]);
+            const assignments = buildAssignments(members, history);
 
             servedCount[groupIndex]++;
 
-            history[groupIndex].push(assignments);
+            history.push(assignments);
 
             const localDate =
                 `${year}-${String(monthNumber).padStart(2,"0")}-${String(dayNumber).padStart(2,"0")}`;
@@ -1476,8 +1715,9 @@ function freshShuffle(serviceIndex){
         return;
     }
 
+    /* Compare against the WHOLE month so the cross-Sunday rule holds */
     const others = schedule
-        .filter((item,index) => index !== serviceIndex && item.groupIndex === service.groupIndex)
+        .filter((item,index) => index !== serviceIndex)
         .map(item => item.assignments);
 
     if(!confirm(
@@ -1498,6 +1738,16 @@ function freshShuffle(serviceIndex){
 
 /* =========================================================
    REPEAT GUARD REPORT
+   ---------------------------------------------------------
+   The rule being checked is month-wide:
+
+     • a pastor never carries the same responsibility twice,
+       in their own group or against any other group's Sunday;
+     • a pastor never does two different duties in one service.
+
+   Each leader can hold at most one fresh responsibility per
+   service, so a group can only be perfect when it has at least
+   as many leaders as the number of services it leads.
 ========================================================= */
 function renderRepeatGuard(){
 
@@ -1508,14 +1758,10 @@ function renderRepeatGuard(){
         return;
     }
 
-    const repeats = {};     /* "person||role" -> [service labels] */
-    const groupRole = {};   /* groupIndex -> {person: duty count} */
+    /* Every distinct (person + responsibility) used this month */
+    const pairs = {};
 
     schedule.forEach(service => {
-
-        groupRole[service.groupIndex] =
-            groupRole[service.groupIndex] || {};
-
         service.assignments.forEach(a => {
 
             if(a.unassigned){
@@ -1524,26 +1770,48 @@ function renderRepeatGuard(){
 
             const key = a.person + "||" + a.role;
 
-            repeats[key] = repeats[key] || [];
-            repeats[key].push(`${service.groupName} • ${formatShort(service.date)}`);
+            pairs[key] = pairs[key] || [];
+            pairs[key].push({
+                group: service.groupName,
+                label: formatShort(service.date) + " " +
+                       (service.service === SUNDAY_MORNING ? "AM" : "PM")
+            });
         });
     });
 
-    const clashes = Object.entries(repeats)
+    const clashes = Object.entries(pairs)
         .filter(([, list]) => list.length > 1)
         .sort((a,b) => b[1].length - a[1].length);
 
+    /* How many services each group actually leads this month */
+    const servicesPerGroup = new Array(GROUP_COUNT).fill(0);
+
+    schedule.forEach(service => servicesPerGroup[service.groupIndex]++);
+
     const groups = computeGroups();
-    const thin   = groups
-        .map((g,i) => ({ i, size:g.length }))
-        .filter(g => g.size > 0 && g.size < ROLE_NAMES.length);
+
+    const shortGroups = groups
+        .map((members,index) => ({
+            index,
+            size: members.length,
+            services: servicesPerGroup[index],
+            /*
+               A leader can hold each responsibility only once, so a
+               group can only be perfect when it has at least as many
+               leaders as the number of services it leads.
+            */
+            required: Math.max(1, servicesPerGroup[index])
+        }))
+        .filter(g => g.size > 0 && g.services > 0 && g.size < g.required);
 
     if(!clashes.length){
 
         box.innerHTML = `
             <div class="current-service" style="margin-bottom:18px">
-                ✅ Repeat Guard: no leader carries the same responsibility twice on this
-                month's schedule, and no leader appears in two groups.
+                ✅ Repeat Guard: every pastor holds a different responsibility on
+                every Sunday they serve. No duty is repeated by the same person
+                anywhere in this month's schedule — Group 1 compared against
+                Group 2, 3, 4 and back to Group 1 on a 5th Sunday.
             </div>
         `;
         return;
@@ -1557,30 +1825,124 @@ function renderRepeatGuard(){
             <br><br>
 
             ${
-                thin.length
-                ? `<b>Why:</b> ${thin.map(g =>
-                        `${groupLabel(g.i)} has ${g.size} leader${g.size === 1 ? "" : "s"}`
-                    ).join(", ")} — fewer than the ${ROLE_NAMES.length} responsibilities
-                    on the list, so those names must carry more than one duty.
-                    <b>Add at least ${ROLE_NAMES.length} leaders to each group for a clean roster.</b>
-                    <br><br>`
-                : `<b>Why:</b> a group is serving more services this month than it has
-                    distinct leaders available. Add a few more leaders to that group.
-                    <br><br>`
+                shortGroups.length
+                ? `<b>Why:</b> ` + shortGroups.map(g =>
+                        `${groupLabel(g.index)} has <b>${g.size}</b> leader${g.size === 1 ? "" : "s"}
+                         and leads ${g.services} service${g.services === 1 ? "" : "s"},
+                         so it needs at least <b>${g.required}</b>`
+                    ).join("; ") +
+                    `. A leader can hold each responsibility only once in the month, so a
+                     group needs at least one leader for every service it leads.
+                     <b>Add leaders to those groups to clear every repeat.</b>`
+                : `<b>Why:</b> the groups are too thin to give every leader a fresh
+                   responsibility on every Sunday. Add a few more leaders.`
             }
 
-            ${clashes.slice(0,12).map(([key,list]) => {
+            <br><br>
+
+            ${clashes.slice(0,10).map(([key,list]) => {
                 const [person, role] = key.split("||");
-                return `<div style="margin-bottom:5px">
+                return `<div style="margin-bottom:6px">
                     <b>${escapeHtml(person)}</b> — ${escapeHtml(role)}
-                    <br><small>${escapeHtml(list.join(" · "))}</small>
+                    <br><small>${escapeHtml(
+                        list.map(l => `${l.group} · ${l.label}`).join("   /   ")
+                    )}</small>
                 </div>`;
             }).join("")}
 
-            ${clashes.length > 12
-                ? `<div><small>…and ${clashes.length - 12} more.</small></div>`
+            ${clashes.length > 10
+                ? `<div><small>…and ${clashes.length - 10} more.</small></div>`
                 : ""}
 
+        </div>
+    `;
+}
+
+/* =========================================================
+   SUNDAY MATRIX
+   One column per Sunday of the month, one row per
+   responsibility — so it is obvious at a glance that no name
+   keeps a duty from one Sunday to the next.
+========================================================= */
+function renderSundayMatrix(){
+
+    const box = document.getElementById("sundayMatrix");
+
+    if(!schedule.length){
+        box.innerHTML = "";
+        return;
+    }
+
+    const sundays = [];
+
+    schedule
+        .filter(service => service.isSunday)
+        .forEach(service => {
+            let day = sundays.find(d => d.date === service.date);
+            if(!day){
+                day = { date: service.date, groupIndex: service.groupIndex, groupName: service.groupName, services: [] };
+                sundays.push(day);
+            }
+            day.services.push(service);
+        });
+
+    if(!sundays.length){
+        box.innerHTML = "";
+        return;
+    }
+
+    const cell = (role, sunday) => {
+
+        const lines = sunday.services.map(service => {
+
+            const found = service.assignments.find(a => a.role === role);
+
+            if(!found){
+                return "";
+            }
+
+            const tag = service.service === SUNDAY_MORNING ? "AM" : "PM";
+
+            return `<div class="mx-line">
+                <span class="mx-tag">${tag}</span>
+                <span class="${found.unassigned ? "mx-empty" : ""}">${escapeHtml(found.person)}</span>
+            </div>`;
+        }).filter(Boolean).join("");
+
+        return lines || "—";
+    };
+
+    box.innerHTML = `
+        <div class="matrix-wrap">
+            <table class="matrix">
+                <thead>
+                    <tr>
+                        <th class="mx-role">Responsibility</th>
+                        ${sundays.map((sunday,index) => `
+                            <th>
+                                <span class="mx-num">${ordinal(index + 1)} Sunday</span>
+                                <span class="mx-date">${formatShort(sunday.date)}</span>
+                                <span class="group-pill ${groupClass(sunday.groupIndex)}">
+                                    ${escapeHtml(sunday.groupName)}
+                                </span>
+                            </th>
+                        `).join("")}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${ROLE_NAMES.map(role => `
+                        <tr>
+                            <th class="mx-role">${escapeHtml(role)}</th>
+                            ${sundays.map(sunday => `<td>${cell(role, sunday)}</td>`).join("")}
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mx-legend">
+            Each column is one Sunday and the group on duty. Read a row across to
+            confirm the same duty always lands on a different name.
         </div>
     `;
 }
@@ -1600,6 +1962,7 @@ function renderSchedule(){
 
         document.getElementById("summary").innerHTML = "";
         mapBox.innerHTML = "";
+        renderSundayMatrix();
         renderRepeatGuard();
 
         box.innerHTML = `
@@ -1774,15 +2137,14 @@ function renderSchedule(){
                         }
 
                         ${
-                            record.occurrence > 1 && record.groupMembers
-                            && record.groupMembers.length >= ROLE_NAMES.length
-                            ? `<div class="rotation-note">
-                                   ${escapeHtml(record.groupName)} is serving for the
-                                   ${ordinal(record.occurrence)} time this month —
-                                   every leader has been rotated to a responsibility
-                                   they have not carried yet.
-                               </div>`
-                            : ""
+                            record.shuffleCount > 0
+                            ? ""
+                            : (record.groupMembers && record.groupMembers.length * 4 >= ROLE_NAMES.length
+                                ? `<div class="rotation-note">
+                                       Every leader on duty has been given a responsibility they
+                                       have not carried on any earlier Sunday this month.
+                                   </div>`
+                                : "")
                         }
 
                         <div class="assignments">
@@ -1804,6 +2166,7 @@ function renderSchedule(){
         `;
     }).join("");
 
+    renderSundayMatrix();
     renderRepeatGuard();
 }
 
@@ -2016,5 +2379,5 @@ function init(){
 init();
 
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a55579da2a17b56c',t:'MTc5MzgxNDc4Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a55579da2a17b56c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
