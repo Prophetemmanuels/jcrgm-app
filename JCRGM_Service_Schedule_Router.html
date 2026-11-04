@@ -433,6 +433,7 @@ label{
 .group-pill.g2{ background:var(--g2); }
 .group-pill.g3{ background:var(--g3); }
 .group-pill.g4{ background:var(--g4); }
+.group-pill.gall{ background:#475467; }
 
 .service{
     padding:14px;
@@ -848,35 +849,33 @@ footer{
         <div id="groupWarning" class="notice red" style="display:none"></div>
 
         <div class="notice blue">
-            <b>How the Sundays rotate</b><br>
-            1st Sunday → Group 1 &nbsp;•&nbsp; 2nd Sunday → Group 2<br>
-            3rd Sunday → Group 3 &nbsp;•&nbsp; 4th Sunday → Group 4<br>
-            A 5th Sunday starts again at Group 1.
+            <b>Two ways to staff a Sunday</b>
             <br><br>
-            Each group leads <b>both</b> the Morning Service and the Afternoon
-            Prophetic Ministry on its own Sunday, so no two groups ever clash
-            on the same day.
+
+            <b>All Pastors — one name per duty (recommended).</b>
+            Every service is staffed from the whole pastor list, one name per
+            responsibility. No pastor is tied to a group, so any pastor can serve
+            on any Sunday, and the router simply keeps names from repeating the
+            same duty.
             <br><br>
-            A <b>Friday</b> Midweek Service is led by the group that is taking
-            the Sunday of that same week.
+
+            <b>Group Rotation.</b> The month is split into four groups: 1st Sunday
+            Group 1, 2nd Sunday Group 2, 3rd Group 3, 4th Group 4, and a 5th Sunday
+            back to Group 1. Each group leads both the morning and the afternoon
+            service on its own Sunday, so no two groups ever clash.
             <br><br>
-            <b>One duty per pastor per service.</b> A pastor is never given two
-            responsibilities in the same service, and is never listed twice.
-            <br><br>
-            <b>No duty repeats across Sundays.</b> A pastor who preaches on
-            Group 1's Sunday will not preach on Group 2's Sunday that follows,
-            and the same applies to every other responsibility — checked across
-            all groups and all Sundays, including the 5th Sunday that returns to
-            Group 1.
-            <br><br>
-            <b>Every registered pastor participates.</b> Auto Schedule re-balances
-            the groups so no pastor is left in a group that never serves, and
-            reports anyone it could not place.
-            <br><br>
-            <b>How many pastors you need:</b> one pastor per responsibility per
-            service, so a group of 15 or more covers all ${ROLE_NAMES.length}
-            duties with one pastor each. Fewer than that leaves duties open, which
-            the router flags rather than doubling a pastor up.
+
+            <b>In both modes:</b>
+            <br>
+            • one pastor never holds two duties in the same service;
+            <br>
+            • the same name is not put on the same duty twice;
+            <br>
+            • every registered pastor is scheduled;
+            <br>
+            • a Friday is led by the group taking that week's Sunday
+            (or drawn from all pastors in All Pastors mode).
+
         </div>
     </div>
 
@@ -893,6 +892,16 @@ footer{
             <option value="sun">Sunday Services Only</option>
             <option value="fri">Friday Service Only</option>
             <option value="sunfri">Sunday + Friday Services</option>
+        </select>
+
+        <label for="rotationMode">Who Serves Each Service</label>
+        <select id="rotationMode" onchange="onRotationModeChange()">
+            <option value="all" selected>
+                All Pastors — one name per duty (recommended)
+            </option>
+            <option value="groups">
+                Group Rotation — 1st Sunday Group 1, 2nd Group 2…
+            </option>
         </select>
 
         <div class="actions">
@@ -1369,6 +1378,26 @@ function renderGroups(){
 
     const box = document.getElementById("groupsList");
 
+    if(rotationMode() === "all"){
+
+        box.innerHTML = `
+            <div class="group-card" style="grid-column:1/-1">
+                <header>
+                    <span>All Pastors</span>
+                    <small>${people.length} pastor${people.length === 1 ? "" : "s"}</small>
+                </header>
+                <div class="member" style="border:0;color:#667085">
+                    Every service is staffed from the full pastor list, one name per duty.
+                    No pastor is tied to a group, so any pastor can serve on any Sunday.
+                </div>
+            </div>
+        `;
+
+        document.getElementById("groupWarning").style.display = "none";
+
+        return;
+    }
+
     const servicesThisMonth = new Array(GROUP_COUNT).fill(0);
 
     schedule.forEach(service => servicesThisMonth[service.groupIndex]++);
@@ -1625,21 +1654,18 @@ function buildAssignments(members, history){
     }
 
     /*
-       ONE DUTY PER PASTOR PER SERVICE, EVERY PASTOR SERVES.
+       ONE DUTY PER PASTOR PER SERVICE — a pastor takes at most one
+       responsibility in a service, never two.
 
-       With fewer leaders than responsibilities, the first
-       `members.length` duties go one-per-pastor and the rest stay
-       genuinely unassigned — a pastor is never given two duties in
-       the same service. Left-over duties are flagged so extra
-       volunteers can be added.
+       A duty is only left open when there are fewer pastors than
+       duties. Repeating a name is always preferred over leaving a
+       duty uncovered.
     */
-    const roster = members.slice(0, ROLE_NAMES.length);
+    const pool = members.slice();
 
-    /* Every (person|role) pair already used anywhere this month */
-    const usedPairs = new Set();
-
-    /* How many duties each leader has already carried this month */
-    const heldCount = {};
+    /* Everything already given out this month */
+    const usedPairs  = new Set();   /* person + role already paired   */
+    const heldCount  = {};          /* duties each pastor has carried */
 
     history.forEach(assignments => {
         assignments.forEach(a => {
@@ -1653,43 +1679,41 @@ function buildAssignments(members, history){
     let best      = null;
     let bestScore = Infinity;
 
-    /*
-       Randomized greedy construction: walk the duty list and give
-       each duty to a leader who has not carried it yet this month
-       and is carrying the lightest load. Nobody is listed twice in
-       the same service.
-    */
     const trials = 80;
 
     for(let trial = 0; trial < trials; trial++){
 
-        const pool = shuffleArray(roster);
+        const order = shuffleArray(pool);
 
-        const given = new Set();     /* leaders already used in this service */
+        const given = new Set();     /* pastor already used in this service */
 
         const candidate = [];
 
         for(const role of ROLE_NAMES){
 
-            if(given.size >= pool.length){
-                candidate.push({ role, person:"Unassigned", unassigned:true });
-                continue;
-            }
-
             let pick      = null;
             let pickScore = Infinity;
 
-            for(const person of pool){
+            for(const person of order){
 
+                /* one duty per pastor per service — never twice */
                 if(given.has(person)){
-                    continue;      /* one duty each, no exceptions */
+                    continue;
                 }
 
+                /*
+                   Scoring, in priority order:
+                   1. avoid a duty this pastor has already carried
+                      this month (the "don't repeat names" rule);
+                   2. prefer pastors who have carried the fewest
+                      duties so everybody gets a turn;
+                   3. randomness, so each generation differs.
+                */
                 const repeat = usedPairs.has(person + "||" + role) ? 1 : 0;
 
                 const score =
-                    (repeat * 1000000) +
-                    (heldCount[person] || 0) * 100 +
+                    (repeat * 1000) +
+                    (heldCount[person] || 0) * 10 +
                     Math.random();
 
                 if(score < pickScore){
@@ -1698,16 +1722,34 @@ function buildAssignments(members, history){
                 }
             }
 
+            if(pick === null){
+                candidate.push({ role, person:"Unassigned", unassigned:true });
+                continue;
+            }
+
             candidate.push({ role, person: pick });
             given.add(pick);
         }
 
+        /* Count only the repeats that were actually forced */
         const repeats = candidate.reduce(
             (n,c) => n + (c.unassigned ? 0 : (usedPairs.has(c.person + "||" + c.role) ? 1 : 0)),
             0
         );
 
-        const score = repeats * 1000000;
+        /* Fewest repeats wins; then the most even workload */
+        const spread = (function(){
+            const counts = {};
+            candidate.forEach(c => {
+                if(!c.unassigned){
+                    counts[c.person] = (counts[c.person] || 0) + 1;
+                }
+            });
+            const values = Object.values(counts);
+            return values.length ? Math.max(...values) - Math.min(...values) : 0;
+        })();
+
+        const score = (repeats * 1000) + spread;
 
         if(score < bestScore){
             bestScore = score;
@@ -1719,7 +1761,58 @@ function buildAssignments(members, history){
         }
     }
 
-    /* Last resort: trade duties between two leaders to clear a repeat */
+    /*
+       CYCLIC FALLBACK.
+       If the randomized passes still leave a repeat, a rotated
+       assignment is tried: duty i goes to pastor (i + offset),
+       wrapping around the pool. With at least as many pastors as
+       duties this gives every pastor exactly one duty per service,
+       and stepping the offset for each service walks each pastor
+       through a different duty every time — so nothing repeats.
+    */
+    if(bestScore > 0){
+
+        const n = pool.length;
+
+        const offsets = [];
+
+        for(let o = 0; o < n; o++){
+            offsets.push(o);
+        }
+
+        for(const offset of shuffleArray(offsets)){
+
+            const candidate = ROLE_NAMES.map((role,index) => {
+
+                if(index >= n){
+                    return { role, person:"Unassigned", unassigned:true };
+                }
+
+                return { role, person: pool[(index + offset) % n] };
+            });
+
+            /* nobody twice in one service is guaranteed when n >= duties */
+            const repeats = candidate.reduce(
+                (count,c) => count + (c.unassigned ? 0 : (usedPairs.has(c.person + "||" + c.role) ? 1 : 0)),
+                0
+            );
+
+            if(repeats < bestScore){
+                bestScore = repeats;
+                best      = candidate;
+            }
+
+            if(bestScore === 0){
+                break;
+            }
+        }
+    }
+
+    /*
+       Last resort: trade duties between two pastors while that
+       strictly removes a repeated responsibility. A swap keeps each
+       pastor's workload identical and never introduces a new repeat.
+    */
     if(bestScore > 0){
         repairSwaps(best, usedPairs);
     }
@@ -1727,13 +1820,7 @@ function buildAssignments(members, history){
     return best;
 }
 
-/* =========================================================
-   LAST-RESORT SWAP REPAIR
-   ---------------------------------------------------------
-   Trades duties between two leaders while the swap strictly
-   reduces repeats. Nobody gains a second duty in the service
-   and workloads are unchanged.
-========================================================= */
+
 function repairSwaps(candidate, usedPairs){
 
     const active = candidate.filter(c => !c.unassigned);
@@ -1745,20 +1832,25 @@ function repairSwaps(candidate, usedPairs){
 
     let current = repeatsNow();
 
-    for(let step = 0; step < 300 && current > 0; step++){
+    for(let step = 0; step < 600 && current > 0; step++){
 
-        let done = false;
+        let improved = false;
 
-        for(let i = 0; i < active.length && !done; i++){
+        /* random order so different swaps get explored each time */
+        for(const i of shuffleArray(active.map((_,index) => index))){
 
-            for(let j = i + 1; j < active.length; j++){
+            for(const j of shuffleArray(active.map((_,index) => index))){
 
-                if(active[i].person === active[j].person){
+                if(i >= j){
                     continue;
                 }
 
                 const pi = active[i].person;
                 const pj = active[j].person;
+
+                if(pi === pj){
+                    continue;
+                }
 
                 active[i].person = pj;
                 active[j].person = pi;
@@ -1766,22 +1858,68 @@ function repairSwaps(candidate, usedPairs){
                 const after = repeatsNow();
 
                 if(after < current){
-                    current = after;
-                    done    = true;
+                    current  = after;
+                    improved = true;
                     break;
                 }
 
+                /* revert */
                 active[i].person = pi;
                 active[j].person = pj;
             }
+
+            if(improved){
+                break;
+            }
         }
 
-        if(!done){
+        if(!improved){
             return current === 0;
         }
     }
 
     return current === 0;
+}
+
+
+function rotationMode(){
+
+    const el = document.getElementById("rotationMode");
+
+    return el ? el.value : "all";
+}
+
+function onRotationModeChange(){
+    renderSchedule();
+    renderGroups();
+}
+
+/* =========================================================
+   EXACT ROTATION PLAN
+   ---------------------------------------------------------
+   The cleanest way to guarantee that no name is ever put on the
+   same duty twice: give every service its own distinct rotation
+   of the pastor list.
+
+       duty i  ->  pastor (i + offset) % pool.length
+
+   When the offsets all differ, a pastor's duty index shifts by the
+   difference between offsets, so they always land on a different
+   responsibility. This is exact, not a search, and needs one
+   distinct offset per service the pool leads.
+========================================================= */
+function buildRotated(pool, offset){
+
+    const n = pool.length;
+
+    return ROLE_NAMES.map((role,index) => {
+
+        if(n === 0 || index >= n){
+            return { role, person:"Unassigned", unassigned:true };
+        }
+
+        return { role, person: pool[(index + offset) % n] };
+    });
 }
 
 /* =========================================================
@@ -1877,7 +2015,53 @@ function generate(){
 
     slots.forEach(slot => { servicesPerGroup[slot.groupIndex] += slot.services.length; });
 
-    const groups = planGroups(servicesPerGroup);
+    const mode = rotationMode();
+
+    /*
+       ALL PASTORS mode — the pool for every service is the whole
+       congregation, so every registered pastor is in play and the
+       router is free to give each duty to a different name.
+    */
+    const groups = mode === "all"
+        ? [ [...people], [], [], [] ]
+        : planGroups(servicesPerGroup);
+
+    /* ---------------------------------------------
+       EXACT ROTATION PLAN
+       ---------------------------------------------------------
+       One distinct rotation offset per service. In All Pastors
+       mode every service draws from the same pool, so the whole
+       month shares one sequence; in Group mode each group gets its
+       own sequence.
+    --------------------------------------------- */
+    const planKeyOf = slot => (mode === "all" ? "all" : String(slot.groupIndex));
+
+    const servicesByKey = {};
+
+    slots.forEach(slot => {
+        const key = planKeyOf(slot);
+        servicesByKey[key] = (servicesByKey[key] || 0) + slot.services.length;
+    });
+
+    const offsetsByKey = {};
+
+    Object.keys(servicesByKey).forEach(key => {
+
+        const poolSize = mode === "all"
+            ? people.length
+            : (groups[Number(key)] || []).length;
+
+        const serviceCount = servicesByKey[key];
+
+        if(poolSize < serviceCount){
+            offsetsByKey[key] = null;      /* fall back to the search */
+            return;
+        }
+
+        const all = Array.from({length: poolSize}, (_,i) => i);
+
+        offsetsByKey[key] = shuffleArray(all).slice(0, serviceCount);
+    });
 
     /* ---------------------------------------------
        PASS 3 — build the roster
@@ -1893,11 +2077,34 @@ function generate(){
 
     slots.forEach(slot => {
 
-        const members = groups[slot.groupIndex];
+        /*
+           ALL PASTORS mode: every service draws from the whole
+           pastor list, whatever the rotation slot is.
+        */
+        const members = mode === "all"
+            ? people.slice()
+            : (groups[slot.groupIndex] || []);
 
         slot.services.forEach(service => {
 
-            let assignments = buildAssignments(members, history);
+            let assignments;
+
+            const plan = offsetsByKey[planKeyOf(slot)];
+
+            if(plan && plan.length){
+
+                /*
+                   Exact plan: this service gets its own distinct
+                   rotation, so every pastor holds a fresh duty.
+                */
+                assignments = buildRotated(members, plan.shift());
+
+                /* anything the greedy pool could not cover stays open */
+                assignments = assignments.map(a => a);
+            }
+            else{
+                assignments = buildAssignments(members, history);
+            }
 
             /*
                FRIDAY WIDENING — a Friday is a midweek service, so if
@@ -1942,8 +2149,8 @@ function generate(){
                 service: service.name,
                 time: service.time,
 
-                groupIndex: slot.groupIndex,
-                groupName: groupLabel(slot.groupIndex),
+                groupIndex: mode === "all" ? null : slot.groupIndex,
+                groupName: mode === "all" ? "All Pastors" : groupLabel(slot.groupIndex),
                 groupMembers: [...members],
 
                 occurrence: servedCount[slot.groupIndex],
@@ -2007,10 +2214,14 @@ function freshShuffle(serviceIndex){
     }
 
     const service = schedule[serviceIndex];
-    const members = computeGroups()[service.groupIndex];
+
+    /* In All Pastors mode the pool is everyone; otherwise the group on duty */
+    const members = service.groupIndex === null
+        ? people.slice()
+        : (computeGroups()[service.groupIndex] || []);
 
     if(members.length < 2){
-        alert("At least 2 leaders are needed in this group for a fresh shuffle.");
+        alert("At least 2 pastors are needed for a fresh shuffle.");
         return;
     }
 
@@ -2020,8 +2231,9 @@ function freshShuffle(serviceIndex){
         .map(item => item.assignments);
 
     if(!confirm(
-        `Fresh Shuffle only ${service.service} on ${formatDate(service.date)} ` +
-        `(${service.groupName})? Other services stay unchanged.`
+        `Fresh Shuffle only ${service.service} on ${formatDate(service.date)}` +
+        (service.groupIndex === null ? "" : ` (${service.groupName})`) +
+        `? Other services stay unchanged.`
     )){
         return;
     }
@@ -2032,7 +2244,9 @@ function freshShuffle(serviceIndex){
     saveData(false);
     renderSchedule();
 
-    alert(`${service.service} (${service.groupName}) has been freshly shuffled.`);
+    alert(
+        `${service.service} has been freshly shuffled.`
+    );
 }
 
 /* =========================================================
@@ -2104,7 +2318,9 @@ function renderRepeatGuard(){
 
     const groups = computeGroups();
 
-    const thinGroups = groups
+    const allMode = rotationMode() === "all";
+
+    const thinGroups = allMode ? [] : groups
         .map((members,index) => ({ index, size: members.length, services: servicesPerGroup[index] }))
         .filter(g => g.size > 0 && g.services > 0 && g.size < ROLE_NAMES.length);
 
@@ -2272,7 +2488,7 @@ function renderSundayMatrix(){
                             <th>
                                 <span class="mx-num">${ordinal(index + 1)} Sunday</span>
                                 <span class="mx-date">${formatShort(sunday.date)}</span>
-                                <span class="group-pill ${groupClass(sunday.groupIndex)}">
+                                <span class="group-pill ${sunday.groupIndex === null ? "gall" : groupClass(sunday.groupIndex)}">
                                     ${escapeHtml(sunday.groupName)}
                                 </span>
                             </th>
@@ -2448,8 +2664,8 @@ function renderSchedule(){
                     <span class="date-day">
                         ${escapeHtml(first.day)}
                         &nbsp;
-                        <span class="group-pill ${groupClass(first.groupIndex)}">
-                            ${escapeHtml(first.groupName)} ON DUTY
+                        <span class="group-pill ${first.groupIndex === null ? "gall" : groupClass(first.groupIndex)}">
+                            ${escapeHtml(first.groupName)}${first.groupIndex === null ? "" : " ON DUTY"}
                         </span>
                     </span>
                 </div>
@@ -2609,7 +2825,8 @@ function saveData(show = true){
         people,
         schedule,
         month: document.getElementById("month").value,
-        pattern: document.getElementById("servicePattern").value
+        pattern: document.getElementById("servicePattern").value,
+        rotation: rotationMode()
     };
 
     const ok = storage.set("jcrgm_schedule_data_v2", JSON.stringify(data));
@@ -2662,6 +2879,10 @@ function loadData(show = true){
 
         if(data.pattern){
             document.getElementById("servicePattern").value = data.pattern;
+        }
+
+        if(data.rotation){
+            document.getElementById("rotationMode").value = data.rotation;
         }
 
         renderPeople();
@@ -2729,5 +2950,5 @@ function init(){
 init();
 
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5568e67dc00b6da',t:'MTc5MzgyNjExMA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5568e67dc00b6da',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
