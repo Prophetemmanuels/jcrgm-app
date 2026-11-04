@@ -2902,11 +2902,44 @@ function escapeHtml(value){
 }
 
 /* =========================================================
+   FILE NAME (includes the month)
+   ---------------------------------------------------------
+   Every download and every saved PDF is named after the month
+   so the files stay apart, e.g.
+       JCRGM_Service_Schedule_2026-11_November.pdf
+========================================================= */
+function scheduleFileBase(){
+
+    const monthValue = document.getElementById("month").value;
+
+    /* No month picked yet: fall back to the plain app name */
+    if(!monthValue){
+        return "JCRGM_Service_Schedule_Router";
+    }
+
+    const [year, month] = monthValue.split("-").map(Number);
+
+    const monthName = new Date(year, month - 1, 1).toLocaleDateString("en-US", { month:"long" });
+
+    /*
+       Same pattern as the app file name:
+           JCRGM_Service_Schedule_Router.html
+           JCRGM_Service_November_Schedule_Router.html
+       So a download reads:
+           JCRGM_Service_November_Schedule_2026-11.csv
+    */
+    return `JCRGM_Service_${monthName}_Schedule_${monthValue}`;
+}
+
+
+/* =========================================================
    PRINT THE SCHEDULE ONLY
    ---------------------------------------------------------
    The printed page contains nothing but the generated
    schedule, so it can be handed straight to the groups.
 ========================================================= */
+const DEFAULT_TITLE = "JCRGM SERVICE SCHEDULE ROUTER";
+
 function printSchedule(){
 
     if(!schedule.length){
@@ -2914,7 +2947,24 @@ function printSchedule(){
         return;
     }
 
+    /*
+       Browsers use the document title as the default PDF file
+       name, so it is switched to the month-based name just for
+       the duration of the print dialog.
+    */
+    const restore = () => {
+        document.title = DEFAULT_TITLE;
+        window.removeEventListener("afterprint", restore);
+    };
+
+    document.title = scheduleFileBase();
+
+    window.addEventListener("afterprint", restore);
+
     window.print();
+
+    /* Safari and some mobile browsers never fire afterprint */
+    setTimeout(restore, 2000);
 }
 
 /* =========================================================
@@ -2955,7 +3005,7 @@ function exportCSV(){
     const link = document.createElement("a");
 
     link.href = url;
-    link.download = "JCRGM_Service_Schedule.csv";
+    link.download = scheduleFileBase() + ".csv";
 
     document.body.appendChild(link);
     link.click();
@@ -3099,5 +3149,5 @@ function init(){
 init();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a556c4023c69b6da',t:'MTc5MzgyODMwNg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a556c4023c69b6da',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a556d7432ff4b572',t:'MTc5MzgyOTA5NA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a556d7432ff4b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
