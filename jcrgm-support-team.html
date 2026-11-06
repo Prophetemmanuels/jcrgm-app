@@ -384,6 +384,15 @@ table.tbl tbody tr:hover{background:#fafbff}
 .pin input{text-align:center;letter-spacing:.3em;font-size:17px;padding:13px}
 .lock .who{font-size:11px;color:var(--muted);margin-top:14px}
 
+/* collapsible advanced block */
+details.adv{margin:0 0 4px}
+details.adv summary{cursor:pointer;font-size:12.4px;font-weight:700;color:#2a3555;padding:9px 12px;
+  border-radius:11px;background:#f7f9fd;border:1px solid var(--line2);list-style:none;user-select:none}
+details.adv summary::-webkit-details-marker{display:none}
+details.adv summary::before{content:'▸';display:inline-block;margin-right:7px;color:#5b6478;transition:transform .15s}
+details.adv[open] summary::before{transform:rotate(90deg)}
+details.adv[open] summary{border-bottom-left-radius:0;border-bottom-right-radius:0}
+
 /* partner cards */
 .ptype-grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(158px,1fr))}
 .ptype{display:flex;gap:8px;align-items:flex-start;padding:11px;border-radius:var(--r-sm);
@@ -948,34 +957,47 @@ table.tbl tbody tr:hover{background:#fafbff}
             <p>Cases, partners and their documents live in the church's Supabase project — the same project the Announcements and membership pages use. Everything on this device is only an offline cache and outbox.</p>
           </div>
         </div>
-        <div class="stats" id="sbStatus" style="margin-bottom:14px"></div>
-        <div class="grid">
-          <div class="field span2">
-            <label for="sbUrl">Project URL</label>
-            <input class="inp mono" id="sbUrl" placeholder="https://xxxxxxxx.supabase.co" spellcheck="false" autocomplete="off">
-            <span class="hint">Loaded automatically from <code>supabase-config.js</code> when this page runs inside the church app. Paste it here only if it is missing.</span>
+        <div class="stats" id="sbStatus" style="margin-bottom:12px"></div>
+
+        <div class="note ok" style="margin-bottom:12px"><span class="ni">🔗</span><div>
+          <b>Nothing to configure, ever.</b> The church project is built into this app, so every phone that installs it — and every member who opens the form — is connected automatically the moment the page loads. Nobody types a URL or a key. Leaders only <em>sign in</em> to read the register; applicants never do.
+        </div></div>
+
+        <details class="adv">
+          <summary>Advanced — connection details (read-only guide) &amp; this device's session</summary>
+          <div class="grid" style="margin-top:12px">
+            <div class="field span2">
+              <label for="sbUrl">Project URL</label>
+              <input class="inp mono" id="sbUrl" placeholder="https://xxxxxxxx.supabase.co" spellcheck="false" autocomplete="off">
+              <span class="hint">Compiled into the page. Changing it here affects <b>this device only</b> and is never required.</span>
+            </div>
+            <div class="field span2">
+              <label for="sbKey">Publishable / anon key</label>
+              <input class="inp mono" id="sbKey" type="password" placeholder="sb_publishable_…" spellcheck="false" autocomplete="off">
+              <span class="hint">The publishable key only — never the <b>service_role</b> key. Row Level Security decides what it may do.</span>
+            </div>
+            <div class="field">
+              <label for="sbBucket">Document bucket</label>
+              <input class="inp mono" id="sbBucket" placeholder="welfare-documents">
+            </div>
+            <div class="field">
+              <label>This device's session</label>
+              <div class="row" style="min-height:42px"><span class="count" id="sbSignState">Not signed in</span></div>
+            </div>
           </div>
-          <div class="field span2">
-            <label for="sbKey">Anon / publishable key</label>
-            <input class="inp mono" id="sbKey" type="password" placeholder="eyJhbGciOi…" spellcheck="false" autocomplete="off">
-            <span class="hint">The <b>anon</b> key only — never the service_role key. Row Level Security decides what it may do.</span>
+          <div class="formbar" style="border-top:0;padding-top:4px">
+            <span class="count">Override only if the church ever changes project.</span>
+            <span class="grow"></span>
+            <button class="btn ghost sm" type="button" id="sbSave">Save override</button>
           </div>
-          <div class="field">
-            <label for="sbBucket">Document bucket</label>
-            <input class="inp mono" id="sbBucket" placeholder="welfare-documents">
-          </div>
-          <div class="field">
-            <label>Session</label>
-            <div class="row" style="min-height:42px"><span class="count" id="sbSignState">Not signed in</span></div>
-          </div>
-        </div>
+        </details>
+
         <div class="formbar">
-          <span class="count">Run <b>jcrgm-welfare-supabase.sql</b> once in the project to create the tables, policies and bucket.</span>
+          <span class="count" id="sbFoot">Sync status shown above.</span>
           <span class="grow"></span>
           <button class="btn ghost sm" type="button" id="sbSignOut" hidden>Sign out</button>
           <button class="btn ghost sm" type="button" id="sbTest">🔌 Test connection</button>
           <button class="btn ghost sm" type="button" id="btnFlush">🔄 Sync now</button>
-          <button class="btn primary sm" type="button" id="sbSave">Save settings</button>
         </div>
       </div>
 
@@ -1087,7 +1109,7 @@ table.tbl tbody tr:hover{background:#fafbff}
   <footer class="pfoot">
     <span>Jesus Christ Redeems Global Ministries</span><span class="sep">·</span>
     <a href="tel:+260979554970" id="footCall">📞 <span>0979 554 970</span></a><span class="sep">·</span>
-    <a href="/cdn-cgi/l/email-protection#5f2f3a3b3e37252a2d323631362c2b2d363a2c1f38323e3633713c3032" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="bfcfdadbded7c5cacdd2d6d1d6cccbcdd6daccffd8d2ded6d391dcd0d2">[email&#160;protected]</span></span></a><br>
+    <a href="/cdn-cgi/l/email-protection#1b6b7e7f7a73616e6976727572686f69727e685b7c767a727735787476" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="23534647424b5956514e4a4d4a5057514a465063444e424a4f0d404c4e">[email&#160;protected]</span></span></a><br>
     <span id="footVer">v2.0</span> · Confidential welfare record · <span id="footYear"></span>
   </footer>
 </main>
@@ -1143,8 +1165,8 @@ const CONFIG = {
   maxFileMB:    6,
   minDocs:      1,
   sb: {
-    url:    '',                            // filled from the church app or saved settings
-    key:    '',                            // anon / publishable key
+    url:    'https://yisfzexlbjeoeujvmmno.supabase.co',
+    key:    'sb_publishable_NJvHqe_S_6QxZwQD0THexg_-Za92muj',   // publishable key — safe in the browser
     bucket: 'welfare-documents',
     tables: { cases:'welfare_cases', docs:'welfare_documents', partners:'welfare_partners' },
     rpc:    { case:'welfare_lookup_case', partner:'welfare_lookup_partner' }
@@ -1160,6 +1182,11 @@ function gvar(name) {
 
 /* pull the project settings out of the host app, whichever way it exposes them */
 (function pickEnv() {
+  /* The project is compiled into this page. Every copy — every phone that installs
+     the church app — therefore connects to the same database with nothing to type.
+     Only if CONFIG.sb is left blank do we look for settings elsewhere.            */
+  if (CONFIG.sb.url && CONFIG.sb.key) return;
+
   const pairs = [
     ['SUPABASE_URL','SUPABASE_ANON_KEY'], ['SUPABASE_URL','SUPABASE_KEY'],
     ['SUPABASE_PROJECT_URL','SUPABASE_ANON_KEY'], ['JCRGM_SUPABASE_URL','JCRGM_SUPABASE_ANON_KEY'],
@@ -2222,6 +2249,11 @@ function renderSbCard() {
     '<div class="stat" style="text-align:left;padding:12px 14px"><b style="font-size:14px">' + state.partners.length + '</b><span>partners cached</span></div>';
   $('#sbSignOut').hidden = !signed;
   $('#sbSignState').textContent = signed ? 'Signed in as ' + (sess && sess.email) : (has ? 'Not signed in' : '');
+  const foot = $('#sbFoot');
+  if (foot) foot.innerHTML = has
+    ? 'Automatic — the church project is built into this app, so every phone is connected. ' +
+      (state.pending ? '<b>' + state.pending + '</b> record(s) waiting to upload.' : 'Everything is uploaded.')
+    : 'No project built in — fill in the advanced details to connect this device.';
 }
 
 $('#sbSave').addEventListener('click', async e => {
@@ -2727,5 +2759,5 @@ async function refresh(pull) {
 })();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a562f1e21ebdb572',t:'MTc5Mzk1NjAxNA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a562f1e21ebdb572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a56311d06cfeb575',t:'MTc5Mzk1NzMyMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a56311d06cfeb575',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
