@@ -5,63 +5,443 @@
 <title>JCRGM Support Team — Compassion &amp; Welfare | Jesus Christ Redeems Global Ministries</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#101d44">
-<meta name="description" content="JCRGM Support Team: register the people we are sponsoring, apply for assistance, and check the progress of a request. Jesus Christ Redeems Global Ministries.">
+<meta name="description" content="JCRGM Support Team: apply for assistance and upload your supporting documents (NRC/ID), check the progress of a request, or become a partner in the ministry's vision. Jesus Christ Redeems Global Ministries.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="JCRGM Support">
-<meta name="format-detection" content="telephone=no">
 <meta name="robots" content="index,follow">
-<meta property="og:title" content="JCRGM Compassion &amp; Welfare — Support Team Desk">
-<meta property="og:description" content="Register the people we are sponsoring or apply for assistance. Every gift is recorded, receipted and followed up.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23101d44'/><path d='M32 12v40M20 26h24' stroke='%23ffd700' stroke-width='6' stroke-linecap='round'/></svg>">
-<link rel="stylesheet" href="church-platform.css">
-<link rel="stylesheet" href="jcrgm-support-team.css">
+<style>
+/* ═══════════════════════ design tokens ═══════════════════════ */
+:root{
+  --navy:#101d44; --navy2:#1b2c60; --navy3:#0b1533;
+  --gold:#ffd700; --gold2:#b8912c; --gold3:#fff6cc;
+  --teal:#0f766e; --teal-l:#e6f6f4;
+  --bg:#f4f6fb; --card:#ffffff;
+  --ink:#0f172a; --muted:#5b6478; --line:#e3e6ef; --line2:#eef0f7;
+  --ok:#0f8a4d; --ok-l:#e7f7ee; --warn:#b45309; --warn-l:#fff7e6;
+  --danger:#b42318; --danger-l:#fdeceb; --info:#1f3c88; --info-l:#eaf0ff;
+  --r:16px; --r-sm:11px; --r-lg:22px;
+  --sh:0 1px 2px rgba(16,29,68,.06), 0 8px 24px -12px rgba(16,29,68,.18);
+  --sh-lg:0 24px 60px -24px rgba(16,29,68,.45);
+  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Segoe UI",Roboto,"Helvetica Neue",system-ui,-apple-system,sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.55;
+  -webkit-text-size-adjust:100%; overflow-x:hidden;
+}
+h1,h2,h3,h4{margin:0;line-height:1.22;letter-spacing:-.015em}
+p{margin:0}
+a{color:var(--info);text-underline-offset:2px}
+button{font:inherit;color:inherit}
+.gold{color:var(--gold)}
+.req{color:var(--danger);font-weight:700}
+.grow{flex:1 1 auto;min-width:0}
+.small{font-size:12.5px}
+.mono{font-family:var(--mono);letter-spacing:.02em}
+
+/* ═══════════════════════ ambient ═══════════════════════ */
+.pv{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.pv-orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.22}
+.pv-orb.a{width:420px;height:420px;background:#2b4ea8;top:-140px;left:-120px}
+.pv-orb.b{width:360px;height:360px;background:#b8912c;bottom:-160px;right:-110px;opacity:.16}
+.pv-orb.c{width:280px;height:280px;background:#0f766e;top:40%;right:-140px;opacity:.12}
+
+/* ═══════════════════════ masthead ═══════════════════════ */
+.mast{
+  position:relative;z-index:2;
+  background:
+    radial-gradient(900px 320px at 78% -30%, rgba(184,145,44,.42), transparent 62%),
+    radial-gradient(700px 300px at 8% 120%, rgba(47,86,190,.5), transparent 60%),
+    linear-gradient(160deg,var(--navy3),var(--navy) 55%,#16265a);
+  color:#eaf0ff; padding:22px 18px 26px; overflow:hidden;
+  border-bottom:3px solid var(--gold2);
+}
+.mast-stars{position:absolute;inset:0;opacity:.5;
+  background-image:radial-gradient(1.4px 1.4px at 12% 22%,#fff,transparent),radial-gradient(1.2px 1.2px at 32% 68%,#fff,transparent),
+  radial-gradient(1.6px 1.6px at 58% 18%,#fff,transparent),radial-gradient(1.2px 1.2px at 78% 52%,#fff,transparent),
+  radial-gradient(1.4px 1.4px at 92% 28%,#fff,transparent),radial-gradient(1.1px 1.1px at 46% 88%,#fff,transparent),
+  radial-gradient(1.3px 1.3px at 68% 82%,#fff,transparent);}
+.mast-inner{position:relative;max-width:1080px;margin:0 auto;text-align:center}
+.back{
+  position:absolute;top:0;left:0;z-index:3;color:#cfd9f7;text-decoration:none;
+  font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:99px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16)
+}
+.back:hover{background:rgba(255,255,255,.16)}
+.crest{margin:2px auto 10px;width:52px;height:52px;display:grid;place-items:center;
+  border-radius:16px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);
+  box-shadow:0 10px 26px -10px rgba(0,0,0,.7)}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.mast h1{font-size:clamp(25px,5.6vw,40px);font-weight:800}
+.mast .sub{max-width:620px;margin:10px auto 0;color:#c3cff1;font-size:14px}
+.verse{margin:12px auto 0;max-width:640px;font-size:12.8px;font-style:italic;color:#9fb0dd;min-height:1px}
+.mast-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;
+  padding:7px 12px;border-radius:99px;text-decoration:none;color:#e6ecff;
+  background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16)}
+.pill:hover{background:rgba(255,255,255,.17);color:#fff}
+.dot{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 3px rgba(74,222,128,.2)}
+.dot.off{background:#fbbf24;box-shadow:0 0 0 3px rgba(251,191,36,.2)}
+
+/* ═══════════════════════ tabs ═══════════════════════ */
+.tabs{position:sticky;top:0;z-index:30;background:rgba(16,29,68,.97);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.1);box-shadow:0 6px 20px -14px rgba(0,0,0,.7)}
+.tabs-in{max-width:1080px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs-in::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;position:relative;
+  padding:13px 14px;font-size:13px;font-weight:700;color:#a9b6dd;background:none;border:0;
+  cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:.15s}
+.tab:hover{color:#fff;background:rgba(255,255,255,.05)}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:var(--gold);background:rgba(255,255,255,.07)}
+.ti{font-size:15px}
+.tab-badge{background:var(--gold);color:#101d44;font-size:10.5px;font-weight:800;
+  min-width:18px;height:18px;padding:0 5px;border-radius:9px;display:inline-grid;place-items:center}
+.tab-badge.alert{background:#ff6b5e;color:#fff}
+
+/* ═══════════════════════ layout ═══════════════════════ */
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:20px 14px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:20px;box-shadow:var(--sh);margin-bottom:16px}
+.card.pad-0{padding:0;overflow:hidden}
+.card-hd{display:flex;gap:13px;align-items:flex-start;margin-bottom:16px}
+.card-hd .grow{min-width:0}
+.ico{flex:0 0 auto;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;
+  font-size:19px;background:linear-gradient(150deg,#eef2ff,#dfe6f8);border:1px solid #dbe2f4;color:var(--navy)}
+.eyebrow-sm{display:block;font-size:10.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--gold2);margin-bottom:3px}
+.card-hd h2{font-size:clamp(17px,3.4vw,21px)}
+.card-hd p{font-size:13px;color:var(--muted);margin-top:5px}
+.divider{height:1px;background:var(--line2);margin:16px 0}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.count{font-size:12.5px;color:var(--muted)}
+.count b{color:var(--ink)}
+
+/* ═══════════════════════ action grid (home) ═══════════════════════ */
+.act-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(228px,1fr))}
+.act{position:relative;text-align:left;padding:18px;border-radius:var(--r);cursor:pointer;
+  background:#fbfcff;border:1px solid var(--line);transition:.18s;display:flex;flex-direction:column;gap:8px}
+.act:hover{transform:translateY(-2px);border-color:#c6d1ee;box-shadow:0 18px 36px -22px rgba(16,29,68,.5)}
+.act.is-primary{background:linear-gradient(165deg,#fffdf2,#fff8d9);border-color:#eeda93}
+.act.is-new{background:linear-gradient(165deg,#f4f9ff,#e9f1ff);border-color:#c9dbf8}
+.act .ai{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:18px}
+.g-gold{background:#fff3c4;border:1px solid #f0dd94}
+.g-teal{background:var(--teal-l);border:1px solid #bfe5e0}
+.g-navy{background:#e7ecfb;border:1px solid #cdd8f4}
+.g-indigo{background:#eaf0ff;border:1px solid #c9dbf8}
+.act h3{font-size:15.5px}
+.act p{font-size:12.6px;color:var(--muted);flex:1}
+.act .go{font-size:12.5px;font-weight:800;color:var(--info);display:inline-flex;gap:5px;align-items:center}
+
+/* ═══════════════════════ stats ═══════════════════════ */
+.stats{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(118px,1fr))}
+.stat{padding:13px;border-radius:var(--r-sm);background:#f8faff;border:1px solid var(--line2);text-align:center}
+.stat b{display:block;font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-.02em}
+.stat span{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.stat.gold{background:linear-gradient(160deg,#fffbe6,#fff4c2);border-color:#f0e0a0}
+.stat.gold b{color:#8a6a10}
+.stat.ok{background:var(--ok-l);border-color:#c7e9d5}
+.stat.ok b{color:var(--ok)}
+
+/* ═══════════════════════ flow / steps list ═══════════════════════ */
+.flow{list-style:none;margin:0;padding:0;display:grid;gap:11px}
+.flow li{display:flex;gap:12px;align-items:flex-start}
+.flow .n{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font-size:12.5px;font-weight:800;background:var(--navy);color:var(--gold);margin-top:1px}
+.flow b{display:block;font-size:13.6px}
+.flow span{font-size:12.6px;color:var(--muted)}
+.cats{display:flex;flex-wrap:wrap;gap:6px}
+.cat{font-size:11.6px;font-weight:700;padding:5px 10px;border-radius:99px;background:#f1f4fc;
+  border:1px solid #e0e6f5;color:#2b3f77}
+blockquote.scripture{margin:0;padding:14px 16px;border-left:3px solid var(--gold);
+  background:linear-gradient(90deg,#fffdf0,#fffefa);border-radius:0 var(--r-sm) var(--r-sm) 0;
+  font-size:13px;font-style:italic;color:#3d3a24}
+blockquote.scripture cite{display:block;margin-top:6px;font-size:11.5px;font-style:normal;
+  font-weight:800;color:var(--gold2);letter-spacing:.04em;text-transform:uppercase}
+
+/* ═══════════════════════ notes ═══════════════════════ */
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:var(--r-sm);font-size:12.8px;
+  background:#f7f9fd;border:1px solid var(--line2);border-left:3px solid #c8d3ef}
+.note .ni{flex:0 0 auto;font-size:15px;line-height:1.35}
+.note b{color:var(--ink)}
+.note.warn{background:var(--warn-l);border-color:#f6e3bd;border-left-color:#e0a03a}
+.note.ok{background:var(--ok-l);border-color:#c7e9d5;border-left-color:#3ba86b}
+.note.danger{background:var(--danger-l);border-color:#f6cfcb;border-left-color:#dc5347}
+.note.info{background:var(--info-l);border-color:#cfdcfb;border-left-color:#4166c8}
+.legal{font-size:11.5px;color:var(--muted);line-height:1.62;margin:12px 0 0}
+.legal b{color:#33405f}
+
+/* ═══════════════════════ forms ═══════════════════════ */
+form{margin:0}
+.grid{display:grid;gap:13px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field.span2{grid-column:1 / -1}
+label,.lbl{font-size:12.6px;font-weight:700;color:#2a3555}
+.inp,.sel,textarea.inp{
+  width:100%;padding:11px 12px;border-radius:var(--r-sm);border:1.5px solid var(--line);
+  background:#fcfdff;font:inherit;font-size:14px;color:var(--ink);transition:.15s
+}
+.inp:focus,.sel:focus,textarea.inp:focus{outline:none;border-color:#3f62c4;background:#fff;
+  box-shadow:0 0 0 4px rgba(63,98,196,.13)}
+.inp::placeholder{color:#9aa3ba}
+textarea.inp{resize:vertical;min-height:88px;line-height:1.5}
+.sel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235b6478' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;padding-right:34px}
+.hint{font-size:11.5px;color:var(--muted)}
+.err{display:none;align-items:center;gap:5px;font-size:11.8px;font-weight:600;color:var(--danger)}
+.field.invalid .err,.err.show{display:flex}
+.field.invalid .inp,.field.invalid .sel,.field.invalid .up-drop{border-color:#e3948c;background:#fffafa}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:13px;font-weight:500;color:#2a3555;
+  padding:12px;border-radius:var(--r-sm);background:#f8faff;border:1.5px solid var(--line);cursor:pointer}
+.chk input{width:18px;height:18px;flex:0 0 auto;margin-top:2px;accent-color:#1f3c88}
+.chk.invalid{border-color:#e3948c;background:#fffafa}
+.radio-row{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+.radio-row label{display:flex;gap:8px;align-items:center;padding:10px 12px;border-radius:var(--r-sm);
+  border:1.5px solid var(--line);background:#fcfdff;font-size:12.8px;font-weight:600;cursor:pointer}
+.radio-row input{accent-color:#1f3c88;width:16px;height:16px}
+.radio-row label:has(input:checked){border-color:#3f62c4;background:var(--info-l)}
+.formbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:18px;
+  padding-top:16px;border-top:1px solid var(--line2)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:11px 18px;border-radius:var(--r-sm);border:1.5px solid transparent;font-size:13.4px;
+  font-weight:800;cursor:pointer;transition:.16s;text-decoration:none;white-space:nowrap}
+.btn.primary{background:linear-gradient(160deg,#27479e,#1a2f6d);color:#fff;box-shadow:0 10px 22px -12px rgba(31,60,136,.9)}
+.btn.primary:hover{filter:brightness(1.1)}
+.btn.gold{background:linear-gradient(160deg,#ffd94d,#e8b520);color:#3a2c00;box-shadow:0 10px 22px -12px rgba(184,145,44,.9)}
+.btn.ok{background:linear-gradient(160deg,#17a35c,#0d7a43);color:#fff}
+.btn.ghost{background:#fff;border-color:var(--line);color:#2a3555}
+.btn.ghost:hover{background:#f4f6fc;border-color:#ccd5ea}
+.btn.danger{background:#fff;border-color:#f0c8c4;color:#b42318}
+.btn.danger:hover{background:var(--danger-l)}
+.btn.sm{padding:8px 13px;font-size:12.4px}
+.btn.xs{padding:6px 10px;font-size:11.6px;border-radius:9px}
+.btn.block{width:100%}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn .sp{display:none;width:14px;height:14px;border-radius:50%;border:2px solid currentColor;
+  border-top-color:transparent;animation:spin .7s linear infinite}
+.btn.busy .sp{display:inline-block}
+.btn.busy{pointer-events:none;opacity:.85}
+@keyframes spin{to{transform:rotate(360deg)}}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11.2px;font-weight:800;
+  padding:4px 9px;border-radius:99px;letter-spacing:.02em;white-space:nowrap;
+  background:#eef1f9;color:#3b4870;border:1px solid #e0e5f2}
+.badge.tone-ok{background:var(--ok-l);color:#0b6b3d;border-color:#c7e9d5}
+.badge.tone-warn{background:var(--warn-l);color:#8a5205;border-color:#f0dcb4}
+.badge.tone-danger{background:var(--danger-l);color:#96201a;border-color:#f2c9c5}
+.badge.tone-info{background:var(--info-l);color:#1c3a86;border-color:#cfdcfb}
+.badge.tone-gold{background:var(--gold3);color:#7a5c08;border-color:#f0e0a0}
+.badge.tone-teal{background:var(--teal-l);color:#0b5c56;border-color:#c2e6e1}
+
+/* ═══════════════════════ apply steps ═══════════════════════ */
+.steps{display:flex;gap:6px;margin-bottom:18px;overflow-x:auto;padding-bottom:2px}
+.stp{flex:1 1 0;min-width:96px;display:flex;flex-direction:column;gap:5px}
+.stp .bar{height:4px;border-radius:99px;background:#e7ebf6}
+.stp.done .bar{background:#3ba86b}
+.stp.now .bar{background:linear-gradient(90deg,#3ba86b,#ffd700)}
+.stp span{font-size:10.6px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#98a1b8}
+.stp.now span{color:var(--navy)}
+.stp.done span{color:var(--ok)}
+.step-sec{display:none}
+.step-sec.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.step-sec h3{font-size:14.4px;margin-bottom:11px;display:flex;align-items:center;gap:8px}
+.step-sec h3 .n{width:22px;height:22px;border-radius:50%;background:var(--navy);color:var(--gold);
+  display:grid;place-items:center;font-size:11.5px;font-weight:800}
+
+/* ═══════════════════════ uploader ═══════════════════════ */
+.up-wrap{display:grid;gap:11px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.up{border:1.5px dashed #cfd8ee;border-radius:var(--r);padding:12px;background:#fbfcff;transition:.16s}
+.up.drag{border-color:#3f62c4;background:var(--info-l)}
+.up.has{border-style:solid;border-color:#bfe5d0;background:#fbfffd}
+.up-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+.up-hd b{font-size:12.9px;line-height:1.35}
+.up-hd .tag{font-size:10.2px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--muted);background:#eef1f9;border:1px solid #e2e7f3;border-radius:99px;padding:2px 7px;white-space:nowrap}
+.up-drop{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;
+  padding:16px 10px;border-radius:var(--r-sm);background:#fff;border:1.5px dashed #d5ddef;cursor:pointer;transition:.15s}
+.up-drop:hover{border-color:#3f62c4;background:#f7faff}
+.up-ic{font-size:22px;line-height:1}
+.up-txt b{display:block;font-size:12.4px}
+.up-txt span{font-size:11px;color:var(--muted)}
+.up-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.fitem{display:flex;align-items:center;gap:9px;padding:7px;border-radius:10px;background:#fff;border:1px solid var(--line2)}
+.fthumb{width:38px;height:38px;border-radius:8px;object-fit:cover;background:#eef1f9;flex:0 0 auto;
+  display:grid;place-items:center;font-size:16px;border:1px solid var(--line2)}
+.fmeta{min-width:0;flex:1}
+.fmeta b{display:block;font-size:11.8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fmeta span{font-size:10.6px;color:var(--muted)}
+.fx{flex:0 0 auto;width:24px;height:24px;border-radius:7px;border:1px solid var(--line);background:#fff;
+  cursor:pointer;font-size:11px;color:#b42318;line-height:1}
+.fx:hover{background:var(--danger-l);border-color:#f0c8c4}
+.docs-total{display:flex;align-items:center;gap:8px;font-size:12.4px;font-weight:700;color:var(--navy);
+  background:#f3f7ff;border:1px solid #dde6fa;border-radius:var(--r-sm);padding:9px 12px;margin-top:12px}
+
+/* ═══════════════════════ confirmation ═══════════════════════ */
+.done-hero{text-align:center;padding:12px 6px 4px}
+.done-hero .big{width:66px;height:66px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;
+  font-size:30px;background:radial-gradient(circle at 30% 25%,#c9f5dc,#66d39b);box-shadow:0 16px 34px -18px rgba(15,138,77,.9)}
+.done-hero h2{font-size:22px}
+.done-hero p{color:var(--muted);font-size:13.4px;max-width:520px;margin:8px auto 0}
+.refbox{display:inline-flex;flex-direction:column;gap:2px;margin:16px auto 0;padding:14px 26px;
+  border-radius:var(--r);background:linear-gradient(160deg,#101d44,#1b2c60);color:#fff;
+  box-shadow:var(--sh-lg);border:1px solid rgba(255,255,255,.14)}
+.refbox small{font-size:10.4px;letter-spacing:.16em;text-transform:uppercase;color:#9fb0dd}
+.refbox b{font-family:var(--mono);font-size:19px;letter-spacing:.06em;color:var(--gold)}
+.recap{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:18px;text-align:left}
+.recap div{padding:10px 12px;border-radius:var(--r-sm);background:#f8faff;border:1px solid var(--line2)}
+.recap small{display:block;font-size:10.6px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800}
+.recap b{font-size:13px}
+
+/* ═══════════════════════ register / table ═══════════════════════ */
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.search{position:relative;flex:1 1 200px;min-width:150px}
+.search .si{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;opacity:.6}
+.search .inp{padding-left:33px}
+.toolbar .sel{flex:0 1 auto;width:auto;min-width:120px;padding:9px 30px 9px 11px;font-size:12.4px}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.tbl{width:100%;border-collapse:collapse;font-size:12.6px;min-width:640px}
+table.tbl th{text-align:left;padding:9px 12px;font-size:10.6px;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--muted);background:#f7f9fd;border-bottom:1px solid var(--line);white-space:nowrap}
+table.tbl td{padding:11px 12px;border-bottom:1px solid var(--line2);vertical-align:middle}
+table.tbl tr:last-child td{border-bottom:0}
+table.tbl tbody tr:hover{background:#fafbff}
+.tname b{display:block;font-size:13.2px}
+.tname span{font-size:11px;color:var(--muted)}
+.empty{padding:34px 18px;text-align:center;color:var(--muted)}
+.empty .e-ic{font-size:32px;display:block;margin-bottom:8px;opacity:.55}
+.empty b{display:block;color:var(--ink);font-size:14.4px;margin-bottom:4px}
+
+/* ═══════════════════════ drawer ═══════════════════════ */
+.scrim{position:fixed;inset:0;background:rgba(10,18,40,.55);backdrop-filter:blur(3px);z-index:60}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(520px,100%);background:#fff;z-index:61;
+  display:flex;flex-direction:column;box-shadow:-20px 0 60px -20px rgba(0,0,0,.5);animation:slide .22s ease}
+@keyframes slide{from{transform:translateX(20px);opacity:.6}to{transform:none;opacity:1}}
+.dhd{display:flex;gap:12px;align-items:flex-start;padding:16px;border-bottom:1px solid var(--line);
+  background:linear-gradient(160deg,#101d44,#1b2c60);color:#fff}
+.dhd h3{font-size:16px}
+.dsub{font-size:11.8px;color:#a9b6dd;margin-top:3px}
+.dhd .x{margin-left:auto;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  color:#fff;width:30px;height:30px;border-radius:9px;cursor:pointer;flex:0 0 auto}
+.dhd .x:hover{background:rgba(255,255,255,.24)}
+.dbody-scroll{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.dfoot{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;background:#fbfcff}
+.dl{display:grid;gap:0;margin:0 0 14px}
+.dl div{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line2);font-size:12.8px}
+.dl dt{flex:0 0 40%;font-weight:700;color:var(--muted);font-size:12px;margin:0}
+.dl dd{margin:0;flex:1;word-break:break-word}
+.sec-t{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold2);
+  margin:16px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--line2)}
+.doc-grid{display:grid;gap:9px;grid-template-columns:repeat(auto-fill,minmax(94px,1fr))}
+.doc{border:1px solid var(--line);border-radius:11px;overflow:hidden;background:#f8faff;text-decoration:none;color:inherit;display:block}
+.doc img{width:100%;height:74px;object-fit:cover;display:block;background:#e9edf7}
+.doc .ph{height:74px;display:grid;place-items:center;font-size:22px;background:#e9edf7}
+.doc span{display:block;font-size:10.4px;padding:5px 6px;text-align:center;font-weight:700;color:#2a3555;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc:hover{border-color:#3f62c4}
+
+/* ═══════════════════════ modal ═══════════════════════ */
+.modal{position:fixed;inset:0;z-index:70;display:flex;align-items:flex-end;justify-content:center;padding:0}
+@media(min-width:640px){.modal{align-items:center;padding:24px}}
+.modal-scrim{position:absolute;inset:0;background:rgba(10,18,40,.6);backdrop-filter:blur(3px)}
+.modal-box{position:relative;background:#fff;border-radius:var(--r-lg) var(--r-lg) 0 0;width:min(560px,100%);
+  max-height:92vh;display:flex;flex-direction:column;box-shadow:var(--sh-lg);animation:up .22s ease}
+@media(min-width:640px){.modal-box{border-radius:var(--r-lg)}}
+@keyframes up{from{transform:translateY(18px);opacity:.7}to{transform:none;opacity:1}}
+.modal-hd{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.modal-hd h3{font-size:16px}
+.modal-hd .x{margin-left:auto;width:30px;height:30px;border-radius:9px;border:1px solid var(--line);
+  background:#fff;cursor:pointer;color:#5b6478}
+.modal-bd{padding:16px 18px;overflow-y:auto}
+.modal-ft{padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;background:#fbfcff}
+
+/* ═══════════════════════ toasts ═══════════════════════ */
+.toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:90;
+  display:flex;flex-direction:column;gap:8px;width:min(420px,calc(100% - 24px));pointer-events:none}
+.toast{display:flex;gap:9px;align-items:flex-start;padding:12px 14px;border-radius:var(--r-sm);
+  background:#101d44;color:#fff;font-size:12.8px;font-weight:600;box-shadow:var(--sh-lg);
+  animation:tin .25s ease;border-left:3px solid var(--gold)}
+.toast.ok{background:#0d7a43;border-left-color:#79e2a8}
+.toast.err{background:#96201a;border-left-color:#ffb4ac}
+.toast.warn{background:#8a5205;border-left-color:#ffd98a}
+@keyframes tin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ═══════════════════════ footer ═══════════════════════ */
+.pfoot{text-align:center;font-size:11.8px;color:var(--muted);padding:22px 8px 6px;line-height:1.8}
+.pfoot a{color:var(--info);text-decoration:none;font-weight:600}
+.pfoot .sep{opacity:.4;margin:0 5px}
+
+/* lock card */
+.lock{text-align:center;max-width:430px;margin:0 auto}
+.lock .lk{font-size:34px;margin-bottom:6px}
+.lock h2{font-size:19px;margin-bottom:6px}
+.lock p{font-size:12.8px;color:var(--muted);margin-bottom:16px}
+.pin input{text-align:center;letter-spacing:.3em;font-size:17px;padding:13px}
+.lock .who{font-size:11px;color:var(--muted);margin-top:14px}
+
+/* partner cards */
+.ptype-grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(158px,1fr))}
+.ptype{display:flex;gap:8px;align-items:flex-start;padding:11px;border-radius:var(--r-sm);
+  border:1.5px solid var(--line);background:#fcfdff;cursor:pointer;font-size:12.4px;font-weight:600}
+.ptype input{accent-color:#1f3c88;width:16px;height:16px;margin-top:1px;flex:0 0 auto}
+.ptype:has(input:checked){border-color:#3f62c4;background:var(--info-l);box-shadow:0 0 0 3px rgba(63,98,196,.09)}
+.ptype span small{display:block;font-size:10.8px;font-weight:500;color:var(--muted)}
+.miss{color:#5b6478;font-size:11.6px}
+@media(max-width:520px){
+  .grid{grid-template-columns:1fr}
+  .field.span2{grid-column:auto}
+  .card{padding:16px;border-radius:18px}
+  .wrap{padding:14px 10px 32px}
+}
+@media print{
+  .tabs,.mast-row,.formbar,.toolbar,.btn,.pfoot,.pv,.back{display:none !important}
+  body{background:#fff}
+  .card{box-shadow:none;border:1px solid #ccc;break-inside:avoid}
+}
+</style>
 </head>
 <body>
 
-<!-- ───────────────────────────── ambient flare ───────────────────────────── -->
 <div class="pv" aria-hidden="true">
   <span class="pv-orb a"></span><span class="pv-orb b"></span><span class="pv-orb c"></span>
 </div>
 
-<!-- ───────────────────────────────── masthead ───────────────────────────── -->
+<!-- ═════════════════════════════ masthead ═════════════════════════════ -->
 <header class="mast">
   <div class="mast-stars" aria-hidden="true"></div>
-  <a class="back" href="index.html" aria-label="Back to the church home page">‹ App Home</a>
-
   <div class="mast-inner">
     <div class="crest" aria-hidden="true">
-      <svg viewBox="0 0 64 64" width="46" height="46" role="img" aria-label="JCRGM cross emblem">
-        <defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#3b5bb5"/><stop offset="1" stop-color="#101d44"/></linearGradient></defs>
-        <path d="M32 9v46M17 24h30" stroke="url(#cg)" stroke-width="7.5" stroke-linecap="round" fill="none"/>
-        <circle cx="32" cy="24" r="19.5" fill="none" stroke="#b8912c" stroke-width="2.4" opacity=".8"/>
+      <svg viewBox="0 0 64 64" width="34" height="34" role="img" aria-label="JCRGM cross emblem">
+        <path d="M32 9v46M17 24h30" stroke="#ffd700" stroke-width="7" stroke-linecap="round" fill="none"/>
+        <circle cx="32" cy="24" r="19.5" fill="none" stroke="#b8912c" stroke-width="2.2" opacity=".85"/>
       </svg>
     </div>
-
-    <span class="eyebrow"><span id="mastIco">🛡</span> <span id="mastUnit">Compassion &amp; Welfare Ministry</span></span>
-    <h1 id="mastTitle">JCRGM <span class="gold">Support Team</span></h1>
-    <p class="sub" id="mastSub">The welfare desk of Jesus Christ Redeems Global Ministries — registering the people we sponsor, and opening the door to anyone who needs help.</p>
+    <span class="eyebrow"><span>🛡</span> Compassion &amp; Welfare Ministry</span>
+    <h1>JCRGM <span class="gold">Support Team</span></h1>
+    <p class="sub">The welfare desk of Jesus Christ Redeems Global Ministries — apply for assistance with your supporting documents, track a case, or partner with the ministry's vision.</p>
     <p class="verse" id="mastVerse"></p>
-
     <div class="mast-row">
-      <span class="pill" id="pillMode"><span class="dot off"></span>Checking connection…</span>
-      <span class="pill" id="pillQueue" hidden>📥 0 queued</span>
-      <span class="pill" id="pillWho" hidden>👤 …</span>
-      <a class="pill" id="pillCall" href="#">📞 <span>Call the desk</span></a>
-      <a class="pill" id="pillWa" href="#">💬 <span>WhatsApp the desk</span></a>
-      <a class="pill" id="pillMap" href="#" target="_blank" rel="noopener">📍 Directions</a>
+      <span class="pill" id="pillMode"><span class="dot off"></span>Starting…</span>
+      <a class="pill" id="pillCall" href="tel:+260970000000">📞 <span>Call the desk</span></a>
+      <a class="pill" id="pillWa" href="https://wa.me/260970000000" target="_blank" rel="noopener">💬 <span>WhatsApp the desk</span></a>
+      <a class="pill" id="pillPartner" href="#" data-goto="partners">🤝 Become a partner</a>
     </div>
   </div>
 </header>
 
-<!-- ─────────────────────────────────── tabs ─────────────────────────────── -->
+<!-- ═════════════════════════════ tabs ═════════════════════════════ -->
 <nav class="tabs" aria-label="Welfare sections">
   <div class="tabs-in" role="tablist">
-    <button class="tab" role="tab" id="tab-home"    aria-controls="p-home"    aria-selected="true"  data-tab="home"><span class="ti">🏠</span> Home</button>
-    <button class="tab" role="tab" id="tab-apply"   aria-controls="p-apply"   aria-selected="false" data-tab="apply"><span class="ti">🤲</span> Apply for Help</button>
-    <button class="tab" role="tab" id="tab-status"  aria-controls="p-status"  aria-selected="false" data-tab="status"><span class="ti">🔎</span> Check Status</button>
-    <button class="tab" role="tab" id="tab-admin"   aria-controls="p-admin"   aria-selected="false" data-tab="admin"><span class="ti">🛡</span> Support Team <span class="tab-badge" id="badgeAwaiting" hidden>0</span></button>
+    <button class="tab" role="tab" id="tab-home"     aria-controls="p-home"     aria-selected="true"  data-tab="home"><span class="ti">🏠</span> Home</button>
+    <button class="tab" role="tab" id="tab-apply"    aria-controls="p-apply"    aria-selected="false" data-tab="apply"><span class="ti">🤲</span> Apply for Help</button>
+    <button class="tab" role="tab" id="tab-status"   aria-controls="p-status"   aria-selected="false" data-tab="status"><span class="ti">🔎</span> Check Status</button>
+    <button class="tab" role="tab" id="tab-partners" aria-controls="p-partners" aria-selected="false" data-tab="partners"><span class="ti">🤝</span> Partners</button>
+    <button class="tab" role="tab" id="tab-admin"    aria-controls="p-admin"    aria-selected="false" data-tab="admin"><span class="ti">🛡</span> Support Team <span class="tab-badge" id="badgeAwaiting" hidden>0</span></button>
   </div>
 </nav>
 
@@ -76,30 +456,37 @@
         <div class="grow">
           <span class="eyebrow-sm">A ministry of mercy</span>
           <h2>Nobody who comes in good faith goes unanswered</h2>
-          <p>This desk exists so that every gift given to the church can be traced to a real person, a real need, and a real receipt. Choose where you want to go.</p>
+          <p>This desk exists so that every gift given to the church can be traced to a real person, a real need and a real receipt. Choose where you want to go.</p>
         </div>
       </div>
 
       <div class="act-grid">
-        <button class="act is-primary" type="button" data-go="apply">
+        <button class="act is-primary" type="button" data-goto="apply">
           <span class="ai g-gold" aria-hidden="true">🤲</span>
           <h3>Apply for Assistance</h3>
-          <p>For any person — member or not — who needs help with school fees, medical bills, food, rent or a funeral. No login, no cost.</p>
-          <span class="go">Start my request <span aria-hidden="true">→</span></span>
+          <p>For any person — member or not — who needs help with school fees, medical bills, food, rent or a funeral. Attach your NRC/ID and proof of the need. No login, no cost.</p>
+          <span class="go">Start my request →</span>
         </button>
 
-        <button class="act" type="button" data-go="status">
+        <button class="act is-new" type="button" data-goto="partners">
+          <span class="ai g-indigo" aria-hidden="true">🤝</span>
+          <h3>Partner With the Vision</h3>
+          <p>Give, serve or pray with us. Register as a partner and the desk will approve your details and send you a thank-you on email or WhatsApp.</p>
+          <span class="go">Become a partner →</span>
+        </button>
+
+        <button class="act" type="button" data-goto="status">
           <span class="ai g-teal" aria-hidden="true">🔎</span>
           <h3>Check a Reference</h3>
           <p>Already applied? Enter your JCRGM number and the last digits of your phone to see exactly where your case stands.</p>
-          <span class="go">Track my case <span aria-hidden="true">→</span></span>
+          <span class="go">Track my case →</span>
         </button>
 
-        <button class="act" type="button" data-go="admin">
+        <button class="act" type="button" data-goto="admin">
           <span class="ai g-navy" aria-hidden="true">🛡</span>
           <h3>Support Team Register</h3>
-          <p>Admins only. Register the people we are sponsoring, vet applications, record disbursements and print reports.</p>
-          <span class="go">Open the desk <span aria-hidden="true">→</span></span>
+          <p>Admins only. Vet applications, read the documents attached, approve partners and record disbursements.</p>
+          <span class="go">Open the desk →</span>
         </button>
       </div>
     </div>
@@ -109,12 +496,10 @@
         <span class="ico" aria-hidden="true">📊</span>
         <div class="grow"><span class="eyebrow-sm">This device</span>
           <h2>Where we stand right now</h2>
-          <p>Live counts from the welfare register. When Supabase is connected these numbers are shared across every phone in the church app.</p>
+          <p>Live counts from the welfare register of this device.</p>
         </div>
       </div>
-      <div class="stats" id="homeStats">
-        <div class="stat"><b>—</b><span>Loading…</span></div>
-      </div>
+      <div class="stats" id="homeStats"><div class="stat"><b>—</b><span>Loading…</span></div></div>
     </div>
 
     <div class="card">
@@ -124,8 +509,8 @@
           <h2>Four steps, from need to receipt</h2></div>
       </div>
       <ol class="flow">
-        <li><span class="n">1</span><div><b>Apply or be registered</b><span>A member applies on their phone, or the Support Team registers a beneficiary being sponsored.</span></div></li>
-        <li><span class="n">2</span><div><b>Vetting &amp; reference</b><span>Two team members verify the details — documents, a home visit or a phone call to the referee.</span></div></li>
+        <li><span class="n">1</span><div><b>Apply, attach documents &amp; be registered</b><span>A member applies on their phone with a photo of their NRC/ID and proof of the need, or the Support Team registers a beneficiary being sponsored.</span></div></li>
+        <li><span class="n">2</span><div><b>Vetting &amp; reference</b><span>Two team members verify the details — the documents, a home visit or a phone call to the referee.</span></div></li>
         <li><span class="n">3</span><div><b>Decision &amp; payment</b><span>The committee approves, declines or defers. Money is paid as far as possible straight to the school or clinic.</span></div></li>
         <li><span class="n">4</span><div><b>Receipt &amp; follow-up</b><span>A proof reference is recorded, a review date is set, and the sponsor is told what became of their gift.</span></div></li>
       </ol>
@@ -140,10 +525,10 @@
         <span class="ico" aria-hidden="true">⚖️</span>
         <div class="grow"><span class="eyebrow-sm">Before you apply</span><h2>What we ask of you — and what we promise</h2></div>
       </div>
-      <div class="note warn"><span class="ni" aria-hidden="true">⚠️</span><div><b>Apply honestly.</b> Every case is checked. A false claim ends support immediately and is reported to church leadership. A genuine need, however small, is always welcome.</div></div>
-      <div class="note" style="margin-top:9px"><span class="ni" aria-hidden="true">🔒</span><div><b>Your privacy.</b> Names, phone numbers and NRC details are seen only by the Support Team and are held under the Data Protection Act No. 3 of 2021. We never publish a beneficiary's name or photograph without written consent.</div></div>
+      <div class="note warn"><span class="ni" aria-hidden="true">⚠️</span><div><b>Apply honestly.</b> Every case is checked, including the documents you attach. A false claim or a forged document ends support immediately and is reported to church leadership. A genuine need, however small, is always welcome.</div></div>
+      <div class="note" style="margin-top:9px"><span class="ni" aria-hidden="true">🔒</span><div><b>Your privacy.</b> Names, phone numbers, NRC details and uploaded documents are seen only by the Support Team and are held under the Data Protection Act No. 3 of 2021. Your ID is used to verify who you are — it is never published, and never shared with a sponsor.</div></div>
       <div class="note ok" style="margin-top:9px"><span class="ni" aria-hidden="true">💰</span><div><b>No cash is ever promised.</b> Support is given as far as possible by paying the school, clinic or supplier directly, and everything is receipted.</div></div>
-      <div class="note danger" style="margin-top:9px"><span class="ni" aria-hidden="true">🚨</span><div><b>In an emergency</b> — a child at risk, violence at home, or a medical crisis — do not wait for this form. Call <a href="#" id="emergCall">the office</a> now, or go to the nearest police station or hospital.</div></div>
+      <div class="note danger" style="margin-top:9px"><span class="ni" aria-hidden="true">🚨</span><div><b>In an emergency</b> — a child at risk, violence at home, or a medical crisis — do not wait for this form. Call <a href="tel:+260970000000">the office</a> now, or go to the nearest police station or hospital.</div></div>
     </div>
   </section>
 
@@ -162,7 +547,176 @@
       <ol class="steps" id="applySteps" aria-label="Progress"></ol>
 
       <form id="applyForm" novalidate autocomplete="on">
-        <div id="applySections"></div>
+        <!-- STEP 1 -->
+        <div class="step-sec on" data-step="1">
+          <h3><span class="n">1</span> The person who needs help</h3>
+          <div class="grid">
+            <div class="field span2">
+              <label for="apName">Full name as it appears on the NRC / ID <span class="req">*</span></label>
+              <input class="inp" id="apName" autocomplete="name" placeholder="e.g. Grace Mwansa Banda" required>
+              <span class="err"><span>⚠</span><span class="em"></span></span>
+            </div>
+            <div class="field">
+              <label for="apPhone">Phone number (this is how we reach you) <span class="req">*</span></label>
+              <input class="inp" id="apPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="097X XXX XXX" required>
+              <span class="hint">Used together with your reference to track the case.</span>
+              <span class="err"><span>⚠</span><span class="em"></span></span>
+            </div>
+            <div class="field">
+              <label for="apPhone2">Second phone / WhatsApp <span class="small" style="font-weight:500;color:#5b6478">(optional)</span></label>
+              <input class="inp" id="apPhone2" type="tel" inputmode="tel" placeholder="096X XXX XXX">
+            </div>
+            <div class="field">
+              <label for="apNrc">NRC / National ID number <span class="req">*</span></label>
+              <input class="inp mono" id="apNrc" autocomplete="off" placeholder="123456/78/9" required>
+              <span class="hint">Type it exactly as printed — we compare it with your ID photo.</span>
+              <span class="err"><span>⚠</span><span class="em"></span></span>
+            </div>
+            <div class="field">
+              <label for="apEmail">Email address <span class="small" style="font-weight:500;color:#5b6478">(optional)</span></label>
+              <input class="inp" id="apEmail" type="email" autocomplete="email" placeholder="you@example.com">
+              <span class="err"><span>⚠</span><span class="em"></span></span>
+            </div>
+            <div class="field">
+              <label for="apWho">Who are you in this request? <span class="req">*</span></label>
+              <select class="sel" id="apWho" required>
+                <option value="">Choose…</option>
+                <option>I am asking for myself</option>
+                <option>I am a parent / guardian</option>
+                <option>I am a family member</option>
+                <option>I am a church member reporting a need</option>
+                <option>I am a neighbour / friend</option>
+                <option>I am a cell leader</option>
+              </select>
+              <span class="err"><span>⚠</span><span class="em"></span></span>
+            </div>
+            <div class="field">
+              <label for="apCompound">Where you stay (compound / area) <span class="req">*</span></label>
+              <input class="inp" id="apCompound" placeholder="e.g. Chawama, Lusaka" required>
+              <span class="err"><span>⚠</span><span class="em"></span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step-sec" data-step="2">
+          <h3><span class="n">2</span> What is needed</h3>
+          <div class="grid">
+            <div class="field">
+              <label for="apCat">Type of help needed <span class="req">*</span></label>
+              <select class="sel" id="apCat" required><option value="">Choose…</option></select>
+              <span class="err"><span>⚠</span><span class="em"></span></span>
+            </div>
+            <div class="field">
+              <label for="apAmount">Amount needed (ZMW) <span class="small" style="font-weight:500;color:#5b6478">(if known)</span></label>
+              <input class="inp" id="apAmount" type="number" min="0" step="10" inputmode="numeric" placeholder="e.g. 1500">
+            </div>
+            <div class="field">
+              <label for="apUrgency">How urgent is it? <span class="req">*</span></label>
+              <select class="sel" id="apUrgency" required>
+                <option value="">Choose…</option>
+                <option>Emergency — within 48 hours</option>
+                <option>Urgent — this week</option>
+                <option>Normal — within a month</option>
+                <option>I am planning ahead</option>
+              </select>
+              <span class="err"><span>⚠</span><span class="em"></span></span>
+            </div>
+            <div class="field">
+              <label for="apHousehold">People in the household</label>
+              <input class="inp" id="apHousehold" type="number" min="1" step="1" inputmode="numeric" placeholder="e.g. 6">
+            </div>
+            <div class="field span2">
+              <label for="apStory">Tell us what has happened, in your own words <span class="req">*</span></label>
+              <textarea class="inp" id="apStory" rows="5" placeholder="Explain the need simply: what happened, what the money is for, who it will help, and what you have already tried." required></textarea>
+              <span class="hint"><span id="apStoryCount">0</span> characters · at least 30 so the committee can understand the case.</span>
+              <span class="err"><span>⚠</span><span class="em"></span></span>
+            </div>
+            <div class="field span2">
+              <label for="apRef">Referee — someone who can confirm this <span class="req">*</span></label>
+              <input class="inp" id="apRef" placeholder="Name and phone number, e.g. Pastor J. Phiri 0977 000 000" required>
+              <span class="hint">A cell leader, employer, teacher, clinic officer or neighbour. We will call them.</span>
+              <span class="err"><span>⚠</span><span class="em"></span></span>
+            </div>
+            <div class="field span2">
+              <label for="apPrev">Have you received help from this desk before?</label>
+              <select class="sel" id="apPrev">
+                <option>No, this is my first time</option>
+                <option>Yes — for the same need</option>
+                <option>Yes — for a different need</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 : DOCUMENTS -->
+        <div class="step-sec" data-step="3">
+          <h3><span class="n">3</span> Supporting documents &amp; verification</h3>
+          <div class="note info" style="margin-bottom:13px"><span class="ni">📎</span><div>
+            <b>Attach at least one document.</b> The strongest file is: a photo of your <b>NRC / National ID</b> plus <b>proof of the need</b> (school bill, hospital bill, invoice, or a letter from the school/clinic). Photos taken on this phone are fine — lay the document flat, in good light, with all four corners showing.
+          </div></div>
+
+          <div class="up-wrap" id="applyUploads">
+            <div class="up" data-slot="nrc-front" data-label="NRC / National ID — front">
+              <div class="up-hd"><b>NRC / National ID — front <span class="req">*</span></b><span class="tag">Photo or PDF</span></div>
+              <label class="up-drop">
+                <input type="file" accept="image/*,application/pdf" multiple hidden>
+                <span class="up-ic">🪪</span>
+                <span class="up-txt"><b>Take a photo or choose a file</b><span>JPG, PNG or PDF · up to 6 MB each</span></span>
+              </label>
+              <div class="up-list"></div>
+            </div>
+
+            <div class="up" data-slot="nrc-back" data-label="NRC / National ID — back">
+              <div class="up-hd"><b>NRC / National ID — back</b><span class="tag">Photo or PDF</span></div>
+              <label class="up-drop">
+                <input type="file" accept="image/*,application/pdf" multiple hidden>
+                <span class="up-ic">🪪</span>
+                <span class="up-txt"><b>Add the back page</b><span>Helps confirm the number and signature</span></span>
+              </label>
+              <div class="up-list"></div>
+            </div>
+
+            <div class="up" data-slot="proof" data-label="Proof of the need">
+              <div class="up-hd"><b>Proof of the need <span class="req">*</span></b><span class="tag">Bill / letter</span></div>
+              <label class="up-drop">
+                <input type="file" accept="image/*,application/pdf" multiple hidden>
+                <span class="up-ic">🧾</span>
+                <span class="up-txt"><b>School or clinic bill, invoice, letter</b><span>Anything showing what is owed and to whom</span></span>
+              </label>
+              <div class="up-list"></div>
+            </div>
+
+            <div class="up" data-slot="verification" data-label="Other verification">
+              <div class="up-hd"><b>Other verification</b><span class="tag">Optional</span></div>
+              <label class="up-drop">
+                <input type="file" accept="image/*,application/pdf" multiple hidden>
+                <span class="up-ic">📄</span>
+                <span class="up-txt"><b>Payslip, clinic card, death certificate, letter</b><span>Anything that supports the case</span></span>
+              </label>
+              <div class="up-list"></div>
+            </div>
+          </div>
+
+          <div class="docs-total" id="applyDocsTotal">📎 No documents attached yet</div>
+          <div class="err" id="applyDocErr" style="margin-top:8px"><span>⚠</span><span class="em">Attach at least one document — your NRC/ID or proof of the need.</span></div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="step-sec" data-step="4">
+          <h3><span class="n">4</span> Review &amp; send</h3>
+          <div id="applyReview"></div>
+          <div class="field" style="margin-top:14px">
+            <label for="apNotes">Anything else the Support Team should know? <span class="small" style="font-weight:500;color:#5b6478">(optional)</span></label>
+            <textarea class="inp" id="apNotes" rows="2" placeholder="Best time to call, who to speak to, etc."></textarea>
+          </div>
+          <label class="chk" id="apConsentWrap" style="margin-top:13px">
+            <input type="checkbox" id="apConsent">
+            <span>I confirm that the information and the documents I have attached are true, and I agree that JCRGM may keep them under the Data Protection Act No. 3 of 2021, verify them, and contact me and my referee about this request. <span class="req">*</span></span>
+          </label>
+          <div class="err" id="apConsentErr" style="margin-top:6px"><span>⚠</span><span class="em">Please tick the confirmation to send your request.</span></div>
+        </div>
+
         <div class="formbar">
           <button class="btn ghost" type="button" id="applyBack" hidden>‹ Back</button>
           <span class="grow"></span>
@@ -176,7 +730,8 @@
     <div class="card" id="applyDone" hidden></div>
 
     <div class="card">
-      <div class="note"><span class="ni" aria-hidden="true">🤝</span><div><b>Cannot read or write?</b> Come to the Support Team desk after any Sunday service, or call the office and a member will fill this in with you over the phone. You can also hand a written note to your cell leader.</div></div>
+      <div class="note"><span class="ni" aria-hidden="true">🤝</span><div><b>Cannot read or write?</b> Come to the Support Team desk after any Sunday service, or call the office and a member will fill this in with you over the phone. Someone at the desk can also photograph your NRC with your permission.</div></div>
+      <div class="note info" style="margin-top:9px"><span class="ni" aria-hidden="true">📵</span><div><b>No data or no smartphone?</b> Bring the paper documents to the desk and a team member will capture them here and keep the papers in the locked welfare file.</div></div>
     </div>
   </section>
 
@@ -192,22 +747,21 @@
       </div>
       <form id="lookupForm" novalidate>
         <div class="grid">
-          <div class="field span2">
-            <label for="lkRef">Reference number <span class="req" aria-hidden="true">*</span></label>
-            <input class="inp mono" id="lkRef" name="ref" inputmode="text" autocapitalize="characters"
+          <div class="field span2" id="lkRefField">
+            <label for="lkRef">Reference number <span class="req">*</span></label>
+            <input class="inp mono" id="lkRef" inputmode="text" autocapitalize="characters"
                    placeholder="JCRGM-2026-1234-K" autocomplete="off" spellcheck="false" required>
-            <span class="hint">On your receipt card, in the SMS or WhatsApp confirmation, or on the paper slip you were given.</span>
-            <span class="err" id="lkRefErr"><span aria-hidden="true">⚠</span><span class="em"></span></span>
+            <span class="hint">On your receipt card, the confirmation screen, or the SMS/WhatsApp message.</span>
+            <span class="err"><span>⚠</span><span class="em"></span></span>
           </div>
-          <div class="field span2">
-            <label for="lkPhone">Phone number you applied with <span class="req" aria-hidden="true">*</span></label>
-            <input class="inp" id="lkPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel"
-                   placeholder="097X XXX XXX" required>
-            <span class="err" id="lkPhoneErr"><span aria-hidden="true">⚠</span><span class="em"></span></span>
+          <div class="field span2" id="lkPhoneField">
+            <label for="lkPhone">Phone number you applied with <span class="req">*</span></label>
+            <input class="inp" id="lkPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="097X XXX XXX" required>
+            <span class="err"><span>⚠</span><span class="em"></span></span>
           </div>
         </div>
         <div class="formbar">
-          <span class="count" id="lkHint">Tip: your reference begins with <b>JCRGM-</b> and ends with a single letter.</span>
+          <span class="count">Tip: your reference begins with <b>JCRGM-</b> and ends with a single letter. Partner references begin with <b>PTR-</b>.</span>
           <span class="grow"></span>
           <button class="btn primary" type="submit" id="lkGo"><span class="sp"></span><span class="lb">Find my case</span></button>
         </div>
@@ -216,74 +770,226 @@
     <div id="lookupResult"></div>
   </section>
 
+  <!-- ═══════════════════════════ PARTNERS ═══════════════════════════ -->
+  <section class="panel" id="p-partners" role="tabpanel" aria-labelledby="tab-partners" tabindex="-1" hidden>
+
+    <div class="card">
+      <div class="card-hd">
+        <span class="ico" aria-hidden="true" style="background:linear-gradient(150deg,#fff6cc,#ffeaa0);border-color:#f0e0a0">🤝</span>
+        <div class="grow">
+          <span class="eyebrow-sm">Partnership with the vision</span>
+          <h2>Come and build with us</h2>
+          <p>Jesus Christ Redeems Global Ministries feeds, schools, buries and lifts up people who have nowhere else to turn. That work is carried by partners — givers, professionals, businesses and prayer warriors. Register your details below and the Compassion &amp; Welfare desk will review and approve your partnership, then send you a word of thanks on <b>email</b> or <b>WhatsApp</b>.</p>
+        </div>
+      </div>
+
+      <div class="stats" style="margin-bottom:16px">
+        <div class="stat gold"><b>1</b><span>Register your details</span></div>
+        <div class="stat"><b>2</b><span>Desk reviews &amp; approves</span></div>
+        <div class="stat ok"><b>3</b><span>You are thanked &amp; welcomed</span></div>
+      </div>
+
+      <div id="partnerFormWrap">
+        <form id="partnerForm" novalidate autocomplete="on">
+          <h3 style="font-size:14.4px;margin-bottom:11px;display:flex;align-items:center;gap:8px"><span class="n" style="width:22px;height:22px;border-radius:50%;background:var(--navy);color:var(--gold);display:grid;place-items:center;font-size:11.5px;font-weight:800">1</span> Your details</h3>
+          <div class="grid">
+            <div class="field">
+              <label for="ptName">Full name <span class="req">*</span></label>
+              <input class="inp" id="ptName" autocomplete="name" placeholder="e.g. Daniel Mumba" required>
+              <span class="err"><span>⚠</span><span class="em"></span></span>
+            </div>
+            <div class="field">
+              <label for="ptOrg">Organisation / business <span class="small" style="font-weight:500;color:#5b6478">(optional)</span></label>
+              <input class="inp" id="ptOrg" placeholder="e.g. Mumba Logistics Ltd">
+            </div>
+            <div class="field">
+              <label for="ptEmail">Email address <span class="req">*</span></label>
+              <input class="inp" id="ptEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+              <span class="err"><span>⚠</span><span class="em"></span></span>
+            </div>
+            <div class="field">
+              <label for="ptPhone">WhatsApp / phone number <span class="req">*</span></label>
+              <input class="inp" id="ptPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+260 97X XXX XXX" required>
+              <span class="hint">Include the country code if you are outside Zambia.</span>
+              <span class="err"><span>⚠</span><span class="em"></span></span>
+            </div>
+            <div class="field">
+              <label for="ptCity">City / country</label>
+              <input class="inp" id="ptCity" placeholder="e.g. Lusaka, Zambia">
+            </div>
+            <div class="field">
+              <label for="ptChurch">Home church / how you know JCRGM</label>
+              <input class="inp" id="ptChurch" placeholder="e.g. Member, Chawama branch">
+            </div>
+          </div>
+
+          <h3 style="font-size:14.4px;margin:18px 0 11px;display:flex;align-items:center;gap:8px"><span class="n" style="width:22px;height:22px;border-radius:50%;background:var(--navy);color:var(--gold);display:grid;place-items:center;font-size:11.5px;font-weight:800">2</span> How you want to partner</h3>
+          <div class="ptype-grid" id="ptTypes">
+            <label class="ptype"><input type="checkbox" value="Monthly financial partner"><span>💳 Monthly giving<small>Standing gift each month</small></span></label>
+            <label class="ptype"><input type="checkbox" value="One-off gift"><span>🎁 One-off gift<small>A single gift to the welfare fund</small></span></label>
+            <label class="ptype"><input type="checkbox" value="Sponsor a child's education"><span>🎓 Sponsor a child<small>School fees, uniforms, books</small></span></label>
+            <label class="ptype"><input type="checkbox" value="In-kind (food, clothes, materials)"><span>📦 In-kind giving<small>Food, clothes, building materials</small></span></label>
+            <label class="ptype"><input type="checkbox" value="Professional / skilled services"><span>🛠 Professional services<small>Medical, legal, teaching, trades</small></span></label>
+            <label class="ptype"><input type="checkbox" value="Volunteer with the welfare desk"><span>🙋 Volunteer<small>Home visits, vetting, admin</small></span></label>
+            <label class="ptype"><input type="checkbox" value="Prayer partner"><span>🙏 Prayer partner<small>Cover this ministry in prayer</small></span></label>
+            <label class="ptype"><input type="checkbox" value="Church / ministry partnership"><span>⛪ Church partnership<small>Partner ministry or congregation</small></span></label>
+          </div>
+          <span class="err" id="ptTypeErr" style="margin-top:7px"><span>⚠</span><span class="em">Choose at least one way of partnering.</span></span>
+
+          <div class="grid" style="margin-top:13px">
+            <div class="field">
+              <label for="ptAmount">Pledge amount (ZMW) <span class="small" style="font-weight:500;color:#5b6478">(if giving)</span></label>
+              <input class="inp" id="ptAmount" type="number" min="0" step="50" inputmode="numeric" placeholder="e.g. 500 per month">
+            </div>
+            <div class="field">
+              <label for="ptFreq">Frequency</label>
+              <select class="sel" id="ptFreq">
+                <option value="">Not applicable</option>
+                <option>Monthly</option>
+                <option>Quarterly</option>
+                <option>Annually</option>
+                <option>One-off</option>
+                <option>As the Lord provides</option>
+              </select>
+            </div>
+            <div class="field span2">
+              <label for="ptMsg">What is on your heart? <span class="small" style="font-weight:500;color:#5b6478">(optional)</span></label>
+              <textarea class="inp" id="ptMsg" rows="3" placeholder="Tell us which part of the vision you want to carry — e.g. school fees for orphans in Chawama, or medical outreach."></textarea>
+            </div>
+          </div>
+
+          <h3 style="font-size:14.4px;margin:18px 0 11px;display:flex;align-items:center;gap:8px"><span class="n" style="width:22px;height:22px;border-radius:50%;background:var(--navy);color:var(--gold);display:grid;place-items:center;font-size:11.5px;font-weight:800">3</span> How we should thank you</h3>
+          <div class="field">
+            <span class="lbl">Send my welcome and thank-you message by <span class="req">*</span></span>
+            <div class="radio-row" id="ptContact">
+              <label><input type="radio" name="ptContact" value="Email"> ✉ Email</label>
+              <label><input type="radio" name="ptContact" value="WhatsApp"> 💬 WhatsApp</label>
+              <label><input type="radio" name="ptContact" value="Both"> ✉ + 💬 Both</label>
+            </div>
+            <span class="err" id="ptContactErr"><span>⚠</span><span class="em">Choose how we should reach you.</span></span>
+          </div>
+
+          <label class="chk" id="ptConsentWrap" style="margin-top:14px">
+            <input type="checkbox" id="ptConsent">
+            <span>I agree that Jesus Christ Redeems Global Ministries may save these details in its partnership register, contact me about this partnership on the channel I chose, and hold my data under the Data Protection Act No. 3 of 2021. I can ask to be removed at any time. <span class="req">*</span></span>
+          </label>
+          <div class="err" id="ptConsentErr" style="margin-top:6px"><span>⚠</span><span class="em">Please tick the box so we may register you.</span></div>
+
+          <div class="formbar">
+            <span class="count">Your details go straight to the Support Team desk.</span>
+            <span class="grow"></span>
+            <button class="btn gold" type="submit" id="ptSubmit"><span class="sp"></span><span class="lb">Register as a partner</span></button>
+          </div>
+        </form>
+      </div>
+
+      <div id="partnerDone" hidden></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd"><span class="ico" aria-hidden="true">💛</span>
+        <div class="grow"><span class="eyebrow-sm">Why it matters</span><h2>What your partnership carries</h2></div></div>
+      <div class="note ok"><span class="ni">🎓</span><div><b>A child stays in school.</b> Fees paid directly to the bursar, with the receipt number recorded the same day.</div></div>
+      <div class="note" style="margin-top:9px"><span class="ni">🏥</span><div><b>A bill is cleared at the clinic,</b> not handed over as cash — every payment is receipted and reported back to you.</div></div>
+      <div class="note warn" style="margin-top:9px"><span class="ni">🕊</span><div><b>A family buries with dignity.</b> Funeral support is released within 48 hours of an approved case.</div></div>
+      <blockquote class="scripture" style="margin-top:14px">Each of you should use whatever gift you have received to serve others, as faithful stewards of God's grace in its various forms.<cite>1 Peter 4:10</cite></blockquote>
+    </div>
+  </section>
+
   <!-- ════════════════════════════ ADMIN ══════════════════════════════ -->
   <section class="panel" id="p-admin" role="tabpanel" aria-labelledby="tab-admin" tabindex="-1" hidden>
 
-    <!-- ── lock ── -->
     <div class="card lock" id="lockCard">
       <div class="lk" aria-hidden="true">🔐</div>
       <h2>Support Team only</h2>
-      <p>Enter the admin password to open the welfare register. Records are never shown to anyone outside this desk.</p>
+      <p>Enter the desk password to open the welfare register and the partner approvals.</p>
       <form id="lockForm" novalidate>
-        <div class="pin"><input id="lockPw" type="password" inputmode="text" autocomplete="off"
-             aria-label="Admin password" placeholder="••••••••" maxlength="40" spellcheck="false"></div>
-        <div class="note danger" id="lockErr" hidden><span class="ni" aria-hidden="true">⚠</span><div id="lockErrText"></div></div>
-        <button class="btn primary block" type="submit" id="lockGo" style="margin-top:6px"><span class="sp"></span><span class="lb">Unlock the desk</span></button>
+        <div class="field pin"><input class="inp" id="lockPw" type="password" autocomplete="off"
+             aria-label="Desk password" placeholder="••••••••" maxlength="40" spellcheck="false"></div>
+        <div class="note danger" id="lockErr" hidden style="margin-top:8px"><span class="ni">⚠</span><div>That password is not right. Try again, or ask the office.</div></div>
+        <button class="btn primary block" type="submit" id="lockGo" style="margin-top:8px">Unlock the desk</button>
         <label class="row" style="justify-content:center;margin-top:12px;font-size:12px;color:var(--muted);cursor:pointer">
           <input type="checkbox" id="showPw" style="width:16px;height:16px;accent-color:#1f3c88"> Show characters
         </label>
       </form>
-      <div id="lockAuthSlot"></div>
       <p class="who">Authorised by the Office of the Senior Pastor · <span id="lockFoot"></span></p>
     </div>
 
-    <!-- ── desk ── -->
     <div id="desk" hidden>
       <div class="card" style="padding-top:14px">
         <div class="card-hd" style="margin-bottom:10px">
           <span class="ico" aria-hidden="true">🛡</span>
           <div class="grow"><span class="eyebrow-sm">Support Team desk</span>
             <h2>Welfare register</h2>
-            <p id="deskIntro">Register someone we are sponsoring, or work through the requests that have arrived.</p>
+            <p id="deskIntro">Work through the requests that have arrived, read the documents attached, and approve the partners who have registered.</p>
           </div>
           <div class="row" style="margin-left:auto">
-            <button class="btn gold sm" type="button" id="btnNew">＋ Register a beneficiary</button>
-            <button class="btn ghost sm" type="button" id="btnSync">🔄 Sync</button>
+            <button class="btn gold sm" type="button" id="btnAdd">＋ Register a beneficiary</button>
             <button class="btn ghost sm" type="button" id="btnLock">🔒 Lock</button>
           </div>
         </div>
-        <div class="row" id="deskNotes"></div>
-      </div>
-
-      <div class="card">
         <div class="stats" id="deskStats"></div>
       </div>
 
-      <!-- ── registration form ── -->
-      <div class="card" id="regCard" hidden>
+      <!-- register a beneficiary on their behalf -->
+      <div class="card" id="addCard" hidden>
         <div class="card-hd">
           <span class="ico" aria-hidden="true">📝</span>
           <div class="grow"><span class="eyebrow-sm">New record</span>
-            <h2 id="regTitle">Register a sponsored beneficiary</h2>
-            <p>Fill in every section you can. Fields marked <span class="req">*</span> are required; the rest make the file audit-ready for sponsors and for the church accounts.</p>
+            <h2>Register a beneficiary at the desk</h2>
+            <p>For a walk-in, a sponsored person, or a case captured on paper. Documents can be photographed here too.</p>
           </div>
-          <button class="btn ghost sm" type="button" id="regClose" style="margin-left:auto">✕ Close</button>
+          <button class="btn ghost sm" type="button" id="addClose" style="margin-left:auto">✕ Close</button>
         </div>
-        <div class="row" id="regMode" style="margin-bottom:14px">
-          <span class="badge tone-info" id="regKindBadge">Sponsorship register</span>
-          <span class="count">Sections are saved together as one case file.</span>
-        </div>
-        <form id="regForm" novalidate>
-          <div id="regSections"></div>
+        <form id="addForm" novalidate>
+          <div class="grid">
+            <div class="field"><label for="adName">Full name <span class="req">*</span></label><input class="inp" id="adName" required></div>
+            <div class="field"><label for="adPhone">Phone <span class="req">*</span></label><input class="inp" id="adPhone" type="tel" required></div>
+            <div class="field"><label for="adNrc">NRC / ID number</label><input class="inp mono" id="adNrc"></div>
+            <div class="field"><label for="adCat">Category <span class="req">*</span></label><select class="sel" id="adCat" required><option value="">Choose…</option></select></div>
+            <div class="field"><label for="adAmount">Amount (ZMW)</label><input class="inp" id="adAmount" type="number" min="0" step="10"></div>
+            <div class="field"><label for="adKind">Record type</label><select class="sel" id="adKind"><option value="sponsorship">Sponsored beneficiary</option><option value="application">Application taken at the desk</option></select></div>
+            <div class="field span2"><label for="adNotes">Notes</label><textarea class="inp" id="adNotes" rows="2" placeholder="What is the need, who referred them…"></textarea></div>
+          </div>
+          <div class="up-wrap" style="margin-top:13px">
+            <div class="up" data-slot="nrc-front" data-label="NRC / ID">
+              <div class="up-hd"><b>NRC / ID</b><span class="tag">Photo or PDF</span></div>
+              <label class="up-drop"><input type="file" accept="image/*,application/pdf" multiple hidden><span class="up-ic">🪪</span><span class="up-txt"><b>Attach ID</b><span>Photographed with consent</span></span></label>
+              <div class="up-list"></div>
+            </div>
+            <div class="up" data-slot="proof" data-label="Proof of need">
+              <div class="up-hd"><b>Proof of need</b><span class="tag">Bill / letter</span></div>
+              <label class="up-drop"><input type="file" accept="image/*,application/pdf" multiple hidden><span class="up-ic">🧾</span><span class="up-txt"><b>Attach proof</b><span>Bill, invoice or letter</span></span></label>
+              <div class="up-list"></div>
+            </div>
+          </div>
           <div class="formbar">
-            <button class="btn ghost" type="button" id="regCancel">Cancel</button>
+            <button class="btn ghost" type="button" id="addCancel">Cancel</button>
             <span class="grow"></span>
-            <button class="btn ok" type="submit" id="regSave"><span class="sp"></span><span class="lb">Save to register</span></button>
+            <button class="btn ok" type="submit" id="addSave"><span class="sp"></span><span class="lb">Save to register</span></button>
           </div>
         </form>
       </div>
 
-      <!-- ── register ── -->
+      <!-- partner approvals -->
+      <div class="card pad-0" id="partnerAdminCard">
+        <div style="padding:16px 16px 0">
+          <div class="card-hd" style="margin-bottom:12px">
+            <span class="ico" aria-hidden="true" style="background:linear-gradient(150deg,#fff6cc,#ffeaa0);border-color:#f0e0a0">🤝</span>
+            <div class="grow"><span class="eyebrow-sm">Partnership register</span><h2>Approve partners &amp; send the thank-you</h2>
+              <p>Approving a partner opens the welcome message. Send it on email or WhatsApp — the desk records that it went.</p></div>
+          </div>
+          <div class="toolbar">
+            <button class="btn ghost sm" type="button" id="pfPending" aria-pressed="true">⏳ Awaiting approval</button>
+            <button class="btn ghost sm" type="button" id="pfAll" aria-pressed="false">All partners</button>
+            <span class="grow"></span>
+            <button class="btn ghost xs" type="button" id="pfCsv">⬇ CSV export</button>
+          </div>
+        </div>
+        <div id="partnerTable"></div>
+      </div>
+
+      <!-- cases register -->
       <div class="card pad-0">
         <div style="padding:16px 16px 0">
           <div class="card-hd" style="margin-bottom:12px">
@@ -292,28 +998,21 @@
           </div>
           <div class="toolbar">
             <div class="search"><span class="si" aria-hidden="true">🔎</span>
-              <input class="inp" id="fQuery" type="search" placeholder="Name, reference, NRC, compound, sponsor…" aria-label="Search the register">
+              <input class="inp" id="fQuery" type="search" placeholder="Name, reference, NRC, compound…" aria-label="Search the register">
             </div>
-            <select class="sel" id="fKind" aria-label="Filter by record type">
-              <option value="">All types</option>
-              <option value="sponsorship">🧍 Sponsored only</option>
-              <option value="application">🤲 Applications only</option>
-            </select>
             <select class="sel" id="fStatus" aria-label="Filter by status"><option value="">Any status</option></select>
             <select class="sel" id="fCat" aria-label="Filter by category"><option value="">Any category</option></select>
-            <select class="sel" id="fSort" aria-label="Sort">
-              <option value="newest">Newest first</option>
-              <option value="oldest">Oldest first</option>
-              <option value="amount">Largest amount</option>
+            <select class="sel" id="fDocs" aria-label="Filter by documents">
+              <option value="">Any documents</option>
+              <option value="yes">📎 Has documents</option>
+              <option value="no">No documents yet</option>
             </select>
-            <button class="btn ghost sm" type="button" id="fAwait" aria-pressed="false">⏳ Awaiting me</button>
           </div>
         </div>
         <div class="toolbar" style="padding:0 16px 14px;margin:0">
           <span class="count" id="regCount">—</span>
           <span class="grow"></span>
           <button class="btn ghost xs" type="button" id="btnCsv">⬇ CSV export</button>
-          <button class="btn ghost xs" type="button" id="btnCsvFull">⬇ Full CSV</button>
           <button class="btn ghost xs" type="button" id="btnPrint">🖨 Print report</button>
         </div>
         <div id="registerView"></div>
@@ -324,46 +1023,1167 @@
           <div class="grow"><span class="eyebrow-sm">Good practice</span><h2>Standing orders of this desk</h2></div></div>
         <div class="note"><span class="ni" aria-hidden="true">1</span><div><b>Two-person rule.</b> No disbursement is made on one signature. The assigned member and one other must both appear in the file notes.</div></div>
         <div class="note" style="margin-top:9px"><span class="ni" aria-hidden="true">2</span><div><b>Pay the institution, not the pocket.</b> School fees go to the bursar, treatment to the clinic. Record the receipt number the same day.</div></div>
-        <div class="note" style="margin-top:9px"><span class="ni" aria-hidden="true">3</span><div><b>Close the loop.</b> Every applicant is told the outcome in <em>Decision letter</em>, and every sponsor gets a one-paragraph report on their gift.</div></div>
-        <div class="note warn" style="margin-top:9px"><span class="ni" aria-hidden="true">4</span><div><b>Children and the vulnerable.</b> Where a minor is involved, a guardian's consent must be ticked, and no photograph leaves this device without it.</div></div>
+        <div class="note" style="margin-top:9px"><span class="ni" aria-hidden="true">3</span><div><b>Close the loop.</b> Every applicant is told the outcome, and every partner is thanked on the channel they chose.</div></div>
+        <div class="note warn" style="margin-top:9px"><span class="ni" aria-hidden="true">4</span><div><b>Children and the vulnerable.</b> Where a minor is involved, a guardian's consent must be ticked and the ID attached must be the guardian's.</div></div>
+        <div class="note danger" style="margin-top:9px"><span class="ni" aria-hidden="true">5</span><div><b>Documents are the most sensitive thing here.</b> Open a document only when you need it for vetting. Never forward an ID image on WhatsApp, never keep it on a personal phone, and delete the case file's documents once the case is closed (button in the case drawer).</div></div>
         <p class="legal">
-          <b>Where the data lives.</b> A case is saved to this church's own Supabase project over HTTPS — the same project the Announcements and membership pages use — and from there it appears on every phone that runs the app. Reading the whole register needs a signed-in, leader-approved account in a Support Team role <em>and</em> the team code; the database enforces the same rule, so a modified copy of this page cannot get around it.<br>
-          <b>What the public form can do.</b> It can file a case, and look up one case with the reference number plus the last four digits of the phone that applied. It cannot list, search or browse anyone else's file — that is a database policy, not a setting.<br>
-          <b>If the phone has no signal.</b> The entry is kept in this phone's own browser storage and uploaded later. Anyone holding this phone and opening this page can read that queue, so do not leave the app open on an unattended device, and do not store what does not need to be stored. A phone code is a deterrent, not a vault: the register is protected by the church account and the database rules, and by keeping the desk itself out of strangers' hands.<br>
-          <b>What not to type here.</b> This is a welfare register, not a filing cabinet. No HIV or clinic letters, no national ID images, no court or family-dispute detail, nothing a child should never read back. If a case needs that, it belongs in the pastoral office on paper, referenced here by one line saying it exists.
-        </p>      </div>
+          <b>Where the data lives.</b> Cases, partner records and uploaded documents are saved in this church app's own storage on the device — under the same rules as the rest of the church app. In the demo build this is the browser's IndexedDB (falling back to localStorage, then memory), and it can be pointed at the church's Supabase project through <code>CONFIG.apiBase</code> at the top of the script.<br>
+          <b>What the public form can do.</b> It can file a case with documents, register one partner, and look up one case with the reference number plus the last four digits of the phone that applied. It cannot list or browse anyone else's file.<br>
+          <b>Document retention.</b> ID images and bills are kept only as long as the case is open plus the audit period, then deleted. Use <em>Purge documents</em> in the case drawer once the case is closed.<br>
+          <b>Outbound messages.</b> Approving a partner opens a ready-written thank-you on WhatsApp or in the email app. To send it automatically from the church's own WhatsApp Business number or mail domain, set <code>CONFIG.notifyEndpoint</code> — the desk will post the approved partner and message there and record the result.
+        </p>
+      </div>
     </div>
   </section>
 
   <footer class="pfoot">
-    <span id="footChurch">Jesus Christ Redeems Global Ministries</span><span class="sep">·</span>
-    <a href="#" id="footCall">📞 <span></span></a><span class="sep">·</span>
-    <a href="#" id="footMail">✉ <span></span></a><span class="sep">·</span>
-    <a href="#" id="footMap" target="_blank" rel="noopener">📍 Map</a><br>
-    <span id="footVer"></span> · Confidential welfare record · <span id="footYear"></span>
+    <span>Jesus Christ Redeems Global Ministries</span><span class="sep">·</span>
+    <a href="tel:+260970000000" id="footCall">📞 <span>+260 970 000 000</span></a><span class="sep">·</span>
+    <a href="/cdn-cgi/l/email-protection#1661737a70776473567c7564717b38796471" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="6c1b09000a0d1e092c060f1e0b0142031e0b">[email&#160;protected]</span></span></a><br>
+    <span id="footVer">v2.0</span> · Confidential welfare record · <span id="footYear"></span>
   </footer>
 </main>
 
-<!-- detail drawer (populated by script) -->
+<!-- detail drawer -->
 <div class="scrim" id="scrim" hidden></div>
 <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" hidden>
   <div class="dhd">
     <div class="dbody"><h3 id="drawerTitle">Case</h3><div class="dsub" id="drawerSub"></div></div>
-    <button class="x" type="button" id="drawerClose" aria-label="Close case file">✕</button>
+    <button class="x" type="button" id="drawerClose" aria-label="Close">✕</button>
   </div>
   <div class="dbody-scroll" id="drawerBody"></div>
   <div class="dfoot" id="drawerFoot"></div>
 </aside>
 
+<!-- modal -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-scrim" data-close="1"></div>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-hd"><h3 id="modalTitle">Message</h3><button class="x" type="button" data-close="1" aria-label="Close">✕</button></div>
+    <div class="modal-bd" id="modalBody"></div>
+    <div class="modal-ft" id="modalFoot"></div>
+  </div>
+</div>
+
 <div class="toasts" id="toasts" role="status" aria-live="polite" aria-atomic="false"></div>
 
-<!-- The same four lines the rest of the church app uses, in the same order:
-     shared project settings -> vendored Supabase library -> church platform
-     (sign-in, membership, roles, realtime) -> this module's own config. -->
-<script src="supabase-config.js"></script>
-<script src="vendor/supabase.js"></script>
-<script src="church-platform.js"></script>
-<script src="jcrgm-config.js"></script>
-<script src="jcrgm-support-team.js"></script>
-</body>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ══════════════════════════════════════════════════════════════════════
+   JCRGM Compassion & Welfare — Support Team desk  (v2.0)
+   Adds:  • Document / NRC-ID upload on the assistance application
+          • Partners tab — partner registration, desk approval,
+            thank-you message by email or WhatsApp
+   Storage: IndexedDB  →  localStorage  →  memory  (auto-fallback)
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────── CONFIG (edit here) ─────────────────────────── */
+const CONFIG = {
+  church:      'Jesus Christ Redeems Global Ministries',
+  ministry:    'Compassion & Welfare Ministry',
+  deskPhone:   '+260 97979554970',
+  deskEmail:   'pedahzurministries@gmail.com',
+  deskWhatsApp:'260979554970',       // digits only, no + or spaces
+  adminPin:    '19922',           // change this before going live
+  apiBase:     '',                   // e.g. 'https://xyz.supabase.co/functions/v1/welfare'
+  notifyEndpoint: '',                // POST target for real email/WhatsApp dispatch
+  maxFileMB:   6,
+  minDocs:     1
+};
+
+const CATEGORIES = [
+  'School fees & education','Medical bill / treatment','Food & groceries',
+  'Rent & eviction','Funeral & bereavement','Uniforms, books & supplies',
+  'Business / income support','Utility bill (ZESCO / water)','Other emergency'
+];
+
+const STATUSES = {
+  submitted: { label:'Submitted',        tone:'info'   },
+  vetting:   { label:'Under vetting',    tone:'warn'   },
+  approved:  { label:'Approved',         tone:'ok'     },
+  deferred:  { label:'Deferred',         tone:'gold'   },
+  declined:  { label:'Not approved',     tone:'danger' },
+  paid:      { label:'Paid / delivered', tone:'teal'   }
+};
+
+const VERSES = [
+  ['Religion that God our Father accepts as pure and faultless is this: to look after orphans and widows in their distress.','James 1:27'],
+  ['Whatever you did for one of the least of these brothers and sisters of mine, you did for me.','Matthew 25:40'],
+  ['Each of you should use whatever gift you have received to serve others, as faithful stewards of God\u2019s grace.','1 Peter 4:10']
+];
+
+/* ─────────────────────────── tiny helpers ─────────────────────────── */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c =>
+  ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const nowISO = () => new Date().toISOString();
+const digits = s => String(s || '').replace(/\D/g, '');
+const last4 = s => digits(s).slice(-4);
+const fmtDate = iso => { try { return new Date(iso).toLocaleString('en-GB',
+  { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }); } catch (e) { return '—'; } };
+const fmtDay = iso => { try { return new Date(iso).toLocaleDateString('en-GB',
+  { day:'2-digit', month:'short', year:'numeric' }); } catch (e) { return '—'; } };
+const money = n => (n === '' || n == null || isNaN(n)) ? '—' : 'K' + Number(n).toLocaleString('en-ZM');
+const fmtBytes = b => b < 1024 ? b + ' B' : b < 1048576 ? (b / 1024).toFixed(0) + ' KB' : (b / 1048576).toFixed(1) + ' MB';
+const validPhone = v => digits(v).length >= 9;
+const validEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v || '').trim());
+
+function toast(msg, kind = '', ms = 3800) {
+  const t = document.createElement('div');
+  t.className = 'toast ' + kind;
+  t.innerHTML = '<span>' + (kind === 'ok' ? '✓' : kind === 'err' ? '⚠' : kind === 'warn' ? '!' : 'ℹ') + '</span><span>' + esc(msg) + '</span>';
+  $('#toasts').appendChild(t);
+  setTimeout(() => { t.style.transition = 'opacity .3s,transform .3s'; t.style.opacity = '0'; t.style.transform = 'translateY(8px)'; }, ms - 320);
+  setTimeout(() => t.remove(), ms);
+}
+
+/* ─────────────────────────── storage layer ─────────────────────────── */
+const Store = (() => {
+  const DB_NAME = 'jcrgm_welfare', DB_VER = 1, STORES = ['cases', 'partners', 'drafts'];
+  let db = null, backend = 'memory';
+  const mem = { cases:new Map(), partners:new Map(), drafts:new Map() };
+  const lsKey = s => 'jcrgm_' + s;
+
+  function lsRead(s) {
+    try { const raw = localStorage.getItem(lsKey(s)); return raw ? JSON.parse(raw) : []; }
+    catch (e) { return []; }
+  }
+  function lsWrite(s, arr) {
+    try { localStorage.setItem(lsKey(s), JSON.stringify(arr)); return true; }
+    catch (e) { return false; }
+  }
+
+  async function init() {
+    try {
+      db = await new Promise((res, rej) => {
+        if (!window.indexedDB) return rej(new Error('no idb'));
+        const r = indexedDB.open(DB_NAME, DB_VER);
+        r.onupgradeneeded = () => {
+          const d = r.result;
+          STORES.forEach(s => { if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, { keyPath:'id' }); });
+        };
+        r.onsuccess = () => res(r.result);
+        r.onerror = () => rej(r.error || new Error('idb error'));
+        r.onblocked = () => rej(new Error('idb blocked'));
+        setTimeout(() => rej(new Error('idb timeout')), 2500);
+      });
+      backend = 'indexeddb';
+    } catch (e) {
+      try { localStorage.setItem('__jcrgm_probe', '1'); localStorage.removeItem('__jcrgm_probe'); backend = 'localstorage'; }
+      catch (e2) { backend = 'memory'; }
+    }
+    // seed from localStorage into memory when running without a store
+    STORES.forEach(s => { if (backend !== 'indexeddb') lsRead(s).forEach(r => mem[s].set(r.id, r)); });
+    return backend;
+  }
+
+  const bname = () => backend === 'indexeddb' ? 'on this phone (IndexedDB)'
+    : backend === 'localstorage' ? 'in this browser (localStorage)' : 'in this session only';
+
+  async function all(store) {
+    if (backend === 'memory') return Array.from(mem[store].values());
+    if (backend === 'localstorage') return lsRead(store);
+    return new Promise((res, rej) => {
+      const r = db.transaction(store, 'readonly').objectStore(store).getAll();
+      r.onsuccess = () => res(r.result || []);
+      r.onerror = () => rej(r.error);
+    });
+  }
+  async function get(store, id) {
+    if (backend === 'memory') return mem[store].get(id) || null;
+    if (backend === 'localstorage') return lsRead(store).find(r => r.id === id) || null;
+    return new Promise(res => {
+      const r = db.transaction(store, 'readonly').objectStore(store).get(id);
+      r.onsuccess = () => res(r.result || null);
+      r.onerror = () => res(null);
+    });
+  }
+  async function put(store, rec) {
+    if (backend === 'indexeddb') {
+      try {
+        await new Promise((res, rej) => {
+          const t = db.transaction(store, 'readwrite');
+          t.objectStore(store).put(rec);
+          t.oncomplete = () => res(); t.onerror = () => rej(t.error);
+        });
+        return true;
+      } catch (e) { /* fall through to memory below */ }
+    }
+    mem[store].set(rec.id, rec);
+    if (backend === 'localstorage') {
+      const arr = lsRead(store).filter(r => r.id !== rec.id); arr.push(rec);
+      if (!lsWrite(store, arr)) { backend = 'memory'; toast('Storage is full — this record is kept for this session only.', 'warn', 6000); }
+    }
+    return true;
+  }
+  async function del(store, id) {
+    if (backend === 'indexeddb') {
+      await new Promise(res => {
+        const t = db.transaction(store, 'readwrite'); t.objectStore(store).delete(id);
+        t.oncomplete = () => res(); t.onerror = () => res();
+      });
+      return true;
+    }
+    mem[store].delete(id);
+    if (backend === 'localstorage') lsWrite(store, lsRead(store).filter(r => r.id !== id));
+    return true;
+  }
+  return { init, all, get, put, del, bname:() => bname(), backend:() => backend };
+})();
+
+/* ─────────────────────────── app state ─────────────────────────── */
+const state = { cases:[], partners:[], docs:{}, step:1, uploads:{}, adminAdd:{}, partnerFilter:'pending', unlocked:false };
+
+function loadUploads() {
+  $$('.up').forEach(u => {
+    const slot = u.dataset.slot;
+    const scope = u.closest('#addCard') ? 'add' : 'apply';
+    const key = scope + ':' + slot;
+    if (!state.uploads[key]) state.uploads[key] = [];
+  });
+}
+
+/* ─────────────────────────── images / files ─────────────────────────── */
+function readFileAsDataURL(file) {
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(fr.result);
+    fr.onerror = () => rej(fr.error);
+    fr.readAsDataURL(file);
+  });
+}
+function shrinkImage(file, max = 1500, quality = 0.82) {
+  return new Promise(res => {
+    if (!/^image\//.test(file.type) || file.type === 'image/gif') return res(null);
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      const scale = Math.min(1, max / Math.max(w, h));
+      w = Math.round(w * scale); h = Math.round(h * scale);
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const cx = c.getContext('2d');
+      cx.fillStyle = '#fff'; cx.fillRect(0, 0, w, h);
+      cx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      try { res(c.toDataURL('image/jpeg', quality)); } catch (e) { res(null); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); res(null); };
+    img.src = url;
+  });
+}
+
+async function handleFiles(input, upEl) {
+  const scope = upEl.closest('#addCard') ? 'add' : 'apply';
+  const key = scope + ':' + upEl.dataset.slot;
+  const files = Array.from(input.files || []);
+  if (!files.length) return;
+  upEl.classList.remove('drag');
+  for (const f of files) {
+    if (f.size > CONFIG.maxFileMB * 1048576) { toast(f.name + ' is bigger than ' + CONFIG.maxFileMB + ' MB — please retake it.', 'err'); continue; }
+    const isImg = /^image\//.test(f.type);
+    let dataUrl = isImg ? await shrinkImage(f) : null;
+    if (!dataUrl) dataUrl = await readFileAsDataURL(f);
+    state.uploads[key].push({
+      docId: uid(), label: upEl.dataset.label || upEl.dataset.slot, name: f.name,
+      type: f.type || 'application/octet-stream', size: isImg ? Math.round(dataUrl.length * 0.75) : f.size,
+      dataUrl, addedAt: nowISO()
+    });
+  }
+  input.value = '';
+  renderUpload(upEl);
+  updateDocTotals();
+}
+
+function renderUpload(upEl) {
+  const scope = upEl.closest('#addCard') ? 'add' : 'apply';
+  const list = state.uploads[scope + ':' + upEl.dataset.slot] || [];
+  const box = $('.up-list', upEl);
+  box.innerHTML = list.map(f => {
+    const thumb = /^data:image/.test(f.dataUrl)
+      ? '<img class="fthumb" src="' + f.dataUrl + '" alt="">'
+      : '<div class="fthumb">📄</div>';
+    return '<div class="fitem">' + thumb +
+      '<div class="fmeta"><b>' + esc(f.name) + '</b><span>' + esc(f.label) + ' · ' + fmtBytes(f.size) + '</span></div>' +
+      '<button class="fx" type="button" data-rm="' + f.docId + '" title="Remove">✕</button></div>';
+  }).join('');
+  upEl.classList.toggle('has', list.length > 0);
+  $$('[data-rm]', box).forEach(b => b.addEventListener('click', () => {
+    const arr = state.uploads[scope + ':' + upEl.dataset.slot];
+    const i = arr.findIndex(x => x.docId === b.dataset.rm);
+    if (i > -1) arr.splice(i, 1);
+    renderUpload(upEl); updateDocTotals();
+  }));
+}
+
+function scopeDocs(scope) {
+  const prefix = scope + ':';
+  return Object.keys(state.uploads)
+    .filter(k => k.startsWith(prefix))
+    .reduce((acc, k) => acc.concat(state.uploads[k] || []), []);
+}
+function updateDocTotals() {
+  const applyDocs = scopeDocs('apply');
+  const total = $('#applyDocsTotal');
+  const nid = applyDocs.filter(d => d.label.indexOf('NRC') === 0).length;
+  const nproof = applyDocs.filter(d => d.label.indexOf('Proof') === 0).length;
+  if (!applyDocs.length) { total.textContent = '📎 No documents attached yet'; total.style.color = '#5b6478'; }
+  else {
+    total.innerHTML = '📎 <b>' + applyDocs.length + '</b> document' + (applyDocs.length > 1 ? 's' : '') +
+      ' attached · ' + (nid ? 'NRC/ID ✓' : 'NRC/ID ✗') + ' · ' + (nproof ? 'proof of need ✓' : 'proof of need ✗');
+    total.style.color = '#101d44';
+  }
+  const err = $('#applyDocErr');
+  if (err) err.style.display = applyDocs.length >= CONFIG.minDocs ? 'none' : '';
+}
+
+/* ─────────────────────────── references ─────────────────────────── */
+function makeCaseRef() {
+  const y = new Date().getFullYear();
+  const n = String(Math.floor(Math.random() * 9000) + 1000);
+  const L = 'ABCDEFGHJKLMNPQRSTUVWXYZ'[Math.floor(Math.random() * 24)];
+  return 'JCRGM-' + y + '-' + n + '-' + L;
+}
+function makePartnerRef() {
+  return 'PTR-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 9000) + 1000);
+}
+
+/* ─────────────────────────── tabs & navigation ─────────────────────────── */
+function go(tab) {
+  const panels = { home:'p-home', apply:'p-apply', status:'p-status', partners:'p-partners', admin:'p-admin' };
+  if (!panels[tab]) tab = 'home';
+  $$('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
+  $$('.panel').forEach(p => { p.hidden = p.id !== panels[tab]; });
+  try { history.replaceState(null, '', '#' + tab); } catch (e) {}
+  window.scrollTo({ top:0, behavior:'smooth' });
+  if (tab === 'admin' && state.unlocked) renderDesk();
+}
+$$('.tab').forEach(b => b.addEventListener('click', () => go(b.dataset.tab)));
+document.addEventListener('click', e => {
+  const g = e.target.closest('[data-goto]');
+  if (g) { e.preventDefault(); go(g.dataset.goto); }
+});
+
+/* ─────────────────────────── field validation ─────────────────────────── */
+function setErr(field, msg) {
+  const f = field.closest('.field') || field.closest('.chk');
+  const box = f ? $('.err', f) : null;
+  if (f) f.classList.toggle('invalid', !!msg);
+  if (box) { if (msg) $('.em', box).textContent = msg; box.style.display = msg ? 'flex' : ''; }
+  return !msg;
+}
+function clearErrs(root) {
+  $$('.field.invalid, .chk.invalid', root).forEach(f => f.classList.remove('invalid'));
+  $$('.err', root).forEach(e => { if (!e.id || !/^pt|^ap|^lk/.test(e.id) || e.style.display) e.style.display = ''; });
+}
+function val(id) { const el = $('#' + id); return el ? el.value.trim() : ''; }
+
+/* ═══════════════════════ APPLY FORM ═══════════════════════ */
+const APPLY_TITLES = {
+  1:['Who is asking','Take your time. Everything here is confidential, and there is no charge for any of it.'],
+  2:['What is needed','Tell us plainly what has happened. The committee reads this, not a computer.'],
+  3:['Documents & verification','Attach a photo of your NRC/ID and proof of the need. This is what lets us approve quickly and honestly.'],
+  4:['Review & send','Check everything, tick the confirmation, and send it to the Support Team desk.']
+};
+
+function buildCats() {
+  const sel = $('#apCat'), ad = $('#adCat');
+  CATEGORIES.forEach(c => {
+    if (sel) sel.insertAdjacentHTML('beforeend', '<option>' + esc(c) + '</option>');
+    if (ad) ad.insertAdjacentHTML('beforeend', '<option>' + esc(c) + '</option>');
+  });
+  $('#homeCats').innerHTML = CATEGORIES.map(c => '<span class="cat">' + esc(c) + '</span>').join('');
+  const fs = $('#fCat');
+  if (fs) CATEGORIES.forEach(c => fs.insertAdjacentHTML('beforeend', '<option value="' + esc(c) + '">' + esc(c) + '</option>'));
+  const st = $('#fStatus');
+  if (st) Object.keys(STATUSES).forEach(k => st.insertAdjacentHTML('beforeend', '<option value="' + k + '">' + esc(STATUSES[k].label) + '</option>'));
+}
+
+function renderSteps() {
+  const names = ['Details','The need','Documents','Review'];
+  $('#applySteps').innerHTML = names.map((n, i) => {
+    const s = i + 1;
+    const cls = state.step === s ? 'now' : state.step > s ? 'done' : '';
+    return '<li class="stp ' + cls + '"><span class="bar"></span><span>' + (s) + '. ' + n + '</span></li>';
+  }).join('');
+  $$('.step-sec').forEach(sec => sec.classList.toggle('on', Number(sec.dataset.step) === state.step));
+  const [t, n] = APPLY_TITLES[state.step];
+  $('#applyStepTitle').textContent = t;
+  $('#applyStepNote').textContent = n;
+  $('#applyBack').hidden = state.step === 1;
+  $('#applyNext').hidden = state.step === 4;
+  $('#applySubmit').hidden = state.step !== 4;
+  $('#applySave').hidden = state.step === 4;
+  if (state.step === 4) renderApplyReview();
+}
+
+function validateStep(s) {
+  let ok = true;
+  if (s === 1) {
+    ok = setErr($('#apName'), val('apName').length < 3 ? 'Please give the full name.' : '') && ok;
+    ok = setErr($('#apPhone'), !validPhone(val('apPhone')) ? 'Enter a phone number we can call.' : '') && ok;
+    ok = setErr($('#apNrc'), val('apNrc').length < 5 ? 'Enter the NRC / ID number, or attach the ID in the next step.' : '') && ok;
+    ok = setErr($('#apWho'), !val('apWho') ? 'Choose who is asking.' : '') && ok;
+    ok = setErr($('#apCompound'), val('apCompound').length < 2 ? 'Where you stay helps us plan a visit.' : '') && ok;
+    const em = val('apEmail');
+    ok = setErr($('#apEmail'), em && !validEmail(em) ? 'That email does not look right.' : '') && ok;
+  }
+  if (s === 2) {
+    ok = setErr($('#apCat'), !val('apCat') ? 'Choose the type of help.' : '') && ok;
+    ok = setErr($('#apUrgency'), !val('apUrgency') ? 'Tell us how urgent it is.' : '') && ok;
+    ok = setErr($('#apStory'), val('apStory').length < 30 ? 'Please write at least 30 characters about the need.' : '') && ok;
+    ok = setErr($('#apRef'), val('apRef').length < 6 ? 'A referee makes the case much stronger.' : '') && ok;
+  }
+  if (s === 3) {
+    const has = scopeDocs('apply').length >= CONFIG.minDocs;
+    $('#applyDocErr').style.display = has ? 'none' : 'flex';
+    if (!has) toast('Attach at least one document — NRC/ID or proof of the need.', 'err');
+    ok = has && ok;
+  }
+  if (!ok) {
+    const first = $('.step-sec.on .invalid input, .step-sec.on .invalid select, .step-sec.on .invalid textarea');
+    if (first) first.focus();
+  }
+  return ok;
+}
+
+function renderApplyReview() {
+  const docs = scopeDocs('apply');
+  const rows = [
+    ['Name', val('apName')], ['Phone', val('apPhone')],
+    ['NRC / ID', val('apNrc')], ['Asking as', val('apWho')],
+    ['Area', val('apCompound')], ['Help needed', val('apCat')],
+    ['Amount', val('apAmount') ? money(val('apAmount')) : 'Not stated'],
+    ['Urgency', val('apUrgency')], ['Referee', val('apRef')]
+  ];
+  $('#applyReview').innerHTML =
+    '<div class="dl">' + rows.map(r =>
+      '<div><dt>' + esc(r[0]) + '</dt><dd>' + (r[1] ? esc(r[1]) : '—') + '</dd></div>').join('') +
+    '</div>' +
+    '<div class="sec-t">Documents attached (' + docs.length + ')</div>' +
+    (docs.length
+      ? '<div class="doc-grid">' + docs.map(d =>
+          '<div class="doc">' + (/^data:image/.test(d.dataUrl) ? '<img src="' + d.dataUrl + '" alt="">' : '<div class="ph">📄</div>') +
+          '<span>' + esc(d.label) + '</span></div>').join('') + '</div>'
+      : '<p class="small" style="color:#b42318">No documents — go back to step 3.</p>');
+}
+
+$('#applyNext') && $('#applyNext').addEventListener('click', () => {
+  if (!validateStep(state.step)) return;
+  if (state.step < 4) { state.step++; renderSteps(); window.scrollTo({ top:120, behavior:'smooth' }); }
+});
+$('#applyBack') && $('#applyBack').addEventListener('click', () => {
+  if (state.step > 1) { state.step--; renderSteps(); window.scrollTo({ top:120, behavior:'smooth' }); }
+});
+$('#apStory') && $('#apStory').addEventListener('input', e => { $('#apStoryCount').textContent = e.target.value.length; });
+
+/* save draft */
+$('#applySave') && $('#applySave').addEventListener('click', async () => {
+  const draft = { id:'draft-apply', savedAt:nowISO(),
+    name:val('apName'), phone:val('apPhone'), nrc:val('apNrc'), story:val('apStory') };
+  await Store.put('drafts', draft);
+  toast('Draft saved on this phone. Come back to the Apply tab to continue.', 'ok');
+});
+
+/* submit application */
+$('#applyForm') && $('#applyForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  for (let s = 1; s <= 3; s++) if (!validateStep(s)) { state.step = s; renderSteps(); return; }
+  if (!$('#apConsent').checked) {
+    $('#apConsentWrap').classList.add('invalid');
+    $('#apConsentErr').style.display = 'flex';
+    $('#apConsent').focus();
+    return;
+  }
+  $('#apConsentWrap').classList.remove('invalid');
+  $('#apConsentErr').style.display = 'none';
+
+  const btn = $('#applySubmit'); btn.classList.add('busy');
+  const docs = scopeDocs('apply');
+  const rec = {
+    id: uid(), ref: makeCaseRef(), kind:'application',
+    name: val('apName'), phone: val('apPhone'), phone2: val('apPhone2'),
+    email: val('apEmail'), nrc: val('apNrc'), who: val('apWho'), compound: val('apCompound'),
+    category: val('apCat'), amount: val('apAmount'), urgency: val('apUrgency'),
+    household: val('apHousehold'), story: val('apStory'), referee: val('apRef'),
+    previous: val('apPrev'), notes: val('apNotes'),
+    status: 'submitted', createdAt: nowISO(), history: [{ at:nowISO(), status:'submitted', by:'applicant' }],
+    docCount: docs.length, docLabels: docs.map(d => d.label)
+  };
+  await Store.put('cases', rec);
+  if (docs.length) await Store.put('docs', { id: rec.id, ref: rec.ref, items: docs, savedAt: nowISO() });
+  await Store.del('drafts', 'draft-apply');
+  await refresh();
+  btn.classList.remove('busy');
+
+  // success card
+  $('#applyShell').hidden = true;
+  const done = $('#applyDone'); done.hidden = false;
+  const notifyChannel = CONFIG.deskWhatsApp;
+  done.innerHTML =
+    '<div class="done-hero">' +
+      '<div class="big">✓</div>' +
+      '<h2>Your request has reached the desk</h2>' +
+      '<p>Thank you for trusting us with this. Keep the reference below — it is how you and the Support Team will talk about your case.</p>' +
+      '<div class="refbox"><small>Your reference</small><b>' + esc(rec.ref) + '</b></div>' +
+      '<div class="recap">' +
+        '<div><small>Name</small><b>' + esc(rec.name) + '</b></div>' +
+        '<div><small>Help needed</small><b>' + esc(rec.category) + '</b></div>' +
+        '<div><small>Documents</small><b>' + rec.docCount + ' attached</b></div>' +
+        '<div><small>Status</small><b>Submitted</b></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="divider"></div>' +
+    '<div class="note ok"><span class="ni">📱</span><div><b>Save this now.</b> Screenshot this screen or write the reference down. You will need it with the last 4 digits of <b>' + esc(rec.phone) + '</b> to check the case.</div></div>' +
+    '<div class="note" style="margin-top:9px"><span class="ni">⏱</span><div><b>What happens next.</b> Two team members will look at your documents and call your referee. Most cases are decided within 7 days; emergencies within 48 hours. We will call you on ' + esc(rec.phone) + '.</div></div>' +
+    '<div class="note warn" style="margin-top:9px"><span class="ni">🔒</span><div><b>About your documents.</b> Your NRC/ID and bills stay with the Support Team only. They are never posted, forwarded on WhatsApp, or shown to a sponsor.</div></div>' +
+    '<div class="formbar">' +
+      '<button class="btn ghost" type="button" data-go="status">🔎 Track this case</button>' +
+      '<button class="btn ghost" type="button" id="doneWa">💬 WhatsApp the desk</button>' +
+      '<span class="grow"></span>' +
+      '<button class="btn primary" type="button" id="doneAgain">Apply for someone else</button>' +
+    '</div>';
+  $('#doneWa').addEventListener('click', () => openWhatsApp(CONFIG.deskWhatsApp,
+    'Good day. I have submitted an application for assistance. My reference is ' + rec.ref + '.'));
+  $('#doneAgain').addEventListener('click', () => resetApply());
+  window.scrollTo({ top:0, behavior:'smooth' });
+  toast('Application sent. Your reference is ' + rec.ref, 'ok', 6000);
+});
+
+function resetApply() {
+  $('#applyForm').reset();
+  $('#applyDocsTotal').textContent = '📎 No documents attached yet';
+  $$('.up', $('#applyUploads')).forEach(u => { const k = 'apply:' + u.dataset.slot; if (state.uploads[k]) state.uploads[k] = []; renderUpload(u); });
+  state.step = 1;
+  renderSteps();
+  $('#applyDone').hidden = true;
+  $('#applyShell').hidden = false;
+  updateDocTotals();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ═══════════════════════ PARTNERS ═══════════════════════ */
+const ptTypes = () => $$('#ptTypes input:checked').map(i => i.value);
+
+$('#partnerForm') && $('#partnerForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  let ok = true;
+  ok = setErr($('#ptName'), val('ptName').length < 3 ? 'Please give your full name.' : '') && ok;
+  ok = setErr($('#ptEmail'), !validEmail(val('ptEmail')) ? 'We need a working email address.' : '') && ok;
+  ok = setErr($('#ptPhone'), !validPhone(val('ptPhone')) ? 'Enter a WhatsApp / phone number with country code.' : '') && ok;
+  const types = ptTypes();
+  $('#ptTypeErr').style.display = types.length ? 'none' : 'flex';
+  if (!types.length) ok = false;
+  const contact = ($('input[name="ptContact"]:checked') || {}).value || '';
+  $('#ptContactErr').style.display = contact ? 'none' : 'flex';
+  if (!contact) ok = false;
+  const consent = $('#ptConsent').checked;
+  $('#ptConsentWrap').classList.toggle('invalid', !consent);
+  $('#ptConsentErr').style.display = consent ? 'none' : 'flex';
+  if (!consent) ok = false;
+  if (!ok) { const f = $('#partnerForm .invalid input'); if (f) f.focus(); toast('Please complete the highlighted fields.', 'err'); return; }
+
+  const btn = $('#ptSubmit'); btn.classList.add('busy');
+  const rec = {
+    id: uid(), ref: makePartnerRef(),
+    name: val('ptName'), org: val('ptOrg'), email: val('ptEmail'), phone: val('ptPhone'),
+    city: val('ptCity'), church: val('ptChurch'), types, amount: val('ptAmount'), freq: val('ptFreq'),
+    message: val('ptMsg'), contact,
+    status: 'pending', createdAt: nowISO(), approvedAt: null, notifyLog: []
+  };
+  await Store.put('partners', rec);
+  await refresh();
+  btn.classList.remove('busy');
+
+  $('#partnerFormWrap').hidden = true;
+  const done = $('#partnerDone'); done.hidden = false;
+  done.innerHTML =
+    '<div class="done-hero">' +
+      '<div class="big" style="background:radial-gradient(circle at 30% 25%,#fff3c4,#ffd94d);box-shadow:0 16px 34px -18px rgba(184,145,44,.9)">🤝</div>' +
+      '<h2>Welcome to the vision</h2>' +
+      '<p>Your partnership details are now with the Compassion &amp; Welfare desk. Once the team has approved them, a thank-you message will be sent to you by <b>' + esc(contact === 'Both' ? 'email and WhatsApp' : contact) + '</b>.</p>' +
+      '<div class="refbox"><small>Partnership reference</small><b>' + esc(rec.ref) + '</b></div>' +
+    '</div>' +
+    '<div class="divider"></div>' +
+    '<div class="note ok"><span class="ni">✅</span><div><b>Status: awaiting approval.</b> Approval is usually done by the desk within 1–3 working days after a Sunday service. Your message goes out as soon as it is approved.</div></div>' +
+    '<div class="note" style="margin-top:9px"><span class="ni">✉️</span><div><b>Watch your inbox.</b> The thank-you goes to <b>' + esc(rec.email) + '</b>' + (contact !== 'Email' ? ' and to WhatsApp <b>' + esc(rec.phone) + '</b>' : '') + '. If you don\'t see it, check the spam folder or call ' + esc(CONFIG.deskPhone) + '.</div></div>' +
+    '<div class="note info" style="margin-top:9px"><span class="ni">📋</span><div><b>Bring this reference on Sunday.</b> Quote ' + esc(rec.ref) + ' at the partnership desk and the team will show you exactly where your partnership is working.</div></div>' +
+    '<div class="formbar">' +
+      '<button class="btn ghost" type="button" data-go="status">🔎 Check partnership status</button>' +
+      '<button class="btn ghost" type="button" id="ptWa">💬 WhatsApp the desk</button>' +
+      '<span class="grow"></span>' +
+      '<button class="btn primary" type="button" id="ptAnother">Register another partner</button>' +
+    '</div>';
+  $('#ptWa').addEventListener('click', () => openWhatsApp(CONFIG.deskWhatsApp,
+    'Good day. I have registered as a partner. My partnership reference is ' + rec.ref + '.'));
+  $('#ptAnother').addEventListener('click', () => {
+    $('#partnerForm').reset();
+    $('#partnerDone').hidden = true; $('#partnerFormWrap').hidden = false;
+    $$('.err', $('#partnerForm')).forEach(x => x.style.display = '');
+    window.scrollTo({ top:0, behavior:'smooth' });
+  });
+  window.scrollTo({ top:0, behavior:'smooth' });
+  toast('Registered. Reference ' + rec.ref + ' — awaiting approval.', 'ok', 6000);
+  updateBadge();
+});
+
+/* ═══════════════════════ STATUS LOOKUP ═══════════════════════ */
+$('#lookupForm') && $('#lookupForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const ref = val('lkRef').toUpperCase().replace(/\s+/g, '');
+  const ph = last4(val('lkPhone'));
+  let ok = true;
+  ok = setErr($('#lkRef'), ref.length < 6 ? 'Enter the reference number.' : '') && ok;
+  ok = setErr($('#lkPhone'), ph.length < 4 ? 'Enter the phone number you applied with.' : '') && ok;
+  if (!ok) return;
+  const box = $('#lookupResult');
+
+  const c = state.cases.find(x => x.ref === ref);
+  if (c) {
+    if (last4(c.phone) !== ph && last4(c.phone2) !== ph) return showLookupMiss('The reference was found, but the phone number does not match the one on the file.');
+    box.innerHTML = caseStatusCard(c); return;
+  }
+  const p = state.partners.find(x => x.ref === ref);
+  if (p) {
+    if (last4(p.phone) !== ph) return showLookupMiss('The partnership was found, but the phone number does not match.');
+    box.innerHTML = partnerStatusCard(p); return;
+  }
+  showLookupMiss('We could not find that reference on this device. Check the letters and digits, or call the desk on ' + CONFIG.deskPhone + '.');
+});
+
+function showLookupMiss(msg) {
+  $('#lookupResult').innerHTML =
+    '<div class="card"><div class="note danger"><span class="ni">🔍</span><div><b>Not found.</b> ' + esc(msg) + '</div></div></div>';
+}
+
+function caseStatusCard(c) {
+  const order = ['submitted', 'vetting', 'approved', 'paid'];
+  const idx = order.indexOf(c.status === 'deferred' ? 'vetting' : c.status);
+  const steps = [
+    ['Submitted', 'We have received your request and your documents.'],
+    ['Under vetting', 'Two team members are checking the documents and calling your referee.'],
+    ['Decision', 'The committee has reached a decision (approved cases move to payment).'],
+    ['Paid / delivered', 'The school, clinic or supplier has been paid and receipted.']
+  ];
+  return '<div class="card">' +
+    '<div class="card-hd"><span class="ico">📄</span><div class="grow">' +
+      '<span class="eyebrow-sm">' + esc(c.ref) + '</span><h2>' + esc(c.name) + '</h2>' +
+      '<p>' + esc(c.category) + (c.amount ? ' · ' + money(c.amount) : '') + ' · opened ' + fmtDay(c.createdAt) + '</p></div>' +
+      '<span class="badge tone-' + STATUSES[c.status].tone + '">' + STATUSES[c.status].label + '</span></div>' +
+    '<div class="stats" style="margin-bottom:14px">' +
+      '<div class="stat"><b>' + (c.docCount || 0) + '</b><span>Documents</span></div>' +
+      '<div class="stat gold"><b>' + esc(c.urgency ? c.urgency.split(' —')[0] : '—') + '</b><span>Urgency</span></div>' +
+      '<div class="stat"><b>' + fmtDay(c.createdAt).split(' ')[0] + '</b><span>Opened</span></div>' +
+    '</div>' +
+    '<div class="dl">' + steps.map((s, i) => {
+      const cls = i < idx ? 'done' : i === idx ? 'now' : 'todo';
+      const mark = i < idx ? '✓' : i === idx ? '●' : '○';
+      return '<div><dt>' + mark + ' ' + esc(s[0]) + '</dt><dd class="' + cls + '" style="font-size:12.4px;color:' +
+        (i <= idx ? '#0f172a' : '#98a1b8') + '">' + esc(s[1]) + '</dd></div>';
+    }).join('') + '</div>' +
+    '<div class="note info"><span class="ni">📞</span><div>Questions? Call <b>' + esc(CONFIG.deskPhone) + '</b> and say your reference <b>' + esc(c.ref) + '</b>.</div></div>' +
+    '</div>';
+}
+
+function partnerStatusCard(p) {
+  const tone = p.status === 'approved' ? 'ok' : p.status === 'declined' ? 'danger' : 'warn';
+  const label = p.status === 'approved' ? 'Approved partner' : p.status === 'declined' ? 'Not approved' : 'Awaiting approval';
+  return '<div class="card">' +
+    '<div class="card-hd"><span class="ico">🤝</span><div class="grow">' +
+      '<span class="eyebrow-sm">' + esc(p.ref) + '</span><h2>' + esc(p.name) + '</h2>' +
+      '<p>' + esc(p.types.join(' · ')) + ' · registered ' + fmtDay(p.createdAt) + '</p></div>' +
+      '<span class="badge tone-' + tone + '">' + label + '</span></div>' +
+    (p.status === 'approved'
+      ? '<div class="note ok"><span class="ni">✅</span><div><b>Thank you for partnering with the vision.</b> Your welcome message was sent by ' + esc(p.contact) + '.' + (p.approvedAt ? ' Approved on ' + fmtDay(p.approvedAt) + '.' : '') + ' The desk will be in touch about next steps.</div></div>'
+      : '<div class="note warn"><span class="ni">⏳</span><div><b>Still with the desk.</b> Your details have been received and are waiting for approval. The thank-you message goes out on approval — usually within 1–3 working days.</div></div>') +
+    '<div class="dl" style="margin-top:12px">' +
+      '<div><dt>Email</dt><dd>' + esc(p.email) + '</dd></div>' +
+      '<div><dt>WhatsApp</dt><dd>' + esc(p.phone) + '</dd></div>' +
+      '<div><dt>Contact by</dt><dd>' + esc(p.contact) + '</dd></div>' +
+      '<div><dt>Pledge</dt><dd>' + (p.amount ? money(p.amount) + (p.freq ? ' · ' + esc(p.freq) : '') : 'Not stated') + '</dd></div>' +
+    '</div></div>';
+}
+
+/* ═══════════════════════ ADMIN ═══════════════════════ */
+const LOCK_KEY = 'jcrgm_desk_unlocked';
+$('#lockForm') && $('#lockForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const pw = $('#lockPw').value;
+  if (pw === CONFIG.adminPin) {
+    state.unlocked = true;
+    try { sessionStorage.setItem(LOCK_KEY, '1'); } catch (er) {}
+    $('#lockCard').hidden = true; $('#desk').hidden = false;
+    $('#lockErr').hidden = true; $('#lockPw').value = '';
+    renderDesk(); toast('Desk unlocked.', 'ok');
+  } else {
+    $('#lockErr').hidden = false;
+    $('#lockPw').classList.add('invalid');
+    $('#lockPw').focus(); $('#lockPw').select();
+  }
+});
+$('#showPw') && $('#showPw').addEventListener('change', e => { $('#lockPw').type = e.target.checked ? 'text' : 'password'; });
+$('#btnLock') && $('#btnLock').addEventListener('click', () => {
+  state.unlocked = false;
+  try { sessionStorage.removeItem(LOCK_KEY); } catch (e) {}
+  $('#desk').hidden = true; $('#lockCard').hidden = false;
+  go('home'); toast('Desk locked.');
+});
+
+function renderDesk() {
+  if (!state.unlocked) return;
+  const cases = state.cases;
+  const pend = state.partners.filter(p => p.status === 'pending');
+  const appr = state.partners.filter(p => p.status === 'approved');
+  $('#deskStats').innerHTML = [
+    ['', cases.length, 'Cases on file'],
+    ['gold', cases.filter(c => c.status === 'submitted').length, 'Awaiting vetting'],
+    ['ok', appr.length, 'Approved partners'],
+    ['', cases.reduce((a, c) => a + (c.docCount || 0), 0), 'Documents held'],
+    ['gold', pend.length, 'Partners to approve']
+  ].map(s => '<div class="stat ' + s[0] + '"><b>' + s[1] + '</b><span>' + s[2] + '</span></div>').join('');
+  renderPartners();
+  renderRegister();
+  updateBadge();
+}
+
+function updateBadge() {
+  const b = $('#badgeAwaiting');
+  if (!b) return;
+  const pend = state.partners.filter(p => p.status === 'pending').length +
+               state.cases.filter(c => c.status === 'submitted').length;
+  b.hidden = pend === 0;
+  b.textContent = pend;
+  b.classList.toggle('alert', pend > 0);
+}
+
+/* ── partner table ── */
+$('#pfPending') && $('#pfPending').addEventListener('click', () => { state.partnerFilter = 'pending'; renderPartners(); });
+$('#pfAll') && $('#pfAll').addEventListener('click', () => { state.partnerFilter = 'all'; renderPartners(); });
+$('#pfCsv') && $('#pfCsv').addEventListener('click', () => exportPartnersCsv());
+
+function renderPartners() {
+  const wrap = $('#partnerTable');
+  if (!wrap) return;
+  const list = (state.partnerFilter === 'pending' ? state.partners.filter(p => p.status === 'pending') : state.partners)
+    .slice().sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  $('#pfPending').setAttribute('aria-pressed', String(state.partnerFilter === 'pending'));
+  $('#pfAll').setAttribute('aria-pressed', String(state.partnerFilter === 'all'));
+  if (!list.length) {
+    wrap.innerHTML = '<div class="empty"><span class="e-ic">🤝</span><b>' +
+      (state.partnerFilter === 'pending' ? 'No partners waiting' : 'No partners registered yet') + '</b>' +
+      '<span class="small">' + (state.partnerFilter === 'pending'
+        ? 'New registrations from the Partners tab will appear here for approval.'
+        : 'Partners who register on the Partners tab appear here.') + '</span></div>';
+    return;
+  }
+  wrap.innerHTML = '<div class="tbl-wrap"><table class="tbl"><thead><tr>' +
+    '<th>Partner</th><th>Type</th><th>Contact</th><th>Pledge</th><th>Status</th><th></th></tr></thead><tbody>' +
+    list.map(p => {
+      const tone = p.status === 'approved' ? 'ok' : p.status === 'declined' ? 'danger' : 'warn';
+      const label = p.status === 'approved' ? '✓ Approved' : p.status === 'declined' ? 'Not approved' : '⏳ Pending';
+      const acts = p.status === 'pending'
+        ? '<button class="btn ok xs" data-approve="' + p.id + '">✓ Approve</button> <button class="btn danger xs" data-decline="' + p.id + '">✕</button>'
+        : '<button class="btn ghost xs" data-approve="' + p.id + '">✉ Message</button>';
+      return '<tr>' +
+        '<td class="tname"><b>' + esc(p.name) + '</b><span>' + esc(p.ref) + (p.org ? ' · ' + esc(p.org) : '') + '</span></td>' +
+        '<td>' + esc(p.types.map(t => t.split(' ')[0]).join(' ')) + '<br><span class="small" style="color:#5b6478">' + esc(p.types[0] || '') + '</span></td>' +
+        '<td>' + esc(p.email) + '<br><span class="small" style="color:#5b6478">' + esc(p.phone) + ' · ' + esc(p.contact) + '</span></td>' +
+        '<td>' + (p.amount ? money(p.amount) + (p.freq ? '<br><span class="small" style="color:#5b6478">' + esc(p.freq) + '</span>' : '') : '—') + '</td>' +
+        '<td><span class="badge tone-' + tone + '">' + label + '</span></td>' +
+        '<td style="white-space:nowrap"><button class="btn ghost xs" data-pview="' + p.id + '">Open</button> ' + acts + '</td>' +
+        '</tr>';
+    }).join('') + '</tbody></table></div>';
+
+  $$('[data-pview]', wrap).forEach(b => b.addEventListener('click', () => openPartnerDrawer(b.dataset.pview)));
+  $$('[data-approve]', wrap).forEach(b => b.addEventListener('click', () => approvePartner(b.dataset.approve)));
+  $$('[data-decline]', wrap).forEach(b => b.addEventListener('click', () => declinePartner(b.dataset.decline)));
+}
+
+async function declinePartner(id) {
+  const p = state.partners.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm('Mark ' + p.name + ' as not approved? They will not receive a thank-you message.')) return;
+  p.status = 'declined'; p.decidedAt = nowISO();
+  await Store.put('partners', p); await refresh(); renderDesk();
+  toast('Marked as not approved.', 'warn');
+}
+
+function thankYouMessage(p) {
+  const first = (p.name || '').split(' ')[0] || 'friend';
+  return [
+    'Dear ' + first + ',',
+    '',
+    'Praise the Lord! On behalf of the Office of the Senior Pastor and the whole family of ' + CONFIG.church + ', thank you for accepting the call to partner with us in this vision. We have received and approved your details.',
+    '',
+    'Your partnership reference is ' + p.ref + '. Through it you are now part of the ' + CONFIG.ministry + ' — school fees paid to the bursar, medical bills settled at the clinic, and families fed and buried with dignity.',
+    '',
+    p.types && p.types.length ? 'You have chosen to partner as: ' + p.types.join(', ') + '.' : '',
+    p.amount ? 'Your pledge of ' + money(p.amount) + (p.freq ? ' (' + p.freq + ')' : '') + ' is recorded, and a receipt will be issued for every gift.' : '',
+    '',
+    'The Support Team will be in touch within 3 working days to walk with you on the next steps. If you need us before then, call ' + CONFIG.deskPhone + ' or reply to this message.',
+    '',
+    '"Each of you should use whatever gift you have received to serve others, as faithful stewards of God\u2019s grace in its various forms." — 1 Peter 4:10',
+    '',
+    'With gratitude in Christ,',
+    'The ' + CONFIG.ministry,
+    CONFIG.church
+  ].filter(l => l !== '' || true).join('\n');
+}
+
+function approvePartner(id) {
+  const p = state.partners.find(x => x.id === id);
+  if (!p) return;
+  const msg = thankYouMessage(p);
+  openModal('Approve partnership · ' + esc(p.name), '' +
+    '<div class="note info"><span class="ni">✅</span><div><b>' + esc(p.ref) + '</b> · ' + esc(p.types.join(', ')) + '<br>' +
+      esc(p.email) + ' · ' + esc(p.phone) + ' · prefers <b>' + esc(p.contact) + '</b></div></div>' +
+    '<div class="field" style="margin-top:12px"><label for="tyMsg">Welcome &amp; thank-you message (editable)</label>' +
+      '<textarea class="inp" id="tyMsg" rows="12" style="font-size:12.6px;line-height:1.5">' + esc(msg) + '</textarea></div>' +
+    '<p class="small" style="color:#5b6478;margin-top:8px">Approving saves the partner as approved. Sending opens WhatsApp or your email app with this message ready — press send there, then the desk records that it went.</p>',
+    '<button class="btn ghost" type="button" data-close="1">Cancel</button>' +
+    '<button class="btn ok" type="button" id="tyApprove">✓ Approve partner</button>' +
+    '<button class="btn ghost" type="button" id="tyEmail">✉ Email</button>' +
+    '<button class="btn gold" type="button" id="tyWa">💬 WhatsApp</button>');
+
+  $('#tyEmail').addEventListener('click', () => dispatch(p, 'Email', $('#tyMsg').value));
+  $('#tyWa').addEventListener('click', () => dispatch(p, 'WhatsApp', $('#tyMsg').value));
+  $('#tyApprove').addEventListener('click', async () => {
+    p.status = 'approved'; p.approvedAt = nowISO(); p.approvedBy = 'Support Team desk';
+    p.thankYou = $('#tyMsg').value;
+    await Store.put('partners', p); await refresh(); renderDesk(); closeModal();
+    toast(p.name + ' is now an approved partner.', 'ok', 5000);
+  });
+}
+
+async function dispatch(p, channel, message) {
+  // Optional real backend (WhatsApp Business API / transactional email).
+  if (CONFIG.notifyEndpoint) {
+    try {
+      const r = await fetch(CONFIG.notifyEndpoint, {
+        method:'POST', headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({ type:'partner-approved', channel, partner:p, message })
+      });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+    } catch (e) { toast('The message service did not answer — opening ' + channel + ' instead.', 'warn'); }
+  }
+  const subject = 'Thank you for partnering with ' + CONFIG.church;
+  if (channel === 'Email') {
+    window.location.href = 'mailto:' + encodeURIComponent(p.email) + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(message);
+  } else {
+    openWhatsApp(p.phone, message);
+  }
+  p.notifyLog = (p.notifyLog || []).concat([{ at:nowISO(), channel, by:'desk' }]);
+  if (p.status !== 'approved') { p.status = 'approved'; p.approvedAt = nowISO(); }
+  p.thankYou = message;
+  await Store.put('partners', p); await refresh();
+  toast('Thank-you recorded as sent by ' + channel + '.', 'ok', 5000);
+  renderDesk();
+  closeModal();
+}
+
+function openWhatsApp(phone, text) {
+  const num = digits(phone);
+  const url = 'https://wa.me/' + num + '?text=' + encodeURIComponent(text);
+  const w = window.open(url, '_blank', 'noopener');
+  if (!w) { navigator.clipboard && navigator.clipboard.writeText(text); toast('Pop-up blocked — the message was copied to your clipboard.', 'warn', 6000); }
+}
+
+function openPartnerDrawer(id) {
+  const p = state.partners.find(x => x.id === id);
+  if (!p) return;
+  const tone = p.status === 'approved' ? 'ok' : p.status === 'declined' ? 'danger' : 'warn';
+  openDrawer(p.name + ' · ' + p.ref, p.types.join(' · '),
+    '<div class="dl">' +
+      [['Reference', p.ref], ['Status', (p.status === 'approved' ? 'Approved' : p.status === 'declined' ? 'Not approved' : 'Awaiting approval')],
+       ['Organisation', p.org || '—'], ['Email', p.email], ['WhatsApp', p.phone],
+       ['City / country', p.city || '—'], ['Home church', p.church || '—'],
+       ['Partnership types', p.types.join(', ')], ['Pledge', p.amount ? money(p.amount) + (p.freq ? ' · ' + p.freq : '') : '—'],
+       ['Preferred contact', p.contact], ['Registered', fmtDate(p.createdAt)],
+       ['Approved', p.approvedAt ? fmtDate(p.approvedAt) : '—'],
+       ['Messages sent', (p.notifyLog || []).map(l => l.channel + ' ' + fmtDate(l.at)).join(' · ') || 'none yet']
+      ].map(r => '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>').join('') + '</div>' +
+    (p.message ? '<div class="sec-t">What is on their heart</div><p class="small">' + esc(p.message) + '</p>' : '') +
+    (p.thankYou ? '<div class="sec-t">Thank-you message sent</div><p class="small" style="white-space:pre-wrap;background:#f8faff;border:1px solid #e3e6ef;border-radius:12px;padding:11px">' + esc(p.thankYou) + '</p>' : ''),
+    (p.status === 'pending'
+      ? '<button class="btn ok" type="button" data-approve="' + p.id + '">✓ Approve &amp; thank</button>' +
+        '<button class="btn danger" type="button" data-decline="' + p.id + '">✕ Decline</button>'
+      : '<button class="btn ghost" type="button" data-approve="' + p.id + '">✉ Send message again</button>') +
+      '<span class="grow"></span><span class="badge tone-' + tone + '">' + esc(p.contact) + '</span>');
+  $$('#drawerFoot [data-approve]').forEach(b => b.addEventListener('click', () => { closeDrawer(); approvePartner(b.dataset.approve); }));
+  $$('#drawerFoot [data-decline]').forEach(b => b.addEventListener('click', () => { closeDrawer(); declinePartner(b.dataset.decline); }));
+}
+
+/* ── cases register ── */
+['#fQuery', '#fStatus', '#fCat', '#fDocs'].forEach(sel => {
+  const el = $(sel); if (el) el.addEventListener('input', renderRegister);
+});
+
+function filteredCases() {
+  const q = val('fQuery').toLowerCase();
+  const st = val('fStatus'), cat = val('fCat'), dc = val('fDocs');
+  return state.cases.filter(c => {
+    if (st && c.status !== st) return false;
+    if (cat && c.category !== cat) return false;
+    if (dc === 'yes' && !(c.docCount > 0)) return false;
+    if (dc === 'no' && c.docCount > 0) return false;
+    if (q) {
+      const hay = [c.name, c.ref, c.nrc, c.compound, c.phone, c.category, c.story].join(' ').toLowerCase();
+      if (hay.indexOf(q) === -1) return false;
+    }
+    return true;
+  }).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+}
+
+function renderRegister() {
+  const wrap = $('#registerView');
+  if (!wrap) return;
+  const list = filteredCases();
+  $('#regCount').innerHTML = '<b>' + list.length + '</b> of ' + state.cases.length + ' case' + (state.cases.length === 1 ? '' : 's') +
+    ' · <span class="badge tone-teal">📎 ' + state.cases.reduce((a, c) => a + (c.docCount || 0), 0) + ' documents</span>';
+  if (!list.length) {
+    wrap.innerHTML = '<div class="empty"><span class="e-ic">🗂</span><b>Nothing here yet</b>' +
+      '<span class="small">' + (state.cases.length ? 'No case matches this filter.' : 'Applications sent from the Apply tab, and beneficiaries you register, appear here.') + '</span></div>';
+    return;
+  }
+  wrap.innerHTML = '<div class="tbl-wrap"><table class="tbl"><thead><tr>' +
+    '<th>Applicant</th><th>Need</th><th>Docs</th><th>Amount</th><th>Status</th><th>Received</th><th></th></tr></thead><tbody>' +
+    list.map(c => '<tr>' +
+      '<td class="tname"><b>' + esc(c.name) + '</b><span>' + esc(c.ref) + ' · ' + esc(c.phone) + '</span></td>' +
+      '<td>' + esc(c.category || '—') + '<br><span class="small" style="color:#5b6478">' + esc(c.compound || '') + '</span></td>' +
+      '<td>' + (c.docCount ? '<span class="badge tone-teal">📎 ' + c.docCount + '</span>' : '<span class="badge tone-warn">none</span>') + '</td>' +
+      '<td>' + (c.amount ? money(c.amount) : '—') + '</td>' +
+      '<td><span class="badge tone-' + STATUSES[c.status].tone + '">' + STATUSES[c.status].label + '</span></td>' +
+      '<td class="small">' + fmtDay(c.createdAt) + '</td>' +
+      '<td><button class="btn ghost xs" data-case="' + c.id + '">Open</button></td></tr>').join('') +
+    '</tbody></table></div>';
+  $$('[data-case]', wrap).forEach(b => b.addEventListener('click', () => openCaseDrawer(b.dataset.case)));
+}
+
+async function openCaseDrawer(id) {
+  const c = state.cases.find(x => x.id === id);
+  if (!c) return;
+  const docRec = await Store.get('docs', id);
+  const items = (docRec && docRec.items) || [];
+  const groups = {};
+  items.forEach(d => { (groups[d.label] = groups[d.label] || []).push(d); });
+
+  const docsHtml = items.length
+    ? Object.keys(groups).map(label =>
+        '<div class="sec-t">' + esc(label) + '</div><div class="doc-grid">' +
+        groups[label].map(d =>
+          '<a class="doc" href="' + d.dataUrl + '" download="' + esc(d.name) + '" target="_blank" rel="noopener">' +
+          (/^data:image/.test(d.dataUrl) ? '<img src="' + d.dataUrl + '" alt="">' : '<div class="ph">📄</div>') +
+          '<span title="' + esc(d.name) + '">' + esc(d.name.length > 14 ? d.name.slice(0, 12) + '…' : d.name) + '</span></a>').join('') +
+        '</div>').join('')
+    : '<div class="note warn" style="margin-top:8px"><span class="ni">📎</span><div>No documents were attached to this case. Call the applicant and ask them to bring their NRC and proof of the need.</div></div>';
+
+  openDrawer(c.name + ' · ' + c.ref,
+    (c.kind === 'sponsorship' ? 'Sponsored beneficiary' : 'Application') + ' · ' + fmtDate(c.createdAt),
+    '<div class="dl">' +
+      [['Reference', c.ref], ['Phone', c.phone + (c.phone2 ? ' / ' + c.phone2 : '')],
+       ['Email', c.email || '—'], ['NRC / ID', c.nrc || '—'], ['Asking as', c.who || '—'],
+       ['Area', c.compound || '—'], ['Help needed', c.category || '—'],
+       ['Amount', c.amount ? money(c.amount) : '—'], ['Urgency', c.urgency || '—'],
+       ['Household', c.household || '—'], ['Referee', c.referee || '—'],
+       ['Previously helped', c.previous || '—'], ['Status', STATUSES[c.status].label]
+      ].map(r => '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>').join('') +
+    '<div><dt>Verification</dt><dd>' + (c.nrc && c.docCount ? '<span class="badge tone-ok">ID + ' + c.docCount + ' doc(s)</span>' : c.docCount ? '<span class="badge tone-warn">docs, no NRC typed</span>' : '<span class="badge tone-danger">nothing to verify</span>') + '</dd></div>' +
+    '</div>' +
+    (c.story ? '<div class="sec-t">The need, in their words</div><p class="small">' + esc(c.story) + '</p>' : '') +
+    (c.notes ? '<div class="sec-t">Notes</div><p class="small">' + esc(c.notes) + '</p>' : '') +
+    '<div class="sec-t">Documents (' + items.length + ')</div>' + docsHtml,
+    Object.keys(STATUSES).map(k =>
+      '<button class="btn ' + (c.status === k ? 'primary' : 'ghost') + ' xs" type="button" data-setstat="' + k + '">' + STATUSES[k].label + '</button>'
+    ).join('') +
+    '<span class="grow"></span>' +
+    '<button class="btn danger xs" type="button" id="purgeDocs">🗑 Purge documents</button>');
+
+  $$('#drawerFoot [data-setstat]').forEach(b => b.addEventListener('click', async () => {
+    c.status = b.dataset.setstat;
+    c.history = (c.history || []).concat([{ at:nowISO(), status:c.status, by:'desk' }]);
+    await Store.put('cases', c); await refresh(); renderDesk(); closeDrawer();
+    toast('Status set to ' + STATUSES[c.status].label + '.', 'ok');
+  }));
+  const pg = $('#purgeDocs');
+  if (pg) pg.addEventListener('click', async () => {
+    if (!confirm('Delete all documents attached to ' + c.ref + '? This cannot be undone.')) return;
+    await Store.del('docs', c.id);
+    c.docCount = 0; c.docLabels = []; c.docsPurgedAt = nowISO();
+    await Store.put('cases', c); await refresh(); renderDesk(); closeDrawer();
+    toast('Documents deleted.', 'warn');
+  });
+}
+
+/* ── register a beneficiary at the desk ── */
+$('#btnAdd') && $('#btnAdd').addEventListener('click', () => { $('#addCard').hidden = false; $('#addCard').scrollIntoView({ behavior:'smooth', block:'start' }); });
+$('#addClose') && $('#addClose').addEventListener('click', () => { $('#addCard').hidden = true; });
+$('#addCancel') && $('#addCancel').addEventListener('click', () => { $('#addCard').hidden = true; $('#addForm').reset(); });
+
+$('#addForm') && $('#addForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (val('adName').length < 3 || !validPhone(val('adPhone')) || !val('adCat')) {
+    toast('Name, phone and category are required.', 'err'); return;
+  }
+  const btn = $('#addSave'); btn.classList.add('busy');
+  const docs = scopeDocs('add');
+  const rec = {
+    id: uid(), ref: makeCaseRef(), kind: val('adKind') || 'sponsorship',
+    name: val('adName'), phone: val('adPhone'), phone2:'', email:'', nrc: val('adNrc'),
+    who:'Registered at the desk', compound:'', category: val('adCat'), amount: val('adAmount'),
+    urgency:'', household:'', story: val('adNotes'), referee:'', previous:'', notes:'Captured by the Support Team desk',
+    status:'approved', createdAt: nowISO(), history:[{ at:nowISO(), status:'approved', by:'desk' }],
+    docCount: docs.length, docLabels: docs.map(d => d.label)
+  };
+  await Store.put('cases', rec);
+  if (docs.length) await Store.put('docs', { id: rec.id, ref: rec.ref, items: docs, savedAt: nowISO() });
+  await refresh(); btn.classList.remove('busy');
+  $('#addForm').reset();
+  $$('.up', $('#addCard')).forEach(u => { state.uploads['add:' + u.dataset.slot] = []; renderUpload(u); });
+  $('#addCard').hidden = true;
+  renderDesk();
+  toast(rec.name + ' saved to the register as ' + rec.ref + '.', 'ok', 5000);
+});
+
+/* ── CSV exports ── */
+function download(name, text) {
+  const blob = new Blob([text], { type:'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+const csvCell = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+
+$('#btnCsv') && $('#btnCsv').addEventListener('click', () => {
+  const rows = [['Reference','Name','Phone','NRC','Category','Amount','Urgency','Status','Documents','Received']];
+  filteredCases().forEach(c => rows.push([c.ref, c.name, c.phone, c.nrc, c.category, c.amount, c.urgency, STATUSES[c.status].label, c.docCount || 0, fmtDay(c.createdAt)]));
+  download('jcrgm-cases-' + fmtDay(nowISO()).replace(/ /g, '-') + '.csv', rows.map(r => r.map(csvCell).join(',')).join('\n'));
+  toast('Case list exported.', 'ok');
+});
+function exportPartnersCsv() {
+  const rows = [['Reference','Name','Organisation','Email','WhatsApp','Types','Pledge','Frequency','Preferred contact','Status','Registered','Approved','Message']];
+  state.partners.forEach(p => rows.push([p.ref, p.name, p.org, p.email, p.phone, (p.types || []).join('; '), p.amount, p.freq, p.contact, p.status, fmtDay(p.createdAt), p.approvedAt ? fmtDay(p.approvedAt) : '', p.message]));
+  download('jcrgm-partners-' + fmtDay(nowISO()).replace(/ /g, '-') + '.csv', rows.map(r => r.map(csvCell).join(',')).join('\n'));
+  toast('Partner list exported.', 'ok');
+}
+$('#btnPrint') && $('#btnPrint').addEventListener('click', () => window.print());
+
+/* ── drawer & modal ── */
+function openDrawer(title, sub, body, foot) {
+  $('#drawerTitle').textContent = title;
+  $('#drawerSub').textContent = sub || '';
+  $('#drawerBody').innerHTML = body || '';
+  $('#drawerFoot').innerHTML = foot || '';
+  $('#scrim').hidden = false; $('#drawer').hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() { $('#scrim').hidden = true; $('#drawer').hidden = true; document.body.style.overflow = ''; }
+$('#drawerClose') && $('#drawerClose').addEventListener('click', closeDrawer);
+$('#scrim') && $('#scrim').addEventListener('click', closeDrawer);
+
+function openModal(title, body, foot) {
+  $('#modalTitle').innerHTML = title;
+  $('#modalBody').innerHTML = body;
+  $('#modalFoot').innerHTML = foot || '<button class="btn ghost" type="button" data-close="1">Close</button>';
+  $('#modal').hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  $('#modal').hidden = true;
+  if ($('#drawer').hidden) document.body.style.overflow = '';
+}
+document.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (!$('#modal').hidden) closeModal();
+  else if (!$('#drawer').hidden) closeDrawer();
+});
+
+/* ── refresh from storage ── */
+async function refresh() {
+  state.cases = (await Store.all('cases')).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  state.partners = (await Store.all('partners')).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  renderHomeStats();
+  updateBadge();
+  if (state.unlocked) { renderRegister(); renderPartners(); renderDeskStats(); }
+}
+function renderDeskStats() {
+  const el = $('#deskStats'); if (!el || !state.unlocked) return;
+  const cases = state.cases, pend = state.partners.filter(p => p.status === 'pending');
+  el.innerHTML = [
+    ['', cases.length, 'Cases on file'],
+    ['gold', cases.filter(c => c.status === 'submitted').length, 'Awaiting vetting'],
+    ['ok', state.partners.filter(p => p.status === 'approved').length, 'Approved partners'],
+    ['', cases.reduce((a, c) => a + (c.docCount || 0), 0), 'Documents held'],
+    ['gold', pend.length, 'Partners to approve']
+  ].map(s => '<div class="stat ' + s[0] + '"><b>' + s[1] + '</b><span>' + s[2] + '</span></div>').join('');
+}
+function renderHomeStats() {
+  const el = $('#homeStats');
+  if (!el) return;
+  const open = state.cases.filter(c => ['submitted', 'vetting'].indexOf(c.status) > -1).length;
+  const paid = state.cases.filter(c => c.status === 'paid').length;
+  const docs = state.cases.reduce((a, c) => a + (c.docCount || 0), 0);
+  el.innerHTML =
+    '<div class="stat"><b>' + state.cases.length + '</b><span>Cases filed</span></div>' +
+    '<div class="stat gold"><b>' + open + '</b><span>In progress</span></div>' +
+    '<div class="stat ok"><b>' + paid + '</b><span>Completed</span></div>' +
+    '<div class="stat"><b>' + state.partners.filter(p => p.status === 'approved').length + '</b><span>Partners</span></div>' +
+    '<div class="stat"><b>' + docs + '</b><span>Documents</span></div>';
+}
+
+/* ── boot ── */
+(async function boot() {
+  buildCats();
+  loadUploads();
+  renderSteps();
+  $('#footYear').textContent = new Date().getFullYear();
+  $('#lockFoot').textContent = new Date().getFullYear();
+
+  const v = VERSES[Math.floor(Math.random() * VERSES.length)];
+  $('#mastVerse').textContent = '“' + v[0] + '” — ' + v[1];
+  $('#homeVerse').innerHTML = '“' + esc(v[0]) + '”<cite>' + esc(v[1]) + '</cite>';
+
+  // wire uploaders
+  $$('.up').forEach(up => {
+    const input = $('input[type=file]', up);
+    if (!input) return;
+    input.addEventListener('change', () => handleFiles(input, up));
+    ['dragenter', 'dragover'].forEach(ev => up.addEventListener(ev, e => { e.preventDefault(); up.classList.add('drag'); }));
+    ['dragleave', 'drop'].forEach(ev => up.addEventListener(ev, e => { e.preventDefault(); up.classList.remove('drag'); }));
+    up.addEventListener('drop', e => { if (e.dataTransfer && e.dataTransfer.files) { input.files = e.dataTransfer.files; handleFiles(input, up); } });
+  });
+
+  const backend = await Store.init();
+  const dot = $('#pillMode .dot');
+  if (dot) dot.className = 'dot' + (backend === 'memory' ? ' off' : '');
+  $('#pillMode').innerHTML = '<span class="dot' + (backend === 'memory' ? ' off' : '') + '"></span>Saved ' + Store.bname();
+
+  try {
+    if (sessionStorage.getItem(LOCK_KEY) === '1') {
+      state.unlocked = true; $('#lockCard').hidden = true; $('#desk').hidden = false;
+    }
+  } catch (e) {}
+
+  await refresh();
+  if (state.unlocked) renderDesk();
+
+  // restore draft
+  try {
+    const d = await Store.get('drafts', 'draft-apply');
+    if (d && d.name) {
+      if (!$('#apName').value && d.name) $('#apName').value = d.name;
+      if (!$('#apPhone').value && d.phone) $('#apPhone').value = d.phone;
+      if (!$('#apNrc').value && d.nrc) $('#apNrc').value = d.nrc;
+      if (!$('#apStory').value && d.story) { $('#apStory').value = d.story; $('#apStoryCount').textContent = d.story.length; }
+      toast('A saved draft was restored.', '', 4000);
+    }
+  } catch (e) {}
+
+  go((location.hash || '#home').slice(1));
+  updateDocTotals();
+})();
+
+</script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a562af025c50b572',t:'MTc5Mzk1MzI3NQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a562af025c50b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
