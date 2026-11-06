@@ -510,6 +510,7 @@ details.adv[open] summary{border-bottom-left-radius:0;border-bottom-right-radius
         </div>
       </div>
       <div class="stats" id="homeStats"><div class="stat"><b>—</b><span>Loading…</span></div></div>
+      <p class="count" id="homeStatsNote" style="margin:10px 0 0"></p>
     </div>
 
     <div class="card">
@@ -942,9 +943,12 @@ details.adv[open] summary{border-bottom-left-radius:0;border-bottom-right-radius
           </div>
           <div class="row" style="margin-left:auto">
             <button class="btn gold sm" type="button" id="btnAdd">＋ Register a beneficiary</button>
+            <button class="btn ghost sm" type="button" id="btnSyncNow">🔄 Sync now</button>
             <button class="btn ghost sm" type="button" id="btnLock">🔒 Lock</button>
           </div>
         </div>
+        <div class="note warn" id="deskStaleNote" hidden></div>
+        <p class="count" id="deskSyncState" style="margin:0 0 10px"></p>
         <div class="stats" id="deskStats"></div>
       </div>
 
@@ -1109,7 +1113,7 @@ details.adv[open] summary{border-bottom-left-radius:0;border-bottom-right-radius
   <footer class="pfoot">
     <span>Jesus Christ Redeems Global Ministries</span><span class="sep">·</span>
     <a href="tel:+260979554970" id="footCall">📞 <span>0979 554 970</span></a><span class="sep">·</span>
-    <a href="/cdn-cgi/l/email-protection#89f9ecede8e1f3fcfbe4e0e7e0fafdfbe0ecfac9eee4e8e0e5a7eae6e4" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="d3a3b6b7b2bba9a6a1bebabdbaa0a7a1bab6a093b4beb2babffdb0bcbe">[email&#160;protected]</span></span></a><br>
+    <a href="/cdn-cgi/l/email-protection#daaabfbebbb2a0afa8b7b3b4b3a9aea8b3bfa99abdb7bbb3b6f4b9b5b7" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="fa8a9f9e9b92808f8897939493898e88939f89ba9d979b9396d4999597">[email&#160;protected]</span></span></a><br>
     <span id="footVer">v2.0</span> · Confidential welfare record · <span id="footYear"></span>
   </footer>
 </main>
@@ -1490,7 +1494,7 @@ const Store = (() => {
 })();
 /* ═══════════════════════ SYNC LAYER ═══════════════════════ */
 const state = { cases:[], partners:[], step:1, uploads:{}, partnerFilter:'pending',
-                unlocked:false, cloud:'offline', signedIn:false, pending:0 };
+                unlocked:false, cloud:'offline', signedIn:false, pending:0, publicStats:null, lastSync:null };
 
 /* ── row <-> record ── */
 const numOrNull = v => (v === '' || v == null || isNaN(v)) ? null : Number(v);
@@ -1621,15 +1625,22 @@ async function purgeDocsCloud(rec) {
 
 async function updateCaseCloud(rec) {
   if (!Sb.ready()) return false;
-  try { await Sb.update(CONFIG.sb.tables.cases, { id:rec.id },
-        { status:rec.status, history:rec.history || [], doc_count:rec.docCount || 0, notes:rec.notes || null });
+  try {
+    const rows = await Sb.update(CONFIG.sb.tables.cases, { id:rec.id },
+      { status:rec.status, history:rec.history || [], doc_count:rec.docCount || 0, notes:rec.notes || null });
+    if (!Array.isArray(rows) || rows.length === 0) { await pushCase(rec); }
     return true;
   } catch (e) { noteSyncError(e); return false; }
 }
 async function updatePartnerCloud(rec) {
   if (!Sb.ready()) return false;
-  try { await Sb.update(CONFIG.sb.tables.partners, { id:rec.id }, partnerToRow(rec)); return true; }
-  catch (e) { noteSyncError(e); return false; }
+  try {
+    const rows = await Sb.update(CONFIG.sb.tables.partners, { id:rec.id }, partnerToRow(rec));
+    /* PostgREST answers 200 + [] when the row was never uploaded (created on a
+       device that was offline). That is not a success — insert it instead.     */
+    if (!Array.isArray(rows) || rows.length === 0) { await pushPartner(rec); }
+    return true;
+  } catch (e) { noteSyncError(e); return false; }
 }
 
 function noteSyncError(e) {
@@ -1670,6 +1681,15 @@ async function flushOutbox(quiet) {
 }
 
 /* ── pulls ── */
+async function pullPublicStats() {
+  if (!Sb.ready()) return null;
+  try {
+    const r = await Sb.rpc('welfare_public_stats', {});
+    state.publicStats = Array.isArray(r) ? (r[0] || null) : r;
+    return state.publicStats;
+  } catch (e) { return null; }
+}
+
 async function pullAll() {
   if (!Sb.ready() || !Sb.signedIn()) return false;
   const t = CONFIG.sb.tables;
@@ -1686,6 +1706,7 @@ async function pullAll() {
     localCases.filter(c => c.synced === false && !idsC.has(c.id)).forEach(c => cloudCases.unshift(c));
     localPartners.filter(p => p.synced === false && !idsP.has(p.id)).forEach(p => cloudPartners.unshift(p));
     state.cloud = 'ok';
+    state.lastSync = nowISO();
     await Store.bulk('cases', cloudCases);
     await Store.bulk('partners', cloudPartners);
     return { cases:cloudCases, partners:cloudPartners };
@@ -2303,6 +2324,26 @@ $('#btnFlush').addEventListener('click', async () => {
 /* ═══════════════════════ ADMIN: desk ═══════════════════════ */
 function renderDesk() {
   if (!state.unlocked) return;
+  const warn = $('#deskStaleNote');
+  if (warn) {
+    if (!Sb.ready()) {
+      warn.hidden = false;
+      warn.className = 'note warn';
+      warn.innerHTML = '<span class="ni">📱</span><div><b>No database connected.</b> You are seeing only what was captured on this device.</div>';
+    } else if (!Sb.signedIn()) {
+      warn.hidden = false;
+      warn.className = 'note warn';
+      warn.innerHTML = '<span class="ni">🔒</span><div><b>You are not signed in, so this register shows only this device\'s copy.</b> Anything added or approved on another phone will be missing here. Lock the desk and sign in with a Support Team account to read the whole church database.</div>';
+    } else if (state.pending) {
+      warn.hidden = false;
+      warn.className = 'note warn';
+      warn.innerHTML = '<span class="ni">⏳</span><div><b>' + state.pending + ' record(s) still waiting to upload.</b> Press <b>Sync now</b>. Other devices will not see them until they land in Supabase.</div>';
+    } else {
+      warn.hidden = true;
+    }
+  }
+  const st = $('#deskSyncState');
+  if (st) st.textContent = state.lastSync ? 'Synced ' + fmtDate(state.lastSync) : 'Not synced yet';
   renderDeskStats();
   renderPartners();
   renderRegister();
@@ -2328,14 +2369,28 @@ function updateBadge() {
 }
 function renderHomeStats() {
   const el = $('#homeStats'); if (!el) return;
-  const open = state.cases.filter(c => ['submitted','vetting'].indexOf(c.status) > -1).length;
-  const paid = state.cases.filter(c => c.status === 'paid').length;
+  const ps = state.publicStats;
+  const localPartners = state.partners.filter(p => p.status === 'approved').length;
+  const localCases = state.cases.length;
+  const localPaid = state.cases.filter(c => c.status === 'paid').length;
+  const localDocs = state.cases.reduce((a, c) => a + (c.docCount || 0), 0);
+
+  /* When Supabase answers, show the whole church's figures, not this phone's cache */
+  const partners = ps ? Number(ps.partners_approved || 0) : localPartners;
+  const cases    = ps ? Number(ps.cases_total || 0) : localCases;
+  const paid     = ps ? Number(ps.cases_completed || 0) : localPaid;
+  const docs     = ps ? Number(ps.documents || 0) : localDocs;
+
   el.innerHTML =
-    '<div class="stat"><b>' + state.cases.length + '</b><span>Cases filed</span></div>' +
-    '<div class="stat gold"><b>' + open + '</b><span>In progress</span></div>' +
+    '<div class="stat"><b>' + cases + '</b><span>Cases filed</span></div>' +
+    '<div class="stat gold"><b>' + (ps ? Number(ps.cases_open || 0) : state.cases.filter(c => ['submitted','vetting'].indexOf(c.status) > -1).length) + '</b><span>In progress</span></div>' +
     '<div class="stat ok"><b>' + paid + '</b><span>Completed</span></div>' +
-    '<div class="stat"><b>' + state.partners.filter(p => p.status === 'approved').length + '</b><span>Partners</span></div>' +
-    '<div class="stat"><b>' + state.cases.reduce((a, c) => a + (c.docCount || 0), 0) + '</b><span>Documents</span></div>';
+    '<div class="stat"><b>' + partners + '</b><span>Partners</span></div>' +
+    '<div class="stat"><b>' + docs + '</b><span>Documents</span></div>';
+  const note = $('#homeStatsNote');
+  if (note) note.innerHTML = ps
+    ? '☁ Church-wide figures from the database, shared by every device.'
+    : '📱 Figures from this device only — connect to the church database to see the whole church.';
 }
 
 /* ── partner table ── */
@@ -2618,6 +2673,15 @@ async function openCaseDrawer(id) {
 }
 
 /* ── register a beneficiary at the desk ── */
+$('#btnSyncNow').addEventListener('click', async () => {
+  const b = $('#btnSyncNow'); b.classList.add('busy');
+  await flushOutbox(true);
+  const ok = await pullAll();
+  await refresh(false); renderDesk();
+  b.classList.remove('busy');
+  toast(ok ? 'Register refreshed from the church database.' : 'Could not reach the database — check the connection and sign-in.', ok ? 'ok' : 'warn', 4500);
+});
+
 $('#btnAdd').addEventListener('click', () => { $('#addCard').hidden = false; $('#addCard').scrollIntoView({ behavior:'smooth', block:'start' }); });
 $('#addClose').addEventListener('click', () => { $('#addCard').hidden = true; });
 $('#addCancel').addEventListener('click', () => { $('#addCard').hidden = true; $('#addForm').reset(); });
@@ -2696,11 +2760,18 @@ document.addEventListener('keydown', e => {
 async function refresh(pull) {
   state.cases = (await Store.all('cases')).sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
   state.partners = (await Store.all('partners')).sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+  await pullPublicStats();
   if (pull !== false && Sb.ready() && Sb.signedIn()) await pullAll();
   await countPending();
   state.signedIn = Sb.signedIn();
   renderHomeStats(); updateBadge(); updatePill();
-  if (state.unlocked) { renderDeskStats(); renderRegister(); renderPartners(); renderSbCard(); }
+  if (state.unlocked) {
+    renderDeskStats(); renderRegister(); renderPartners(); renderSbCard();
+    const st = $('#deskSyncState');
+    if (st) st.textContent = state.lastSync ? 'Synced ' + fmtDate(state.lastSync) : 'Not synced yet — press Sync now';
+    const warn = $('#deskStaleNote');
+    if (warn && Sb.ready() && Sb.signedIn() && !state.pending) warn.hidden = true;
+  }
 }
 
 /* ═══════════════════════ BOOT ═══════════════════════ */
@@ -2750,6 +2821,17 @@ async function refresh(pull) {
     });
   }
 
+  /* keep the desk in step with the other phones without a manual reload */
+  async function gentleSync() {
+    if (!state.unlocked || !Sb.ready() || !Sb.signedIn() || document.hidden) return;
+    await refresh(false);
+    if (state.unlocked) { renderRegister(); renderPartners(); renderDeskStats();
+      const st = $('#deskSyncState'); if (st) st.textContent = state.lastSync ? 'Synced ' + fmtDate(state.lastSync) : ''; }
+  }
+  setInterval(gentleSync, 25000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) gentleSync(); });
+  window.addEventListener('focus', gentleSync);
+
   window.addEventListener('online', async () => {
     toast('Back online — syncing queued records…');
     if (Sb.ready()) { const ok = await flushOutbox(true); if (ok) { await refresh(); toast('Sync complete.', 'ok'); } }
@@ -2772,5 +2854,5 @@ async function refresh(pull) {
 })();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a56337d60d37b575',t:'MTc5Mzk1ODg3OQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a56337d60d37b575',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5634feff9dfb572',t:'MTc5Mzk1OTg2Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5634feff9dfb572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
