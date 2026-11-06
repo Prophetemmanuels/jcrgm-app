@@ -1109,7 +1109,7 @@ details.adv[open] summary{border-bottom-left-radius:0;border-bottom-right-radius
   <footer class="pfoot">
     <span>Jesus Christ Redeems Global Ministries</span><span class="sep">·</span>
     <a href="tel:+260979554970" id="footCall">📞 <span>0979 554 970</span></a><span class="sep">·</span>
-    <a href="/cdn-cgi/l/email-protection#1b6b7e7f7a73616e6976727572686f69727e685b7c767a727735787476" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="23534647424b5956514e4a4d4a5057514a465063444e424a4f0d404c4e">[email&#160;protected]</span></span></a><br>
+    <a href="/cdn-cgi/l/email-protection#89f9ecede8e1f3fcfbe4e0e7e0fafdfbe0ecfac9eee4e8e0e5a7eae6e4" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="d3a3b6b7b2bba9a6a1bebabdbaa0a7a1bab6a093b4beb2babffdb0bcbe">[email&#160;protected]</span></span></a><br>
     <span id="footVer">v2.0</span> · Confidential welfare record · <span id="footYear"></span>
   </footer>
 </main>
@@ -2191,8 +2191,21 @@ $('#lockForm').addEventListener('submit', async e => {
       await refresh();
       toast(ok ? 'Signed in — register loaded from Supabase.' : 'Signed in, but the register could not be read. Check your role.', ok ? 'ok' : 'warn', 5000);
     } catch (err) {
-      $('#lockErrText').textContent = 'Supabase sign-in failed: ' + (err.message || 'check the email and password') + '.';
-      $('#lockErr').hidden = false;
+      const isPin = (pw === CONFIG.adminPin);
+      const box = $('#lockErr'), msg = $('#lockErrText');
+      if (isPin) {
+        msg.innerHTML = '<b>That is the desk PIN, not a database password.</b> Unlocked in offline mode instead — you will only see what is cached on this device until a team account is connected.';
+        box.hidden = false;
+        unlockDesk();
+        toast('Desk unlocked offline. Sign in with a team account to see every case.', 'warn', 6000);
+      } else {
+        msg.innerHTML = '<b>Invalid login credentials.</b> Supabase returns the same message for a wrong password and for an email that has no account, so check all three:' +
+          '<div style="margin-top:6px">1. Is there a user with this email in <b>Authentication → Users</b>? If the list is empty, create one and tick <b>Auto Confirm User</b>.</div>' +
+          '<div>2. Is the password right? Use the ⋯ menu → <b>Reset password</b> if you are unsure.</div>' +
+          '<div>3. Is this a leader account in this project? Sign-in is per person, not a shared password.</div>' +
+          '<div style="margin-top:6px">Or leave the email blank and unlock with the desk PIN to work offline.</div>';
+        box.hidden = false;
+      }
     } finally { btn.classList.remove('busy'); }
     return;
   }
@@ -2759,5 +2772,5 @@ async function refresh(pull) {
 })();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a56311d06cfeb575',t:'MTc5Mzk1NzMyMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a56311d06cfeb575',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a56337d60d37b575',t:'MTc5Mzk1ODg3OQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a56337d60d37b575',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
