@@ -1078,164 +1078,292 @@ body.mm-noscroll{overflow:hidden;}
 html.perf-lite .mm-overlay{-webkit-backdrop-filter:none;backdrop-filter:none;}
 
 /* ============================================================
-   🚌 TRANSPORT & LOGISTICS DESK — member movements,
-   pickups, fares & coordination (requests go to the
-   church WhatsApp lines).
+   🚌 TRANSPORT & LOGISTICS DESK — 5+ Group Church Transport,
+   50/50 Church Fare Subsidy, In-Form Readiness & Movement Board
    ============================================================ */
 body.tl-noscroll{overflow:hidden;}
 .tl-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:150;display:none;
-  background:rgba(7,13,34,.86);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);padding:14px;}
+  background:rgba(7,13,34,.88);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);padding:12px;}
 .tl-overlay.open{display:flex;justify-content:center;align-items:stretch;animation:tlFade .25s ease both;}
 @keyframes tlFade{from{opacity:0;}to{opacity:1;}}
-.tl-wrap{width:100%;max-width:780px;display:flex;flex-direction:column;overflow:hidden;
-  background:linear-gradient(165deg,#0d1735 0%,#101d44 45%,#1b2f6b 100%);
-  border:1px solid rgba(212,175,55,.5);border-radius:18px;
-  box-shadow:0 26px 80px rgba(2,6,20,.65),0 0 46px rgba(255,215,0,.10);}
+.tl-overlay button{width:auto;margin:0;box-shadow:none;letter-spacing:.2px;}
+.tl-overlay button::after{display:none !important;}
+.tl-overlay button:hover{transform:none;}
+.tl-overlay label{text-transform:none;letter-spacing:normal;margin:0;}
+.tl-wrap{width:100%;max-width:860px;display:flex;flex-direction:column;overflow:hidden;
+  background:linear-gradient(165deg,#0b1530 0%,#101d44 45%,#1a2e68 100%);
+  border:1px solid rgba(212,175,55,.55);border-radius:18px;
+  box-shadow:0 26px 80px rgba(2,6,20,.72),0 0 46px rgba(255,215,0,.12);text-align:left;}
 .tl-head{display:flex;align-items:center;justify-content:space-between;
   padding:13px 16px;border-bottom:1px solid rgba(255,215,0,.28);
-  background:linear-gradient(180deg,rgba(255,215,0,.12),rgba(255,215,0,0));}
+  background:linear-gradient(180deg,rgba(255,215,0,.14),rgba(255,215,0,.02));}
 .tl-title{display:flex;align-items:center;min-width:0;margin-right:10px;}
-.tl-title b{display:block;font-size:16px;color:#fff;letter-spacing:.3px;line-height:1.25;}
-.tl-title small{display:block;font-size:10.5px;color:#c9d4f2;letter-spacing:.4px;}
-.tl-ico{font-size:21px;margin-right:10px;filter:drop-shadow(0 0 8px rgba(255,215,0,.45));}
-.tl-close{width:auto;padding:8px 13px;margin:0;border-radius:11px;border:1px solid rgba(255,255,255,.32);
-  background:rgba(255,255,255,.12);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.tl-title b{display:block;font-size:16.5px;color:#fff;letter-spacing:.3px;line-height:1.25;}
+.tl-title small{display:block;font-size:11px;color:#ffe38a;letter-spacing:.35px;margin-top:1px;}
+.tl-ico{font-size:23px;margin-right:10px;filter:drop-shadow(0 0 8px rgba(255,215,0,.45));}
+.tl-close{width:auto;padding:8px 14px;margin:0;border-radius:11px;border:1px solid rgba(255,255,255,.32);
+  background:rgba(255,255,255,.12);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
 .tl-close:hover{background:rgba(255,255,255,.24);}
 .tl-body{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0;}
 .tl-body::-webkit-scrollbar{width:8px;}
 .tl-body::-webkit-scrollbar-thumb{background:rgba(255,215,0,.35);border-radius:99px;}
+
 /* tabs */
-.tl-tabs{display:flex;padding:10px 14px 0;border-bottom:1px solid rgba(255,215,0,.25);}
-.tl-tab{width:auto;flex:1 1 0;padding:11px 6px;margin:0 4px;border-radius:11px 11px 0 0;
-  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-bottom:none;
-  color:#c9d4f2;font-weight:700;font-size:12px;letter-spacing:.4px;cursor:pointer;font-family:inherit;
+.tl-tabs{display:flex;padding:10px 14px 0;border-bottom:1px solid rgba(255,215,0,.25);background:rgba(6,12,28,.25);}
+.tl-tab{width:auto;flex:1 1 0;padding:11px 8px;margin:0 4px;border-radius:11px 11px 0 0;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-bottom:none;
+  color:#d2dcf5;font-weight:700;font-size:12.5px;letter-spacing:.3px;cursor:pointer;font-family:inherit;
   line-height:1.3;transition:background .2s,color .2s;}
-.tl-tab:hover{background:rgba(255,255,255,.12);}
-.tl-tab.active{color:#2a1e02;background:linear-gradient(135deg,#ffd700,#c9960a);box-shadow:0 -3px 14px rgba(255,190,0,.25);}
-.tl-count{display:inline-block;min-width:17px;padding:1px 6px;margin-left:5px;border-radius:99px;
-  background:rgba(0,0,0,.20);font-size:10.5px;font-weight:800;}
-.tl-panel{display:none;padding:14px 16px 8px;}
-.tl-panel.active{display:block;animation:fadeUp .35s ease both;}
+.tl-tab:hover{background:rgba(255,255,255,.13);}
+.tl-tab.active{color:#231802;background:linear-gradient(135deg,#ffe066,#d4a017);border-color:rgba(255,215,0,.85);
+  box-shadow:0 -3px 16px rgba(255,190,0,.28);}
+.tl-count{display:inline-block;min-width:18px;padding:1px 6px;margin-left:5px;border-radius:99px;
+  background:rgba(0,0,0,.22);font-size:10.5px;font-weight:800;}
+.tl-panel{display:none;padding:14px 16px 18px;}
+.tl-panel.active{display:block;animation:fadeUp .3s ease both;}
+
 /* buttons */
-.tl-overlay .tl-btn{width:auto;padding:10px 14px;margin:0;border-radius:11px;border:1px solid rgba(255,255,255,.24);
-  background:rgba(255,255,255,.10);color:#fff;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;
+.tl-overlay .tl-btn{width:auto;padding:10px 15px;margin:0;border-radius:11px;border:1px solid rgba(255,255,255,.26);
+  background:rgba(255,255,255,.10);color:#fff;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;
   line-height:1.3;text-decoration:none;display:inline-block;transition:background .2s,border-color .2s,transform .12s;}
 .tl-overlay a.tl-btn{text-decoration:none;}
 .tl-overlay .tl-btn:hover{background:rgba(255,255,255,.20);}
-.tl-overlay .tl-btn:active{transform:scale(.97);}
-.tl-btn-gold{background:linear-gradient(135deg,#ffd700,#c9960a) !important;color:#2a1e02 !important;
-  border-color:rgba(255,215,0,.75) !important;box-shadow:0 3px 12px rgba(255,190,0,.28);}
+.tl-overlay .tl-btn:active{transform:scale(.98);}
+.tl-btn-gold{background:linear-gradient(135deg,#ffe066,#c9960a) !important;color:#231802 !important;
+  border-color:rgba(255,215,0,.82) !important;box-shadow:0 4px 14px rgba(255,190,0,.30) !important;}
 .tl-btn-wa{background:linear-gradient(135deg,#2fe174,#128c4b) !important;color:#fff !important;
-  border-color:rgba(72,220,130,.7) !important;box-shadow:0 3px 12px rgba(18,140,75,.30);}
-.tl-btn-danger{background:rgba(220,53,69,.16);border-color:rgba(248,113,133,.5);color:#ffd6dc;}
+  border-color:rgba(72,220,130,.75) !important;box-shadow:0 4px 14px rgba(18,140,75,.32) !important;}
+.tl-btn-danger{background:rgba(220,53,69,.16) !important;border-color:rgba(248,113,133,.5) !important;color:#ffd6dc !important;}
 .tl-armed{background:#dc3545 !important;color:#fff !important;border-color:#dc3545 !important;animation:tlPulseArm 1s ease-in-out infinite;}
 @keyframes tlPulseArm{50%{filter:brightness(1.3);}}
-/* form */
-.tl-card{background:linear-gradient(170deg,#fdfefe,#eef3fb);border:1px solid #dbe3f0;border-radius:14px;
-  padding:14px 14px 16px;margin:10px 0;box-shadow:0 4px 14px rgba(4,10,28,.16);}
+
+/* royal policy banner */
+.tl-policy-hero{background:linear-gradient(135deg,rgba(255,215,0,.16) 0%,rgba(16,32,78,.92) 55%,rgba(11,22,54,.96) 100%);
+  border:1.5px solid rgba(255,215,0,.55);border-radius:15px;padding:14px 15px;margin:2px 0 12px;
+  box-shadow:0 8px 26px rgba(3,8,24,.36),inset 0 1px 0 rgba(255,255,255,.12);}
+.tl-policy-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:8px;}
+.tl-policy-kicker{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;
+  color:#231802;background:linear-gradient(135deg,#ffe38a,#d4a017);padding:3px 10px;border-radius:99px;margin:0 8px 4px 0;}
+.tl-policy-link{background:rgba(255,215,0,.14) !important;border:1px solid rgba(255,215,0,.5) !important;
+  color:#ffe38a !important;font-size:11.5px !important;font-weight:700 !important;padding:5px 11px !important;
+  border-radius:99px !important;cursor:pointer;}
+.tl-policy-link:hover{background:rgba(255,215,0,.25) !important;}
+.tl-policy-title{font-size:15px;font-weight:800;color:#fff;margin:0 0 5px;line-height:1.38;}
+.tl-policy-title span{color:#ffe066;}
+.tl-policy-lead{font-size:12.5px;color:#d6e0f8;margin:0 0 11px;line-height:1.58;}
+.tl-pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:8px;}
+.tl-pillar{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-left:3.5px solid #ffd700;
+  border-radius:11px;padding:9px 11px;}
+.tl-pillar b{display:block;font-size:12px;color:#ffe38a;margin-bottom:2px;}
+.tl-pillar span{display:block;font-size:11.5px;color:#dbe4fb;line-height:1.48;}
+
+/* request mode switch */
+.tl-modes{display:flex;flex-wrap:wrap;margin:0 0 10px;}
+.tl-modebtn{flex:1 1 240px;padding:10px 12px !important;margin:0 6px 6px 0 !important;border-radius:12px !important;
+  border:1.5px solid rgba(255,255,255,.20) !important;background:rgba(255,255,255,.06) !important;
+  color:#d2dcf5 !important;font-size:12.5px !important;font-weight:700 !important;text-align:left !important;cursor:pointer;}
+.tl-modebtn small{display:block;font-size:10.5px;font-weight:500;opacity:.85;margin-top:2px;}
+.tl-modebtn.active{background:linear-gradient(135deg,rgba(255,215,0,.22),rgba(255,215,0,.09)) !important;
+  border-color:#ffd700 !important;color:#fff !important;box-shadow:0 4px 16px rgba(255,215,0,.15) !important;}
+.tl-modebtn.active b{color:#ffe066;}
+
+/* form section cards */
+.tl-card{background:linear-gradient(170deg,#ffffff,#f1f5fc);border:1px solid #dbe3f0;border-radius:14px;
+  padding:15px 15px 16px;margin:11px 0;box-shadow:0 5px 16px rgba(4,10,28,.18);}
+.tl-sec-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  margin:0 0 12px;padding-bottom:9px;border-bottom:1px solid #e3eaf5;}
+.tl-sec-title{display:flex;align-items:center;font-size:14.5px;font-weight:800;color:#142759;margin:0;}
+.tl-sec-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:8px;
+  background:linear-gradient(135deg,#1f3c88,#101d44);color:#ffe066;font-size:12px;font-weight:800;margin-right:8px;flex-shrink:0;}
+.tl-sec-tag{font-size:10.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:#8a6500;
+  background:#fff4ce;border:1px solid #f5da82;border-radius:99px;padding:3px 9px;margin-top:2px;}
 .tl-h{font-size:15px;font-weight:800;color:#16295e;margin:0 0 10px;letter-spacing:.2px;}
-.tl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px 12px;}
+.tl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:11px 13px;}
 .tl-field{display:flex;flex-direction:column;min-width:0;}
 .tl-full{grid-column:1 / -1;}
-.tl-lab{font-size:10.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#44536b;margin:0 0 5px 2px;}
-.tl-in{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #d7dfec;background:#fff;
-  color:#1e2a3a;font-size:16px;font-family:inherit;}
-.tl-in:focus{outline:none;border-color:#c9960a;box-shadow:0 0 0 3px rgba(255,215,0,.18);}
-.tl-in.tl-bad{border-color:#dc3545;box-shadow:0 0 0 3px rgba(220,53,69,.15);}
+.tl-overlay .tl-lab{display:block;font-size:10.5px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;
+  color:#3c4c66;margin:0 0 5px 2px;}
+.tl-hint{font-size:11.5px;color:#5a6b87;margin:4px 2px 0;line-height:1.45;}
+.tl-in{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #cfd9ea;background:#fff;
+  color:#1e2a3a;font-size:16px;font-family:inherit;transition:border-color .2s,box-shadow .2s;}
+.tl-in:focus{outline:none;border-color:#c9960a;box-shadow:0 0 0 3px rgba(255,215,0,.20);transform:none;}
+.tl-in.tl-bad{border-color:#dc3545;box-shadow:0 0 0 3px rgba(220,53,69,.16);}
 textarea.tl-in{min-height:64px;resize:vertical;}
-.tl-check{display:flex;align-items:center;padding:8px 2px;color:#1e2a3a;font-size:13.5px;font-weight:600;}
-.tl-check input{width:18px;height:18px;margin-right:9px;accent-color:#c9960a;}
-/* preview */
-.tl-preview{background:#0e1836;border:1px solid rgba(255,215,0,.35);border-radius:12px;padding:12px 14px;margin:12px 0;}
+.tl-overlay .tl-check{display:flex;align-items:flex-start;padding:9px 11px;margin-top:2px;
+  background:#f6f9fe;border:1px solid #dce5f4;border-radius:10px;color:#1e2a3a;font-size:13px;font-weight:600;
+  line-height:1.5;cursor:pointer;}
+.tl-check input{width:18px;height:18px;margin:2px 10px 0 0;accent-color:#1f3c88;flex-shrink:0;}
+
+/* live 5+ group status bar */
+.tl-grpstatus{border-radius:11px;padding:10px 12px;font-size:12.5px;line-height:1.55;font-weight:600;
+  border:1.5px solid #d7e1f2;background:#f4f7fd;color:#33415e;margin-top:2px;}
+.tl-grpstatus b{font-weight:800;}
+.tl-grpstatus.ok{background:#e7f8ee;border-color:#84d8a6;color:#0e5a30;}
+.tl-grpstatus.warn{background:#fff3cd;border-color:#f5cf6b;color:#785300;}
+.tl-grpstatus.err{background:#fde8ea;border-color:#f3abb3;color:#981b28;}
+
+/* quick fare chips + live 50/50 split calculator */
+.tl-chips{display:flex;flex-wrap:wrap;align-items:center;margin:7px 0 2px;}
+.tl-chips span{font-size:11px;font-weight:700;color:#5a6b87;margin:0 7px 5px 0;}
+.tl-chip{padding:4px 10px !important;margin:0 6px 5px 0 !important;border-radius:99px !important;
+  border:1px solid #cbd6ea !important;background:#f5f8fe !important;color:#1f3c88 !important;
+  font-size:11.5px !important;font-weight:700 !important;cursor:pointer;}
+.tl-chip:hover{background:#e6eefc !important;border-color:#1f3c88 !important;}
+.tl-splitbox{background:linear-gradient(145deg,#0f1e47,#19316e);border:1.5px solid rgba(255,215,0,.5);
+  border-radius:13px;padding:12px 13px;margin-top:8px;color:#fff;}
+.tl-split-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:9px;}
+.tl-split-head b{font-size:12px;letter-spacing:.7px;text-transform:uppercase;color:#ffe066;}
+.tl-split-badge{font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:99px;
+  background:rgba(47,225,116,.18);border:1px solid rgba(47,225,116,.55);color:#9bf5be;}
+.tl-split-badge.muted{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.25);color:#d2dcf5;}
+.tl-split-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;}
+.tl-split-cell{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:9px 10px;}
+.tl-split-cell.church{background:rgba(255,215,0,.14);border-color:rgba(255,215,0,.5);}
+.tl-split-cell.group{background:rgba(47,225,116,.13);border-color:rgba(72,220,130,.45);}
+.tl-split-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#c7d4f2;}
+.tl-split-val{font-size:16px;font-weight:800;color:#fff;margin-top:3px;line-height:1.2;}
+.tl-split-cell.church .tl-split-val{color:#ffe066;}
+.tl-split-cell.group .tl-split-val{color:#8ef2b5;}
+.tl-split-sub{font-size:10.5px;color:#b9c8ec;margin-top:2px;}
+.tl-split-foot{font-size:11.5px;color:#d2dcf5;margin:9px 0 0;line-height:1.5;}
+.tl-split-foot b{color:#ffe38a;}
+
+/* in-form readiness & guidelines card */
+.tl-ready-card{background:linear-gradient(170deg,#fffdf6,#fff8e3);border:1.5px solid #ebd078;
+  border-radius:14px;padding:14px 15px;margin:11px 0;box-shadow:0 4px 14px rgba(4,10,28,.14);}
+.tl-ready-title{font-size:14px;font-weight:800;color:#5c4200;margin:0 0 8px;display:flex;align-items:center;}
+.tl-ready-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:8px;margin:0 0 11px;}
+.tl-ready-item{background:#fff;border:1px solid #efe0a6;border-radius:10px;padding:9px 11px;
+  font-size:12px;color:#33415e;line-height:1.52;}
+.tl-ready-item b{display:block;color:#16295e;font-size:12.5px;margin-bottom:2px;}
+.tl-overlay .tl-agree{display:flex;align-items:flex-start;background:#fff;border:1.5px solid #d4a017;
+  border-radius:11px;padding:10px 12px;color:#1e2a3a;font-size:12.8px;font-weight:700;line-height:1.5;cursor:pointer;}
+.tl-agree.tl-bad{border-color:#dc3545;background:#fff5f6;box-shadow:0 0 0 3px rgba(220,53,69,.16);}
+.tl-agree input{width:19px;height:19px;margin:2px 10px 0 0;accent-color:#128c4b;flex-shrink:0;}
+
+/* preview & actions */
+.tl-preview{background:#0b1430;border:1px solid rgba(255,215,0,.38);border-radius:12px;padding:12px 14px;margin:12px 0;}
 .tl-preview-head{font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:#ffe38a;font-weight:800;margin-bottom:7px;}
 .tl-preview-txt{font-size:12.5px;color:#e7ecfa;line-height:1.65;white-space:pre-wrap;word-break:break-word;}
-.tl-sendrow{display:flex;flex-wrap:wrap;margin:4px 0 2px;}
+.tl-sendrow{display:flex;flex-wrap:wrap;margin:6px 0 2px;}
 .tl-sendrow .tl-btn{margin:4px 8px 4px 0;}
-.tl-note{font-size:11.5px;color:#a9b7dc;line-height:1.65;margin:10px 2px 4px;}
+.tl-note{font-size:11.5px;color:#b4c2e4;line-height:1.65;margin:10px 2px 4px;}
 .tl-callrow{display:flex;flex-wrap:wrap;align-items:center;margin:10px 0 2px;}
 .tl-callrow span{font-size:12px;color:#c9d4f2;margin-right:10px;}
 .tl-call{width:auto;padding:7px 12px;margin:0 6px 6px 0;border-radius:99px;border:1px solid rgba(255,215,0,.45);
   background:rgba(255,215,0,.10);color:#ffe38a;font-size:12.5px;font-weight:700;text-decoration:none;display:inline-block;}
 .tl-call:hover{background:rgba(255,215,0,.2);}
-/* board */
-.tl-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin:10px 0 12px;}
+
+/* movement board */
+.tl-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px;margin:8px 0 12px;}
 .tl-sumcell{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:12px;
   padding:9px 8px;text-align:center;}
-.tl-sumnum{font-size:17px;font-weight:800;color:#ffe38a;line-height:1.2;word-break:break-word;}
-.tl-sumlab{font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:#a9b7dc;margin-top:3px;}
+.tl-sumcell.gold{background:rgba(255,215,0,.12);border-color:rgba(255,215,0,.42);}
+.tl-sumcell.green{background:rgba(47,225,116,.11);border-color:rgba(72,220,130,.40);}
+.tl-sumnum{font-size:16px;font-weight:800;color:#ffe38a;line-height:1.2;word-break:break-word;}
+.tl-sumcell.green .tl-sumnum{color:#8ef2b5;}
+.tl-sumlab{font-size:9.5px;letter-spacing:.9px;text-transform:uppercase;color:#b4c2e4;margin-top:3px;}
 .tl-filters{display:flex;flex-wrap:wrap;margin:0 0 8px;}
-.tl-fbtn{width:auto;padding:7px 13px;margin:0 6px 6px 0;border-radius:99px;border:1px solid rgba(255,255,255,.22);
-  background:rgba(255,255,255,.08);color:#c9d4f2;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
-.tl-fbtn.active{background:linear-gradient(135deg,#ffd700,#c9960a);color:#2a1e02;border-color:rgba(255,215,0,.6);}
+.tl-fbtn{width:auto;padding:7px 13px !important;margin:0 6px 6px 0 !important;border-radius:99px !important;
+  border:1px solid rgba(255,255,255,.22) !important;background:rgba(255,255,255,.08) !important;
+  color:#c9d4f2 !important;font-size:12px !important;font-weight:700 !important;cursor:pointer;}
+.tl-fbtn.active{background:linear-gradient(135deg,#ffd700,#c9960a) !important;color:#2a1e02 !important;
+  border-color:rgba(255,215,0,.7) !important;}
 .tl-trip{background:linear-gradient(170deg,#fdfefe,#eef3fb);border:1px solid #dbe3f0;border-left:5px solid #c9960a;
-  border-radius:13px;padding:11px 13px;margin:9px 0;box-shadow:0 3px 12px rgba(4,10,28,.14);}
+  border-radius:13px;padding:12px 13px;margin:9px 0;box-shadow:0 3px 12px rgba(4,10,28,.15);}
 .tl-trip[data-st="Confirmed"]{border-left-color:#1e8e4f;}
 .tl-trip[data-st="In Transit"]{border-left-color:#1f6fb8;}
-.tl-trip[data-st="Completed"]{border-left-color:#7c8aa5;opacity:.8;}
+.tl-trip[data-st="Completed"]{border-left-color:#7c8aa5;opacity:.82;}
 .tl-trip[data-st="Cancelled"]{border-left-color:#dc3545;opacity:.62;}
 .tl-trip-top{display:flex;align-items:center;flex-wrap:wrap;}
-.tl-when{font-weight:800;color:#1e2a3a;font-size:13.5px;margin-right:8px;}
+.tl-when{font-weight:800;color:#1e2a3a;font-size:13.5px;margin-right:8px;margin-bottom:3px;}
 .tl-badge{font-size:10px;font-weight:800;letter-spacing:.6px;border-radius:99px;padding:3px 9px;
-  text-transform:uppercase;border:1px solid transparent;}
+  text-transform:uppercase;border:1px solid transparent;margin-bottom:3px;}
 .tl-b-scheduled{background:#fff3cd;color:#8a6d00;border-color:#ffe08a;}
 .tl-b-confirmed{background:#e2f7e9;color:#116939;border-color:#b7e8c8;}
 .tl-b-intransit{background:#e3effc;color:#12508f;border-color:#bcd8f5;}
 .tl-b-completed{background:#eceff4;color:#4a5872;border-color:#d5dbe6;}
 .tl-b-cancelled{background:#fde3e5;color:#a02332;border-color:#f8c1c7;}
-.tl-pill{font-size:11.5px;font-weight:700;color:#33415e;background:rgba(31,60,136,.08);
-  border:1px solid rgba(31,60,136,.16);border-radius:99px;padding:3px 10px;}
-.tl-trip-top .tl-pill{margin-left:6px;}
+.tl-pill{font-size:11px;font-weight:700;color:#33415e;background:rgba(31,60,136,.08);
+  border:1px solid rgba(31,60,136,.16);border-radius:99px;padding:3px 9px;margin:0 0 3px 6px;}
+.tl-pill-sub{background:#e7f8ee;color:#0f6334;border-color:#9ce0b7;}
 .tl-trip-top .tl-firstpill{margin-left:auto;}
 .tl-route{font-size:13px;color:#1e2a3a;margin:6px 0 3px;font-weight:700;line-height:1.5;}
-.tl-pt{font-weight:500;color:#5b6b87;}
-.tl-sub{font-size:12px;color:#5b6b87;line-height:1.6;}
-.tl-notes{font-size:12px;color:#5b6b87;background:rgba(31,60,136,.05);border-radius:8px;padding:6px 9px;margin-top:6px;line-height:1.55;}
+.tl-pt{font-weight:600;color:#475875;}
+.tl-sub{font-size:12px;color:#4e5f7c;line-height:1.6;}
+.tl-notes{font-size:12px;color:#4a5a75;background:rgba(31,60,136,.05);border-radius:8px;padding:6px 9px;margin-top:6px;line-height:1.55;}
 .tl-trip-ctl{display:flex;align-items:center;flex-wrap:wrap;margin-top:8px;}
 .tl-stsel{width:auto;padding:5px 9px;margin:0;border-radius:9px;border:1.5px solid #cfd9ea;background:#fff;
   font-size:12px;font-weight:700;color:#1e2a3a;font-family:inherit;}
-.tl-xbtn{width:auto;padding:5px 10px;margin-left:8px;font-size:11px;border-radius:9px;border:1px solid rgba(220,53,69,.4);
-  background:rgba(220,53,69,.08);color:#c0392b;font-weight:700;cursor:pointer;font-family:inherit;}
-.tl-xbtn:hover{background:rgba(220,53,69,.16);}
+.tl-xbtn{width:auto;padding:5px 10px !important;margin-left:8px !important;font-size:11px !important;
+  border-radius:9px !important;border:1px solid rgba(220,53,69,.4) !important;
+  background:rgba(220,53,69,.08) !important;color:#c0392b !important;font-weight:700 !important;cursor:pointer;}
+.tl-xbtn:hover{background:rgba(220,53,69,.16) !important;}
 .tl-empty{text-align:center;padding:26px 14px;background:rgba(255,255,255,.05);border:1px dashed rgba(255,215,0,.4);
   border-radius:16px;margin:10px 0;color:#c9d4f2;font-size:13px;line-height:1.7;}
 .tl-empty b{color:#fff;}
-/* guidelines */
-.tl-step{display:flex;align-items:flex-start;margin:10px 0;}
+
+/* 5+ group guide & contacts tab */
+.tl-tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:8px;}
+.tl-tier{border-radius:12px;padding:12px 13px;border:1.5px solid #dbe3f0;background:#f8faff;}
+.tl-tier.primary{background:linear-gradient(160deg,#fffdf5,#fff5d6);border-color:#e5bf53;}
+.tl-tier-badge{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;
+  padding:3px 9px;border-radius:99px;margin-bottom:6px;background:#e2e8f5;color:#2b3b59;}
+.tl-tier.primary .tl-tier-badge{background:#16295e;color:#ffe066;}
+.tl-tier h4{margin:0 0 5px;font-size:14px;color:#16295e;font-weight:800;}
+.tl-tier p{margin:0;font-size:12.5px;color:#33415e;line-height:1.58;}
+.tl-step{display:flex;align-items:flex-start;margin:11px 0;}
 .tl-stepnum{flex:0 0 30px;width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;
   background:linear-gradient(135deg,#ffd700,#c9960a);color:#2a1e02;font-weight:800;font-size:14px;margin-right:10px;}
-.tl-steptxt{font-size:13px;color:#33415e;line-height:1.65;padding-top:4px;}
+.tl-steptxt{font-size:13px;color:#33415e;line-height:1.62;padding-top:3px;}
 .tl-steptxt b{color:#16295e;}
+.tl-ex-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:12.5px;}
+.tl-ex-table th{background:#16295e;color:#ffe38a;text-align:left;padding:8px 9px;font-size:11px;
+  text-transform:uppercase;letter-spacing:.6px;}
+.tl-ex-table th:first-child{border-radius:8px 0 0 0;}
+.tl-ex-table th:last-child{border-radius:0 8px 0 0;}
+.tl-ex-table td{padding:8px 9px;border-bottom:1px solid #e2e9f5;color:#25344d;font-weight:600;}
+.tl-ex-table tr:nth-child(even) td{background:#f6f9fe;}
+.tl-ex-church{color:#8a6500 !important;font-weight:800 !important;}
+.tl-ex-group{color:#0f6937 !important;font-weight:800 !important;}
 .tl-guide{padding-left:20px;margin:0;}
-.tl-guide li{font-size:13px;color:#33415e;line-height:1.7;margin:7px 0;}
-.tl-contact{display:flex;align-items:center;flex-wrap:wrap;background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,215,0,.3);border-radius:13px;padding:11px 13px;margin:8px 0;}
-.tl-cnum{font-size:15.5px;font-weight:800;color:#fff;margin-right:auto;margin-bottom:4px;}
+.tl-guide li{font-size:13px;color:#33415e;line-height:1.68;margin:7px 0;}
+.tl-guide li b{color:#16295e;}
+.tl-contact{display:flex;align-items:center;flex-wrap:wrap;background:#132352;
+  border:1px solid rgba(255,215,0,.38);border-radius:13px;padding:11px 13px;margin:8px 0;}
+.tl-cnum{font-size:15px;font-weight:800;color:#fff;margin-right:auto;margin-bottom:4px;}
 .tl-contact .tl-btn{margin:0 0 0 8px;}
+
 /* toast */
 #tlToast{position:fixed;left:50%;bottom:24px;z-index:220;transform:translate(-50%,18px);
   background:#0d1735;color:#ffe38a;border:1px solid rgba(255,215,0,.65);border-radius:14px;
-  padding:11px 18px;font-size:13px;font-weight:600;line-height:1.5;max-width:86vw;text-align:center;
+  padding:11px 18px;font-size:13px;font-weight:600;line-height:1.5;max-width:88vw;text-align:center;
   opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s,transform .3s,visibility .3s;
-  box-shadow:0 14px 40px rgba(2,6,20,.6),0 0 24px rgba(255,215,0,.14);}
+  box-shadow:0 14px 40px rgba(2,6,20,.65),0 0 24px rgba(255,215,0,.16);}
 #tlToast.show{opacity:1;visibility:visible;transform:translate(-50%,0);}
 .tl-overlay *{-webkit-tap-highlight-color:rgba(0,0,0,0);}
-@media (max-width:560px){
-  .tl-overlay{padding:8px;}
+@media (max-width:580px){
+  .tl-overlay{padding:6px;}
   .tl-head{padding:11px 12px;}
   .tl-title b{font-size:14.5px;}
-  .tl-tabs{padding:8px 10px 0;}
-  .tl-tab{font-size:10.5px;padding:9px 3px;margin:0 3px;}
-  .tl-panel{padding:10px 11px 6px;}
+  .tl-tabs{padding:8px 8px 0;}
+  .tl-tab{font-size:11px;padding:9px 4px;margin:0 2px;}
+  .tl-panel{padding:10px 11px 14px;}
+  .tl-card,.tl-ready-card,.tl-policy-hero{padding:12px;}
+  .tl-trip-top .tl-firstpill{margin-left:0;}
+  .tl-pill{margin:2px 6px 2px 0;}
   .tl-cnum{font-size:14px;width:100%;margin-bottom:8px;}
   .tl-contact .tl-btn{margin:0 6px 6px 0;}
+  .tl-ex-table{font-size:11.5px;}
+  .tl-ex-table th,.tl-ex-table td{padding:6px 6px;}
 }
 html.perf-lite .tl-overlay{-webkit-backdrop-filter:none;backdrop-filter:none;}
 /* Yango private rides — Yango brand: red + white font */
-.tl-btn-yango{background:linear-gradient(135deg,#ff3230,#e50101) !important;color:#fff !important;border-color:rgba(255,125,125,.65) !important;box-shadow:0 3px 14px rgba(229,1,1,.4);}
-.tl-btn-yango:hover{filter:brightness(1.18);}
-.tl-yangorow{display:flex;align-items:center;flex-wrap:wrap;background:rgba(255,255,255,.05);border:1px dashed rgba(245,1,1,.45);border-radius:12px;padding:10px 12px;margin:10px 0 2px;}
+.tl-btn-yango{background:linear-gradient(135deg,#ff3230,#e50101) !important;color:#fff !important;border-color:rgba(255,125,125,.65) !important;box-shadow:0 3px 14px rgba(229,1,1,.4) !important;}
+.tl-btn-yango:hover{filter:brightness(1.15);}
+.tl-yangorow{display:flex;align-items:center;flex-wrap:wrap;background:rgba(255,255,255,.05);border:1px dashed rgba(245,80,80,.55);border-radius:12px;padding:11px 13px;margin:12px 0 4px;}
 .tl-yangorow .tl-btn{margin:0 12px 6px 0;}
-.tl-yangonote{flex:1 1 220px;min-width:0;font-size:11.5px;color:#c9d4f2;line-height:1.6;}
+.tl-yangonote{flex:1 1 220px;min-width:0;font-size:11.5px;color:#d2dcf5;line-height:1.6;}
 .tl-yangonote b{color:#fff;}
 
 
@@ -1536,7 +1664,7 @@ body.ss-noscroll{overflow:hidden;}
       <button type="button" class="tile" onclick="openMusicManager()" aria-label="Open the Event Music Manager"><span class="t-ico c-violet">🎶</span><span class="t-txt"><span class="t-name">Event Music Manager</span><span class="t-sub">Songs for every session — weddings, graduations &amp; more</span></span></button>
       <button type="button" class="tile" onclick="showTithes()"><span class="t-ico c-gold">💰</span><span class="t-txt"><span class="t-name">Partnership &amp; Offerings</span><span class="t-sub">Cheerful giving</span></span></button>
       <button type="button" class="tile" onclick="window.location.href='Church Calendar.html'"><span class="t-ico c-indigo">📅</span><span class="t-txt"><span class="t-name">Church Calendar</span><span class="t-sub">Holy convocations</span></span></button>
-      <button type="button" class="tile" onclick="openTransportDesk()" aria-label="Open the Transport and Logistics Desk"><span class="t-ico c-teal">🚌</span><span class="t-txt"><span class="t-name">Transport &amp; Logistics</span><span class="t-sub">Pickups, fares &amp; member movements</span></span></button>
+      <button type="button" class="tile" onclick="openTransportDesk()" aria-label="Open the Transport and Logistics Desk"><span class="t-ico c-teal">🚌</span><span class="t-txt"><span class="t-name">Transport &amp; Logistics</span><span class="t-sub">5+ group church transport &middot; 50% fare support</span></span></button>
       <button type="button" class="tile" onclick="makePayment()"><span class="t-ico c-green">💳</span><span class="t-txt"><span class="t-name">Make Payments</span><span class="t-sub">Dues, building &amp; projects</span></span></button>
     </div>
   </div>
@@ -3860,122 +3988,278 @@ window.DOMMatrix = window.DOMMatrix || window.WebKitCSSMatrix || function(){};
 
 <!-- ============================================================
      🚌 TRANSPORT & LOGISTICS DESK — JCRGM
-     Member movements: request transport (pickup location,
-     people, fare…) and send the details straight to the
-     church WhatsApp lines 0979 554 970 / 0978 548 813.
-     The Movement Board tracks every trip on this device.
+     Official 5+ Group Church Transport & 50/50 Bill Partnership:
+       • Transport to church is provided for organised groups of 5+ people
+       • Church handles 50% (half) of the transport bill; the group shares 50%
+       • Guided request form with built-in readiness rules & live 50/50 split
+       • Full 5+ Group Guide & Movement Board saved on this device
      ============================================================ -->
 <div id="transportDesk" class="tl-overlay" role="dialog" aria-modal="true" aria-label="Transport and Logistics Desk">
   <div class="tl-wrap">
     <div class="tl-head">
-      <div class="tl-title"><span class="tl-ico">🚌</span><span><b>Transport &amp; Logistics Desk</b><small>Member movements · pickups · fares · coordination</small></span></div>
+      <div class="tl-title">
+        <span class="tl-ico">🚌</span>
+        <span>
+          <b>Transport &amp; Logistics Desk</b>
+          <small>5+ Group Church Transport &middot; 50% Church Fare Support &middot; Movement Board</small>
+        </span>
+      </div>
       <button type="button" class="tl-close" onclick="closeTransportDesk()">✕ Close</button>
     </div>
+
     <div class="tl-tabs" role="tablist">
       <button type="button" class="tl-tab active" id="tlTabReq" role="tab" aria-selected="true">📝 Request Transport</button>
+      <button type="button" class="tl-tab" id="tlTabInfo" role="tab" aria-selected="false">📖 5+ Group Guide</button>
       <button type="button" class="tl-tab" id="tlTabBoard" role="tab" aria-selected="false">🚌 Movement Board<span class="tl-count" id="tlBoardCount"></span></button>
-      <button type="button" class="tl-tab" id="tlTabInfo" role="tab" aria-selected="false">ℹ️ Guidelines &amp; Contacts</button>
     </div>
+
     <div class="tl-body">
 
       <!-- ============ TAB 1: REQUEST TRANSPORT ============ -->
       <div class="tl-panel active" id="tlPanelReq">
+
+        <!-- Official 5+ Group & 50/50 Policy Hero -->
+        <div class="tl-policy-hero">
+          <div class="tl-policy-top">
+            <span class="tl-policy-kicker">🏛️ Official Church Transport Policy</span>
+            <button type="button" class="tl-btn tl-policy-link" id="tlGoGuide">📖 Read Full 5+ Group Guide &rarr;</button>
+          </div>
+          <div class="tl-policy-title">Church Transport is Provided for <span>Groups of 5+ People</span> &mdash; <span>Church Pays Half (50%)</span> of the Bill</div>
+          <p class="tl-policy-lead">To serve brethren across Lusaka with excellence and good stewardship, church-arranged transport to services is organised in neighbourhood groups of <b>5 or more confirmed people</b>.</p>
+          <div class="tl-pillars">
+            <div class="tl-pillar">
+              <b>👥 1. Form a 5+ Group</b>
+              <span>Gather 5 or more people in your area under <b>one Group Leader</b> and send one combined request.</span>
+            </div>
+            <div class="tl-pillar">
+              <b>🤝 2. 50 / 50 Bill Partnership</b>
+              <span><b>JCRGM covers 50% (half)</b> of the agreed transport fare; your group shares the other <b>50%</b>.</span>
+            </div>
+            <div class="tl-pillar">
+              <b>📍 3. One Point &middot; 10m Early</b>
+              <span>Everyone meets at <b>one roadside landmark</b> 10 mins early with the group&rsquo;s 50% already collected.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Request Type Switch -->
+        <div class="tl-modes" role="group" aria-label="Transport request category">
+          <button type="button" class="tl-modebtn active" id="tlModeGroup" data-mode="group">
+            <b>👥 Church Group Transport (5+ People)</b>
+            <small>Coming to church as an organised group &middot; 50% bill paid by Church</small>
+          </button>
+          <button type="button" class="tl-modebtn" id="tlModeLogistics" data-mode="logistics">
+            <b>📦 Ministry Goods / Special Logistics</b>
+            <small>Choir instruments, equipment truck, or pastoral emergency movement</small>
+          </button>
+        </div>
+
+        <!-- STEP 1: GROUP & COORDINATOR -->
         <div class="tl-card">
+          <div class="tl-sec-head">
+            <h3 class="tl-sec-title"><span class="tl-sec-num">1</span><span id="tlSec1Title">Group &amp; Coordinator Details</span></h3>
+            <span class="tl-sec-tag" id="tlSec1Tag">Minimum 5+ People</span>
+          </div>
           <div class="tl-grid">
-            <div class="tl-field tl-full">
-              <label class="tl-lab" for="tlName">Member / group name *</label>
-              <input id="tlName" class="tl-in" type="text" maxlength="70" placeholder="e.g. Kabwata Cell Group — Jane Phiri" autocomplete="name">
+            <div class="tl-field">
+              <label class="tl-lab" for="tlGroup" id="tlGroupLab">Group / Cell / Zone Name *</label>
+              <input id="tlGroup" class="tl-in" type="text" maxlength="70" placeholder="e.g. Kabwata Cell Group / Chilenje Youth">
             </div>
             <div class="tl-field">
-              <label class="tl-lab" for="tlPhone">Your phone (WhatsApp) *</label>
+              <label class="tl-lab" for="tlName" id="tlNameLab">Group Leader (Coordinator) Name *</label>
+              <input id="tlName" class="tl-in" type="text" maxlength="70" placeholder="e.g. Sis. Jane Phiri (1 spokesperson)" autocomplete="name">
+            </div>
+            <div class="tl-field">
+              <label class="tl-lab" for="tlPhone">Coordinator Phone (WhatsApp) *</label>
               <input id="tlPhone" class="tl-in" type="tel" maxlength="18" placeholder="09XX XXX XXX" autocomplete="tel">
             </div>
             <div class="tl-field">
-              <label class="tl-lab" for="tlPeople">Number of people *</label>
-              <input id="tlPeople" class="tl-in" type="number" min="1" max="200" inputmode="numeric" placeholder="e.g. 12">
+              <label class="tl-lab" for="tlPeople" id="tlPeopleLab">Confirmed Group Size (5+ People) *</label>
+              <input id="tlPeople" class="tl-in" type="number" min="5" max="200" inputmode="numeric" placeholder="e.g. 8 (minimum 5)">
             </div>
+            <div class="tl-field tl-full">
+              <div id="tlPeopleStatus" class="tl-grpstatus">👥 Enter <b>5 or more confirmed people</b> coming together from your area to activate <b>50% Church Bill Support</b>.</div>
+            </div>
+            <div class="tl-field tl-full" id="tlRosterWrap">
+              <label class="tl-lab" for="tlRoster">Group Members&rsquo; Names (Recommended &mdash; confirms your 5+ group)</label>
+              <textarea id="tlRoster" class="tl-in" maxlength="360" placeholder="e.g. 1. Jane Phiri, 2. Peter Banda, 3. Mary Tembo, 4. John Zulu, 5. Grace Mulenga…"></textarea>
+              <div class="tl-hint">Listing confirmed passengers helps the Group Leader and Transport Desk avoid unconfirmed headcounts.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: ROUTE, SCHEDULE & VEHICLE -->
+        <div class="tl-card">
+          <div class="tl-sec-head">
+            <h3 class="tl-sec-title"><span class="tl-sec-num">2</span><span>Single Pickup Point, Schedule &amp; Vehicle</span></h3>
+            <span class="tl-sec-tag">One Central Stop</span>
+          </div>
+          <div class="tl-grid">
             <div class="tl-field">
-              <label class="tl-lab" for="tlPickup">Pickup location (area) *</label>
+              <label class="tl-lab" for="tlPickup">Pickup Area / Township *</label>
               <input id="tlPickup" class="tl-in" type="text" maxlength="70" list="tlAreas" placeholder="e.g. Kabwata">
             </div>
             <div class="tl-field">
-              <label class="tl-lab" for="tlPoint">Pickup point / landmark</label>
-              <input id="tlPoint" class="tl-in" type="text" maxlength="90" placeholder="e.g. Kulima Tower bus stop">
+              <label class="tl-lab" for="tlPoint" id="tlPointLab">Single Agreed Pickup Landmark *</label>
+              <input id="tlPoint" class="tl-in" type="text" maxlength="90" placeholder="e.g. Kabwata Total Filling Station bus stop">
             </div>
             <div class="tl-field">
               <label class="tl-lab" for="tlDest">Destination *</label>
               <input id="tlDest" class="tl-in" type="text" maxlength="90" list="tlDests" value="JCRGM Church — Lusaka">
             </div>
             <div class="tl-field">
-              <label class="tl-lab" for="tlDate">Pickup date *</label>
-              <input id="tlDate" class="tl-in" type="date">
-            </div>
-            <div class="tl-field">
-              <label class="tl-lab" for="tlTime">Pickup time *</label>
-              <input id="tlTime" class="tl-in" type="time">
-            </div>
-            <div class="tl-field">
-              <label class="tl-lab" for="tlVehicle">Vehicle needed</label>
-              <select id="tlVehicle" class="tl-in">
-                <option>Any available</option>
-                <option>Car (up to 4)</option>
-                <option>Van (6–8)</option>
-                <option>Minibus (14–16)</option>
-                <option>Bus (25–33)</option>
-                <option>Big Bus (60+)</option>
-                <option>Truck (goods / instruments)</option>
-              </select>
-            </div>
-            <div class="tl-field">
-              <label class="tl-lab" for="tlPurpose">Purpose of the trip</label>
+              <label class="tl-lab" for="tlPurpose">Service / Purpose of Trip</label>
               <select id="tlPurpose" class="tl-in">
                 <option>Sunday Service</option>
                 <option>Midweek Service</option>
                 <option>Allnight / Crossover</option>
+                <option>Conference / Convention</option>
+                <option>Choir / Ministry Duty</option>
+                <option>Outreach / Evangelism</option>
                 <option>Wedding</option>
                 <option>Funeral / Memorial</option>
                 <option>Graduation</option>
-                <option>Conference / Convention</option>
                 <option>Hospital Visit</option>
                 <option>Airport Transfer</option>
-                <option>Outreach / Evangelism</option>
-                <option>Choir / Ministry Duty</option>
-                <option>Shopping / Errands</option>
+                <option>Instruments / Goods Movement</option>
                 <option>Other (see notes)</option>
               </select>
             </div>
             <div class="tl-field">
-              <label class="tl-lab" for="tlFare">Transport fare (ZMW)</label>
-              <input id="tlFare" class="tl-in" type="number" min="0" step="1" inputmode="numeric" placeholder="e.g. 250 — leave blank if to be agreed">
+              <label class="tl-lab" for="tlDate">Pickup Date *</label>
+              <input id="tlDate" class="tl-in" type="date">
+            </div>
+            <div class="tl-field">
+              <label class="tl-lab" for="tlTime">Pickup Time *</label>
+              <input id="tlTime" class="tl-in" type="time">
+              <div class="tl-hint" id="tlAssembleHint">⏰ All group members must assemble 10 minutes before pickup.</div>
             </div>
             <div class="tl-field tl-full">
-              <label class="tl-lab" for="tlNotes">Special needs / notes</label>
-              <textarea id="tlNotes" class="tl-in" maxlength="300" placeholder="e.g. choir instruments, elderly members, luggage, gate colour…"></textarea>
+              <label class="tl-lab" for="tlVehicle">Vehicle Needed</label>
+              <select id="tlVehicle" class="tl-in">
+                <option>Auto-match to group size (Recommended)</option>
+                <option>7-Seater / Wish / Noah (5–7 people)</option>
+                <option>Van / Hiace (8–13 people)</option>
+                <option>Minibus / Rosa (14–18 people)</option>
+                <option>Coaster Bus (22–33 people)</option>
+                <option>Big Bus (50–65+ people)</option>
+                <option>Truck / Van (Instruments &amp; Ministry Goods)</option>
+              </select>
             </div>
-            <label class="tl-check tl-full"><input type="checkbox" id="tlReturn"> Return trip needed — pick-up back after the service / event</label>
+            <label class="tl-check tl-full" for="tlReturn">
+              <input type="checkbox" id="tlReturn">
+              <span><b>Return trip needed</b> &mdash; schedule pick-up back after the service / event (50/50 split applies to agreed return fare too)</span>
+            </label>
           </div>
         </div>
 
+        <!-- STEP 3: TRANSPORT BILL & LIVE 50/50 CALCULATOR -->
+        <div class="tl-card">
+          <div class="tl-sec-head">
+            <h3 class="tl-sec-title"><span class="tl-sec-num">3</span><span>Transport Bill &amp; 50/50 Cost Sharing</span></h3>
+            <span class="tl-sec-tag" id="tlSec3Tag">Church Covers 50%</span>
+          </div>
+          <div class="tl-grid">
+            <div class="tl-field tl-full">
+              <label class="tl-lab" for="tlFare">Total Estimated / Agreed Transport Bill (ZMW)</label>
+              <input id="tlFare" class="tl-in" type="number" min="0" step="1" inputmode="numeric" placeholder="Enter full vehicle fare e.g. 200 (or leave blank for Desk quote)">
+              <div class="tl-chips" aria-label="Quick fare presets">
+                <span>Quick fill:</span>
+                <button type="button" class="tl-chip" data-fare="100">ZMW 100</button>
+                <button type="button" class="tl-chip" data-fare="150">ZMW 150</button>
+                <button type="button" class="tl-chip" data-fare="200">ZMW 200</button>
+                <button type="button" class="tl-chip" data-fare="300">ZMW 300</button>
+                <button type="button" class="tl-chip" data-fare="400">ZMW 400</button>
+                <button type="button" class="tl-chip" data-fare="">Clear</button>
+              </div>
+
+              <!-- Live 50/50 Bill Split Box -->
+              <div class="tl-splitbox" id="tlSplitBox">
+                <div class="tl-split-head">
+                  <b>💰 Live 50 / 50 Transport Bill Breakdown</b>
+                  <span class="tl-split-badge" id="tlSplitBadge">50% Church Subsidy</span>
+                </div>
+                <div class="tl-split-grid">
+                  <div class="tl-split-cell">
+                    <div class="tl-split-lbl">Total Vehicle Bill</div>
+                    <div class="tl-split-val" id="tlSplitTotal">To be agreed</div>
+                    <div class="tl-split-sub">100% trip fare</div>
+                  </div>
+                  <div class="tl-split-cell church">
+                    <div class="tl-split-lbl">🏛️ Church Pays (50%)</div>
+                    <div class="tl-split-val" id="tlSplitChurch">50% of bill</div>
+                    <div class="tl-split-sub">Handled by JCRGM</div>
+                  </div>
+                  <div class="tl-split-cell group">
+                    <div class="tl-split-lbl">👥 Group Pays (50%)</div>
+                    <div class="tl-split-val" id="tlSplitGroup">50% of bill</div>
+                    <div class="tl-split-sub">Collected by Leader</div>
+                  </div>
+                  <div class="tl-split-cell">
+                    <div class="tl-split-lbl" id="tlSplitPerLab">👤 Per Person</div>
+                    <div class="tl-split-val" id="tlSplitPer">&mdash;</div>
+                    <div class="tl-split-sub" id="tlSplitPerSub">Enter fare &amp; 5+ people</div>
+                  </div>
+                </div>
+                <p class="tl-split-foot" id="tlSplitFoot">Enter the total transport fare above to calculate how much <b>JCRGM pays (50%)</b>, how much <b>your group pays (50%)</b>, and each member&rsquo;s individual contribution.</p>
+              </div>
+            </div>
+
+            <div class="tl-field tl-full">
+              <label class="tl-lab" for="tlNotes">Special Needs / Additional Notes</label>
+              <textarea id="tlNotes" class="tl-in" maxlength="300" placeholder="e.g. 2 elderly mothers needing front seats, choir keyboard, baby stroller, gate landmark…"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4: IN-FORM GUIDELINES & GROUP READINESS COMMITMENT -->
+        <div class="tl-ready-card" id="tlReadyCard">
+          <h3 class="tl-ready-title">✅ Step 4 &mdash; Group Guidelines to Make This Pickup Succeed</h3>
+          <div class="tl-ready-list">
+            <div class="tl-ready-item">
+              <b>👥 1. Confirmed 5+ Passengers Only</b>
+              Ensure at least 5 people have firmly committed to travel. If your numbers drop below 5, inform the Desk immediately.
+            </div>
+            <div class="tl-ready-item">
+              <b>📍 2. One Landmark &middot; 10 Mins Early</b>
+              Vehicles cannot go house-to-house. All 5+ members must gather at <b>one roadside point</b> 10 minutes early (max 10-min wait).
+            </div>
+            <div class="tl-ready-item">
+              <b>💰 3. Pool Group&rsquo;s 50% Before Arrival</b>
+              The Group Leader collects every member&rsquo;s share of the <b>group&rsquo;s 50% bill</b> while waiting so payment takes under 1 minute.
+            </div>
+            <div class="tl-ready-item">
+              <b>📞 4. One Coordinator &amp; Active Phone</b>
+              Submit only <b>one request per group</b> (avoid duplicates) and keep the Coordinator&rsquo;s phone on for Desk &amp; driver confirmation.
+            </div>
+          </div>
+          <label class="tl-agree" id="tlAgreeWrap" for="tlAgree">
+            <input type="checkbox" id="tlAgree">
+            <span>I confirm on behalf of our group that we are <b>5+ confirmed people</b> meeting together at <b>one pickup landmark 10 minutes early</b>, and our group will have our <b>50% share of the transport bill</b> collected and ready.</span>
+          </label>
+        </div>
+
         <div class="tl-preview">
-          <div class="tl-preview-head">📨 WhatsApp message preview — this is exactly what the Transport Desk receives</div>
+          <div class="tl-preview-head">📨 Live WhatsApp Request Preview &mdash; exact summary sent to the Transport Desk</div>
           <div class="tl-preview-txt" id="tlPreview"></div>
         </div>
 
         <div class="tl-sendrow">
           <button type="button" class="tl-btn tl-btn-wa" id="tlSendA">💬 Send to 0979 554 970</button>
           <button type="button" class="tl-btn tl-btn-wa" id="tlSendB">💬 Send to 0978 548 813</button>
-          <button type="button" class="tl-btn" id="tlSaveOnly">💾 Save to board only</button>
-          <button type="button" class="tl-btn" id="tlCopy">📋 Copy details</button>
-          <button type="button" class="tl-btn" id="tlClear">🧹 Clear form</button>
+          <button type="button" class="tl-btn tl-btn-gold" id="tlSaveOnly">💾 Save to Board Only</button>
+          <button type="button" class="tl-btn" id="tlCopy">📋 Copy Request</button>
+          <button type="button" class="tl-btn" id="tlClear">🧹 Reset Form</button>
         </div>
-        <p class="tl-note">Tap a <b>Send</b> button — WhatsApp opens with your request already typed; just press send. The request is also saved to the <b>Movement Board</b> on this device so you can track it.</p>
+        <p class="tl-note">Tap a <b>Send</b> button &mdash; WhatsApp opens with your complete 5+ group request and 50/50 fare breakdown pre-typed; just press send. Your request is also saved to the <b>Movement Board</b> on this device.</p>
+
         <div class="tl-yangorow">
           <button type="button" class="tl-btn tl-btn-yango" id="tlYango">🚕 Open Yango App</button>
-          <span class="tl-yangonote">Need a <b>private ride right now</b>? Yango taxis operate across Lusaka — one tap opens the Yango app on your phone. Yango fares are shown before you ride and are paid <b>directly to Yango</b>, not to the church.</span>
+          <span class="tl-yangonote"><b>Fewer than 5 people (1&ndash;4) or need an instant private ride?</b> Link up with nearby brethren in your zone to form a <b>5+ group</b>, or tap here to book a private Yango ride across Lusaka (paid <b>100% directly to Yango</b>, not to the church).</span>
         </div>
 
         <div class="tl-callrow">
-          <span>Urgent? Call the lines directly:</span>
+          <span>Urgent coordination? Call the Transport Desk directly:</span>
           <a class="tl-call" href="tel:0979554970">📞 0979 554 970</a>
           <a class="tl-call" href="tel:0978548813">📞 0978 548 813</a>
         </div>
@@ -4002,7 +4286,140 @@ window.DOMMatrix = window.DOMMatrix || window.WebKitCSSMatrix || function(){};
         </datalist>
       </div>
 
-      <!-- ============ TAB 2: MOVEMENT BOARD ============ -->
+      <!-- ============ TAB 2: 5+ GROUP GUIDE & CONTACTS ============ -->
+      <div class="tl-panel" id="tlPanelInfo">
+
+        <div class="tl-card">
+          <h3 class="tl-h">🏛️ JCRGM 5+ Group Transport &amp; 50/50 Bill Policy</h3>
+          <p style="font-size:13px;color:#33415e;line-height:1.65;margin:0 0 10px;">
+            Jesus Christ Redeems Global Ministries (JCRGM) provides coordinated church transport so brethren, families, and invited visitors can attend services together without being held back by full transport costs. To ensure order, punctuality, and faithful stewardship, <b>passengers must organise themselves into groups of 5 or more people</b>.
+          </p>
+          <div class="tl-tier-grid">
+            <div class="tl-tier primary">
+              <span class="tl-tier-badge">✅ Eligible &middot; 5+ People in a Group</span>
+              <h4>Church-Coordinated Transport + 50% Fare Subsidy</h4>
+              <p>When <b>5 or more confirmed people</b> travel together to church from one agreed pickup point, the Transport Desk coordinates the vehicle and <b>JCRGM pays 50% (half) of the transport bill</b>. The group shares the remaining <b>50%</b>.</p>
+            </div>
+            <div class="tl-tier">
+              <span class="tl-tier-badge">ℹ️ 1 to 4 People &middot; Individual / Small Pair</span>
+              <h4>Join a Zone Group or Use Private Transport</h4>
+              <p>Church-funded transport is not dispatched for fewer than 5 passengers. Connect with your Cell/Zone Leader to join a nearby <b>5+ pickup group</b>, use public buses, or tap <b>🚕 Open Yango App</b> (paid 100% directly by the rider).</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-card">
+          <h3 class="tl-h">🧭 How to Organise a 5+ Group with Excellence (Step-by-Step)</h3>
+          <div class="tl-step">
+            <span class="tl-stepnum">1</span>
+            <span class="tl-steptxt"><b>Mobilise 5+ Confirmed People in Your Area</b> &mdash; Reach out during the week (by Friday/Saturday) to church members, family, neighbours, and first-time visitors in your township who are definitely coming to service.</span>
+          </div>
+          <div class="tl-step">
+            <span class="tl-stepnum">2</span>
+            <span class="tl-steptxt"><b>Appoint One Group Leader (Coordinator)</b> &mdash; Every group must have <b>one spokesperson</b> who records the confirmed names, submits one combined form request, and answers calls from the Desk and driver.</span>
+          </div>
+          <div class="tl-step">
+            <span class="tl-stepnum">3</span>
+            <span class="tl-steptxt"><b>Agree on ONE Accessible Roadside Landmark</b> &mdash; Choose a clear, safe main-road landmark (e.g. a filling station, clinic, or major bus stop). Vehicles make <b>one group stop</b>, not door-to-door pickups.</span>
+          </div>
+          <div class="tl-step">
+            <span class="tl-stepnum">4</span>
+            <span class="tl-steptxt"><b>Submit Request Early &amp; Confirm the 50/50 Bill</b> &mdash; Send your form request at least <b>12&ndash;24 hours ahead</b> (by Saturday 17:00 for Sunday Service; 24+ hours ahead for 15+ minibuses/buses). The Desk confirms the vehicle and total fare.</span>
+          </div>
+          <div class="tl-step">
+            <span class="tl-stepnum">5</span>
+            <span class="tl-steptxt"><b>Assemble 10 Minutes Early &amp; Collect Group&rsquo;s 50% Upfront</b> &mdash; All 5+ members arrive <b>10 minutes before pickup</b>. While waiting, the Group Leader collects everyone&rsquo;s contribution toward the group&rsquo;s half of the bill so boarding is swift and orderly.</span>
+          </div>
+        </div>
+
+        <div class="tl-card">
+          <h3 class="tl-h">💰 How the 50 / 50 Bill Split Works (Examples)</h3>
+          <p style="font-size:12.5px;color:#4e5f7c;margin:0 0 8px;line-height:1.55;">
+            See how affordable coming to church becomes when brethren unite in a 5+ group and JCRGM covers half the bill:
+          </p>
+          <table class="tl-ex-table" aria-label="50/50 transport fare sharing examples">
+            <thead>
+              <tr>
+                <th>Group Size</th>
+                <th>Total Fare</th>
+                <th>Church Pays (50%)</th>
+                <th>Group Pays (50%)</th>
+                <th>Each Person</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>👥 5 People</td>
+                <td>ZMW 100</td>
+                <td class="tl-ex-church">ZMW 50</td>
+                <td class="tl-ex-group">ZMW 50</td>
+                <td>ZMW 10</td>
+              </tr>
+              <tr>
+                <td>👥 8 People</td>
+                <td>ZMW 200</td>
+                <td class="tl-ex-church">ZMW 100</td>
+                <td class="tl-ex-group">ZMW 100</td>
+                <td>ZMW 12.50</td>
+              </tr>
+              <tr>
+                <td>👥 15 People</td>
+                <td>ZMW 360</td>
+                <td class="tl-ex-church">ZMW 180</td>
+                <td class="tl-ex-group">ZMW 180</td>
+                <td>ZMW 12</td>
+              </tr>
+              <tr>
+                <td>👥 30 People</td>
+                <td>ZMW 600</td>
+                <td class="tl-ex-church">ZMW 300</td>
+                <td class="tl-ex-group">ZMW 300</td>
+                <td>ZMW 10</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tl-card">
+          <h3 class="tl-h">📋 Golden Rules &amp; Operational Standards</h3>
+          <ul class="tl-guide">
+            <li><b>Minimum 5+ Group Rule:</b> Church-provided passenger transport and the 50% church subsidy apply strictly to organised groups of <b>5 or more confirmed people</b> travelling together.</li>
+            <li><b>Fare Approval Before Dispatch:</b> The fare entered on the form is an estimate/offer; the Transport Desk confirms the final agreed bill with the driver before the trip so both the <b>Church&rsquo;s 50%</b> and the <b>Group&rsquo;s 50%</b> are clear upfront.</li>
+            <li><b>Booking Deadlines:</b> Submit requests by <b>Saturday 17:00</b> for Sunday Service, and at least <b>24 hours ahead</b> for groups of 15 or more requiring a minibus or coaster bus.</li>
+            <li><b>Strict 10-Minute Waiting Window:</b> Drivers wait a maximum of <b>10 minutes</b> at the agreed pickup landmark so the entire service schedule stays on time.</li>
+            <li><b>Headcount Honesty:</b> Never inflate numbers to reach 5. If cancellations drop your group below 5 before pickup, notify the Desk immediately so resources are redirected responsibly.</li>
+            <li><b>Return Trips:</b> Tick <i>&ldquo;Return trip needed&rdquo;</i> on the form if your group also needs transport back home after the service; the 50/50 split applies to agreed return fares as well.</li>
+            <li><b>Honour &amp; Priority Seating:</b> Elderly members, expectant mothers, persons with disabilities, and mothers with infants are seated first. Children under 12 must travel with a responsible adult.</li>
+            <li><b>Ministry Instruments &amp; Goods:</b> For choir gear, PA equipment, or welfare items, use the <i>Ministry Goods / Special Logistics</i> mode and list items clearly in the notes.</li>
+          </ul>
+        </div>
+
+        <div class="tl-card">
+          <h3 class="tl-h">📞 Transport Desk Lines &amp; Private Ride Option</h3>
+          <div class="tl-contact">
+            <span class="tl-cnum">📞 Desk Line 1: 0979 554 970</span>
+            <a class="tl-btn" href="tel:0979554970">📞 Call</a>
+            <a class="tl-btn tl-btn-wa" href="https://wa.me/260979554970" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+          </div>
+          <div class="tl-contact">
+            <span class="tl-cnum">📞 Desk Line 2: 0978 548 813</span>
+            <a class="tl-btn" href="tel:0978548813">📞 Call</a>
+            <a class="tl-btn tl-btn-wa" href="https://wa.me/260978548813" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+          </div>
+          <div class="tl-contact" style="background:#2b1218;border-color:rgba(255,110,110,.45);">
+            <span class="tl-cnum">🚕 Yango (For 1&ndash;4 People / Private Rides)</span>
+            <button type="button" class="tl-btn tl-btn-yango" id="tlYango2">🚕 Open Yango App</button>
+            <a class="tl-btn" href="https://yango.com/en_zm/rider/" target="_blank" rel="noopener noreferrer">🌐 Info</a>
+          </div>
+          <p style="font-size:12px;color:#5b6b87;margin:8px 2px 12px;line-height:1.55;">
+            For funerals, hospital emergencies, or last-minute changes on service morning, please <b>call the Desk lines directly</b> rather than waiting on WhatsApp.
+          </p>
+          <button type="button" class="tl-btn tl-btn-gold" id="tlBackToReq">📝 Organise &amp; Submit a 5+ Group Request Now &rarr;</button>
+        </div>
+
+      </div>
+
+      <!-- ============ TAB 3: MOVEMENT BOARD ============ -->
       <div class="tl-panel" id="tlPanelBoard">
         <div class="tl-sum" id="tlSum"></div>
         <div class="tl-filters">
@@ -4013,58 +4430,10 @@ window.DOMMatrix = window.DOMMatrix || window.WebKitCSSMatrix || function(){};
         </div>
         <div id="tlTrips"></div>
         <div class="tl-sendrow">
-          <button type="button" class="tl-btn" id="tlCopyBoard">📋 Copy board summary</button>
-          <button type="button" class="tl-btn tl-btn-danger" id="tlClearDone">🧹 Clear completed</button>
+          <button type="button" class="tl-btn tl-btn-gold" id="tlCopyBoard">📋 Copy Board &amp; 50/50 Summary</button>
+          <button type="button" class="tl-btn tl-btn-danger" id="tlClearDone">🧹 Clear Completed</button>
         </div>
-        <p class="tl-note">This board is saved on this device — the Transport Desk can track every pickup, headcount and fare, then copy the summary to WhatsApp for the drivers and coordinators.</p>
-      </div>
-
-      <!-- ============ TAB 3: GUIDELINES & CONTACTS ============ -->
-      <div class="tl-panel" id="tlPanelInfo">
-        <div class="tl-card">
-          <h3 class="tl-h">🧭 How the Transport Desk works</h3>
-          <div class="tl-step"><span class="tl-stepnum">1</span><span class="tl-steptxt"><b>Fill the request form</b> — pickup location, number of people, date, time and the fare offered. The message builds itself as you type.</span></div>
-          <div class="tl-step"><span class="tl-stepnum">2</span><span class="tl-steptxt"><b>Send it on WhatsApp</b> to 0979 554 970 or 0978 548 813 — one tap opens WhatsApp with the request already typed. Just press send.</span></div>
-          <div class="tl-step"><span class="tl-stepnum">3</span><span class="tl-steptxt"><b>The Desk confirms</b> the vehicle, fare and pickup time with you on the same number.</span></div>
-          <div class="tl-step"><span class="tl-stepnum">4</span><span class="tl-steptxt"><b>Be at the pickup point 10 minutes early</b> with your group. The driver calls when he is close.</span></div>
-        </div>
-        <div class="tl-card">
-          <h3 class="tl-h">📞 Transport lines</h3>
-          <div class="tl-contact">
-            <span class="tl-cnum">📞 0979 554 970</span>
-            <a class="tl-btn" href="tel:0979554970">📞 Call</a>
-            <a class="tl-btn tl-btn-wa" href="https://wa.me/260979554970" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
-          </div>
-          <div class="tl-contact">
-            <span class="tl-cnum">📞 0978 548 813</span>
-            <a class="tl-btn" href="tel:0978548813">📞 Call</a>
-            <a class="tl-btn tl-btn-wa" href="https://wa.me/260978548813" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
-          </div>
-          <p class="tl-note" style="color:#5b6b87;">For funerals and emergencies, please call the line directly instead of waiting for a WhatsApp reply.</p>
-        </div>
-        <div class="tl-card">
-          <h3 class="tl-h">🚕 Yango — private rides across Lusaka</h3>
-          <div class="tl-contact">
-            <span class="tl-cnum">🚕 Yango ride-hailing</span>
-            <button type="button" class="tl-btn tl-btn-yango" id="tlYango2">🚕 Open Yango App</button>
-            <a class="tl-btn" href="https://yango.com/en_zm/rider/" target="_blank" rel="noopener noreferrer">🌐 Get the app / info</a>
-          </div>
-          <p class="tl-note" style="color:#5b6b87;">Yango operates in Lusaka, Kitwe, Ndola and Solwezi. Use it when you need a private car quickly — the fare is shown before you ride and is <b>paid directly to Yango</b>, not to the church. For church-organised transport, always use the request form so the Movement Board keeps track of every trip.</p>
-        </div>
-        <div class="tl-card">
-          <h3 class="tl-h">📋 Transport guidelines</h3>
-          <ul class="tl-guide">
-            <li><b>Book early</b> — at least 24 hours ahead for groups of 10 or more.</li>
-            <li><b>Fares</b> — the fare you enter is your offer; the Desk confirms the final fare with the driver before the trip. Fares are shared fairly among passengers where possible.</li>
-            <li><b>Priority seating</b> — the elderly, the sick, expectant mothers and children are seated first.</li>
-            <li><b>Children</b> — under 12 must travel with an adult who remains responsible for them.</li>
-            <li><b>Instruments &amp; goods</b> — declare them in the notes so the right vehicle is sent (truck / extra space).</li>
-            <li><b>Keep your phone on</b> — the driver or coordinator will call or WhatsApp to confirm the trip and pickup point.</li>
-            <li><b>Be on time</b> — vehicles wait a maximum of 10 minutes at the pickup point, so the whole programme keeps flowing.</li>
-            <li><b>Return trips</b> — tick “Return trip needed” so the Desk schedules the pick-up back as well.</li>
-            <li><b>Yango</b> — for private rides across Lusaka, tap “🚕 Open Yango App”; those fares are paid directly to Yango, not to the church.</li>
-          </ul>
-        </div>
+        <p class="tl-note">Saved locally on this device &mdash; coordinators can track every 5+ group pickup, headcount, <b>Church 50% subsidy</b>, and <b>Group 50% share</b>, then copy the full dispatch report to WhatsApp.</p>
       </div>
 
     </div>
@@ -4074,17 +4443,12 @@ window.DOMMatrix = window.DOMMatrix || window.WebKitCSSMatrix || function(){};
 
 <script>
 /* ============================================================
-   🚌 TRANSPORT & LOGISTICS DESK — JCRGM
-   Member movements made professional:
-     • Tab 1  Request Transport — a guided form (pickup
-       location, people, fare, vehicle, purpose…) that builds
-       a ready-made WhatsApp message and sends it to the
-       church lines 0979554970 / 0978548813.
-     • Tab 2  Movement Board — every trip on record with
-       pickup, headcount, fare and status; saved on this
-       device (localStorage) and shareable to WhatsApp.
-     • Tab 3  Guidelines & contacts.
-   Written to work on older iPhones too (no modern JS syntax).
+   🚌 TRANSPORT & LOGISTICS DESK — JCRGM (5+ Group & 50/50 Edition)
+   • Enforces & guides the 5+ Group Church Transport policy
+   • Live 50/50 Church/Group bill calculator + per-member share
+   • In-form Group Readiness checklist so pickups succeed smoothly
+   • Movement Board tracks total bills, Church 50% & Group 50%
+   • ES5-compatible for older iPhones / Safari (iOS 14+)
    ============================================================ */
 (function(){
 "use strict";
@@ -4093,6 +4457,7 @@ window.DOMMatrix = window.DOMMatrix || window.WebKitCSSMatrix || function(){};
 var WA_A="260979554970", WA_B="260978548813";
 var LS_KEY="jcrgm_transport_board_v1";
 var STATUSES=["Scheduled","Confirmed","In Transit","Completed","Cancelled"];
+var MIN_GROUP=5;
 
 /* ---------------- helpers ---------------- */
 function byId(i){ return document.getElementById(i); }
@@ -4100,12 +4465,16 @@ function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(c){
   return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
 function uid(p){ return (p||"id")+"_"+Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
 function p2(n){ return (n<10?"0":"")+n; }
-function thousands(n){
-  var s=String(Math.round(Number(n)||0)), out="", c=0;
+function fmtMoneyNum(n){
+  var v=Math.round((Number(n)||0)*100)/100;
+  var whole=Math.floor(Math.abs(v));
+  var cents=Math.round((Math.abs(v)-whole)*100);
+  if(cents===100){ whole+=1; cents=0; }
+  var s=String(whole), out="", c=0;
   for(var i=s.length-1;i>=0;i--){ out=s.charAt(i)+out; c++; if(c%3===0&&i>0) out=","+out; }
-  return out;
+  return (v<0?"-":"")+out+(cents>0?"."+p2(cents):"");
 }
-function fmtZMW(v){ return "ZMW "+thousands(v); }
+function fmtZMW(v){ return "ZMW "+fmtMoneyNum(v); }
 function todayISO(){
   var d=new Date();
   return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate());
@@ -4120,6 +4489,22 @@ function defaultTime(){
   m = m<15?15 : m<30?30 : m<45?45 : 0;
   if(m===0) h=(h+1)%24;
   return p2(h)+":"+p2(m);
+}
+function minusMinutes(hhmm,mins){
+  if(!hhmm || hhmm.indexOf(":")===-1) return "";
+  var p=hhmm.split(":");
+  var h=parseInt(p[0],10), m=parseInt(p[1],10);
+  if(isNaN(h)||isNaN(m)) return "";
+  var tot=(h*60+m-mins+1440)%1440;
+  return p2(Math.floor(tot/60))+":"+p2(tot%60);
+}
+function suggestVehicle(n){
+  if(!(n>=1)) return "";
+  if(n<=7) return "7-Seater / Wish / Noah (5–7)";
+  if(n<=13) return "Van / Hiace (8–13)";
+  if(n<=18) return "Minibus / Rosa (14–18)";
+  if(n<=33) return "Coaster Bus (22–33)";
+  return "Big Bus (50–65+)";
 }
 function fmtDateHuman(iso){
   if(!iso) return "";
@@ -4154,14 +4539,14 @@ function legacyCopy(t,cb){
 }
 
 /* ---------------- state ---------------- */
-var TL={ trips:[], filter:"all", confirmId:null, confirmAt:0, clearDoneAt:0, lastSig:"" };
+var TL={ trips:[], mode:"group", filter:"all", confirmId:null, confirmAt:0, clearDoneAt:0, lastSig:"" };
 
 function loadState(){
   try{
     var raw=localStorage.getItem(LS_KEY);
     if(raw){
       var d=JSON.parse(raw);
-      if(d && d.v===1 && d.trips) TL.trips=d.trips;
+      if(d && d.trips && d.trips.length!=null) TL.trips=d.trips;
     }
   }catch(e){}
 }
@@ -4177,12 +4562,12 @@ function toast(msg,ms){
   el.innerHTML=msg;
   el.classList.add("show");
   if(toastTimer) clearTimeout(toastTimer);
-  toastTimer=setTimeout(function(){ el.classList.remove("show"); },ms||2800);
+  toastTimer=setTimeout(function(){ el.classList.remove("show"); },ms||3000);
 }
 
-/* ---------------- tabs ---------------- */
+/* ---------------- tabs & mode ---------------- */
 function setTab(which){
-  var tabs=["Req","Board","Info"], i;
+  var tabs=["Req","Info","Board"], i;
   for(i=0;i<tabs.length;i++){
     var b=byId("tlTab"+tabs[i]), p=byId("tlPanel"+tabs[i]);
     if(!b||!p) continue;
@@ -4190,90 +4575,300 @@ function setTab(which){
     if(on){ b.classList.add("active"); p.classList.add("active"); b.setAttribute("aria-selected","true"); }
     else{ b.classList.remove("active"); p.classList.remove("active"); b.setAttribute("aria-selected","false"); }
   }
+  var body=document.querySelector("#transportDesk .tl-body");
+  if(body) body.scrollTop=0;
   if(which==="Board") renderBoard();
 }
 
-/* ---------------- form ---------------- */
+function setMode(mode){
+  TL.mode=(mode==="logistics")?"logistics":"group";
+  var isGrp=(TL.mode==="group");
+  var mg=byId("tlModeGroup"), ml=byId("tlModeLogistics");
+  if(mg){ if(isGrp) mg.classList.add("active"); else mg.classList.remove("active"); }
+  if(ml){ if(!isGrp) ml.classList.add("active"); else ml.classList.remove("active"); }
+
+  var pIn=byId("tlPeople");
+  if(pIn){
+    pIn.setAttribute("min", isGrp ? "5" : "1");
+    pIn.setAttribute("placeholder", isGrp ? "e.g. 8 (minimum 5)" : "e.g. 2 handlers");
+  }
+  if(byId("tlSec1Title")) byId("tlSec1Title").textContent=isGrp?"Group & Coordinator Details":"Ministry Team & Coordinator";
+  if(byId("tlSec1Tag")) byId("tlSec1Tag").textContent=isGrp?"Minimum 5+ People":"Special Logistics";
+  if(byId("tlGroupLab")) byId("tlGroupLab").textContent=isGrp?"Group / Cell / Zone Name *":"Ministry Department / Team *";
+  if(byId("tlGroup")) byId("tlGroup").setAttribute("placeholder", isGrp?"e.g. Kabwata Cell Group / Chilenje Youth":"e.g. Choir & Sound Team / Welfare Desk");
+  if(byId("tlNameLab")) byId("tlNameLab").textContent=isGrp?"Group Leader (Coordinator) Name *":"Person Responsible *";
+  if(byId("tlPeopleLab")) byId("tlPeopleLab").textContent=isGrp?"Confirmed Group Size (5+ People) *":"People Travelling with Load *";
+  if(byId("tlPointLab")) byId("tlPointLab").textContent=isGrp?"Single Agreed Pickup Landmark *":"Pickup Point / Landmark";
+  if(byId("tlSec3Tag")) byId("tlSec3Tag").textContent=isGrp?"Church Covers 50%":"Desk Approval";
+
+  var rw=byId("tlRosterWrap"), rc=byId("tlReadyCard");
+  if(rw) rw.style.display=isGrp?"":"none";
+  if(rc) rc.style.display=isGrp?"":"none";
+
+  if(!isGrp && byId("tlPurpose") && byId("tlPurpose").selectedIndex===0){
+    /* keep user's choice or nudge to logistics if untouched */
+  }
+  updateLiveUI();
+}
+
+/* ---------------- calculations & live form helpers ---------------- */
+function isTripSubsidised(mode,people){
+  if(mode==="logistics") return (people>=MIN_GROUP);
+  return (people>=MIN_GROUP);
+}
+function calcSplit(fareVal,people,subsidised){
+  var hasFare=(fareVal!=="" && fareVal!=null && !isNaN(Number(fareVal)) && Number(fareVal)>0);
+  if(!hasFare) return { hasFare:false, total:0, church:0, group:0, perPerson:0, subsidised:subsidised };
+  var total=Math.max(0, Number(fareVal)||0);
+  if(!subsidised){
+    return { hasFare:true, total:total, church:0, group:total, perPerson:(people>=1?total/people:total), subsidised:false };
+  }
+  var church=Math.round(total*50)/100; /* exact 50% */
+  var group=Math.round((total-church)*100)/100;
+  var per=(people>=1)?(group/people):group;
+  return { hasFare:true, total:total, church:church, group:group, perPerson:per, subsidised:true };
+}
+
 function formFields(){
   return {
+    mode:TL.mode,
+    group:(byId("tlGroup").value||"").trim(),
     name:(byId("tlName").value||"").trim(),
     phone:(byId("tlPhone").value||"").trim(),
+    people:parseInt(byId("tlPeople").value,10),
+    roster:(byId("tlRoster").value||"").trim(),
     pickup:(byId("tlPickup").value||"").trim(),
     point:(byId("tlPoint").value||"").trim(),
     dest:(byId("tlDest").value||"").trim(),
     date:byId("tlDate").value||"",
     time:byId("tlTime").value||"",
-    people:parseInt(byId("tlPeople").value,10),
-    vehicle:byId("tlVehicle").value||"Any available",
+    vehicle:byId("tlVehicle").value||"Auto-match to group size (Recommended)",
     purpose:byId("tlPurpose").value||"Sunday Service",
     fare:(byId("tlFare").value||"").trim(),
     notes:(byId("tlNotes").value||"").trim(),
-    ret:byId("tlReturn").checked
+    ret:byId("tlReturn").checked,
+    agree:byId("tlAgree").checked
   };
 }
+
+function updateLiveUI(){
+  var f=formFields();
+  var isGrp=(f.mode==="group");
+
+  /* 1. Live 5+ group headcount status */
+  var stEl=byId("tlPeopleStatus");
+  if(stEl){
+    stEl.className="tl-grpstatus";
+    if(!isGrp){
+      stEl.innerHTML="📦 <b>Ministry Goods / Special Logistics mode:</b> Describe the instruments, equipment, or pastoral emergency clearly in the notes below for Transport Desk approval.";
+    } else if(isNaN(f.people) || byId("tlPeople").value===""){
+      stEl.innerHTML="👥 Enter <b>5 or more confirmed people</b> coming together from your area to activate <b>Church Transport &amp; 50% Bill Support</b>.";
+    } else if(f.people<MIN_GROUP){
+      var need=MIN_GROUP-f.people;
+      stEl.className="tl-grpstatus err";
+      stEl.innerHTML="⚠️ <b>"+f.people+" "+(f.people===1?"person":"people")+" entered &mdash; "+need+" more needed to reach 5+:</b> Church-arranged transport &amp; 50% fare support is strictly for <b>groups of 5+ people</b>. Connect with nearby brethren/visitors in your area to form a 5+ group, or tap <b>🚕 Open Yango App</b> below.";
+    } else {
+      stEl.className="tl-grpstatus ok";
+      stEl.innerHTML="✅ <b>"+f.people+"-Person Group Qualifies!</b> Eligible for Church Transport + <b>50% Church Fare Subsidy</b>. Recommended vehicle: <b>"+esc(suggestVehicle(f.people))+"</b>.";
+    }
+  }
+
+  /* 2. Assembly time hint (10 mins early) */
+  var ah=byId("tlAssembleHint");
+  if(ah){
+    var asm=minusMinutes(f.time,10);
+    if(asm) ah.innerHTML="⏰ Group must assemble at the pickup landmark by <b>"+esc(asm)+"</b> (10 minutes before "+esc(f.time)+").";
+    else ah.innerHTML="⏰ All group members must assemble at the landmark 10 minutes before pickup.";
+  }
+
+  /* 3. Live 50/50 Bill Split Calculator */
+  var sub=isTripSubsidised(f.mode, isNaN(f.people)?(isGrp?5:1):f.people);
+  var sp=calcSplit(f.fare, f.people, sub);
+  var bdg=byId("tlSplitBadge"), totEl=byId("tlSplitTotal"), chEl=byId("tlSplitChurch"),
+      grEl=byId("tlSplitGroup"), perEl=byId("tlSplitPer"), perSub=byId("tlSplitPerSub"),
+      perLab=byId("tlSplitPerLab"), foot=byId("tlSplitFoot");
+
+  if(bdg){
+    if(isGrp && (isNaN(f.people)||f.people>=MIN_GROUP)){
+      bdg.className="tl-split-badge";
+      bdg.textContent="50% Church · 50% Group";
+    } else if(isGrp && f.people<MIN_GROUP){
+      bdg.className="tl-split-badge muted";
+      bdg.textContent="Needs 5+ People for 50% Subsidy";
+    } else {
+      bdg.className="tl-split-badge muted";
+      bdg.textContent=sub?"50/50 Split Active":"Per Desk Approval";
+    }
+  }
+
+  if(!sp.hasFare){
+    if(totEl) totEl.textContent="Desk to quote";
+    if(chEl) chEl.textContent=(isGrp||sub)?"50% of bill":"Per Desk";
+    if(grEl) grEl.textContent=(isGrp||sub)?"50% of bill":"Per Desk";
+    if(perLab) perLab.textContent="👤 Per Member";
+    if(perEl) perEl.textContent="—";
+    if(perSub) perSub.textContent=(f.people>=MIN_GROUP)?("Shared by "+f.people+" people"):"Enter fare & 5+ people";
+    if(foot){
+      foot.innerHTML=isGrp
+        ?"Leave fare blank if unsure &mdash; the Transport Desk will confirm the total fare with the driver, and <b>JCRGM pays 50%</b> while <b>your group shares 50%</b>."
+        :"Leave fare blank if unsure &mdash; the Transport Desk will confirm logistics arrangements with you.";
+    }
+  } else if(isGrp && f.people>0 && f.people<MIN_GROUP){
+    if(totEl) totEl.textContent=fmtZMW(sp.total);
+    if(chEl) chEl.textContent="Requires 5+";
+    if(grEl) grEl.textContent="Requires 5+";
+    if(perEl) perEl.textContent="—";
+    if(perSub) perSub.textContent="Add "+(MIN_GROUP-f.people)+" more for 50% split";
+    if(foot) foot.innerHTML="Increase confirmed group size to <b>5 or more people</b> so the church covers <b>"+fmtZMW(sp.total/2)+" (50%)</b> of this fare.";
+  } else if(sp.subsidised){
+    if(totEl) totEl.textContent=fmtZMW(sp.total);
+    if(chEl) chEl.textContent=fmtZMW(sp.church);
+    if(grEl) grEl.textContent=fmtZMW(sp.group);
+    if(perLab) perLab.textContent="👤 Per Member"+(f.people>=1?" (÷"+f.people+")":"");
+    if(perEl) perEl.textContent=(f.people>=MIN_GROUP)?fmtZMW(sp.perPerson):(fmtZMW(sp.group/MIN_GROUP)+" (at 5)");
+    if(perSub) perSub.textContent=(f.people>=MIN_GROUP)?"Each person's share":"Enter confirmed 5+ count";
+    if(foot){
+      foot.innerHTML="Out of <b>"+fmtZMW(sp.total)+"</b>, <b>JCRGM Church handles "+fmtZMW(sp.church)+" (50%)</b> and the Group Leader collects <b>"+fmtZMW(sp.group)+" (50%)</b>"+(f.people>=MIN_GROUP?" &mdash; just <b>"+fmtZMW(sp.perPerson)+" per person</b> across "+f.people+" members.":" from the group.");
+    }
+  } else {
+    if(totEl) totEl.textContent=fmtZMW(sp.total);
+    if(chEl) chEl.textContent="Desk review";
+    if(grEl) grEl.textContent="Desk review";
+    if(perEl) perEl.textContent="—";
+    if(perSub) perSub.textContent="Special logistics";
+    if(foot) foot.innerHTML="Estimated fare of <b>"+fmtZMW(sp.total)+"</b> will be reviewed and confirmed directly by the Transport &amp; Logistics Desk.";
+  }
+
+  updatePreview();
+}
+
+function clearBadHighlights(){
+  var ids=["tlGroup","tlName","tlPhone","tlPeople","tlPickup","tlPoint","tlDate","tlTime"];
+  for(var i=0;i<ids.length;i++){ var el=byId(ids[i]); if(el) el.classList.remove("tl-bad"); }
+  var aw=byId("tlAgreeWrap"); if(aw) aw.classList.remove("tl-bad");
+}
+
 function readForm(){
   var f=formFields();
-  var ids=["tlName","tlPhone","tlPickup","tlDate","tlTime","tlPeople"];
-  for(var i=0;i<ids.length;i++) byId(ids[i]).classList.remove("tl-bad");
+  var isGrp=(f.mode==="group");
+  clearBadHighlights();
   var bad=[];
-  if(!f.name) bad.push(["tlName","your name / group name"]);
-  if(f.phone.replace(/\D/g,"").length<9) bad.push(["tlPhone","a valid phone number (09… or 07…)"]);
-  if(!f.pickup) bad.push(["tlPickup","the pickup location"]);
+  if(!f.group) bad.push(["tlGroup", isGrp?"your Group / Cell / Zone name":"the Ministry Department / Team name"]);
+  if(!f.name) bad.push(["tlName", isGrp?"the Group Leader's name":"the responsible coordinator's name"]);
+  if(f.phone.replace(/\D/g,"").length<9) bad.push(["tlPhone","a valid WhatsApp / phone number (09… or 07…)"]);
+  if(!(f.people>=1)) bad.push(["tlPeople","the confirmed number of people"]);
+  else if(isGrp && f.people<MIN_GROUP){
+    bad.push(["tlPeople","at least 5 confirmed people (Church transport & 50% fare support requires a 5+ group)"]);
+  }
+  if(!f.pickup) bad.push(["tlPickup","the pickup area / township"]);
+  if(isGrp && !f.point) bad.push(["tlPoint","the single agreed pickup landmark where all 5+ members will meet"]);
   if(!f.date) bad.push(["tlDate","the pickup date"]);
   if(!f.time) bad.push(["tlTime","the pickup time"]);
-  if(!(f.people>=1)) bad.push(["tlPeople","the number of people"]);
+
   if(bad.length){
-    byId(bad[0][0]).classList.add("tl-bad");
-    try{ byId(bad[0][0]).focus(); }catch(e){}
-    toast("⚠️ Please fill in "+bad[0][1]+".");
+    var first=byId(bad[0][0]);
+    if(first){
+      first.classList.add("tl-bad");
+      try{ first.focus(); }catch(e){}
+    }
+    toast("⚠️ Please enter "+bad[0][1]+".", 3600);
     return null;
   }
+
+  if(isGrp && !f.agree){
+    var aw=byId("tlAgreeWrap");
+    if(aw){
+      aw.classList.add("tl-bad");
+      try{ aw.scrollIntoView({behavior:"smooth",block:"center"}); }catch(e){}
+    }
+    toast("⚠️ Please tick Step 4 to confirm your 5+ group will meet at ONE landmark 10 mins early with your 50% share ready.", 4000);
+    return null;
+  }
+
   f.people=Math.min(f.people,200);
   if(!f.dest) f.dest="JCRGM Church — Lusaka";
+  if(f.vehicle.indexOf("Auto-match")===0 && f.people>=MIN_GROUP){
+    f.vehicle=suggestVehicle(f.people);
+  }
+  f.subsidised=isTripSubsidised(f.mode, f.people);
   return f;
 }
+
 function buildMessage(f,preview){
-  function orDash(v,ph){ return v? v : (preview? ph : "—"); }
+  function orDash(v,ph){ return v ? v : (preview ? ph : "—"); }
+  var isGrp=(f.mode!=="logistics");
+  var sub=isTripSubsidised(f.mode, f.people||0);
+  var sp=calcSplit(f.fare, f.people||0, sub);
+  var asm=minusMinutes(f.time,10);
+  var veh=f.vehicle;
+  if(veh && veh.indexOf("Auto-match")===0 && f.people>=MIN_GROUP) veh=suggestVehicle(f.people);
+
   var L=[];
-  L.push("🚌 JCRGM TRANSPORT REQUEST");
+  L.push(isGrp ? "🚌 JCRGM 5+ GROUP TRANSPORT REQUEST" : "📦 JCRGM SPECIAL LOGISTICS REQUEST");
   L.push("──────────────────────");
-  L.push("👤 Name: "+orDash(f.name,"(your name)"));
-  L.push("📞 Phone: "+orDash(f.phone,"(your phone)"));
-  L.push("📍 Pickup: "+orDash(f.pickup,"(pickup area)")+(f.point?" — "+f.point:""));
-  L.push("🏁 Destination: "+orDash(f.dest,"(destination)"));
+  L.push((isGrp?"👥 Group / Zone: ":"🏛️ Team / Dept: ")+orDash(f.group, isGrp?"(group / cell name)":"(ministry team)"));
+  L.push("👤 Coordinator: "+orDash(f.name,"(leader name)"));
+  L.push("📞 Phone: "+orDash(f.phone,"(09XX XXX XXX)"));
+  if(isGrp){
+    var pTxt=(f.people>=1)?(f.people+(f.people>=MIN_GROUP?" (Verified 5+ Group ✅)":" (⚠️ Below 5 minimum)")):(preview?"(5+ people)":"—");
+    L.push("🔢 Group Size: "+pTxt);
+  } else {
+    L.push("🔢 People Travelling: "+(f.people>=1?f.people:(preview?"(count)":"—")));
+  }
+  L.push("📍 Pickup Point: "+orDash(f.pickup,"(area)")+(f.point?" — "+f.point:(preview&&isGrp?" — (single landmark)":"")));
+  L.push("🏁 Destination: "+orDash(f.dest,"JCRGM Church — Lusaka"));
   L.push("📅 Date: "+(f.date?fmtDateHuman(f.date):(preview?"(date)":"—")));
-  L.push("🕘 Time: "+orDash(f.time,"(time)"));
-  L.push("👥 People: "+(f.people>=1?f.people:(preview?"(number)":"—")));
-  L.push("🚐 Vehicle: "+f.vehicle);
+  L.push("🕘 Pickup Time: "+orDash(f.time,"(time)")+(asm?" (Group assembling by "+asm+")":""));
+  L.push("🚐 Vehicle: "+veh);
   L.push("🎯 Purpose: "+f.purpose);
-  if(f.fare!=="") L.push("💰 Fare offered: "+fmtZMW(f.fare));
-  else L.push("💰 Fare: to be agreed with the Transport Desk");
-  if(f.ret) L.push("↩️ Return trip: YES — pick-up back needed");
+
+  if(sp.hasFare){
+    L.push("💰 Total Transport Bill: "+fmtZMW(sp.total));
+    if(sp.subsidised){
+      L.push("   ├ 🏛️ Church Pays (50%): "+fmtZMW(sp.church));
+      L.push("   └ 🤝 Group Pays (50%): "+fmtZMW(sp.group)+(f.people>=MIN_GROUP?" ("+fmtZMW(sp.perPerson)+"/person)":""));
+    } else {
+      L.push("   └ ℹ️ Arrangement: Subject to Transport Desk approval");
+    }
+  } else {
+    L.push(isGrp
+      ? "💰 Transport Bill: Desk to confirm (50% Church / 50% Group split applies)"
+      : "💰 Transport Bill: To be confirmed with Transport Desk");
+  }
+
+  if(f.ret) L.push("↩️ Return Trip: YES — pick-up back after service/event");
+  if(isGrp && f.roster) L.push("📋 Group Roster: "+f.roster);
   if(f.notes) L.push("📝 Notes: "+f.notes);
+  if(isGrp && (f.agree || !preview)){
+    L.push("✅ Group Commitment: 5+ confirmed, 1 pickup point 10m early, 50% group share ready");
+  }
   L.push("──────────────────────");
-  L.push("Sent from the JCRGM website — Transport & Logistics Desk");
+  L.push("Sent from JCRGM Website — Transport & Logistics Desk");
   return L.join("\n");
 }
+
 function updatePreview(){
   var el=byId("tlPreview"); if(!el) return;
   var f=formFields();
-  if(!f.name && !f.pickup && !f.phone){
-    el.textContent="Your request message will appear here as you fill the form below — then one tap sends it to the church WhatsApp lines.";
+  if(!f.group && !f.name && !f.pickup && !f.phone && !f.fare && !(f.people>=1)){
+    el.textContent="Fill in your 5+ group details above — your formatted WhatsApp dispatch request and 50/50 Church/Group fare split will build right here automatically.";
     return;
   }
   el.textContent=buildMessage(f,true);
 }
+
 function sigOf(f){
-  return [f.name,f.phone,f.pickup,f.point,f.dest,f.date,f.time,f.people,f.vehicle,f.purpose,f.fare,f.notes,f.ret?"1":""].join("|");
+  return [f.mode,f.group,f.name,f.phone,f.pickup,f.point,f.dest,f.date,f.time,f.people,f.vehicle,f.purpose,f.fare,f.roster,f.notes,f.ret?"1":""].join("|");
 }
 function saveTripFromForm(f){
   var s=sigOf(f);
-  if(TL.lastSig===s) return false;            /* same request already saved */
+  if(TL.lastSig===s) return false;
   TL.lastSig=s;
   TL.trips.push({
-    id:uid("trip"), name:f.name, phone:f.phone, pickup:f.pickup, point:f.point,
-    dest:f.dest, date:f.date, time:f.time, people:f.people, vehicle:f.vehicle,
-    purpose:f.purpose, fare:f.fare, notes:f.notes, ret:f.ret,
+    id:uid("trip"), mode:f.mode, group:f.group, name:f.name, phone:f.phone,
+    pickup:f.pickup, point:f.point, dest:f.dest, date:f.date, time:f.time,
+    people:f.people, roster:f.roster, vehicle:f.vehicle, purpose:f.purpose,
+    fare:f.fare, subsidised:f.subsidised, notes:f.notes, ret:f.ret,
     status:"Scheduled", created:Date.now()
   });
   saveState(); renderBoard();
@@ -4285,30 +4880,26 @@ function sendTo(num,label){
   var url="https://wa.me/"+num+"?text="+encodeURIComponent(buildMessage(f,false));
   var w=null;
   try{ w=window.open(url,"_blank"); }catch(e){}
-  if(!w) toast("⚠️ Pop-up blocked — tap 📋 Copy details and send them to "+label+" on WhatsApp.",3600);
-  else toast("✅ Opening WhatsApp for "+label+" — just press send. Also saved to your Movement Board.",3600);
+  if(!w) toast("⚠️ Pop-up blocked — tap 📋 Copy Request and send it to "+label+" on WhatsApp.",3800);
+  else toast("✅ Opening WhatsApp for "+label+" — just press send! Saved to Movement Board.",3600);
 }
 function clearForm(){
-  var ids=["tlName","tlPhone","tlPickup","tlPoint","tlPeople","tlFare","tlNotes"];
-  for(var i=0;i<ids.length;i++){ byId(ids[i]).value=""; byId(ids[i]).classList.remove("tl-bad"); }
+  var ids=["tlGroup","tlName","tlPhone","tlPeople","tlRoster","tlPickup","tlPoint","tlFare","tlNotes"];
+  for(var i=0;i<ids.length;i++){ if(byId(ids[i])) byId(ids[i]).value=""; }
+  clearBadHighlights();
   byId("tlDest").value="JCRGM Church — Lusaka";
   byId("tlVehicle").selectedIndex=0;
   byId("tlPurpose").selectedIndex=0;
   byId("tlReturn").checked=false;
+  byId("tlAgree").checked=false;
   byId("tlDate").value=todayISO();
   byId("tlTime").value=defaultTime();
-  updatePreview();
-  toast("🧹 Form cleared.");
+  setMode("group");
+  toast("🧹 Form reset.");
 }
 
 /* ---------------- Yango private rides ---------------- */
 function openYango(){
-  /* Opens the Yango ride-hailing app DIRECTLY on phones.
-     Deep link confirmed from Yango's official AppMetrica
-     redirector: scheme yandexyango://, package com.yandex.yango.
-     Fallbacks: the Android intent link carries its own store
-     fallback; iOS falls back to Yango's official link
-     (universal link → app, otherwise the App Store). */
   var ua=navigator.userAgent||"";
   var isAndroid=/android/i.test(ua);
   var isIOS=/iPad|iPhone|iPod/.test(ua)||("MacIntel"===(navigator.platform||"")&&navigator.maxTouchPoints>1);
@@ -4320,12 +4911,9 @@ function openYango(){
   window.addEventListener("pagehide",mark);
 
   if(isAndroid){
-    /* 1) intent link — opens the Yango app instantly; if it is not
-          installed, Chrome itself follows S.browser_fallback_url. */
     try{
       window.location.href="intent://route?ref=jcrgm#Intent;scheme=yandexyango;package=com.yandex.yango;S.browser_fallback_url="+encodeURIComponent(PLAY)+";end";
     }catch(e){}
-    /* 2) browsers that ignore intent links (e.g. Firefox) — official link */
     setTimeout(function(){
       if(left||document.hidden) return;
       try{ window.location.href=APPMETRICA; }catch(e){}
@@ -4334,10 +4922,7 @@ function openYango(){
   }
 
   if(isIOS){
-    /* 1) open the Yango app directly via its scheme */
     try{ window.location.href="yandexyango://route?ref=jcrgm"; }catch(e){}
-    /* 2) if the app did not open — Yango's official link opens the
-          app (universal link) or takes you to the App Store */
     setTimeout(function(){
       if(left||document.hidden) return;
       try{ window.location.href=APPMETRICA; }catch(e){}
@@ -4345,11 +4930,10 @@ function openYango(){
     return;
   }
 
-  /* Desktop — Yango Zambia rider page */
   try{ window.location.href="https://yango.com/en_zm/rider/"; }catch(e){}
 }
 
-/* ---------------- board ---------------- */
+/* ---------------- movement board ---------------- */
 function tripDT(t){ return (t.date||"")+" "+(t.time||""); }
 function isUpcoming(t,nowStr){
   if(t.status==="Completed"||t.status==="Cancelled") return false;
@@ -4365,6 +4949,10 @@ function sortedTrips(){
   });
   return list;
 }
+function tripSplitInfo(t){
+  var sub=(t.subsidised!=null)?!!t.subsidised:((t.people||0)>=MIN_GROUP);
+  return calcSplit(t.fare, t.people||0, sub);
+}
 function renderBoard(){
   var nowStr=nowStamp();
   var list=sortedTrips();
@@ -4373,20 +4961,28 @@ function renderBoard(){
   else if(TL.filter==="past") shown=list.filter(function(t){ return !isUpcoming(t,nowStr); });
   else if(TL.filter==="done") shown=list.filter(function(t){ return t.status==="Completed"; });
 
-  /* summary (whole board) */
-  var ppl=0, fr=0, upc=0, i;
+  /* summary (active non-cancelled trips for financial clarity) */
+  var ppl=0, totBill=0, totChurch=0, totGroup=0, upc=0, i;
   for(i=0;i<list.length;i++){
-    ppl+=list[i].people||0;
-    if(list[i].fare!==""&&list[i].fare!=null) fr+=Number(list[i].fare)||0;
+    if(list[i].status!=="Cancelled"){
+      ppl+=list[i].people||0;
+      var sp=tripSplitInfo(list[i]);
+      if(sp.hasFare){
+        totBill+=sp.total;
+        totChurch+=sp.church;
+        totGroup+=sp.group;
+      }
+    }
     if(isUpcoming(list[i],nowStr)) upc++;
   }
   var sum=byId("tlSum");
   if(sum){
     sum.innerHTML=
-      '<div class="tl-sumcell"><div class="tl-sumnum">'+list.length+'</div><div class="tl-sumlab">Trips</div></div>'+
-      '<div class="tl-sumcell"><div class="tl-sumnum">'+ppl+'</div><div class="tl-sumlab">People</div></div>'+
-      '<div class="tl-sumcell"><div class="tl-sumnum">'+esc(fmtZMW(fr))+'</div><div class="tl-sumlab">Total fares</div></div>'+
-      '<div class="tl-sumcell"><div class="tl-sumnum">'+upc+'</div><div class="tl-sumlab">Upcoming</div></div>';
+      '<div class="tl-sumcell"><div class="tl-sumnum">'+list.length+' <span style="font-size:11px;color:#b4c2e4;">('+upc+' up)</span></div><div class="tl-sumlab">Trips</div></div>'+
+      '<div class="tl-sumcell"><div class="tl-sumnum">'+ppl+'</div><div class="tl-sumlab">Total People</div></div>'+
+      '<div class="tl-sumcell"><div class="tl-sumnum">'+esc(fmtZMW(totBill))+'</div><div class="tl-sumlab">Total Bills</div></div>'+
+      '<div class="tl-sumcell gold"><div class="tl-sumnum">'+esc(fmtZMW(totChurch))+'</div><div class="tl-sumlab">🏛️ Church 50%</div></div>'+
+      '<div class="tl-sumcell green"><div class="tl-sumnum">'+esc(fmtZMW(totGroup))+'</div><div class="tl-sumlab">👥 Groups 50%</div></div>';
   }
   var cnt=byId("tlBoardCount");
   if(cnt) cnt.textContent=list.length?String(list.length):"";
@@ -4397,7 +4993,7 @@ function renderBoard(){
   if(!shown.length){
     host.innerHTML='<div class="tl-empty">🚌<br>'+(list.length
       ?'No trips match this filter.'
-      :'No trips on the board yet.<br>Requests you send from <b>Request Transport</b> are saved here automatically — the Transport Desk can also save call-in requests with <b>💾 Save to board only</b>.')+'</div>';
+      :'No group movements on the board yet.<br>Requests sent from <b>📝 Request Transport</b> appear here automatically with their <b>50/50 Church &amp; Group fare split</b>.')+'</div>';
     return;
   }
   var h="";
@@ -4406,17 +5002,26 @@ function renderBoard(){
 }
 function tripHTML(t){
   var st=t.status||"Scheduled";
-  var fareTxt=(t.fare!==""&&t.fare!=null)?fmtZMW(t.fare):"Fare TBA";
+  var sp=tripSplitInfo(t);
+  var asm=minusMinutes(t.time,10);
   var armed=(TL.confirmId===t.id && (Date.now()-TL.confirmAt)<3200);
   var h='<div class="tl-trip" data-st="'+esc(st)+'" data-id="'+t.id+'">';
   h+='<div class="tl-trip-top">';
-  h+='<span class="tl-when">📅 '+esc(fmtDateHuman(t.date))+' · '+esc(t.time||"--:--")+'</span>';
+  h+='<span class="tl-when">📅 '+esc(fmtDateHuman(t.date))+' &middot; '+esc(t.time||"--:--")+(asm?' <span style="font-weight:600;font-size:11.5px;color:#5a6b87;">(assemble '+esc(asm)+')</span>':'')+'</span>';
   h+='<span class="tl-badge tl-b-'+st.toLowerCase().replace(/\s+/g,"")+'">'+esc(st)+'</span>';
-  h+='<span class="tl-pill tl-firstpill">👥 '+t.people+'</span>';
-  h+='<span class="tl-pill">💰 '+esc(fareTxt)+'</span>';
+  h+='<span class="tl-pill tl-firstpill">👥 '+t.people+((t.people>=MIN_GROUP)?' (5+ Group)':'')+'</span>';
+  if(sp.hasFare){
+    h+='<span class="tl-pill">💰 Total: '+esc(fmtZMW(sp.total))+'</span>';
+    if(sp.subsidised){
+      h+='<span class="tl-pill tl-pill-sub">🏛️ '+esc(fmtZMW(sp.church))+' &middot; 👥 '+esc(fmtZMW(sp.group))+'</span>';
+    }
+  } else {
+    h+='<span class="tl-pill">💰 Fare TBA (50/50)</span>';
+  }
   h+='</div>';
-  h+='<div class="tl-route">📍 '+esc(t.pickup)+(t.point?' <span class="tl-pt">('+esc(t.point)+')</span>':'')+' → 🏁 '+esc(t.dest||"—")+'</div>';
-  h+='<div class="tl-sub">'+esc(t.purpose||"")+(t.vehicle&&t.vehicle!=="Any available"?" · "+esc(t.vehicle):"")+(t.ret?" · ↩️ return trip":"")+' · 👤 '+esc(t.name)+(t.phone?" · 📞 "+esc(t.phone):"")+'</div>';
+  h+='<div class="tl-route">📍 '+esc(t.pickup)+(t.point?' <span class="tl-pt">&mdash; '+esc(t.point)+'</span>':'')+' &rarr; 🏁 '+esc(t.dest||"—")+'</div>';
+  h+='<div class="tl-sub">'+(t.group?'<b>'+esc(t.group)+'</b> &middot; ':'')+esc(t.purpose||"")+(t.vehicle&&t.vehicle.indexOf("Auto-match")!==0&&t.vehicle!=="Any available"?" &middot; "+esc(t.vehicle):"")+(t.ret?" &middot; ↩️ return trip":"")+' &middot; 👤 '+esc(t.name)+(t.phone?" &middot; 📞 "+esc(t.phone):"")+'</div>';
+  if(t.roster) h+='<div class="tl-notes">📋 <b>Group Members:</b> '+esc(t.roster)+'</div>';
   if(t.notes) h+='<div class="tl-notes">📝 '+esc(t.notes)+'</div>';
   h+='<div class="tl-trip-ctl"><select class="tl-stsel" data-id="'+t.id+'" aria-label="Update trip status">';
   for(var i=0;i<STATUSES.length;i++)
@@ -4434,25 +5039,35 @@ function removeTrip(id){
 }
 function boardText(){
   var nowStr=nowStamp(), list=sortedTrips(), L=[];
-  L.push("🚌 JCRGM TRANSPORT — MOVEMENT BOARD");
+  L.push("🚌 JCRGM TRANSPORT — 5+ GROUP MOVEMENT BOARD");
   L.push("──────────────────────");
   if(!list.length) L.push("(no trips on the board)");
+  var ppl=0, totBill=0, totChurch=0, totGroup=0;
   for(var i=0;i<list.length;i++){
     var t=list[i];
+    var sp=tripSplitInfo(t);
+    if(t.status!=="Cancelled"){
+      ppl+=t.people||0;
+      if(sp.hasFare){ totBill+=sp.total; totChurch+=sp.church; totGroup+=sp.group; }
+    }
     L.push("");
     L.push((i+1)+") "+fmtDateHuman(t.date)+" · "+(t.time||"--:--")+" — "+(t.status||"Scheduled"));
+    if(t.group) L.push("   👥 Group: "+t.group+" ("+t.people+" people)");
+    else L.push("   👥 People: "+t.people);
     L.push("   📍 "+t.pickup+(t.point?" ("+t.point+")":"")+" → "+(t.dest||"—"));
-    L.push("   👥 "+t.people+" · 💰 "+((t.fare!==""&&t.fare!=null)?fmtZMW(t.fare):"TBA")+" · "+(t.purpose||""));
-    L.push("   👤 "+t.name+(t.phone?" ("+t.phone+")":""));
+    if(sp.hasFare){
+      if(sp.subsidised) L.push("   💰 Bill: "+fmtZMW(sp.total)+" [Church 50%: "+fmtZMW(sp.church)+" | Group 50%: "+fmtZMW(sp.group)+"]");
+      else L.push("   💰 Bill: "+fmtZMW(sp.total));
+    } else {
+      L.push("   💰 Bill: TBA (50/50 split) · "+(t.purpose||""));
+    }
+    L.push("   👤 Leader: "+t.name+(t.phone?" ("+t.phone+")":"")+(t.ret?" · ↩️ Return":""));
     if(t.notes) L.push("   📝 "+t.notes);
   }
-  var ppl=0,fr=0;
-  for(var k=0;k<list.length;k++){
-    ppl+=list[k].people||0;
-    if(list[k].fare!==""&&list[k].fare!=null) fr+=Number(list[k].fare)||0;
-  }
   L.push("");
-  L.push("TOTALS: "+list.length+" trip(s) · "+ppl+" people · "+fmtZMW(fr)+" ("+countUpcoming(nowStr)+" upcoming)");
+  L.push("──────────────────────");
+  L.push("ACTIVE TOTALS: "+list.length+" trip(s) · "+ppl+" people ("+countUpcoming(nowStr)+" upcoming)");
+  L.push("💰 Total Bills: "+fmtZMW(totBill)+" | 🏛️ Church 50%: "+fmtZMW(totChurch)+" | 👥 Groups 50%: "+fmtZMW(totGroup));
   return L.join("\n");
 }
 function countUpcoming(nowStr){
@@ -4467,11 +5082,11 @@ window.openTransportDesk=function(){
   if(!ov) return;
   ov.classList.add("open");
   document.body.classList.add("tl-noscroll");
-  setTab("Req");   /* always open on the request form — members first */
+  setTab("Req");
   var d=byId("tlDate"), t=byId("tlTime");
   if(d && !d.value) d.value=todayISO();
   if(t && !t.value) t.value=defaultTime();
-  updatePreview();
+  updateLiveUI();
   renderBoard();
 };
 window.closeTransportDesk=function(){
@@ -4487,17 +5102,41 @@ function init(){
 
   loadState();
 
-  /* tabs */
-  var t1=byId("tlTabReq"), t2=byId("tlTabBoard"), t3=byId("tlTabInfo");
+  /* tabs & guide jump buttons */
+  var t1=byId("tlTabReq"), t2=byId("tlTabInfo"), t3=byId("tlTabBoard");
   if(t1) t1.addEventListener("click",function(){ setTab("Req"); });
-  if(t2) t2.addEventListener("click",function(){ setTab("Board"); });
-  if(t3) t3.addEventListener("click",function(){ setTab("Info"); });
+  if(t2) t2.addEventListener("click",function(){ setTab("Info"); });
+  if(t3) t3.addEventListener("click",function(){ setTab("Board"); });
+  var gg=byId("tlGoGuide"); if(gg) gg.addEventListener("click",function(){ setTab("Info"); });
+  var br=byId("tlBackToReq"); if(br) br.addEventListener("click",function(){ setTab("Req"); });
 
-  /* live preview */
+  /* mode buttons */
+  var mg=byId("tlModeGroup"), ml=byId("tlModeLogistics");
+  if(mg) mg.addEventListener("click",function(){ setMode("group"); });
+  if(ml) ml.addEventListener("click",function(){ setMode("logistics"); });
+
+  /* live form + quick fare chips */
   var req=byId("tlPanelReq");
   if(req){
-    req.addEventListener("input",updatePreview);
-    req.addEventListener("change",updatePreview);
+    req.addEventListener("input",function(e){
+      var trg=e.target||e.srcElement;
+      if(trg && trg.classList) trg.classList.remove("tl-bad");
+      updateLiveUI();
+    });
+    req.addEventListener("change",function(e){
+      var trg=e.target||e.srcElement;
+      if(trg && trg.id==="tlAgree" && byId("tlAgreeWrap")) byId("tlAgreeWrap").classList.remove("tl-bad");
+      updateLiveUI();
+    });
+    req.addEventListener("click",function(e){
+      var t=e.target||e.srcElement;
+      var chip=closestAttr(t,"data-fare");
+      if(chip){
+        var fv=chip.getAttribute("data-fare");
+        if(byId("tlFare")) byId("tlFare").value=fv;
+        updateLiveUI();
+      }
+    });
   }
 
   /* send / save / copy / clear */
@@ -4506,14 +5145,14 @@ function init(){
   var so=byId("tlSaveOnly");
   if(so) so.addEventListener("click",function(){
     var f=readForm(); if(!f) return;
-    if(saveTripFromForm(f)) toast("💾 Saved to the Movement Board on this device.");
-    else toast("ℹ️ This exact request is already on the board.");
+    if(saveTripFromForm(f)) toast("💾 Saved to the Movement Board with 50/50 split.");
+    else toast("ℹ️ This exact group request is already on the board.");
   });
   var cp=byId("tlCopy");
   if(cp) cp.addEventListener("click",function(){
     var f=readForm(); if(!f) return;
     copyText(buildMessage(f,false),function(ok){
-      toast(ok?"📋 Details copied — paste them into WhatsApp (0979 554 970 / 0978 548 813)."
+      toast(ok?"📋 Group request copied — paste into WhatsApp (0979 554 970 / 0978 548 813)."
               :"⚠️ Copy failed — please copy the preview text manually.");
     });
   });
@@ -4521,7 +5160,7 @@ function init(){
   var yg1=byId("tlYango");   if(yg1) yg1.addEventListener("click",openYango);
   var yg2=byId("tlYango2");  if(yg2) yg2.addEventListener("click",openYango);
 
-  /* board: filters */
+  /* board: filters, two-tap clear, two-tap delete, status */
   var board=byId("tlPanelBoard");
   if(board){
     board.addEventListener("click",function(e){
@@ -4537,7 +5176,6 @@ function init(){
         renderBoard();
         return;
       }
-      /* clear completed — two-tap */
       var idEl=closestAttr(t,"id");
       if(idEl && idEl.id==="tlClearDone"){
         var armedC=(Date.now()-TL.clearDoneAt)<3200;
@@ -4553,13 +5191,12 @@ function init(){
           if(cdb){ cdb.classList.add("tl-armed"); cdb.textContent="🧹 Clear — sure?"; }
           setTimeout(function(){
             var b=byId("tlClearDone");
-            if(b){ b.classList.remove("tl-armed"); b.textContent="🧹 Clear completed"; }
+            if(b){ b.classList.remove("tl-armed"); b.textContent="🧹 Clear Completed"; }
           },3300);
         }
         return;
       }
 
-      /* delete trip — two-tap */
       var btn=closestAttr(t,"data-act");
       if(btn && btn.getAttribute("data-act")==="deltrip"){
         var card=closestAttr(btn,"data-id");
@@ -4582,7 +5219,6 @@ function init(){
         return;
       }
     });
-    /* status change */
     board.addEventListener("change",function(e){
       var t=e.target||e.srcElement;
       var sel=closestAttr(t,"data-id");
@@ -4593,11 +5229,10 @@ function init(){
       saveState(); renderBoard();
       toast("✅ Trip status updated to "+esc(sel.value)+".");
     });
-    /* copy board */
     var cb=byId("tlCopyBoard");
     if(cb) cb.addEventListener("click",function(){
       copyText(boardText(),function(ok){
-        toast(ok?"📋 Board summary copied — paste it into the drivers' / coordinators' WhatsApp group."
+        toast(ok?"📋 Board & 50/50 summary copied — paste into WhatsApp."
                 :"⚠️ Copy failed — please copy manually.");
       });
     });
@@ -4611,7 +5246,7 @@ function init(){
     }
   });
 
-  updatePreview();
+  updateLiveUI();
   renderBoard();
 }
 
@@ -5212,5 +5847,5 @@ document.addEventListener("visibilitychange", function(){ if(!document.hidden) u
   }catch(e){}
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a507cac349dd8df8',t:'MTc5MzAwMDIwNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a507cac349dd8df8',t:'MTc5MzAwMDIwNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a564b8ebec0cb575',t:'MTc5Mzk3NDY1Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a564b8ebec0cb575',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
