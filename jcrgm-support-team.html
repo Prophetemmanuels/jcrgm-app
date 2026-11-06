@@ -1133,7 +1133,7 @@ details.adv[open] summary{border-bottom-left-radius:0;border-bottom-right-radius
   <footer class="pfoot">
     <span>Jesus Christ Redeems Global Ministries</span><span class="sep">·</span>
     <a href="tel:+260979554970" id="footCall">📞 <span>0979 554 970</span></a><span class="sep">·</span>
-    <a href="/cdn-cgi/l/email-protection#35455051545d4f4047585c5b5c4641475c5046755258545c591b565a58" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="7101141510190b04031c181f1802050318140231161c10181d5f121e1c">[email&#160;protected]</span></span></a><br>
+    <a href="/cdn-cgi/l/email-protection#6e1e0b0a0f06141b1c030700071d1a1c070b1d2e09030f0702400d0103" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="7a0a1f1e1b12000f0817131413090e08131f093a1d171b131654191517">[email&#160;protected]</span></span></a><br>
     <span id="footVer">v2.0</span> · Confidential welfare record · <span id="footYear"></span>
   </footer>
 </main>
@@ -1346,18 +1346,29 @@ const Sb = (() => {
   async function select(table, query = '', opts = {}) {
     return request('/rest/v1/' + table + (query ? '?' + query : ''), opts);
   }
+  /* Public writes use return=minimal on purpose: asking PostgREST to send the row
+     back makes Postgres demand SELECT permission, which an anonymous applicant
+     does not (and must not) have — that turns a valid insert into
+     "new row violates row-level security policy".                            */
   async function insert(table, rows, opts = {}) {
     return request('/rest/v1/' + table, {
       method:'POST',
-      headers: Object.assign({ 'Content-Type':'application/json', Prefer:'return=representation' }, opts.headers || {}),
+      headers: Object.assign({ 'Content-Type':'application/json', Prefer:'return=minimal' }, opts.headers || {}),
       body: JSON.stringify(rows)
     });
   }
   async function upsert(table, rows, onConflict = 'id') {
     return request('/rest/v1/' + table + '?on_conflict=' + q(onConflict), {
       method:'POST',
-      headers:{ 'Content-Type':'application/json', Prefer:'resolution=merge-duplicates,return=representation' },
+      headers:{ 'Content-Type':'application/json', Prefer:'resolution=merge-duplicates,return=minimal' },
       body: JSON.stringify(rows)
+    });
+  }
+  async function updateMin(table, match, patch) {
+    const m = Object.keys(match).map(k => q(k) + '=eq.' + q(match[k])).join('&');
+    return request('/rest/v1/' + table + '?' + m, {
+      method:'PATCH', headers:{ 'Content-Type':'application/json', Prefer:'return=minimal' },
+      body: JSON.stringify(patch)
     });
   }
   async function update(table, match, patch) {
@@ -1379,12 +1390,19 @@ const Sb = (() => {
   }
 
   /* ── storage ── */
-  async function upload(pathName, blob, contentType, upsertFlag = true) {
-    return request('/storage/v1/object/' + CONFIG.sb.bucket + '/' + pathName, {
-      method:'POST',
-      headers:{ 'Content-Type': contentType || blob.type || 'application/octet-stream', 'x-upsert': upsertFlag ? 'true' : 'false' },
-      body: blob
-    });
+  async function upload(pathName, blob, contentType) {
+    const hdr = { 'Content-Type': contentType || blob.type || 'application/octet-stream' };
+    try {
+      return await request('/storage/v1/object/' + CONFIG.sb.bucket + '/' + pathName, { method:'POST', headers:hdr, body:blob });
+    } catch (e) {
+      /* only a genuine duplicate may retry as an overwrite — an upsert checks for
+         an existing object first, which needs read permission the applicant lacks */
+      if (e && (e.status === 409 || /already exists|duplicate/i.test(e.message || ''))) {
+        return request('/storage/v1/object/' + CONFIG.sb.bucket + '/' + pathName, {
+          method:'POST', headers:Object.assign({ 'x-upsert':'true' }, hdr), body:blob });
+      }
+      throw e;
+    }
   }
   async function signedUrl(pathName, seconds = 3600) {
     const j = await request('/storage/v1/object/sign/' + CONFIG.sb.bucket + '/' + pathName, {
@@ -1426,7 +1444,7 @@ const Sb = (() => {
     }
   }
 
-  return { ready, signedIn, session:() => session, configure, select, insert, upsert, update, remove, rpc,
+  return { ready, signedIn, session:() => session, configure, select, insert, upsert, update, updateMin, remove, rpc,
            upload, signedUrl, removeObject, signIn, signOut, ping, url:() => url, isOnline:() => online };
 })();
 CONFIG.sb.url && CONFIG.sb.url.length && Sb.configure(CONFIG.sb.url, CONFIG.sb.key);
@@ -1571,7 +1589,7 @@ async function saveCase(rec, docs) {
   let cloudOk = false;
   if (Sb.ready()) {
     try {
-      await Sb.upsert(CONFIG.sb.tables.cases, [caseToRow(rec)], 'id');
+      await writeRow(CONFIG.sb.tables.cases, caseToRow(rec));
       rec.synced = true;
       await Store.put('cases', rec);
       cloudOk = true;
@@ -1593,7 +1611,7 @@ async function savePartner(rec) {
   let cloudOk = false;
   if (Sb.ready()) {
     try {
-      await Sb.upsert(CONFIG.sb.tables.partners, [partnerToRow(rec)], 'id');
+      await writeRow(CONFIG.sb.tables.partners, partnerToRow(rec));
       rec.synced = true;
       await Store.put('partners', rec); cloudOk = true;
     } catch (e) {
@@ -1606,12 +1624,30 @@ async function savePartner(rec) {
   return cloudOk;
 }
 
+/* A plain INSERT is the only write an anonymous applicant is allowed to make.
+   An UPSERT (ON CONFLICT DO UPDATE) needs update rights, and a representation
+   response needs read rights — asking for either turns a good insert into
+   "new row violates row-level security policy". So: insert; if the row is
+   already there (409) treat it as done, or update it when we are allowed to.  */
+async function writeRow(table, row) {
+  try {
+    await Sb.insert(table, [row]);
+    return 'inserted';
+  } catch (e) {
+    if (e && e.status === 409) {
+      try { await Sb.updateMin(table, { id: row.id }, row); return 'updated'; }
+      catch (e2) { return 'exists'; }      // someone else's copy is already there — good enough
+    }
+    throw e;
+  }
+}
+
 async function pushCase(rec) {
-  await Sb.upsert(CONFIG.sb.tables.cases, [caseToRow(rec)], 'id');
+  await writeRow(CONFIG.sb.tables.cases, caseToRow(rec));
   rec.synced = true; await Store.put('cases', rec);
 }
 async function pushPartner(rec) {
-  await Sb.upsert(CONFIG.sb.tables.partners, [partnerToRow(rec)], 'id');
+  await writeRow(CONFIG.sb.tables.partners, partnerToRow(rec));
   rec.synced = true; await Store.put('partners', rec);
 }
 
@@ -1625,10 +1661,10 @@ async function pushDocs(rec, docRec) {
       const pathName = (rec.ref || rec.id) + '/' + d.docId + '.' + extFor(d.type);
       const blob = dataUrlToBlob(d.dataUrl);
       await Sb.upload(pathName, blob, d.type || 'application/octet-stream');
-      await Sb.upsert(CONFIG.sb.tables.docs, [{
+      await writeRow(CONFIG.sb.tables.docs, {
         id:d.docId, case_id:rec.id, case_ref:rec.ref, label:d.label, file_name:d.name,
         mime_type:d.type, size_bytes:d.size || blob.size, storage_path:pathName, uploaded_by:'applicant'
-      }], 'id');
+      });
       d.uploaded = true; d.storagePath = pathName; changed = true;
     } catch (e) { noteSyncError(e); }
   }
@@ -3023,5 +3059,5 @@ async function refresh(pull) {
 })();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a563a81c0dc7b575',t:'MTc5Mzk2MzQ3OA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a563a81c0dc7b575',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a563c40aee64b56f',t:'MTc5Mzk2NDYyMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a563c40aee64b56f',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
