@@ -427,7 +427,8 @@ table.tbl tbody tr:hover{background:#fafbff}
     <p class="verse" id="mastVerse"></p>
     <div class="mast-row">
       <span class="pill" id="pillMode"><span class="dot off"></span>Starting…</span>
-      <a class="pill" id="pillCall" href="tel:+260979554970">📞 <span>Call the desk</span></a>
+      <span class="pill" id="pillQueue" hidden>📥 0 queued</span>
+      <a class="pill" id="pillCall" href="tel:+260979554970">📞 <span>0979 554 970</span></a>
       <a class="pill" id="pillWa" href="https://wa.me/260979554970" target="_blank" rel="noopener">💬 <span>WhatsApp the desk</span></a>
       <a class="pill" id="pillPartner" href="#" data-goto="partners">🤝 Become a partner</a>
     </div>
@@ -528,7 +529,7 @@ table.tbl tbody tr:hover{background:#fafbff}
       <div class="note warn"><span class="ni" aria-hidden="true">⚠️</span><div><b>Apply honestly.</b> Every case is checked, including the documents you attach. A false claim or a forged document ends support immediately and is reported to church leadership. A genuine need, however small, is always welcome.</div></div>
       <div class="note" style="margin-top:9px"><span class="ni" aria-hidden="true">🔒</span><div><b>Your privacy.</b> Names, phone numbers, NRC details and uploaded documents are seen only by the Support Team and are held under the Data Protection Act No. 3 of 2021. Your ID is used to verify who you are — it is never published, and never shared with a sponsor.</div></div>
       <div class="note ok" style="margin-top:9px"><span class="ni" aria-hidden="true">💰</span><div><b>No cash is ever promised.</b> Support is given as far as possible by paying the school, clinic or supplier directly, and everything is receipted.</div></div>
-      <div class="note danger" style="margin-top:9px"><span class="ni" aria-hidden="true">🚨</span><div><b>In an emergency</b> — a child at risk, violence at home, or a medical crisis — do not wait for this form. Call <a href="tel:+260979554970">the office</a> now, or go to the nearest police station or hospital.</div></div>
+      <div class="note danger" style="margin-top:9px"><span class="ni" aria-hidden="true">🚨</span><div><b>In an emergency</b> — a child at risk, violence at home, or a medical crisis — do not wait for this form. Call <a href="tel:+260979554970" id="emergCall">0979 554 970</a> now, or go to the nearest police station or hospital.</div></div>
     </div>
   </section>
 
@@ -902,17 +903,24 @@ table.tbl tbody tr:hover{background:#fafbff}
     <div class="card lock" id="lockCard">
       <div class="lk" aria-hidden="true">🔐</div>
       <h2>Support Team only</h2>
-      <p>Enter the desk password to open the welfare register and the partner approvals.</p>
-      <form id="lockForm" novalidate>
-        <div class="field pin"><input class="inp" id="lockPw" type="password" autocomplete="off"
-             aria-label="Desk password" placeholder="••••••••" maxlength="40" spellcheck="false"></div>
-        <div class="note danger" id="lockErr" hidden style="margin-top:8px"><span class="ni">⚠</span><div>That password is not right. Try again, or ask the office.</div></div>
-        <button class="btn primary block" type="submit" id="lockGo" style="margin-top:8px">Unlock the desk</button>
+      <p id="lockPinHint">Sign in with the church account that holds a Support Team role.</p>
+      <div class="note" id="lockCloudState" style="text-align:left;margin-bottom:12px;font-size:12px"></div>
+      <form id="lockForm" novalidate autocomplete="on">
+        <div class="field" id="lockEmailField" style="text-align:left;margin-bottom:10px">
+          <label for="lockEmail">Church account email</label>
+          <input class="inp" id="lockEmail" type="email" autocomplete="username" placeholder="pedahzurministries@gmail.com" spellcheck="false">
+        </div>
+        <div class="field pin">
+          <input class="inp" id="lockPw" type="password" autocomplete="current-password"
+                 aria-label="Password or desk PIN" placeholder="••••••••" maxlength="72" spellcheck="false">
+        </div>
+        <div class="note danger" id="lockErr" hidden style="margin-top:8px"><span class="ni">⚠</span><div id="lockErrText"></div></div>
+        <button class="btn primary block" type="submit" id="lockGo" style="margin-top:8px"><span class="sp"></span><span class="lb" id="lockGoText">Unlock the desk</span></button>
         <label class="row" style="justify-content:center;margin-top:12px;font-size:12px;color:var(--muted);cursor:pointer">
           <input type="checkbox" id="showPw" style="width:16px;height:16px;accent-color:#1f3c88"> Show characters
         </label>
       </form>
-      <p class="who">Authorised by the Office of the Senior Pastor · <span id="lockFoot"></span></p>
+      <p class="who">Authorised by the Office of the Senior Pastor · <span id="lockFootText">—</span></p>
     </div>
 
     <div id="desk" hidden>
@@ -929,6 +937,46 @@ table.tbl tbody tr:hover{background:#fafbff}
           </div>
         </div>
         <div class="stats" id="deskStats"></div>
+      </div>
+
+      <!-- ── church database connection ── -->
+      <div class="card" id="sbCard">
+        <div class="card-hd">
+          <span class="ico" aria-hidden="true" style="background:linear-gradient(150deg,#e9f6ff,#dbeafe);border-color:#c9dbf8">☁</span>
+          <div class="grow"><span class="eyebrow-sm">Church database</span>
+            <h2>Supabase connection &amp; sync</h2>
+            <p>Cases, partners and their documents live in the church's Supabase project — the same project the Announcements and membership pages use. Everything on this device is only an offline cache and outbox.</p>
+          </div>
+        </div>
+        <div class="stats" id="sbStatus" style="margin-bottom:14px"></div>
+        <div class="grid">
+          <div class="field span2">
+            <label for="sbUrl">Project URL</label>
+            <input class="inp mono" id="sbUrl" placeholder="https://xxxxxxxx.supabase.co" spellcheck="false" autocomplete="off">
+            <span class="hint">Loaded automatically from <code>supabase-config.js</code> when this page runs inside the church app. Paste it here only if it is missing.</span>
+          </div>
+          <div class="field span2">
+            <label for="sbKey">Anon / publishable key</label>
+            <input class="inp mono" id="sbKey" type="password" placeholder="eyJhbGciOi…" spellcheck="false" autocomplete="off">
+            <span class="hint">The <b>anon</b> key only — never the service_role key. Row Level Security decides what it may do.</span>
+          </div>
+          <div class="field">
+            <label for="sbBucket">Document bucket</label>
+            <input class="inp mono" id="sbBucket" placeholder="welfare-documents">
+          </div>
+          <div class="field">
+            <label>Session</label>
+            <div class="row" style="min-height:42px"><span class="count" id="sbSignState">Not signed in</span></div>
+          </div>
+        </div>
+        <div class="formbar">
+          <span class="count">Run <b>jcrgm-welfare-supabase.sql</b> once in the project to create the tables, policies and bucket.</span>
+          <span class="grow"></span>
+          <button class="btn ghost sm" type="button" id="sbSignOut" hidden>Sign out</button>
+          <button class="btn ghost sm" type="button" id="sbTest">🔌 Test connection</button>
+          <button class="btn ghost sm" type="button" id="btnFlush">🔄 Sync now</button>
+          <button class="btn primary sm" type="button" id="sbSave">Save settings</button>
+        </div>
       </div>
 
       <!-- register a beneficiary on their behalf -->
@@ -1027,9 +1075,9 @@ table.tbl tbody tr:hover{background:#fafbff}
         <div class="note warn" style="margin-top:9px"><span class="ni" aria-hidden="true">4</span><div><b>Children and the vulnerable.</b> Where a minor is involved, a guardian's consent must be ticked and the ID attached must be the guardian's.</div></div>
         <div class="note danger" style="margin-top:9px"><span class="ni" aria-hidden="true">5</span><div><b>Documents are the most sensitive thing here.</b> Open a document only when you need it for vetting. Never forward an ID image on WhatsApp, never keep it on a personal phone, and delete the case file's documents once the case is closed (button in the case drawer).</div></div>
         <p class="legal">
-          <b>Where the data lives.</b> Cases, partner records and uploaded documents are saved in this church app's own storage on the device — under the same rules as the rest of the church app. In the demo build this is the browser's IndexedDB (falling back to localStorage, then memory), and it can be pointed at the church's Supabase project through <code>CONFIG.apiBase</code> at the top of the script.<br>
+          <b>Where the data lives.</b> Cases, partner records and documents are written to this church's own Supabase project over HTTPS — the same project the Announcements and membership pages use — and from there they appear on every phone that runs the app. This device keeps a copy only as a cache and an outbox, so the desk still works with no signal and uploads the moment it is back. Reading the whole register needs a signed-in, leader-approved account with a Support Team role; the database enforces the same rule through Row Level Security, so a modified copy of this page cannot get around it.<br>
           <b>What the public form can do.</b> It can file a case with documents, register one partner, and look up one case with the reference number plus the last four digits of the phone that applied. It cannot list or browse anyone else's file.<br>
-          <b>Document retention.</b> ID images and bills are kept only as long as the case is open plus the audit period, then deleted. Use <em>Purge documents</em> in the case drawer once the case is closed.<br>
+          <b>Document retention.</b> ID images and bills sit in the private <code>welfare-documents</code> Storage bucket, reachable only with a short-lived signed link from a signed-in team account. Keep them only as long as the case is open plus the audit period, then use <em>Purge documents</em> in the case drawer — that deletes the file from Storage as well as the row.<br>
           <b>Outbound messages.</b> Approving a partner opens a ready-written thank-you on WhatsApp or in the email app. To send it automatically from the church's own WhatsApp Business number or mail domain, set <code>CONFIG.notifyEndpoint</code> — the desk will post the approved partner and message there and record the result.
         </p>
       </div>
@@ -1038,8 +1086,8 @@ table.tbl tbody tr:hover{background:#fafbff}
 
   <footer class="pfoot">
     <span>Jesus Christ Redeems Global Ministries</span><span class="sep">·</span>
-    <a href="tel:+260979554970" id="footCall">📞 <span>+260 979554970</span></a><span class="sep">·</span>
-    <a href="/cdn-cgi/l/email-protection#1661737a70776473567c7564717b38796471" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="6c1b09000a0d1e092c060f1e0b0142031e0b">[pedahzurminitries@gmail.com]</span></span></a><br>
+    <a href="tel:+260979554970" id="footCall">📞 <span>0979 554 970</span></a><span class="sep">·</span>
+    <a href="/cdn-cgi/l/email-protection#2e5e4b4a4f46545b5c434740475d5a5c474b5d6e49434f4742004d4143" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="b9c9dcddd8d1c3cccbd4d0d7d0cacdcbd0dccaf9ded4d8d0d597dad6d4">[email&#160;protected]</span></span></a><br>
     <span id="footVer">v2.0</span> · Confidential welfare record · <span id="footYear"></span>
   </footer>
 </main>
@@ -1069,65 +1117,102 @@ table.tbl tbody tr:hover{background:#fafbff}
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ══════════════════════════════════════════════════════════════════════
-   JCRGM Compassion & Welfare — Support Team desk  (v2.0)
-   Adds:  • Document / NRC-ID upload on the assistance application
-          • Partners tab — partner registration, desk approval,
-            thank-you message by email or WhatsApp
-   Storage: IndexedDB  →  localStorage  →  memory  (auto-fallback)
+   JCRGM Compassion & Welfare — Support Team desk   v3.0
+   ──────────────────────────────────────────────────────────────────────
+   v3 : real Supabase sync.
+        · reads the church project settings from the same globals the
+          rest of the app uses (SUPABASE_URL / SUPABASE_ANON_KEY), or from
+          window.supabaseConfig, or from the desk's own saved settings.
+        · cases, partners and documents are written to Supabase and the
+          local copy is only an offline cache + outbox.
+        · documents go to the private Storage bucket "welfare-documents";
+          only metadata rows live in the table.
+        · the desk signs in with the church account, so RLS decides who
+          may read the register.
    ══════════════════════════════════════════════════════════════════════ */
 
-/* ─────────────────────────── CONFIG (edit here) ─────────────────────────── */
+/* ─────────────────────────── CONFIG ─────────────────────────── */
 const CONFIG = {
-  church:      'Jesus Christ Redeems Global Ministries',
-  ministry:    'Compassion & Welfare Ministry',
-  deskPhone:   '+260 97979554970',
-  deskEmail:   'pedahzurministries@gmail.com',
-  deskWhatsApp:'260979554970',       // digits only, no + or spaces
-  adminPin:    '19922',           // change this before going live
-  apiBase:     '',                   // e.g. 'https://xyz.supabase.co/functions/v1/welfare'
-  notifyEndpoint: '',                // POST target for real email/WhatsApp dispatch
-  maxFileMB:   6,
-  minDocs:     1
+  church:       'Jesus Christ Redeems Global Ministries',
+  ministry:     'Compassion & Welfare Ministry',
+  deskPhone:    '+260 979 554 970',        // 0979554970 in international form
+  deskEmail:    'pedahzurministries@gmail.com',
+  deskWhatsApp: '260979554970',            // digits only, for wa.me
+  adminPin:     'desk2026',
+  notifyEndpoint:'',                       // optional: real email / WhatsApp dispatch
+  maxFileMB:    6,
+  minDocs:      1,
+  sb: {
+    url:    '',                            // filled from the church app or saved settings
+    key:    '',                            // anon / publishable key
+    bucket: 'welfare-documents',
+    tables: { cases:'welfare_cases', docs:'welfare_documents', partners:'welfare_partners' },
+    rpc:    { case:'welfare_lookup_case', partner:'welfare_lookup_partner' }
+  }
 };
+
+/* read a global by name — works for window.X and for top-level const in
+   another script (how supabase-config.js normally declares these)          */
+function gvar(name) {
+  try { if (name in window && window[name] != null) return window[name]; } catch (e) {}
+  try { return (0, eval)(name); } catch (e) { return undefined; }
+}
+
+/* pull the project settings out of the host app, whichever way it exposes them */
+(function pickEnv() {
+  const pairs = [
+    ['SUPABASE_URL','SUPABASE_ANON_KEY'], ['SUPABASE_URL','SUPABASE_KEY'],
+    ['SUPABASE_PROJECT_URL','SUPABASE_ANON_KEY'], ['JCRGM_SUPABASE_URL','JCRGM_SUPABASE_ANON_KEY'],
+    ['supabaseUrl','supabaseAnonKey'], ['supabaseUrl','supabaseKey'], ['SUPABASE_URL','SUPABASE_PUBLISHABLE_KEY']
+  ];
+  for (const [u, k] of pairs) {
+    const U = gvar(u), K = gvar(k);
+    if (U && K && typeof U === 'string' && typeof K === 'string') { CONFIG.sb.url = U; CONFIG.sb.key = K; return; }
+  }
+  const g = window;
+  const c = g.supabaseConfig || g.SUPABASE_CONFIG || g.JCRGM_CONFIG || {};
+  const url = c.url || c.supabaseUrl || c.SUPABASE_URL || (c.supabase && c.supabase.url);
+  const key = c.anonKey || c.anon_key || c.key || c.SUPABASE_ANON_KEY || (c.supabase && c.supabase.anonKey);
+  if (url && key) { CONFIG.sb.url = url; CONFIG.sb.key = key; return; }
+  try {
+    const u = localStorage.getItem('jcrgm_sb_url'), k = localStorage.getItem('jcrgm_sb_key');
+    if (u && k) { CONFIG.sb.url = u; CONFIG.sb.key = k; }
+  } catch (e) {}
+})();
 
 const CATEGORIES = [
   'School fees & education','Medical bill / treatment','Food & groceries',
   'Rent & eviction','Funeral & bereavement','Uniforms, books & supplies',
   'Business / income support','Utility bill (ZESCO / water)','Other emergency'
 ];
-
 const STATUSES = {
-  submitted: { label:'Submitted',        tone:'info'   },
-  vetting:   { label:'Under vetting',    tone:'warn'   },
-  approved:  { label:'Approved',         tone:'ok'     },
-  deferred:  { label:'Deferred',         tone:'gold'   },
-  declined:  { label:'Not approved',     tone:'danger' },
-  paid:      { label:'Paid / delivered', tone:'teal'   }
+  submitted:{ label:'Submitted', tone:'info' }, vetting:{ label:'Under vetting', tone:'warn' },
+  approved:{ label:'Approved', tone:'ok' },     deferred:{ label:'Deferred', tone:'gold' },
+  declined:{ label:'Not approved', tone:'danger' }, paid:{ label:'Paid / delivered', tone:'teal' }
 };
-
 const VERSES = [
   ['Religion that God our Father accepts as pure and faultless is this: to look after orphans and widows in their distress.','James 1:27'],
   ['Whatever you did for one of the least of these brothers and sisters of mine, you did for me.','Matthew 25:40'],
   ['Each of you should use whatever gift you have received to serve others, as faithful stewards of God\u2019s grace.','1 Peter 4:10']
 ];
 
-/* ─────────────────────────── tiny helpers ─────────────────────────── */
+/* ─────────────────────────── helpers ─────────────────────────── */
 const $  = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
-const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c =>
-  ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
-const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nowISO = () => new Date().toISOString();
+const uid = () => (self.crypto && crypto.randomUUID) ? crypto.randomUUID()
+  : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16); });
 const digits = s => String(s || '').replace(/\D/g, '');
 const last4 = s => digits(s).slice(-4);
-const fmtDate = iso => { try { return new Date(iso).toLocaleString('en-GB',
-  { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }); } catch (e) { return '—'; } };
-const fmtDay = iso => { try { return new Date(iso).toLocaleDateString('en-GB',
-  { day:'2-digit', month:'short', year:'numeric' }); } catch (e) { return '—'; } };
+const fmtDate = iso => { try { return new Date(iso).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); } catch(e){ return '—'; } };
+const fmtDay = iso => { try { return new Date(iso).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); } catch(e){ return '—'; } };
 const money = n => (n === '' || n == null || isNaN(n)) ? '—' : 'K' + Number(n).toLocaleString('en-ZM');
-const fmtBytes = b => b < 1024 ? b + ' B' : b < 1048576 ? (b / 1024).toFixed(0) + ' KB' : (b / 1048576).toFixed(1) + ' MB';
+const fmtBytes = b => b < 1024 ? b + ' B' : b < 1048576 ? (b/1024).toFixed(0) + ' KB' : (b/1048576).toFixed(1) + ' MB';
 const validPhone = v => digits(v).length >= 9;
 const validEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v || '').trim());
+const val = id => { const el = $('#' + id); return el ? el.value.trim() : ''; };
 
 function toast(msg, kind = '', ms = 3800) {
   const t = document.createElement('div');
@@ -1138,21 +1223,172 @@ function toast(msg, kind = '', ms = 3800) {
   setTimeout(() => t.remove(), ms);
 }
 
-/* ─────────────────────────── storage layer ─────────────────────────── */
+/* ═══════════════════════ SUPABASE CLIENT (no dependency) ═══════════════════════
+   Talks to the Supabase REST + Storage + Auth endpoints directly with fetch(),
+   so this page needs no vendored library and works from any static host.      */
+const Sb = (() => {
+  let url = (CONFIG.sb.url || '').replace(/\/+$/, '');
+  let key = CONFIG.sb.key || '';
+  let session = null;
+  let online = navigator.onLine !== false;
+
+  try { session = JSON.parse(localStorage.getItem('jcrgm_sb_session') || 'null'); } catch (e) { session = null; }
+
+  const ready = () => !!(url && key);
+  const signedIn = () => !!(session && session.access_token);
+
+  function configure(u, k) {
+    url = String(u || '').trim().replace(/\/+$/, '');
+    key = String(k || '').trim();
+  }
+  function headers(extra) {
+    const h = { apikey: key };
+    h.Authorization = 'Bearer ' + (signedIn() ? session.access_token : key);
+    return Object.assign(h, extra || {});
+  }
+  function saveSession(s) {
+    session = s || null;
+    try { s ? localStorage.setItem('jcrgm_sb_session', JSON.stringify(s)) : localStorage.removeItem('jcrgm_sb_session'); } catch (e) {}
+  }
+  function sessionExpired() {
+    return signedIn() && session.expires_at && (session.expires_at * 1000) < Date.now() + 20000;
+  }
+  async function refreshSession() {
+    if (!session || !session.refresh_token) return false;
+    try {
+      const r = await fetch(url + '/auth/v1/token?grant_type=refresh_token', {
+        method:'POST', headers:{ apikey:key, 'Content-Type':'application/json' },
+        body: JSON.stringify({ refresh_token: session.refresh_token })
+      });
+      if (!r.ok) throw new Error('refresh failed');
+      const j = await r.json();
+      saveSession({ access_token:j.access_token, refresh_token:j.refresh_token || session.refresh_token,
+        expires_at: Math.floor(Date.now()/1000) + (j.expires_in || 3600), email: (j.user && j.user.email) || session.email });
+      return true;
+    } catch (e) { saveSession(null); return false; }
+  }
+
+  async function request(path, opts = {}) {
+    if (!ready()) throw new Error('no-project');
+    if (!navigator.onLine) { online = false; throw new Error('offline'); }
+    if (sessionExpired()) await refreshSession();
+    const r = await fetch(url + path, {
+      method: opts.method || 'GET',
+      headers: headers(opts.headers),
+      body: opts.body
+    });
+    online = true;
+    if (r.status === 401 && signedIn() && !opts._retry) {
+      if (await refreshSession()) return request(path, Object.assign({}, opts, { _retry:true }));
+    }
+    const text = await r.text();
+    let data = null; try { data = text ? JSON.parse(text) : null; } catch (e) { data = text; }
+    if (!r.ok) {
+      const err = new Error((data && (data.message || data.error_description || data.error || data.hint)) || ('HTTP ' + r.status));
+      err.status = r.status; err.data = data; throw err;
+    }
+    return data;
+  }
+
+  /* ── table helpers (PostgREST) ── */
+  const q = s => encodeURIComponent(s);
+  async function select(table, query = '', opts = {}) {
+    return request('/rest/v1/' + table + (query ? '?' + query : ''), opts);
+  }
+  async function insert(table, rows, opts = {}) {
+    return request('/rest/v1/' + table, {
+      method:'POST',
+      headers: Object.assign({ 'Content-Type':'application/json', Prefer:'return=representation' }, opts.headers || {}),
+      body: JSON.stringify(rows)
+    });
+  }
+  async function upsert(table, rows, onConflict = 'id') {
+    return request('/rest/v1/' + table + '?on_conflict=' + q(onConflict), {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', Prefer:'resolution=merge-duplicates,return=representation' },
+      body: JSON.stringify(rows)
+    });
+  }
+  async function update(table, match, patch) {
+    const m = Object.keys(match).map(k => q(k) + '=eq.' + q(match[k])).join('&');
+    return request('/rest/v1/' + table + '?' + m, {
+      method:'PATCH',
+      headers:{ 'Content-Type':'application/json', Prefer:'return=representation' },
+      body: JSON.stringify(patch)
+    });
+  }
+  async function remove(table, match) {
+    const m = Object.keys(match).map(k => q(k) + '=eq.' + q(match[k])).join('&');
+    return request('/rest/v1/' + table + '?' + m, { method:'DELETE', headers:{ Prefer:'return=minimal' } });
+  }
+  async function rpc(fn, args) {
+    return request('/rest/v1/rpc/' + fn, {
+      method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(args || {})
+    });
+  }
+
+  /* ── storage ── */
+  async function upload(pathName, blob, contentType, upsertFlag = true) {
+    return request('/storage/v1/object/' + CONFIG.sb.bucket + '/' + pathName, {
+      method:'POST',
+      headers:{ 'Content-Type': contentType || blob.type || 'application/octet-stream', 'x-upsert': upsertFlag ? 'true' : 'false' },
+      body: blob
+    });
+  }
+  async function signedUrl(pathName, seconds = 3600) {
+    const j = await request('/storage/v1/object/sign/' + CONFIG.sb.bucket + '/' + pathName, {
+      method:'POST', headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ expiresIn: seconds })
+    });
+    if (!j || !j.signedURL) return null;
+    return url + '/storage/v1' + (j.signedURL.startsWith('/') ? '' : '/') + j.signedURL;
+  }
+  async function removeObject(pathName) {
+    return request('/storage/v1/object/' + CONFIG.sb.bucket + '/' + pathName, { method:'DELETE' });
+  }
+
+  /* ── auth (email + password, church account) ── */
+  async function signIn(email, password) {
+    const r = await fetch(url + '/auth/v1/token?grant_type=password', {
+      method:'POST', headers:{ apikey:key, 'Content-Type':'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    let j = {};
+    try { const t = await r.text(); j = t ? JSON.parse(t) : {}; } catch (e) { j = {}; }
+    if (!r.ok) throw new Error(j.error_description || j.msg || j.message || ('Sign-in failed (' + r.status + ')'));
+    saveSession({ access_token:j.access_token, refresh_token:j.refresh_token,
+      expires_at: Math.floor(Date.now()/1000) + (j.expires_in || 3600), email: (j.user && j.user.email) || email });
+    return session;
+  }
+  function signOut() { saveSession(null); }
+
+  /* ── connection test ── */
+  async function ping() {
+    if (!ready()) return { ok:false, reason:'no-project' };
+    try {
+      await request('/rest/v1/' + CONFIG.sb.tables.cases + '?select=ref&limit=1');
+      return { ok:true, canRead:true, signedIn: signedIn() };
+    } catch (e) {
+      if (e.status === 401 || e.status === 403 || e.status === 404 || e.status === 42501)
+        return { ok:true, canRead:false, signedIn: signedIn(), status:e.status, message:e.message };
+      return { ok:false, reason:e.message || 'unreachable' };
+    }
+  }
+
+  return { ready, signedIn, session:() => session, configure, select, insert, upsert, update, remove, rpc,
+           upload, signedUrl, removeObject, signIn, signOut, ping, url:() => url, isOnline:() => online };
+})();
+CONFIG.sb.url && CONFIG.sb.url.length && Sb.configure(CONFIG.sb.url, CONFIG.sb.key);
+
+/* ═══════════════════════ LOCAL CACHE (offline + outbox) ═══════════════════════ */
 const Store = (() => {
-  const DB_NAME = 'jcrgm_welfare', DB_VER = 1, STORES = ['cases', 'partners', 'drafts'];
+  const DB_NAME = 'jcrgm_welfare', DB_VER = 2, STORES = ['cases','partners','drafts','docs','outbox'];
   let db = null, backend = 'memory';
-  const mem = { cases:new Map(), partners:new Map(), drafts:new Map() };
+  const mem = { cases:new Map(), partners:new Map(), drafts:new Map(), docs:new Map(), outbox:new Map() };
   const lsKey = s => 'jcrgm_' + s;
 
-  function lsRead(s) {
-    try { const raw = localStorage.getItem(lsKey(s)); return raw ? JSON.parse(raw) : []; }
-    catch (e) { return []; }
-  }
-  function lsWrite(s, arr) {
-    try { localStorage.setItem(lsKey(s), JSON.stringify(arr)); return true; }
-    catch (e) { return false; }
-  }
+  function lsRead(s) { try { const raw = localStorage.getItem(lsKey(s)); return raw ? JSON.parse(raw) : []; } catch (e) { return []; } }
+  function lsWrite(s, arr) { try { localStorage.setItem(lsKey(s), JSON.stringify(arr)); return true; } catch (e) { return false; } }
 
   async function init() {
     try {
@@ -1164,28 +1400,23 @@ const Store = (() => {
           STORES.forEach(s => { if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, { keyPath:'id' }); });
         };
         r.onsuccess = () => res(r.result);
-        r.onerror = () => rej(r.error || new Error('idb error'));
-        r.onblocked = () => rej(new Error('idb blocked'));
-        setTimeout(() => rej(new Error('idb timeout')), 2500);
+        r.onerror = () => rej(r.error || new Error('idb'));
+        setTimeout(() => rej(new Error('timeout')), 2500);
       });
       backend = 'indexeddb';
     } catch (e) {
-      try { localStorage.setItem('__jcrgm_probe', '1'); localStorage.removeItem('__jcrgm_probe'); backend = 'localstorage'; }
+      try { localStorage.setItem('__probe','1'); localStorage.removeItem('__probe'); backend = 'localstorage'; }
       catch (e2) { backend = 'memory'; }
     }
-    // seed from localStorage into memory when running without a store
     STORES.forEach(s => { if (backend !== 'indexeddb') lsRead(s).forEach(r => mem[s].set(r.id, r)); });
     return backend;
   }
-
-  const bname = () => backend === 'indexeddb' ? 'on this phone (IndexedDB)'
-    : backend === 'localstorage' ? 'in this browser (localStorage)' : 'in this session only';
 
   async function all(store) {
     if (backend === 'memory') return Array.from(mem[store].values());
     if (backend === 'localstorage') return lsRead(store);
     return new Promise((res, rej) => {
-      const r = db.transaction(store, 'readonly').objectStore(store).getAll();
+      const r = db.transaction(store,'readonly').objectStore(store).getAll();
       r.onsuccess = () => res(r.result || []);
       r.onerror = () => rej(r.error);
     });
@@ -1194,33 +1425,32 @@ const Store = (() => {
     if (backend === 'memory') return mem[store].get(id) || null;
     if (backend === 'localstorage') return lsRead(store).find(r => r.id === id) || null;
     return new Promise(res => {
-      const r = db.transaction(store, 'readonly').objectStore(store).get(id);
-      r.onsuccess = () => res(r.result || null);
-      r.onerror = () => res(null);
+      const r = db.transaction(store,'readonly').objectStore(store).get(id);
+      r.onsuccess = () => res(r.result || null); r.onerror = () => res(null);
     });
   }
   async function put(store, rec) {
     if (backend === 'indexeddb') {
       try {
         await new Promise((res, rej) => {
-          const t = db.transaction(store, 'readwrite');
-          t.objectStore(store).put(rec);
+          const t = db.transaction(store,'readwrite'); t.objectStore(store).put(rec);
           t.oncomplete = () => res(); t.onerror = () => rej(t.error);
         });
         return true;
-      } catch (e) { /* fall through to memory below */ }
+      } catch (e) {}
     }
     mem[store].set(rec.id, rec);
     if (backend === 'localstorage') {
       const arr = lsRead(store).filter(r => r.id !== rec.id); arr.push(rec);
-      if (!lsWrite(store, arr)) { backend = 'memory'; toast('Storage is full — this record is kept for this session only.', 'warn', 6000); }
+      if (!lsWrite(store, arr)) { backend = 'memory'; }
     }
     return true;
   }
+  async function bulk(store, recs) { for (const r of recs) await put(store, r); }
   async function del(store, id) {
     if (backend === 'indexeddb') {
       await new Promise(res => {
-        const t = db.transaction(store, 'readwrite'); t.objectStore(store).delete(id);
+        const t = db.transaction(store,'readwrite'); t.objectStore(store).delete(id);
         t.oncomplete = () => res(); t.onerror = () => res();
       });
       return true;
@@ -1229,126 +1459,236 @@ const Store = (() => {
     if (backend === 'localstorage') lsWrite(store, lsRead(store).filter(r => r.id !== id));
     return true;
   }
-  return { init, all, get, put, del, bname:() => bname(), backend:() => backend };
+  return { init, all, get, put, bulk, del, backend:() => backend };
 })();
+/* ═══════════════════════ SYNC LAYER ═══════════════════════ */
+const state = { cases:[], partners:[], step:1, uploads:{}, partnerFilter:'pending',
+                unlocked:false, cloud:'offline', signedIn:false, pending:0 };
 
-/* ─────────────────────────── app state ─────────────────────────── */
-const state = { cases:[], partners:[], docs:{}, step:1, uploads:{}, adminAdd:{}, partnerFilter:'pending', unlocked:false };
+/* ── row <-> record ── */
+const numOrNull = v => (v === '' || v == null || isNaN(v)) ? null : Number(v);
+const caseToRow = c => ({
+  id:c.id, ref:c.ref, kind:c.kind || 'application', name:c.name, phone:c.phone,
+  phone2:c.phone2 || null, email:c.email || null, nrc:c.nrc || null, who:c.who || null,
+  compound:c.compound || null, category:c.category || null, amount:numOrNull(c.amount),
+  urgency:c.urgency || null, household:numOrNull(c.household), story:c.story || null,
+  referee:c.referee || null, previous:c.previous || null, notes:c.notes || null,
+  status:c.status || 'submitted', doc_count:c.docCount || 0,
+  history:c.history || [], created_at:c.createdAt || nowISO()
+});
+const rowToCase = r => ({
+  id:r.id, ref:r.ref, kind:r.kind, name:r.name, phone:r.phone, phone2:r.phone2 || '',
+  email:r.email || '', nrc:r.nrc || '', who:r.who || '', compound:r.compound || '',
+  category:r.category || '', amount:r.amount == null ? '' : r.amount, urgency:r.urgency || '',
+  household:r.household == null ? '' : r.household, story:r.story || '', referee:r.referee || '',
+  previous:r.previous || '', notes:r.notes || '', status:r.status || 'submitted',
+  createdAt:r.created_at, history:r.history || [], docCount:r.doc_count || 0,
+  docLabels:[], synced:true
+});
+const partnerToRow = p => ({
+  id:p.id, ref:p.ref, name:p.name, org:p.org || null, email:p.email, phone:p.phone,
+  city:p.city || null, church:p.church || null, types:p.types || [], amount:numOrNull(p.amount),
+  freq:p.freq || null, message:p.message || null, contact:p.contact || 'Email',
+  status:p.status || 'pending', approved_at:p.approvedAt || null, approved_by:p.approvedBy || null,
+  thank_you:p.thankYou || null, notify_log:p.notifyLog || [], created_at:p.createdAt || nowISO()
+});
+const rowToPartner = r => ({
+  id:r.id, ref:r.ref, name:r.name, org:r.org || '', email:r.email, phone:r.phone,
+  city:r.city || '', church:r.church || '', types:r.types || [], amount:r.amount == null ? '' : r.amount,
+  freq:r.freq || '', message:r.message || '', contact:r.contact || 'Email', status:r.status || 'pending',
+  approvedAt:r.approved_at || null, approvedBy:r.approved_by || null, thankYou:r.thank_you || '',
+  notifyLog:r.notify_log || [], createdAt:r.created_at, synced:true
+});
 
-function loadUploads() {
-  $$('.up').forEach(u => {
-    const slot = u.dataset.slot;
-    const scope = u.closest('#addCard') ? 'add' : 'apply';
-    const key = scope + ':' + slot;
-    if (!state.uploads[key]) state.uploads[key] = [];
-  });
+function dataUrlToBlob(dataUrl) {
+  const parts = String(dataUrl).split(',');
+  const mime = (parts[0].match(/:(.*?);/) || [,'application/octet-stream'])[1];
+  const bin = atob(parts[1] || '');
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  return new Blob([arr], { type:mime });
 }
+const extFor = mime => /png/.test(mime) ? 'png' : /pdf/.test(mime) ? 'pdf' : /jpe?g/.test(mime) ? 'jpg' : 'bin';
 
-/* ─────────────────────────── images / files ─────────────────────────── */
-function readFileAsDataURL(file) {
-  return new Promise((res, rej) => {
-    const fr = new FileReader();
-    fr.onload = () => res(fr.result);
-    fr.onerror = () => rej(fr.error);
-    fr.readAsDataURL(file);
-  });
-}
-function shrinkImage(file, max = 1500, quality = 0.82) {
-  return new Promise(res => {
-    if (!/^image\//.test(file.type) || file.type === 'image/gif') return res(null);
-    const url = URL.createObjectURL(file), img = new Image();
-    img.onload = () => {
-      let w = img.width, h = img.height;
-      const scale = Math.min(1, max / Math.max(w, h));
-      w = Math.round(w * scale); h = Math.round(h * scale);
-      const c = document.createElement('canvas'); c.width = w; c.height = h;
-      const cx = c.getContext('2d');
-      cx.fillStyle = '#fff'; cx.fillRect(0, 0, w, h);
-      cx.drawImage(img, 0, 0, w, h);
-      URL.revokeObjectURL(url);
-      try { res(c.toDataURL('image/jpeg', quality)); } catch (e) { res(null); }
-    };
-    img.onerror = () => { URL.revokeObjectURL(url); res(null); };
-    img.src = url;
-  });
-}
-
-async function handleFiles(input, upEl) {
-  const scope = upEl.closest('#addCard') ? 'add' : 'apply';
-  const key = scope + ':' + upEl.dataset.slot;
-  const files = Array.from(input.files || []);
-  if (!files.length) return;
-  upEl.classList.remove('drag');
-  for (const f of files) {
-    if (f.size > CONFIG.maxFileMB * 1048576) { toast(f.name + ' is bigger than ' + CONFIG.maxFileMB + ' MB — please retake it.', 'err'); continue; }
-    const isImg = /^image\//.test(f.type);
-    let dataUrl = isImg ? await shrinkImage(f) : null;
-    if (!dataUrl) dataUrl = await readFileAsDataURL(f);
-    state.uploads[key].push({
-      docId: uid(), label: upEl.dataset.label || upEl.dataset.slot, name: f.name,
-      type: f.type || 'application/octet-stream', size: isImg ? Math.round(dataUrl.length * 0.75) : f.size,
-      dataUrl, addedAt: nowISO()
-    });
+/* ── writes ── */
+async function saveCase(rec, docs) {
+  rec.synced = false;
+  await Store.put('cases', rec);
+  if (docs && docs.length) {
+    await Store.put('docs', { id:rec.id, ref:rec.ref, items:docs.map(d => Object.assign({}, d, { uploaded:false })), savedAt:nowISO() });
   }
-  input.value = '';
-  renderUpload(upEl);
-  updateDocTotals();
-}
-
-function renderUpload(upEl) {
-  const scope = upEl.closest('#addCard') ? 'add' : 'apply';
-  const list = state.uploads[scope + ':' + upEl.dataset.slot] || [];
-  const box = $('.up-list', upEl);
-  box.innerHTML = list.map(f => {
-    const thumb = /^data:image/.test(f.dataUrl)
-      ? '<img class="fthumb" src="' + f.dataUrl + '" alt="">'
-      : '<div class="fthumb">📄</div>';
-    return '<div class="fitem">' + thumb +
-      '<div class="fmeta"><b>' + esc(f.name) + '</b><span>' + esc(f.label) + ' · ' + fmtBytes(f.size) + '</span></div>' +
-      '<button class="fx" type="button" data-rm="' + f.docId + '" title="Remove">✕</button></div>';
-  }).join('');
-  upEl.classList.toggle('has', list.length > 0);
-  $$('[data-rm]', box).forEach(b => b.addEventListener('click', () => {
-    const arr = state.uploads[scope + ':' + upEl.dataset.slot];
-    const i = arr.findIndex(x => x.docId === b.dataset.rm);
-    if (i > -1) arr.splice(i, 1);
-    renderUpload(upEl); updateDocTotals();
-  }));
-}
-
-function scopeDocs(scope) {
-  const prefix = scope + ':';
-  return Object.keys(state.uploads)
-    .filter(k => k.startsWith(prefix))
-    .reduce((acc, k) => acc.concat(state.uploads[k] || []), []);
-}
-function updateDocTotals() {
-  const applyDocs = scopeDocs('apply');
-  const total = $('#applyDocsTotal');
-  const nid = applyDocs.filter(d => d.label.indexOf('NRC') === 0).length;
-  const nproof = applyDocs.filter(d => d.label.indexOf('Proof') === 0).length;
-  if (!applyDocs.length) { total.textContent = '📎 No documents attached yet'; total.style.color = '#5b6478'; }
-  else {
-    total.innerHTML = '📎 <b>' + applyDocs.length + '</b> document' + (applyDocs.length > 1 ? 's' : '') +
-      ' attached · ' + (nid ? 'NRC/ID ✓' : 'NRC/ID ✗') + ' · ' + (nproof ? 'proof of need ✓' : 'proof of need ✗');
-    total.style.color = '#101d44';
+  let cloudOk = false;
+  if (Sb.ready()) {
+    try {
+      await Sb.upsert(CONFIG.sb.tables.cases, [caseToRow(rec)], 'id');
+      rec.synced = true;
+      await Store.put('cases', rec);
+      cloudOk = true;
+      if (docs && docs.length) await pushDocs(rec, await Store.get('docs', rec.id));
+    } catch (e) {
+      state.cloud = 'error'; noteSyncError(e);
+    }
   }
-  const err = $('#applyDocErr');
-  if (err) err.style.display = applyDocs.length >= CONFIG.minDocs ? 'none' : '';
+  await countPending();
+  updatePill();
+  return cloudOk;
 }
 
-/* ─────────────────────────── references ─────────────────────────── */
-function makeCaseRef() {
-  const y = new Date().getFullYear();
-  const n = String(Math.floor(Math.random() * 9000) + 1000);
-  const L = 'ABCDEFGHJKLMNPQRSTUVWXYZ'[Math.floor(Math.random() * 24)];
-  return 'JCRGM-' + y + '-' + n + '-' + L;
-}
-function makePartnerRef() {
-  return 'PTR-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 9000) + 1000);
+async function savePartner(rec) {
+  rec.synced = false;
+  await Store.put('partners', rec);
+  let cloudOk = false;
+  if (Sb.ready()) {
+    try {
+      await Sb.upsert(CONFIG.sb.tables.partners, [partnerToRow(rec)], 'id');
+      rec.synced = true;
+      await Store.put('partners', rec); cloudOk = true;
+    } catch (e) { state.cloud = 'error'; noteSyncError(e); }
+  }
+  await countPending(); updatePill();
+  return cloudOk;
 }
 
-/* ─────────────────────────── tabs & navigation ─────────────────────────── */
+async function pushCase(rec) {
+  await Sb.upsert(CONFIG.sb.tables.cases, [caseToRow(rec)], 'id');
+  rec.synced = true; await Store.put('cases', rec);
+}
+async function pushPartner(rec) {
+  await Sb.upsert(CONFIG.sb.tables.partners, [partnerToRow(rec)], 'id');
+  rec.synced = true; await Store.put('partners', rec);
+}
+
+/* documents → storage bucket + metadata rows */
+async function pushDocs(rec, docRec) {
+  if (!docRec || !docRec.items) return;
+  let changed = false;
+  for (const d of docRec.items) {
+    if (d.uploaded && d.storagePath) continue;
+    try {
+      const pathName = (rec.ref || rec.id) + '/' + d.docId + '.' + extFor(d.type);
+      const blob = dataUrlToBlob(d.dataUrl);
+      await Sb.upload(pathName, blob, d.type || 'application/octet-stream');
+      await Sb.upsert(CONFIG.sb.tables.docs, [{
+        id:d.docId, case_id:rec.id, case_ref:rec.ref, label:d.label, file_name:d.name,
+        mime_type:d.type, size_bytes:d.size || blob.size, storage_path:pathName, uploaded_by:'applicant'
+      }], 'id');
+      d.uploaded = true; d.storagePath = pathName; changed = true;
+    } catch (e) { noteSyncError(e); }
+  }
+  if (changed) await Store.put('docs', docRec);
+}
+
+async function purgeDocsCloud(rec) {
+  const docRec = await Store.get('docs', rec.id);
+  if (Sb.ready() && Sb.signedIn()) {
+    try {
+      const rows = await Sb.select(CONFIG.sb.tables.docs, 'case_id=eq.' + rec.id + '&select=id,storage_path');
+      for (const r of rows || []) {
+        if (r.storage_path) { try { await Sb.removeObject(r.storage_path); } catch (e) {} }
+        try { await Sb.remove(CONFIG.sb.tables.docs, { id:r.id }); } catch (e) {}
+      }
+    } catch (e) { noteSyncError(e); }
+  }
+  if (docRec) await Store.del('docs', rec.id);
+}
+
+async function updateCaseCloud(rec) {
+  if (!Sb.ready()) return false;
+  try { await Sb.update(CONFIG.sb.tables.cases, { id:rec.id },
+        { status:rec.status, history:rec.history || [], doc_count:rec.docCount || 0, notes:rec.notes || null });
+    return true;
+  } catch (e) { noteSyncError(e); return false; }
+}
+async function updatePartnerCloud(rec) {
+  if (!Sb.ready()) return false;
+  try { await Sb.update(CONFIG.sb.tables.partners, { id:rec.id }, partnerToRow(rec)); return true; }
+  catch (e) { noteSyncError(e); return false; }
+}
+
+function noteSyncError(e) {
+  const msg = (e && e.message) || 'sync error';
+  if (/offline|Failed to fetch|NetworkError/i.test(msg)) state.cloud = 'offline';
+  else if (e && (e.status === 401 || e.status === 403)) state.cloud = 'auth';
+  else state.cloud = 'error';
+}
+
+/* ── outbox flush ── */
+async function countPending() {
+  const cases = await Store.all('cases'), partners = await Store.all('partners'), docs = await Store.all('docs');
+  let n = cases.filter(c => c.synced === false).length + partners.filter(p => p.synced === false).length;
+  docs.forEach(d => { n += (d.items || []).filter(i => !i.uploaded).length; });
+  state.pending = n;
+  return n;
+}
+
+async function flushOutbox(quiet) {
+  if (!Sb.ready()) { if (!quiet) toast('No Supabase project is connected yet — open the desk settings.', 'warn'); return false; }
+  const before = state.pending;
+  const cases = (await Store.all('cases')).filter(c => c.synced === false);
+  const partners = (await Store.all('partners')).filter(p => p.synced === false);
+  const docs = await Store.all('docs');
+  let failed = 0;
+  for (const c of cases) { try { await pushCase(c); } catch (e) { failed++; noteSyncError(e); } }
+  for (const p of partners) { try { await pushPartner(p); } catch (e) { failed++; noteSyncError(e); } }
+  for (const d of docs) {
+    const rec = cases.concat(await Store.all('cases')).find(c => c.id === d.id);
+    if (rec && (d.items || []).some(i => !i.uploaded)) { try { await pushDocs(rec, d); } catch (e) { failed++; } }
+  }
+  await countPending();
+  if (!quiet) {
+    if (state.pending === 0) toast('All ' + before + ' record(s) are now in the church database.', 'ok');
+    else toast(state.pending + ' record(s) still waiting — ' + (failed ? 'the database refused them.' : 'no connection yet.'), 'warn', 5500);
+  }
+  return state.pending === 0;
+}
+
+/* ── pulls ── */
+async function pullAll() {
+  if (!Sb.ready() || !Sb.signedIn()) return false;
+  const t = CONFIG.sb.tables;
+  try {
+    const [cases, partners] = await Promise.all([
+      Sb.select(t.cases, 'select=*&order=created_at.desc&limit=1000'),
+      Sb.select(t.partners, 'select=*&order=created_at.desc&limit=1000')
+    ]);
+    const cloudCases = (cases || []).map(rowToCase);
+    const cloudPartners = (partners || []).map(rowToPartner);
+    // keep anything still waiting to upload visible
+    const localCases = await Store.all('cases'), localPartners = await Store.all('partners');
+    const idsC = new Set(cloudCases.map(c => c.id)), idsP = new Set(cloudPartners.map(p => p.id));
+    localCases.filter(c => c.synced === false && !idsC.has(c.id)).forEach(c => cloudCases.unshift(c));
+    localPartners.filter(p => p.synced === false && !idsP.has(p.id)).forEach(p => cloudPartners.unshift(p));
+    state.cloud = 'ok';
+    await Store.bulk('cases', cloudCases);
+    await Store.bulk('partners', cloudPartners);
+    return { cases:cloudCases, partners:cloudPartners };
+  } catch (e) { noteSyncError(e); return false; }
+}
+
+/* ── status pill ── */
+function updatePill() {
+  const pill = $('#pillMode'); if (!pill) return;
+  let dot = 'off', text = '';
+  if (!Sb.ready()) {
+    text = '💾 Saved on this phone — open the desk to connect Supabase';
+  } else if (state.cloud === 'auth' || (Sb.ready() && !Sb.signedIn())) {
+    text = '☁ Connected to the church database';
+  } else if (state.cloud === 'ok') {
+    dot = ''; text = '☁ Synced to the church database';
+  } else if (state.cloud === 'offline') {
+    text = '📶 Offline — saved here, will sync';
+  } else {
+    text = '☁ Connected to Supabase';
+  }
+  pill.innerHTML = '<span class="dot ' + dot + '"></span>' + esc(text) +
+    (state.pending ? ' <b style="color:#ffd700">· ' + state.pending + ' to send</b>' : '');
+  pill.title = Sb.ready() ? 'Supabase: ' + Sb.url() : 'No Supabase project connected';
+  pill.style.cursor = 'pointer';
+  pill.onclick = () => { go('admin'); setTimeout(() => { const s = $('#sbCard'); if (s && !$('#desk').hidden) s.scrollIntoView({ behavior:'smooth', block:'center' }); }, 200); };
+  const q = $('#pillQueue');
+  if (q) { q.hidden = !state.pending; q.textContent = '📥 ' + state.pending + ' queued'; }
+}
+/* ═══════════════════════ tabs & navigation ═══════════════════════ */
 function go(tab) {
   const panels = { home:'p-home', apply:'p-apply', status:'p-status', partners:'p-partners', admin:'p-admin' };
   if (!panels[tab]) tab = 'home';
@@ -1364,7 +1704,7 @@ document.addEventListener('click', e => {
   if (g) { e.preventDefault(); go(g.dataset.goto); }
 });
 
-/* ─────────────────────────── field validation ─────────────────────────── */
+/* ═══════════════════════ validation ═══════════════════════ */
 function setErr(field, msg) {
   const f = field.closest('.field') || field.closest('.chk');
   const box = f ? $('.err', f) : null;
@@ -1372,51 +1712,138 @@ function setErr(field, msg) {
   if (box) { if (msg) $('.em', box).textContent = msg; box.style.display = msg ? 'flex' : ''; }
   return !msg;
 }
-function clearErrs(root) {
-  $$('.field.invalid, .chk.invalid', root).forEach(f => f.classList.remove('invalid'));
-  $$('.err', root).forEach(e => { if (!e.id || !/^pt|^ap|^lk/.test(e.id) || e.style.display) e.style.display = ''; });
-}
-function val(id) { const el = $('#' + id); return el ? el.value.trim() : ''; }
 
-/* ═══════════════════════ APPLY FORM ═══════════════════════ */
+/* ═══════════════════════ uploads ═══════════════════════ */
+function loadUploads() {
+  $$('.up').forEach(u => {
+    const key = (u.closest('#addCard') ? 'add' : 'apply') + ':' + u.dataset.slot;
+    if (!state.uploads[key]) state.uploads[key] = [];
+  });
+}
+function readFileAsDataURL(file) {
+  return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = () => rej(fr.error); fr.readAsDataURL(file); });
+}
+function shrinkImage(file, max = 1500, quality = 0.82) {
+  return new Promise(res => {
+    if (!/^image\//.test(file.type) || file.type === 'image/gif') return res(null);
+    if (typeof window.URL === 'undefined' || !URL.createObjectURL) return res(null);
+    let url, img;
+    try { url = URL.createObjectURL(file); img = new Image(); } catch (e) { return res(null); }
+    let settled = false;
+    const finish = v => { if (!settled) { settled = true; res(v); } };
+    setTimeout(() => finish(null), 5000);   // never leave the applicant waiting
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      const scale = Math.min(1, max / Math.max(w, h));
+      w = Math.round(w * scale); h = Math.round(h * scale);
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const cx = c.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, w, h); cx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      try { finish(c.toDataURL('image/jpeg', quality)); } catch (e) { finish(null); }
+    };
+    img.onerror = () => { try { URL.revokeObjectURL(url); } catch (e) {} finish(null); };
+    try { img.src = url; } catch (e) { finish(null); }
+  });
+}
+async function handleFiles(input, upEl) {
+  const scope = upEl.closest('#addCard') ? 'add' : 'apply';
+  const key = scope + ':' + upEl.dataset.slot;
+  const files = Array.from(input.files || []);
+  if (!files.length) return;
+  upEl.classList.remove('drag');
+  for (const f of files) {
+    if (f.size > CONFIG.maxFileMB * 1048576) { toast(f.name + ' is bigger than ' + CONFIG.maxFileMB + ' MB — please retake it.', 'err'); continue; }
+    const isImg = /^image\//.test(f.type);
+    let dataUrl = isImg ? await shrinkImage(f) : null;
+    if (!dataUrl) dataUrl = await readFileAsDataURL(f);
+    state.uploads[key].push({
+      docId: uid(), label: upEl.dataset.label || upEl.dataset.slot, name: f.name,
+      type: isImg ? 'image/jpeg' : (f.type || 'application/octet-stream'),
+      size: isImg ? Math.round(dataUrl.length * 0.75) : f.size,
+      dataUrl, addedAt: nowISO(), uploaded:false
+    });
+  }
+  input.value = '';
+  renderUpload(upEl); updateDocTotals();
+}
+function renderUpload(upEl) {
+  const scope = upEl.closest('#addCard') ? 'add' : 'apply';
+  const list = state.uploads[scope + ':' + upEl.dataset.slot] || [];
+  const box = $('.up-list', upEl);
+  box.innerHTML = list.map(f => {
+    const thumb = /^data:image/.test(f.dataUrl) ? '<img class="fthumb" src="' + f.dataUrl + '" alt="">' : '<div class="fthumb">📄</div>';
+    return '<div class="fitem">' + thumb +
+      '<div class="fmeta"><b>' + esc(f.name) + '</b><span>' + esc(f.label) + ' · ' + fmtBytes(f.size) + '</span></div>' +
+      '<button class="fx" type="button" data-rm="' + f.docId + '" title="Remove">✕</button></div>';
+  }).join('');
+  upEl.classList.toggle('has', list.length > 0);
+  $$('[data-rm]', box).forEach(b => b.addEventListener('click', () => {
+    const arr = state.uploads[scope + ':' + upEl.dataset.slot];
+    const i = arr.findIndex(x => x.docId === b.dataset.rm);
+    if (i > -1) arr.splice(i, 1);
+    renderUpload(upEl); updateDocTotals();
+  }));
+}
+function scopeDocs(scope) {
+  const p = scope + ':';
+  return Object.keys(state.uploads).filter(k => k.startsWith(p)).reduce((a, k) => a.concat(state.uploads[k] || []), []);
+}
+function updateDocTotals() {
+  const docs = scopeDocs('apply');
+  const total = $('#applyDocsTotal'), err = $('#applyDocErr');
+  if (!total) return;
+  const nid = docs.filter(d => d.label.indexOf('NRC') === 0).length;
+  const nproof = docs.filter(d => d.label.indexOf('Proof') === 0).length;
+  if (!docs.length) { total.textContent = '📎 No documents attached yet'; total.style.color = '#5b6478'; }
+  else {
+    total.innerHTML = '📎 <b>' + docs.length + '</b> document' + (docs.length > 1 ? 's' : '') +
+      ' attached · ' + (nid ? 'NRC/ID ✓' : 'NRC/ID ✗') + ' · ' + (nproof ? 'proof of need ✓' : 'proof of need ✗');
+    total.style.color = '#101d44';
+  }
+  if (err) err.style.display = docs.length >= CONFIG.minDocs ? 'none' : '';
+}
+function resetUploads(scope) {
+  Object.keys(state.uploads).filter(k => k.startsWith(scope + ':')).forEach(k => { state.uploads[k] = []; });
+  $$(scope === 'add' ? '#addCard .up' : '#applyUploads .up').forEach(renderUpload);
+}
+
+/* ═══════════════════════ refs ═══════════════════════ */
+const makeCaseRef = () => 'JCRGM-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 9000) + 1000) +
+  '-' + 'ABCDEFGHJKLMNPQRSTUVWXYZ'[Math.floor(Math.random() * 24)];
+const makePartnerRef = () => 'PTR-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 9000) + 1000);
+
+/* ═══════════════════════ APPLY ═══════════════════════ */
 const APPLY_TITLES = {
   1:['Who is asking','Take your time. Everything here is confidential, and there is no charge for any of it.'],
-  2:['What is needed','Tell us plainly what has happened. The committee reads this, not a computer.'],
+  2:['What is needed','Tell us plainly what has happened. A person on the committee reads this, not a computer.'],
   3:['Documents & verification','Attach a photo of your NRC/ID and proof of the need. This is what lets us approve quickly and honestly.'],
   4:['Review & send','Check everything, tick the confirmation, and send it to the Support Team desk.']
 };
-
 function buildCats() {
   const sel = $('#apCat'), ad = $('#adCat');
   CATEGORIES.forEach(c => {
     if (sel) sel.insertAdjacentHTML('beforeend', '<option>' + esc(c) + '</option>');
     if (ad) ad.insertAdjacentHTML('beforeend', '<option>' + esc(c) + '</option>');
   });
-  $('#homeCats').innerHTML = CATEGORIES.map(c => '<span class="cat">' + esc(c) + '</span>').join('');
-  const fs = $('#fCat');
-  if (fs) CATEGORIES.forEach(c => fs.insertAdjacentHTML('beforeend', '<option value="' + esc(c) + '">' + esc(c) + '</option>'));
-  const st = $('#fStatus');
-  if (st) Object.keys(STATUSES).forEach(k => st.insertAdjacentHTML('beforeend', '<option value="' + k + '">' + esc(STATUSES[k].label) + '</option>'));
+  const hc = $('#homeCats'); if (hc) hc.innerHTML = CATEGORIES.map(c => '<span class="cat">' + esc(c) + '</span>').join('');
+  const fs = $('#fCat'); if (fs) CATEGORIES.forEach(c => fs.insertAdjacentHTML('beforeend', '<option value="' + esc(c) + '">' + esc(c) + '</option>'));
+  const st = $('#fStatus'); if (st) Object.keys(STATUSES).forEach(k => st.insertAdjacentHTML('beforeend', '<option value="' + k + '">' + esc(STATUSES[k].label) + '</option>'));
 }
-
 function renderSteps() {
   const names = ['Details','The need','Documents','Review'];
   $('#applySteps').innerHTML = names.map((n, i) => {
-    const s = i + 1;
-    const cls = state.step === s ? 'now' : state.step > s ? 'done' : '';
-    return '<li class="stp ' + cls + '"><span class="bar"></span><span>' + (s) + '. ' + n + '</span></li>';
+    const s = i + 1, cls = state.step === s ? 'now' : state.step > s ? 'done' : '';
+    return '<li class="stp ' + cls + '"><span class="bar"></span><span>' + s + '. ' + n + '</span></li>';
   }).join('');
   $$('.step-sec').forEach(sec => sec.classList.toggle('on', Number(sec.dataset.step) === state.step));
   const [t, n] = APPLY_TITLES[state.step];
-  $('#applyStepTitle').textContent = t;
-  $('#applyStepNote').textContent = n;
+  $('#applyStepTitle').textContent = t; $('#applyStepNote').textContent = n;
   $('#applyBack').hidden = state.step === 1;
   $('#applyNext').hidden = state.step === 4;
   $('#applySubmit').hidden = state.step !== 4;
   $('#applySave').hidden = state.step === 4;
   if (state.step === 4) renderApplyReview();
 }
-
 function validateStep(s) {
   let ok = true;
   if (s === 1) {
@@ -1440,60 +1867,42 @@ function validateStep(s) {
     if (!has) toast('Attach at least one document — NRC/ID or proof of the need.', 'err');
     ok = has && ok;
   }
-  if (!ok) {
-    const first = $('.step-sec.on .invalid input, .step-sec.on .invalid select, .step-sec.on .invalid textarea');
-    if (first) first.focus();
-  }
+  if (!ok) { const f = $('.step-sec.on .invalid input, .step-sec.on .invalid select, .step-sec.on .invalid textarea'); if (f) f.focus(); }
   return ok;
 }
-
 function renderApplyReview() {
   const docs = scopeDocs('apply');
-  const rows = [
-    ['Name', val('apName')], ['Phone', val('apPhone')],
-    ['NRC / ID', val('apNrc')], ['Asking as', val('apWho')],
-    ['Area', val('apCompound')], ['Help needed', val('apCat')],
-    ['Amount', val('apAmount') ? money(val('apAmount')) : 'Not stated'],
-    ['Urgency', val('apUrgency')], ['Referee', val('apRef')]
-  ];
+  const rows = [['Name',val('apName')],['Phone',val('apPhone')],['NRC / ID',val('apNrc')],['Asking as',val('apWho')],
+    ['Area',val('apCompound')],['Help needed',val('apCat')],['Amount',val('apAmount') ? money(val('apAmount')) : 'Not stated'],
+    ['Urgency',val('apUrgency')],['Referee',val('apRef')]];
   $('#applyReview').innerHTML =
-    '<div class="dl">' + rows.map(r =>
-      '<div><dt>' + esc(r[0]) + '</dt><dd>' + (r[1] ? esc(r[1]) : '—') + '</dd></div>').join('') +
-    '</div>' +
+    '<div class="dl">' + rows.map(r => '<div><dt>' + esc(r[0]) + '</dt><dd>' + (r[1] ? esc(r[1]) : '—') + '</dd></div>').join('') + '</div>' +
     '<div class="sec-t">Documents attached (' + docs.length + ')</div>' +
-    (docs.length
-      ? '<div class="doc-grid">' + docs.map(d =>
-          '<div class="doc">' + (/^data:image/.test(d.dataUrl) ? '<img src="' + d.dataUrl + '" alt="">' : '<div class="ph">📄</div>') +
-          '<span>' + esc(d.label) + '</span></div>').join('') + '</div>'
+    (docs.length ? '<div class="doc-grid">' + docs.map(d =>
+      '<div class="doc">' + (/^data:image/.test(d.dataUrl) ? '<img src="' + d.dataUrl + '" alt="">' : '<div class="ph">📄</div>') +
+      '<span>' + esc(d.label) + '</span></div>').join('') + '</div>'
       : '<p class="small" style="color:#b42318">No documents — go back to step 3.</p>');
 }
-
-$('#applyNext') && $('#applyNext').addEventListener('click', () => {
+$('#applyNext').addEventListener('click', () => {
   if (!validateStep(state.step)) return;
   if (state.step < 4) { state.step++; renderSteps(); window.scrollTo({ top:120, behavior:'smooth' }); }
 });
-$('#applyBack') && $('#applyBack').addEventListener('click', () => {
+$('#applyBack').addEventListener('click', () => {
   if (state.step > 1) { state.step--; renderSteps(); window.scrollTo({ top:120, behavior:'smooth' }); }
 });
-$('#apStory') && $('#apStory').addEventListener('input', e => { $('#apStoryCount').textContent = e.target.value.length; });
-
-/* save draft */
-$('#applySave') && $('#applySave').addEventListener('click', async () => {
-  const draft = { id:'draft-apply', savedAt:nowISO(),
-    name:val('apName'), phone:val('apPhone'), nrc:val('apNrc'), story:val('apStory') };
-  await Store.put('drafts', draft);
+$('#apStory').addEventListener('input', e => { $('#apStoryCount').textContent = e.target.value.length; });
+$('#applySave').addEventListener('click', async () => {
+  await Store.put('drafts', { id:'draft-apply', savedAt:nowISO(), name:val('apName'), phone:val('apPhone'), nrc:val('apNrc'), story:val('apStory') });
   toast('Draft saved on this phone. Come back to the Apply tab to continue.', 'ok');
 });
 
-/* submit application */
-$('#applyForm') && $('#applyForm').addEventListener('submit', async e => {
+$('#applyForm').addEventListener('submit', async e => {
   e.preventDefault();
   for (let s = 1; s <= 3; s++) if (!validateStep(s)) { state.step = s; renderSteps(); return; }
   if (!$('#apConsent').checked) {
     $('#apConsentWrap').classList.add('invalid');
     $('#apConsentErr').style.display = 'flex';
-    $('#apConsent').focus();
-    return;
+    $('#apConsent').focus(); return;
   }
   $('#apConsentWrap').classList.remove('invalid');
   $('#apConsentErr').style.display = 'none';
@@ -1502,24 +1911,20 @@ $('#applyForm') && $('#applyForm').addEventListener('submit', async e => {
   const docs = scopeDocs('apply');
   const rec = {
     id: uid(), ref: makeCaseRef(), kind:'application',
-    name: val('apName'), phone: val('apPhone'), phone2: val('apPhone2'),
-    email: val('apEmail'), nrc: val('apNrc'), who: val('apWho'), compound: val('apCompound'),
-    category: val('apCat'), amount: val('apAmount'), urgency: val('apUrgency'),
-    household: val('apHousehold'), story: val('apStory'), referee: val('apRef'),
-    previous: val('apPrev'), notes: val('apNotes'),
-    status: 'submitted', createdAt: nowISO(), history: [{ at:nowISO(), status:'submitted', by:'applicant' }],
+    name: val('apName'), phone: val('apPhone'), phone2: val('apPhone2'), email: val('apEmail'),
+    nrc: val('apNrc'), who: val('apWho'), compound: val('apCompound'), category: val('apCat'),
+    amount: val('apAmount'), urgency: val('apUrgency'), household: val('apHousehold'),
+    story: val('apStory'), referee: val('apRef'), previous: val('apPrev'), notes: val('apNotes'),
+    status:'submitted', createdAt: nowISO(), history:[{ at:nowISO(), status:'submitted', by:'applicant' }],
     docCount: docs.length, docLabels: docs.map(d => d.label)
   };
-  await Store.put('cases', rec);
-  if (docs.length) await Store.put('docs', { id: rec.id, ref: rec.ref, items: docs, savedAt: nowISO() });
+  const cloudOk = await saveCase(rec, docs);
   await Store.del('drafts', 'draft-apply');
   await refresh();
   btn.classList.remove('busy');
 
-  // success card
   $('#applyShell').hidden = true;
   const done = $('#applyDone'); done.hidden = false;
-  const notifyChannel = CONFIG.deskWhatsApp;
   done.innerHTML =
     '<div class="done-hero">' +
       '<div class="big">✓</div>' +
@@ -1530,42 +1935,38 @@ $('#applyForm') && $('#applyForm').addEventListener('submit', async e => {
         '<div><small>Name</small><b>' + esc(rec.name) + '</b></div>' +
         '<div><small>Help needed</small><b>' + esc(rec.category) + '</b></div>' +
         '<div><small>Documents</small><b>' + rec.docCount + ' attached</b></div>' +
-        '<div><small>Status</small><b>Submitted</b></div>' +
-      '</div>' +
-    '</div>' +
+        '<div><small>Sent</small><b>' + (cloudOk ? 'To the church database' : 'Saved, will sync') + '</b></div>' +
+      '</div></div>' +
     '<div class="divider"></div>' +
-    '<div class="note ok"><span class="ni">📱</span><div><b>Save this now.</b> Screenshot this screen or write the reference down. You will need it with the last 4 digits of <b>' + esc(rec.phone) + '</b> to check the case.</div></div>' +
-    '<div class="note" style="margin-top:9px"><span class="ni">⏱</span><div><b>What happens next.</b> Two team members will look at your documents and call your referee. Most cases are decided within 7 days; emergencies within 48 hours. We will call you on ' + esc(rec.phone) + '.</div></div>' +
-    '<div class="note warn" style="margin-top:9px"><span class="ni">🔒</span><div><b>About your documents.</b> Your NRC/ID and bills stay with the Support Team only. They are never posted, forwarded on WhatsApp, or shown to a sponsor.</div></div>' +
+    (cloudOk
+      ? '<div class="note ok"><span class="ni">☁</span><div><b>Filed in the church database.</b> Your case and your documents are now on the welfare desk\'s register, and the team will see it on any phone that runs the church app.</div></div>'
+      : '<div class="note warn"><span class="ni">📶</span><div><b>Saved on this phone and queued.</b> The church database could not be reached just now, so the case is held safely here and uploads itself as soon as there is signal. Do not clear this browser\'s data before it has synced.</div></div>') +
+    '<div class="note" style="margin-top:9px"><span class="ni">📱</span><div><b>Save this now.</b> Screenshot this screen or write the reference down. You will need it with the last 4 digits of <b>' + esc(rec.phone) + '</b> to check the case.</div></div>' +
+    '<div class="note" style="margin-top:9px"><span class="ni">⏱</span><div><b>What happens next.</b> Two team members will look at your documents and call your referee. Most cases are decided within 7 days; emergencies within 48 hours.</div></div>' +
+    '<div class="note" style="margin-top:9px"><span class="ni">🔒</span><div><b>About your documents.</b> Your NRC/ID and bills are held in the church\'s private document store, seen only by the Support Team. They are never posted, forwarded on WhatsApp, or shown to a sponsor.</div></div>' +
     '<div class="formbar">' +
       '<button class="btn ghost" type="button" data-go="status">🔎 Track this case</button>' +
       '<button class="btn ghost" type="button" id="doneWa">💬 WhatsApp the desk</button>' +
       '<span class="grow"></span>' +
-      '<button class="btn primary" type="button" id="doneAgain">Apply for someone else</button>' +
-    '</div>';
-  $('#doneWa').addEventListener('click', () => openWhatsApp(CONFIG.deskWhatsApp,
-    'Good day. I have submitted an application for assistance. My reference is ' + rec.ref + '.'));
-  $('#doneAgain').addEventListener('click', () => resetApply());
+      '<button class="btn primary" type="button" id="doneAgain">Apply for someone else</button></div>';
+  $('#doneWa').addEventListener('click', () => openWhatsApp(CONFIG.deskWhatsApp, 'Good day. I have submitted an application for assistance. My reference is ' + rec.ref + '.'));
+  $('#doneAgain').addEventListener('click', resetApply);
   window.scrollTo({ top:0, behavior:'smooth' });
   toast('Application sent. Your reference is ' + rec.ref, 'ok', 6000);
 });
 
 function resetApply() {
   $('#applyForm').reset();
-  $('#applyDocsTotal').textContent = '📎 No documents attached yet';
-  $$('.up', $('#applyUploads')).forEach(u => { const k = 'apply:' + u.dataset.slot; if (state.uploads[k]) state.uploads[k] = []; renderUpload(u); });
-  state.step = 1;
-  renderSteps();
-  $('#applyDone').hidden = true;
-  $('#applyShell').hidden = false;
+  resetUploads('apply');
+  state.step = 1; renderSteps();
+  $('#applyDone').hidden = true; $('#applyShell').hidden = false;
   updateDocTotals();
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
 /* ═══════════════════════ PARTNERS ═══════════════════════ */
 const ptTypes = () => $$('#ptTypes input:checked').map(i => i.value);
-
-$('#partnerForm') && $('#partnerForm').addEventListener('submit', async e => {
+$('#partnerForm').addEventListener('submit', async e => {
   e.preventDefault();
   let ok = true;
   ok = setErr($('#ptName'), val('ptName').length < 3 ? 'Please give your full name.' : '') && ok;
@@ -1585,13 +1986,12 @@ $('#partnerForm') && $('#partnerForm').addEventListener('submit', async e => {
 
   const btn = $('#ptSubmit'); btn.classList.add('busy');
   const rec = {
-    id: uid(), ref: makePartnerRef(),
-    name: val('ptName'), org: val('ptOrg'), email: val('ptEmail'), phone: val('ptPhone'),
-    city: val('ptCity'), church: val('ptChurch'), types, amount: val('ptAmount'), freq: val('ptFreq'),
-    message: val('ptMsg'), contact,
-    status: 'pending', createdAt: nowISO(), approvedAt: null, notifyLog: []
+    id: uid(), ref: makePartnerRef(), name: val('ptName'), org: val('ptOrg'), email: val('ptEmail'),
+    phone: val('ptPhone'), city: val('ptCity'), church: val('ptChurch'), types,
+    amount: val('ptAmount'), freq: val('ptFreq'), message: val('ptMsg'), contact,
+    status:'pending', createdAt: nowISO(), approvedAt:null, notifyLog: []
   };
-  await Store.put('partners', rec);
+  const cloudOk = await savePartner(rec);
   await refresh();
   btn.classList.remove('busy');
 
@@ -1601,24 +2001,22 @@ $('#partnerForm') && $('#partnerForm').addEventListener('submit', async e => {
     '<div class="done-hero">' +
       '<div class="big" style="background:radial-gradient(circle at 30% 25%,#fff3c4,#ffd94d);box-shadow:0 16px 34px -18px rgba(184,145,44,.9)">🤝</div>' +
       '<h2>Welcome to the vision</h2>' +
-      '<p>Your partnership details are now with the Compassion &amp; Welfare desk. Once the team has approved them, a thank-you message will be sent to you by <b>' + esc(contact === 'Both' ? 'email and WhatsApp' : contact) + '</b>.</p>' +
-      '<div class="refbox"><small>Partnership reference</small><b>' + esc(rec.ref) + '</b></div>' +
-    '</div>' +
+      '<p>Your partnership details are now with the Compassion &amp; Welfare desk. Once the team approves them, a thank-you message is sent to you by <b>' + esc(contact === 'Both' ? 'email and WhatsApp' : contact) + '</b>.</p>' +
+      '<div class="refbox"><small>Partnership reference</small><b>' + esc(rec.ref) + '</b></div></div>' +
     '<div class="divider"></div>' +
-    '<div class="note ok"><span class="ni">✅</span><div><b>Status: awaiting approval.</b> Approval is usually done by the desk within 1–3 working days after a Sunday service. Your message goes out as soon as it is approved.</div></div>' +
-    '<div class="note" style="margin-top:9px"><span class="ni">✉️</span><div><b>Watch your inbox.</b> The thank-you goes to <b>' + esc(rec.email) + '</b>' + (contact !== 'Email' ? ' and to WhatsApp <b>' + esc(rec.phone) + '</b>' : '') + '. If you don\'t see it, check the spam folder or call ' + esc(CONFIG.deskPhone) + '.</div></div>' +
-    '<div class="note info" style="margin-top:9px"><span class="ni">📋</span><div><b>Bring this reference on Sunday.</b> Quote ' + esc(rec.ref) + ' at the partnership desk and the team will show you exactly where your partnership is working.</div></div>' +
+    (cloudOk
+      ? '<div class="note ok"><span class="ni">☁</span><div><b>Saved to the church database.</b> The desk sees your registration on the partnership register immediately.</div></div>'
+      : '<div class="note warn"><span class="ni">📶</span><div><b>Saved on this phone and queued.</b> No connection to the church database just now — the registration uploads itself as soon as there is signal.</div></div>') +
+    '<div class="note" style="margin-top:9px"><span class="ni">⏳</span><div><b>Status: awaiting approval.</b> Usually 1–3 working days after a Sunday service. Your message goes out as soon as it is approved.</div></div>' +
+    '<div class="note" style="margin-top:9px"><span class="ni">✉️</span><div><b>Watch your inbox.</b> The thank-you goes to <b>' + esc(rec.email) + '</b>' + (contact !== 'Email' ? ' and to WhatsApp <b>' + esc(rec.phone) + '</b>' : '') + '.</div></div>' +
     '<div class="formbar">' +
       '<button class="btn ghost" type="button" data-go="status">🔎 Check partnership status</button>' +
       '<button class="btn ghost" type="button" id="ptWa">💬 WhatsApp the desk</button>' +
       '<span class="grow"></span>' +
-      '<button class="btn primary" type="button" id="ptAnother">Register another partner</button>' +
-    '</div>';
-  $('#ptWa').addEventListener('click', () => openWhatsApp(CONFIG.deskWhatsApp,
-    'Good day. I have registered as a partner. My partnership reference is ' + rec.ref + '.'));
+      '<button class="btn primary" type="button" id="ptAnother">Register another partner</button></div>';
+  $('#ptWa').addEventListener('click', () => openWhatsApp(CONFIG.deskWhatsApp, 'Good day. I have registered as a partner. My partnership reference is ' + rec.ref + '.'));
   $('#ptAnother').addEventListener('click', () => {
-    $('#partnerForm').reset();
-    $('#partnerDone').hidden = true; $('#partnerFormWrap').hidden = false;
+    $('#partnerForm').reset(); $('#partnerDone').hidden = true; $('#partnerFormWrap').hidden = false;
     $$('.err', $('#partnerForm')).forEach(x => x.style.display = '');
     window.scrollTo({ top:0, behavior:'smooth' });
   });
@@ -1628,7 +2026,7 @@ $('#partnerForm') && $('#partnerForm').addEventListener('submit', async e => {
 });
 
 /* ═══════════════════════ STATUS LOOKUP ═══════════════════════ */
-$('#lookupForm') && $('#lookupForm').addEventListener('submit', e => {
+$('#lookupForm').addEventListener('submit', async e => {
   e.preventDefault();
   const ref = val('lkRef').toUpperCase().replace(/\s+/g, '');
   const ph = last4(val('lkPhone'));
@@ -1636,148 +2034,286 @@ $('#lookupForm') && $('#lookupForm').addEventListener('submit', e => {
   ok = setErr($('#lkRef'), ref.length < 6 ? 'Enter the reference number.' : '') && ok;
   ok = setErr($('#lkPhone'), ph.length < 4 ? 'Enter the phone number you applied with.' : '') && ok;
   if (!ok) return;
-  const box = $('#lookupResult');
 
-  const c = state.cases.find(x => x.ref === ref);
-  if (c) {
-    if (last4(c.phone) !== ph && last4(c.phone2) !== ph) return showLookupMiss('The reference was found, but the phone number does not match the one on the file.');
-    box.innerHTML = caseStatusCard(c); return;
+  const btn = $('#lkGo'); btn.classList.add('busy');
+  const box = $('#lookupResult');
+  box.innerHTML = '<div class="card"><p class="small">Looking in the church database…</p></div>';
+
+  let found = null;
+
+  /* 1. Supabase — the narrow lookup functions work for the public */
+  if (Sb.ready()) {
+    try {
+      const rows = await Sb.rpc(CONFIG.sb.rpc.case, { p_ref:ref, p_last4:ph });
+      if (Array.isArray(rows) && rows.length) {
+        const r = rows[0];
+        found = { kind:'case', data:{ ref:r.ref, name:r.name, category:r.category, amount:r.amount,
+          status:r.status, urgency:r.urgency, docCount:r.doc_count, createdAt:r.created_at, phone:r.phone } };
+      } else {
+        const pr = await Sb.rpc(CONFIG.sb.rpc.partner, { p_ref:ref, p_last4:ph });
+        if (Array.isArray(pr) && pr.length) {
+          const r = pr[0];
+          found = { kind:'partner', data:{ ref:r.ref, name:r.name, types:r.types || [], status:r.status,
+            contact:r.contact, createdAt:r.created_at, approvedAt:r.approved_at, phone:r.phone, email:r.email } };
+        } else { found = { kind:'none' }; }
+      }
+    } catch (err) { found = null; /* fall back to the local cache */ }
   }
-  const p = state.partners.find(x => x.ref === ref);
-  if (p) {
-    if (last4(p.phone) !== ph) return showLookupMiss('The partnership was found, but the phone number does not match.');
-    box.innerHTML = partnerStatusCard(p); return;
+
+  /* 2. local cache / offline queue */
+  if (!found) {
+    const c = state.cases.find(x => x.ref === ref);
+    if (c) {
+      if (last4(c.phone) !== ph && last4(c.phone2) !== ph) { found = { kind:'mismatch' }; }
+      else found = { kind:'case', data:c };
+    } else {
+      const p = state.partners.find(x => x.ref === ref);
+      if (p) {
+        if (last4(p.phone) !== ph) found = { kind:'mismatch' };
+        else found = { kind:'partner', data:p };
+      }
+    }
   }
-  showLookupMiss('We could not find that reference on this device. Check the letters and digits, or call the desk on ' + CONFIG.deskPhone + '.');
+  btn.classList.remove('busy');
+
+  if (!found) {
+    box.innerHTML = '<div class="card"><div class="note danger"><span class="ni">🔍</span><div><b>Not found.</b> We could not find that reference on this device or in the church database. Check the letters and digits, or call the desk on ' + esc(CONFIG.deskPhone) + '.</div></div></div>';
+    return;
+  }
+  if (found.kind === 'mismatch') {
+    box.innerHTML = '<div class="card"><div class="note danger"><span class="ni">🔒</span><div><b>The reference was found, but the phone number does not match the one on the file.</b> Use the number you applied with, or call the desk on ' + esc(CONFIG.deskPhone) + '.</div></div></div>';
+    return;
+  }
+  box.innerHTML = found.kind === 'partner' ? partnerStatusCard(found.data, true) : caseStatusCard(found.data);
 });
 
-function showLookupMiss(msg) {
-  $('#lookupResult').innerHTML =
-    '<div class="card"><div class="note danger"><span class="ni">🔍</span><div><b>Not found.</b> ' + esc(msg) + '</div></div></div>';
-}
-
 function caseStatusCard(c) {
-  const order = ['submitted', 'vetting', 'approved', 'paid'];
-  const idx = order.indexOf(c.status === 'deferred' ? 'vetting' : c.status);
+  const order = ['submitted','vetting','approved','paid'];
+  const idx = Math.max(0, order.indexOf(c.status === 'deferred' ? 'vetting' : c.status));
   const steps = [
-    ['Submitted', 'We have received your request and your documents.'],
-    ['Under vetting', 'Two team members are checking the documents and calling your referee.'],
-    ['Decision', 'The committee has reached a decision (approved cases move to payment).'],
-    ['Paid / delivered', 'The school, clinic or supplier has been paid and receipted.']
+    ['Submitted','We have received your request and your documents.'],
+    ['Under vetting','Two team members are checking the documents and calling your referee.'],
+    ['Decision','The committee has reached a decision (approved cases move to payment).'],
+    ['Paid / delivered','The school, clinic or supplier has been paid and receipted.']
   ];
+  const tone = (STATUSES[c.status] || STATUSES.submitted).tone;
+  const label = (STATUSES[c.status] || STATUSES.submitted).label;
   return '<div class="card">' +
     '<div class="card-hd"><span class="ico">📄</span><div class="grow">' +
       '<span class="eyebrow-sm">' + esc(c.ref) + '</span><h2>' + esc(c.name) + '</h2>' +
-      '<p>' + esc(c.category) + (c.amount ? ' · ' + money(c.amount) : '') + ' · opened ' + fmtDay(c.createdAt) + '</p></div>' +
-      '<span class="badge tone-' + STATUSES[c.status].tone + '">' + STATUSES[c.status].label + '</span></div>' +
+      '<p>' + esc(c.category || '') + (c.amount ? ' · ' + money(c.amount) : '') + ' · opened ' + fmtDay(c.createdAt) + '</p></div>' +
+      '<span class="badge tone-' + tone + '">' + label + '</span></div>' +
     '<div class="stats" style="margin-bottom:14px">' +
       '<div class="stat"><b>' + (c.docCount || 0) + '</b><span>Documents</span></div>' +
-      '<div class="stat gold"><b>' + esc(c.urgency ? c.urgency.split(' —')[0] : '—') + '</b><span>Urgency</span></div>' +
-      '<div class="stat"><b>' + fmtDay(c.createdAt).split(' ')[0] + '</b><span>Opened</span></div>' +
-    '</div>' +
+      '<div class="stat gold"><b>' + esc(c.urgency ? String(c.urgency).split(' —')[0] : '—') + '</b><span>Urgency</span></div>' +
+      '<div class="stat"><b>' + fmtDay(c.createdAt).split(' ')[0] + '</b><span>Opened</span></div></div>' +
     '<div class="dl">' + steps.map((s, i) => {
-      const cls = i < idx ? 'done' : i === idx ? 'now' : 'todo';
       const mark = i < idx ? '✓' : i === idx ? '●' : '○';
-      return '<div><dt>' + mark + ' ' + esc(s[0]) + '</dt><dd class="' + cls + '" style="font-size:12.4px;color:' +
-        (i <= idx ? '#0f172a' : '#98a1b8') + '">' + esc(s[1]) + '</dd></div>';
+      return '<div><dt>' + mark + ' ' + esc(s[0]) + '</dt><dd style="font-size:12.4px;color:' + (i <= idx ? '#0f172a' : '#98a1b8') + '">' + esc(s[1]) + '</dd></div>';
     }).join('') + '</div>' +
-    '<div class="note info"><span class="ni">📞</span><div>Questions? Call <b>' + esc(CONFIG.deskPhone) + '</b> and say your reference <b>' + esc(c.ref) + '</b>.</div></div>' +
-    '</div>';
+    '<div class="note info"><span class="ni">📞</span><div>Questions? Call <b>' + esc(CONFIG.deskPhone) + '</b> and say your reference <b>' + esc(c.ref) + '</b>.</div></div></div>';
 }
-
 function partnerStatusCard(p) {
   const tone = p.status === 'approved' ? 'ok' : p.status === 'declined' ? 'danger' : 'warn';
   const label = p.status === 'approved' ? 'Approved partner' : p.status === 'declined' ? 'Not approved' : 'Awaiting approval';
   return '<div class="card">' +
     '<div class="card-hd"><span class="ico">🤝</span><div class="grow">' +
       '<span class="eyebrow-sm">' + esc(p.ref) + '</span><h2>' + esc(p.name) + '</h2>' +
-      '<p>' + esc(p.types.join(' · ')) + ' · registered ' + fmtDay(p.createdAt) + '</p></div>' +
+      '<p>' + esc((p.types || []).join(' · ')) + ' · registered ' + fmtDay(p.createdAt) + '</p></div>' +
       '<span class="badge tone-' + tone + '">' + label + '</span></div>' +
     (p.status === 'approved'
-      ? '<div class="note ok"><span class="ni">✅</span><div><b>Thank you for partnering with the vision.</b> Your welcome message was sent by ' + esc(p.contact) + '.' + (p.approvedAt ? ' Approved on ' + fmtDay(p.approvedAt) + '.' : '') + ' The desk will be in touch about next steps.</div></div>'
-      : '<div class="note warn"><span class="ni">⏳</span><div><b>Still with the desk.</b> Your details have been received and are waiting for approval. The thank-you message goes out on approval — usually within 1–3 working days.</div></div>') +
+      ? '<div class="note ok"><span class="ni">✅</span><div><b>Thank you for partnering with the vision.</b> Your welcome message was sent by ' + esc(p.contact) + '.' + (p.approvedAt ? ' Approved on ' + fmtDay(p.approvedAt) + '.' : '') + '</div></div>'
+      : '<div class="note warn"><span class="ni">⏳</span><div><b>Still with the desk.</b> Your details are waiting for approval. The thank-you message goes out on approval — usually within 1–3 working days.</div></div>') +
     '<div class="dl" style="margin-top:12px">' +
       '<div><dt>Email</dt><dd>' + esc(p.email) + '</dd></div>' +
       '<div><dt>WhatsApp</dt><dd>' + esc(p.phone) + '</dd></div>' +
       '<div><dt>Contact by</dt><dd>' + esc(p.contact) + '</dd></div>' +
-      '<div><dt>Pledge</dt><dd>' + (p.amount ? money(p.amount) + (p.freq ? ' · ' + esc(p.freq) : '') : 'Not stated') + '</dd></div>' +
-    '</div></div>';
+      '<div><dt>Pledge</dt><dd>' + (p.amount ? money(p.amount) + (p.freq ? ' · ' + esc(p.freq) : '') : 'Not stated') + '</dd></div></div></div>';
+}
+/* ═══════════════════════ ADMIN: sign in ═══════════════════════ */
+const LOCK_KEY = 'jcrgm_desk_unlocked';
+
+function setLockMode() {
+  const cloud = Sb.ready();
+  $('#lockEmailField').hidden = !cloud;
+  $('#lockPinHint').textContent = cloud
+    ? 'Sign in with the church account that holds a Support Team role, or leave the email blank and use the desk PIN to work offline.'
+    : 'Enter the desk PIN. (No Supabase project is connected yet — open the connection settings after unlocking.)';
+  $('#lockGoText').textContent = cloud ? 'Unlock the desk' : 'Unlock the desk';
+  $('#lockCloudState').innerHTML = cloud
+    ? '☁ Project: <b>' + esc(Sb.url().replace(/^https?:\/\//, '')) + '</b>'
+    : '⚠ No Supabase project connected — data will stay on this device.';
+  const foot = $('#lockFootText');
+  if (foot) foot.textContent = cloud ? 'Data synced to Supabase' : 'Offline mode';
 }
 
-/* ═══════════════════════ ADMIN ═══════════════════════ */
-const LOCK_KEY = 'jcrgm_desk_unlocked';
-$('#lockForm') && $('#lockForm').addEventListener('submit', e => {
+$('#lockForm').addEventListener('submit', async e => {
   e.preventDefault();
   const pw = $('#lockPw').value;
-  if (pw === CONFIG.adminPin) {
-    state.unlocked = true;
-    try { sessionStorage.setItem(LOCK_KEY, '1'); } catch (er) {}
-    $('#lockCard').hidden = true; $('#desk').hidden = false;
-    $('#lockErr').hidden = true; $('#lockPw').value = '';
-    renderDesk(); toast('Desk unlocked.', 'ok');
-  } else {
-    $('#lockErr').hidden = false;
-    $('#lockPw').classList.add('invalid');
-    $('#lockPw').focus(); $('#lockPw').select();
+  const email = ($('#lockEmail') || {}).value ? $('#lockEmail').value.trim() : '';
+  const btn = $('#lockGo'); btn.classList.add('busy');
+  $('#lockErr').hidden = true;
+
+  if (Sb.ready() && email) {
+    try {
+      await Sb.signIn(email, pw);
+      state.signedIn = true;
+      unlockDesk();
+      const ok = await pullAll();
+      state.cloud = ok ? 'ok' : 'auth';
+      await refresh();
+      toast(ok ? 'Signed in — register loaded from Supabase.' : 'Signed in, but the register could not be read. Check your role.', ok ? 'ok' : 'warn', 5000);
+    } catch (err) {
+      $('#lockErrText').textContent = 'Supabase sign-in failed: ' + (err.message || 'check the email and password') + '.';
+      $('#lockErr').hidden = false;
+    } finally { btn.classList.remove('busy'); }
+    return;
   }
+
+  if (pw === CONFIG.adminPin) {
+    state.signedIn = Sb.signedIn();
+    unlockDesk();
+    toast(Sb.ready() && !Sb.signedIn()
+      ? 'Desk unlocked offline. Sign in with the church account to see every case.'
+      : 'Desk unlocked.', Sb.ready() && !Sb.signedIn() ? 'warn' : 'ok', 5000);
+  } else {
+    $('#lockErrText').textContent = 'That password is not right. Sign in with your church account, or use the desk PIN.';
+    $('#lockErr').hidden = false;
+    $('#lockPw').classList.add('invalid'); $('#lockPw').focus(); $('#lockPw').select();
+  }
+  btn.classList.remove('busy');
 });
-$('#showPw') && $('#showPw').addEventListener('change', e => { $('#lockPw').type = e.target.checked ? 'text' : 'password'; });
-$('#btnLock') && $('#btnLock').addEventListener('click', () => {
+
+function unlockDesk() {
+  state.unlocked = true;
+  try { sessionStorage.setItem(LOCK_KEY, '1'); } catch (e) {}
+  $('#lockCard').hidden = true; $('#desk').hidden = false;
+  $('#lockPw').value = '';
+  renderDesk();
+  updatePill();
+}
+$('#showPw').addEventListener('change', e => { $('#lockPw').type = e.target.checked ? 'text' : 'password'; });
+$('#btnLock').addEventListener('click', () => {
   state.unlocked = false;
   try { sessionStorage.removeItem(LOCK_KEY); } catch (e) {}
   $('#desk').hidden = true; $('#lockCard').hidden = false;
-  go('home'); toast('Desk locked.');
+  if (Sb.signedIn()) { Sb.signOut(); state.signedIn = false; }
+  setLockMode(); go('home'); toast('Desk locked and signed out.');
 });
 
-function renderDesk() {
-  if (!state.unlocked) return;
-  const cases = state.cases;
-  const pend = state.partners.filter(p => p.status === 'pending');
-  const appr = state.partners.filter(p => p.status === 'approved');
-  $('#deskStats').innerHTML = [
-    ['', cases.length, 'Cases on file'],
-    ['gold', cases.filter(c => c.status === 'submitted').length, 'Awaiting vetting'],
-    ['ok', appr.length, 'Approved partners'],
-    ['', cases.reduce((a, c) => a + (c.docCount || 0), 0), 'Documents held'],
-    ['gold', pend.length, 'Partners to approve']
-  ].map(s => '<div class="stat ' + s[0] + '"><b>' + s[1] + '</b><span>' + s[2] + '</span></div>').join('');
-  renderPartners();
-  renderRegister();
-  updateBadge();
+/* ═══════════════════════ ADMIN: Supabase settings card ═══════════════════════ */
+function renderSbCard() {
+  const box = $('#sbStatus'); if (!box) return;
+  const has = Sb.ready();
+  const signed = Sb.signedIn();
+  const sess = Sb.session();
+  $('#sbUrl').value = CONFIG.sb.url || '';
+  $('#sbKey').value = CONFIG.sb.key || '';
+  $('#sbBucket').value = CONFIG.sb.bucket || '';
+  box.innerHTML =
+    '<div class="stat ' + (has ? 'ok' : 'gold') + '" style="grid-column:1/-1;text-align:left;padding:12px 14px">' +
+      '<b style="font-size:14px">' + (has ? (signed ? '☁ Connected &amp; signed in' : '☁ Connected — not signed in') : '⚠ Not connected') + '</b>' +
+      '<span style="display:block;text-transform:none;letter-spacing:0;font-weight:500;margin-top:3px">' +
+        (has ? esc(Sb.url()) + (sess && sess.email ? ' · ' + esc(sess.email) : ' · using the anon key') :
+          'Paste the church project URL and anon key, or load supabase-config.js before this page.') +
+      '</span></div>' +
+    '<div class="stat" style="text-align:left;padding:12px 14px"><b style="font-size:14px">' + state.pending + '</b><span>records waiting to upload</span></div>' +
+    '<div class="stat" style="text-align:left;padding:12px 14px"><b style="font-size:14px">' + state.cases.length + '</b><span>cases on this device\'s cache</span></div>' +
+    '<div class="stat" style="text-align:left;padding:12px 14px"><b style="font-size:14px">' + state.partners.length + '</b><span>partners cached</span></div>';
+  $('#sbSignOut').hidden = !signed;
+  $('#sbSignState').textContent = signed ? 'Signed in as ' + (sess && sess.email) : (has ? 'Not signed in' : '');
 }
 
+$('#sbSave').addEventListener('click', async e => {
+  e.preventDefault();
+  const url = val('sbUrl'), key = val('sbKey'), bucket = val('sbBucket') || 'welfare-documents';
+  if (!/^https?:\/\//.test(url) || !key) { toast('Paste the full project URL (https://…supabase.co) and the anon key.', 'err'); return; }
+  CONFIG.sb.url = url.replace(/\/+$/, ''); CONFIG.sb.key = key; CONFIG.sb.bucket = bucket;
+  try { localStorage.setItem('jcrgm_sb_url', CONFIG.sb.url); localStorage.setItem('jcrgm_sb_key', CONFIG.sb.key); } catch (er) {}
+  Sb.configure(CONFIG.sb.url, CONFIG.sb.key);
+  toast('Project settings saved on this device.', 'ok');
+  await testSb();
+});
+$('#sbTest').addEventListener('click', async e => { e.preventDefault(); await testSb(); });
+async function testSb() {
+  const r = await Sb.ping();
+  if (!r.ok) { toast('Could not reach the project: ' + (r.reason || 'unknown') + '. Check the URL and the key.', 'err', 6000); }
+  else if (r.canRead) { state.cloud = 'ok'; toast('Connection good — the register can be read. ' + (r.signedIn ? 'Signed in.' : 'Using the anon key.'), 'ok', 5000); }
+  else { state.cloud = 'auth'; toast('Project reachable. Reading the register needs a signed-in team account (RLS is doing its job).', 'warn', 6500); }
+  renderSbCard(); updatePill();
+}
+$('#sbSignOut').addEventListener('click', () => {
+  Sb.signOut(); state.signedIn = false; state.unlocked = false;
+  $('#desk').hidden = true; $('#lockCard').hidden = false;
+  setLockMode(); renderSbCard(); updatePill();
+  toast('Signed out of Supabase.');
+});
+$('#btnFlush').addEventListener('click', async () => {
+  const b = $('#btnFlush'); b.classList.add('busy');
+  await flushOutbox(false);
+  b.classList.remove('busy');
+  await refresh(); renderSbCard();
+});
+
+/* ═══════════════════════ ADMIN: desk ═══════════════════════ */
+function renderDesk() {
+  if (!state.unlocked) return;
+  renderDeskStats();
+  renderPartners();
+  renderRegister();
+  renderSbCard();
+  updateBadge();
+  updatePill();
+}
+function renderDeskStats() {
+  const el = $('#deskStats'); if (!el) return;
+  const cases = state.cases;
+  el.innerHTML = [
+    ['', cases.length, 'Cases on file'],
+    ['gold', cases.filter(c => c.status === 'submitted').length, 'Awaiting vetting'],
+    ['ok', state.partners.filter(p => p.status === 'approved').length, 'Approved partners'],
+    ['', cases.reduce((a, c) => a + (c.docCount || 0), 0), 'Documents held'],
+    ['gold', state.partners.filter(p => p.status === 'pending').length, 'Partners to approve']
+  ].map(s => '<div class="stat ' + s[0] + '"><b>' + s[1] + '</b><span>' + s[2] + '</span></div>').join('');
+}
 function updateBadge() {
-  const b = $('#badgeAwaiting');
-  if (!b) return;
-  const pend = state.partners.filter(p => p.status === 'pending').length +
-               state.cases.filter(c => c.status === 'submitted').length;
-  b.hidden = pend === 0;
-  b.textContent = pend;
-  b.classList.toggle('alert', pend > 0);
+  const b = $('#badgeAwaiting'); if (!b) return;
+  const n = state.partners.filter(p => p.status === 'pending').length + state.cases.filter(c => c.status === 'submitted').length;
+  b.hidden = n === 0; b.textContent = n; b.classList.toggle('alert', n > 0);
+}
+function renderHomeStats() {
+  const el = $('#homeStats'); if (!el) return;
+  const open = state.cases.filter(c => ['submitted','vetting'].indexOf(c.status) > -1).length;
+  const paid = state.cases.filter(c => c.status === 'paid').length;
+  el.innerHTML =
+    '<div class="stat"><b>' + state.cases.length + '</b><span>Cases filed</span></div>' +
+    '<div class="stat gold"><b>' + open + '</b><span>In progress</span></div>' +
+    '<div class="stat ok"><b>' + paid + '</b><span>Completed</span></div>' +
+    '<div class="stat"><b>' + state.partners.filter(p => p.status === 'approved').length + '</b><span>Partners</span></div>' +
+    '<div class="stat"><b>' + state.cases.reduce((a, c) => a + (c.docCount || 0), 0) + '</b><span>Documents</span></div>';
 }
 
 /* ── partner table ── */
-$('#pfPending') && $('#pfPending').addEventListener('click', () => { state.partnerFilter = 'pending'; renderPartners(); });
-$('#pfAll') && $('#pfAll').addEventListener('click', () => { state.partnerFilter = 'all'; renderPartners(); });
-$('#pfCsv') && $('#pfCsv').addEventListener('click', () => exportPartnersCsv());
+$('#pfPending').addEventListener('click', () => { state.partnerFilter = 'pending'; renderPartners(); });
+$('#pfAll').addEventListener('click', () => { state.partnerFilter = 'all'; renderPartners(); });
+$('#pfCsv').addEventListener('click', exportPartnersCsv);
 
 function renderPartners() {
-  const wrap = $('#partnerTable');
-  if (!wrap) return;
+  const wrap = $('#partnerTable'); if (!wrap) return;
   const list = (state.partnerFilter === 'pending' ? state.partners.filter(p => p.status === 'pending') : state.partners)
-    .slice().sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    .slice().sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
   $('#pfPending').setAttribute('aria-pressed', String(state.partnerFilter === 'pending'));
   $('#pfAll').setAttribute('aria-pressed', String(state.partnerFilter === 'all'));
   if (!list.length) {
     wrap.innerHTML = '<div class="empty"><span class="e-ic">🤝</span><b>' +
       (state.partnerFilter === 'pending' ? 'No partners waiting' : 'No partners registered yet') + '</b>' +
       '<span class="small">' + (state.partnerFilter === 'pending'
-        ? 'New registrations from the Partners tab will appear here for approval.'
+        ? 'New registrations from the Partners tab appear here for approval.'
         : 'Partners who register on the Partners tab appear here.') + '</span></div>';
     return;
   }
   wrap.innerHTML = '<div class="tbl-wrap"><table class="tbl"><thead><tr>' +
-    '<th>Partner</th><th>Type</th><th>Contact</th><th>Pledge</th><th>Status</th><th></th></tr></thead><tbody>' +
+    '<th>Partner</th><th>Type</th><th>Contact</th><th>Pledge</th><th>Status</th><th>Cloud</th><th></th></tr></thead><tbody>' +
     list.map(p => {
       const tone = p.status === 'approved' ? 'ok' : p.status === 'declined' ? 'danger' : 'warn';
       const label = p.status === 'approved' ? '✓ Approved' : p.status === 'declined' ? 'Not approved' : '⏳ Pending';
@@ -1786,25 +2322,25 @@ function renderPartners() {
         : '<button class="btn ghost xs" data-approve="' + p.id + '">✉ Message</button>';
       return '<tr>' +
         '<td class="tname"><b>' + esc(p.name) + '</b><span>' + esc(p.ref) + (p.org ? ' · ' + esc(p.org) : '') + '</span></td>' +
-        '<td>' + esc(p.types.map(t => t.split(' ')[0]).join(' ')) + '<br><span class="small" style="color:#5b6478">' + esc(p.types[0] || '') + '</span></td>' +
+        '<td>' + esc((p.types || []).join(' ')) + '</td>' +
         '<td>' + esc(p.email) + '<br><span class="small" style="color:#5b6478">' + esc(p.phone) + ' · ' + esc(p.contact) + '</span></td>' +
         '<td>' + (p.amount ? money(p.amount) + (p.freq ? '<br><span class="small" style="color:#5b6478">' + esc(p.freq) + '</span>' : '') : '—') + '</td>' +
         '<td><span class="badge tone-' + tone + '">' + label + '</span></td>' +
-        '<td style="white-space:nowrap"><button class="btn ghost xs" data-pview="' + p.id + '">Open</button> ' + acts + '</td>' +
-        '</tr>';
+        '<td>' + (p.synced === false ? '<span class="badge tone-warn">⏳ queued</span>' : '<span class="badge tone-ok">☁ synced</span>') + '</td>' +
+        '<td style="white-space:nowrap"><button class="btn ghost xs" data-pview="' + p.id + '">Open</button> ' + acts + '</td></tr>';
     }).join('') + '</tbody></table></div>';
-
   $$('[data-pview]', wrap).forEach(b => b.addEventListener('click', () => openPartnerDrawer(b.dataset.pview)));
   $$('[data-approve]', wrap).forEach(b => b.addEventListener('click', () => approvePartner(b.dataset.approve)));
   $$('[data-decline]', wrap).forEach(b => b.addEventListener('click', () => declinePartner(b.dataset.decline)));
 }
 
 async function declinePartner(id) {
-  const p = state.partners.find(x => x.id === id);
-  if (!p) return;
+  const p = state.partners.find(x => x.id === id); if (!p) return;
   if (!confirm('Mark ' + p.name + ' as not approved? They will not receive a thank-you message.')) return;
   p.status = 'declined'; p.decidedAt = nowISO();
-  await Store.put('partners', p); await refresh(); renderDesk();
+  await Store.put('partners', p);
+  await updatePartnerCloud(p);
+  await refresh(); renderDesk();
   toast('Marked as not approved.', 'warn');
 }
 
@@ -1817,8 +2353,8 @@ function thankYouMessage(p) {
     '',
     'Your partnership reference is ' + p.ref + '. Through it you are now part of the ' + CONFIG.ministry + ' — school fees paid to the bursar, medical bills settled at the clinic, and families fed and buried with dignity.',
     '',
-    p.types && p.types.length ? 'You have chosen to partner as: ' + p.types.join(', ') + '.' : '',
-    p.amount ? 'Your pledge of ' + money(p.amount) + (p.freq ? ' (' + p.freq + ')' : '') + ' is recorded, and a receipt will be issued for every gift.' : '',
+    (p.types && p.types.length ? 'You have chosen to partner as: ' + p.types.join(', ') + '.' : ''),
+    (p.amount ? 'Your pledge of ' + money(p.amount) + (p.freq ? ' (' + p.freq + ')' : '') + ' is recorded, and a receipt will be issued for every gift.' : ''),
     '',
     'The Support Team will be in touch within 3 working days to walk with you on the next steps. If you need us before then, call ' + CONFIG.deskPhone + ' or reply to this message.',
     '',
@@ -1827,83 +2363,78 @@ function thankYouMessage(p) {
     'With gratitude in Christ,',
     'The ' + CONFIG.ministry,
     CONFIG.church
-  ].filter(l => l !== '' || true).join('\n');
+  ].join('\n');
 }
 
 function approvePartner(id) {
-  const p = state.partners.find(x => x.id === id);
-  if (!p) return;
-  const msg = thankYouMessage(p);
-  openModal('Approve partnership · ' + esc(p.name), '' +
-    '<div class="note info"><span class="ni">✅</span><div><b>' + esc(p.ref) + '</b> · ' + esc(p.types.join(', ')) + '<br>' +
+  const p = state.partners.find(x => x.id === id); if (!p) return;
+  openModal('Approve partnership · ' + esc(p.name),
+    '<div class="note info"><span class="ni">✅</span><div><b>' + esc(p.ref) + '</b> · ' + esc((p.types || []).join(', ')) + '<br>' +
       esc(p.email) + ' · ' + esc(p.phone) + ' · prefers <b>' + esc(p.contact) + '</b></div></div>' +
     '<div class="field" style="margin-top:12px"><label for="tyMsg">Welcome &amp; thank-you message (editable)</label>' +
-      '<textarea class="inp" id="tyMsg" rows="12" style="font-size:12.6px;line-height:1.5">' + esc(msg) + '</textarea></div>' +
-    '<p class="small" style="color:#5b6478;margin-top:8px">Approving saves the partner as approved. Sending opens WhatsApp or your email app with this message ready — press send there, then the desk records that it went.</p>',
+      '<textarea class="inp" id="tyMsg" rows="12" style="font-size:12.6px;line-height:1.5">' + esc(p.thankYou || thankYouMessage(p)) + '</textarea></div>' +
+    '<p class="small" style="color:#5b6478;margin-top:8px">Approving saves the partner as approved in Supabase. Sending opens WhatsApp or your email app with this message ready — press send there, and the desk records that it went.</p>',
     '<button class="btn ghost" type="button" data-close="1">Cancel</button>' +
     '<button class="btn ok" type="button" id="tyApprove">✓ Approve partner</button>' +
     '<button class="btn ghost" type="button" id="tyEmail">✉ Email</button>' +
     '<button class="btn gold" type="button" id="tyWa">💬 WhatsApp</button>');
-
   $('#tyEmail').addEventListener('click', () => dispatch(p, 'Email', $('#tyMsg').value));
   $('#tyWa').addEventListener('click', () => dispatch(p, 'WhatsApp', $('#tyMsg').value));
   $('#tyApprove').addEventListener('click', async () => {
     p.status = 'approved'; p.approvedAt = nowISO(); p.approvedBy = 'Support Team desk';
     p.thankYou = $('#tyMsg').value;
-    await Store.put('partners', p); await refresh(); renderDesk(); closeModal();
-    toast(p.name + ' is now an approved partner.', 'ok', 5000);
+    await Store.put('partners', p);
+    const ok = await updatePartnerCloud(p);
+    await refresh(); renderDesk(); closeModal();
+    toast(p.name + ' is now an approved partner' + (ok ? ' in Supabase.' : ' (saved here, will sync).'), ok ? 'ok' : 'warn', 5000);
   });
 }
 
 async function dispatch(p, channel, message) {
-  // Optional real backend (WhatsApp Business API / transactional email).
   if (CONFIG.notifyEndpoint) {
     try {
-      const r = await fetch(CONFIG.notifyEndpoint, {
-        method:'POST', headers:{ 'Content-Type':'application/json' },
-        body: JSON.stringify({ type:'partner-approved', channel, partner:p, message })
-      });
+      const r = await fetch(CONFIG.notifyEndpoint, { method:'POST', headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({ type:'partner-approved', channel, partner:p, message }) });
       if (!r.ok) throw new Error('HTTP ' + r.status);
     } catch (e) { toast('The message service did not answer — opening ' + channel + ' instead.', 'warn'); }
   }
-  const subject = 'Thank you for partnering with ' + CONFIG.church;
   if (channel === 'Email') {
-    window.location.href = 'mailto:' + encodeURIComponent(p.email) + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(message);
+    window.location.href = 'mailto:' + encodeURIComponent(p.email) + '?subject=' +
+      encodeURIComponent('Thank you for partnering with ' + CONFIG.church) + '&body=' + encodeURIComponent(message);
   } else {
     openWhatsApp(p.phone, message);
   }
   p.notifyLog = (p.notifyLog || []).concat([{ at:nowISO(), channel, by:'desk' }]);
   if (p.status !== 'approved') { p.status = 'approved'; p.approvedAt = nowISO(); }
   p.thankYou = message;
-  await Store.put('partners', p); await refresh();
+  await Store.put('partners', p);
+  await updatePartnerCloud(p);
+  await refresh(); renderDesk(); closeModal();
   toast('Thank-you recorded as sent by ' + channel + '.', 'ok', 5000);
-  renderDesk();
-  closeModal();
 }
 
 function openWhatsApp(phone, text) {
-  const num = digits(phone);
-  const url = 'https://wa.me/' + num + '?text=' + encodeURIComponent(text);
+  const url = 'https://wa.me/' + digits(phone) + '?text=' + encodeURIComponent(text);
   const w = window.open(url, '_blank', 'noopener');
-  if (!w) { navigator.clipboard && navigator.clipboard.writeText(text); toast('Pop-up blocked — the message was copied to your clipboard.', 'warn', 6000); }
+  if (!w) { try { navigator.clipboard.writeText(text); } catch (e) {} toast('Pop-up blocked — the message was copied to your clipboard.', 'warn', 6000); }
 }
 
 function openPartnerDrawer(id) {
-  const p = state.partners.find(x => x.id === id);
-  if (!p) return;
+  const p = state.partners.find(x => x.id === id); if (!p) return;
   const tone = p.status === 'approved' ? 'ok' : p.status === 'declined' ? 'danger' : 'warn';
-  openDrawer(p.name + ' · ' + p.ref, p.types.join(' · '),
+  openDrawer(p.name + ' · ' + p.ref, (p.types || []).join(' · '),
     '<div class="dl">' +
-      [['Reference', p.ref], ['Status', (p.status === 'approved' ? 'Approved' : p.status === 'declined' ? 'Not approved' : 'Awaiting approval')],
-       ['Organisation', p.org || '—'], ['Email', p.email], ['WhatsApp', p.phone],
-       ['City / country', p.city || '—'], ['Home church', p.church || '—'],
-       ['Partnership types', p.types.join(', ')], ['Pledge', p.amount ? money(p.amount) + (p.freq ? ' · ' + p.freq : '') : '—'],
-       ['Preferred contact', p.contact], ['Registered', fmtDate(p.createdAt)],
+      [['Reference',p.ref],['Status', p.status === 'approved' ? 'Approved' : p.status === 'declined' ? 'Not approved' : 'Awaiting approval'],
+       ['Cloud', p.synced === false ? 'Queued — not yet in Supabase' : 'Synced to Supabase'],
+       ['Organisation',p.org || '—'],['Email',p.email],['WhatsApp',p.phone],['City / country',p.city || '—'],
+       ['Home church',p.church || '—'],['Partnership types',(p.types || []).join(', ')],
+       ['Pledge', p.amount ? money(p.amount) + (p.freq ? ' · ' + p.freq : '') : '—'],
+       ['Preferred contact',p.contact],['Registered',fmtDate(p.createdAt)],
        ['Approved', p.approvedAt ? fmtDate(p.approvedAt) : '—'],
        ['Messages sent', (p.notifyLog || []).map(l => l.channel + ' ' + fmtDate(l.at)).join(' · ') || 'none yet']
       ].map(r => '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>').join('') + '</div>' +
     (p.message ? '<div class="sec-t">What is on their heart</div><p class="small">' + esc(p.message) + '</p>' : '') +
-    (p.thankYou ? '<div class="sec-t">Thank-you message sent</div><p class="small" style="white-space:pre-wrap;background:#f8faff;border:1px solid #e3e6ef;border-radius:12px;padding:11px">' + esc(p.thankYou) + '</p>' : ''),
+    (p.thankYou ? '<div class="sec-t">Thank-you message</div><p class="small" style="white-space:pre-wrap;background:#f8faff;border:1px solid #e3e6ef;border-radius:12px;padding:11px">' + esc(p.thankYou) + '</p>' : ''),
     (p.status === 'pending'
       ? '<button class="btn ok" type="button" data-approve="' + p.id + '">✓ Approve &amp; thank</button>' +
         '<button class="btn danger" type="button" data-decline="' + p.id + '">✕ Decline</button>'
@@ -1914,116 +2445,140 @@ function openPartnerDrawer(id) {
 }
 
 /* ── cases register ── */
-['#fQuery', '#fStatus', '#fCat', '#fDocs'].forEach(sel => {
-  const el = $(sel); if (el) el.addEventListener('input', renderRegister);
-});
+['#fQuery','#fStatus','#fCat','#fDocs'].forEach(sel => { const el = $(sel); if (el) el.addEventListener('input', renderRegister); });
 
 function filteredCases() {
-  const q = val('fQuery').toLowerCase();
-  const st = val('fStatus'), cat = val('fCat'), dc = val('fDocs');
+  const q = val('fQuery').toLowerCase(), st = val('fStatus'), cat = val('fCat'), dc = val('fDocs');
   return state.cases.filter(c => {
     if (st && c.status !== st) return false;
     if (cat && c.category !== cat) return false;
     if (dc === 'yes' && !(c.docCount > 0)) return false;
     if (dc === 'no' && c.docCount > 0) return false;
     if (q) {
-      const hay = [c.name, c.ref, c.nrc, c.compound, c.phone, c.category, c.story].join(' ').toLowerCase();
+      const hay = [c.name,c.ref,c.nrc,c.compound,c.phone,c.category,c.story].join(' ').toLowerCase();
       if (hay.indexOf(q) === -1) return false;
     }
     return true;
-  }).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  }).sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
 }
 
 function renderRegister() {
-  const wrap = $('#registerView');
-  if (!wrap) return;
+  const wrap = $('#registerView'); if (!wrap) return;
   const list = filteredCases();
   $('#regCount').innerHTML = '<b>' + list.length + '</b> of ' + state.cases.length + ' case' + (state.cases.length === 1 ? '' : 's') +
-    ' · <span class="badge tone-teal">📎 ' + state.cases.reduce((a, c) => a + (c.docCount || 0), 0) + ' documents</span>';
+    ' · <span class="badge tone-teal">📎 ' + state.cases.reduce((a, c) => a + (c.docCount || 0), 0) + ' documents</span>' +
+    (state.pending ? ' · <span class="badge tone-warn">↑ ' + state.pending + ' queued</span>' : '');
   if (!list.length) {
     wrap.innerHTML = '<div class="empty"><span class="e-ic">🗂</span><b>Nothing here yet</b>' +
       '<span class="small">' + (state.cases.length ? 'No case matches this filter.' : 'Applications sent from the Apply tab, and beneficiaries you register, appear here.') + '</span></div>';
     return;
   }
   wrap.innerHTML = '<div class="tbl-wrap"><table class="tbl"><thead><tr>' +
-    '<th>Applicant</th><th>Need</th><th>Docs</th><th>Amount</th><th>Status</th><th>Received</th><th></th></tr></thead><tbody>' +
+    '<th>Applicant</th><th>Need</th><th>Docs</th><th>Amount</th><th>Status</th><th>Cloud</th><th>Received</th><th></th></tr></thead><tbody>' +
     list.map(c => '<tr>' +
       '<td class="tname"><b>' + esc(c.name) + '</b><span>' + esc(c.ref) + ' · ' + esc(c.phone) + '</span></td>' +
       '<td>' + esc(c.category || '—') + '<br><span class="small" style="color:#5b6478">' + esc(c.compound || '') + '</span></td>' +
       '<td>' + (c.docCount ? '<span class="badge tone-teal">📎 ' + c.docCount + '</span>' : '<span class="badge tone-warn">none</span>') + '</td>' +
       '<td>' + (c.amount ? money(c.amount) : '—') + '</td>' +
-      '<td><span class="badge tone-' + STATUSES[c.status].tone + '">' + STATUSES[c.status].label + '</span></td>' +
+      '<td><span class="badge tone-' + (STATUSES[c.status] || STATUSES.submitted).tone + '">' + (STATUSES[c.status] || STATUSES.submitted).label + '</span></td>' +
+      '<td>' + (c.synced === false ? '<span class="badge tone-warn">⏳ queued</span>' : '<span class="badge tone-ok">☁ synced</span>') + '</td>' +
       '<td class="small">' + fmtDay(c.createdAt) + '</td>' +
       '<td><button class="btn ghost xs" data-case="' + c.id + '">Open</button></td></tr>').join('') +
     '</tbody></table></div>';
   $$('[data-case]', wrap).forEach(b => b.addEventListener('click', () => openCaseDrawer(b.dataset.case)));
 }
 
-async function openCaseDrawer(id) {
-  const c = state.cases.find(x => x.id === id);
-  if (!c) return;
-  const docRec = await Store.get('docs', id);
-  const items = (docRec && docRec.items) || [];
-  const groups = {};
-  items.forEach(d => { (groups[d.label] = groups[d.label] || []).push(d); });
+async function loadDocsFor(c) {
+  /* Supabase first (signed in), then the local cache */
+  if (Sb.ready() && Sb.signedIn()) {
+    try {
+      const rows = await Sb.select(CONFIG.sb.tables.docs,
+        'case_id=eq.' + c.id + '&select=*&order=created_at.asc');
+      if (rows && rows.length) {
+        const out = [];
+        for (const r of rows) {
+          let url = null, local = null;
+          if (r.storage_path) { try { url = await Sb.signedUrl(r.storage_path, 3600); } catch (e) {} }
+          const docRec = await Store.get('docs', c.id);
+          const hit = docRec && (docRec.items || []).find(i => i.docId === r.id);
+          if (hit) local = hit.dataUrl;
+          out.push({ docId:r.id, label:r.label, name:r.file_name, type:r.mime_type, size:r.size_bytes,
+            dataUrl: url || local || '', remote:true, storagePath:r.storage_path });
+        }
+        return out;
+      }
+    } catch (e) { noteSyncError(e); }
+  }
+  const docRec = await Store.get('docs', c.id);
+  return (docRec && docRec.items) || [];
+}
 
+async function openCaseDrawer(id) {
+  const c = state.cases.find(x => x.id === id); if (!c) return;
+  openDrawer(c.name + ' · ' + c.ref,
+    (c.kind === 'sponsorship' ? 'Sponsored beneficiary' : 'Application') + ' · ' + fmtDate(c.createdAt),
+    '<p class="small">Loading case file…</p>', '');
+
+  const items = await loadDocsFor(c);
+  const groups = {};
+  items.forEach(d => { (groups[d.label || 'Other'] = groups[d.label || 'Other'] || []).push(d); });
   const docsHtml = items.length
     ? Object.keys(groups).map(label =>
         '<div class="sec-t">' + esc(label) + '</div><div class="doc-grid">' +
-        groups[label].map(d =>
-          '<a class="doc" href="' + d.dataUrl + '" download="' + esc(d.name) + '" target="_blank" rel="noopener">' +
-          (/^data:image/.test(d.dataUrl) ? '<img src="' + d.dataUrl + '" alt="">' : '<div class="ph">📄</div>') +
-          '<span title="' + esc(d.name) + '">' + esc(d.name.length > 14 ? d.name.slice(0, 12) + '…' : d.name) + '</span></a>').join('') +
+        groups[label].map(d => (d.dataUrl
+          ? '<a class="doc" href="' + d.dataUrl + '" target="_blank" rel="noopener" download="' + esc(d.name || 'document') + '">' +
+            (/^data:image/.test(d.dataUrl) ? '<img src="' + d.dataUrl + '" alt="">' : '<div class="ph">📄</div>') +
+            '<span title="' + esc(d.name || '') + '">' + esc(String(d.name || 'file').slice(0, 14)) + '</span></a>'
+          : '<div class="doc"><div class="ph">🔒</div><span>' + esc(String(d.name || 'file').slice(0, 14)) + '</span></div>')).join('') +
         '</div>').join('')
     : '<div class="note warn" style="margin-top:8px"><span class="ni">📎</span><div>No documents were attached to this case. Call the applicant and ask them to bring their NRC and proof of the need.</div></div>';
 
   openDrawer(c.name + ' · ' + c.ref,
     (c.kind === 'sponsorship' ? 'Sponsored beneficiary' : 'Application') + ' · ' + fmtDate(c.createdAt),
     '<div class="dl">' +
-      [['Reference', c.ref], ['Phone', c.phone + (c.phone2 ? ' / ' + c.phone2 : '')],
-       ['Email', c.email || '—'], ['NRC / ID', c.nrc || '—'], ['Asking as', c.who || '—'],
-       ['Area', c.compound || '—'], ['Help needed', c.category || '—'],
-       ['Amount', c.amount ? money(c.amount) : '—'], ['Urgency', c.urgency || '—'],
-       ['Household', c.household || '—'], ['Referee', c.referee || '—'],
-       ['Previously helped', c.previous || '—'], ['Status', STATUSES[c.status].label]
+      [['Reference',c.ref],['Phone', c.phone + (c.phone2 ? ' / ' + c.phone2 : '')],['Email',c.email || '—'],
+       ['NRC / ID',c.nrc || '—'],['Asking as',c.who || '—'],['Area',c.compound || '—'],
+       ['Help needed',c.category || '—'],['Amount', c.amount ? money(c.amount) : '—'],
+       ['Urgency',c.urgency || '—'],['Household',c.household || '—'],['Referee',c.referee || '—'],
+       ['Previously helped',c.previous || '—'],
+       ['Cloud', c.synced === false ? 'Queued — not yet in Supabase' : 'Synced to Supabase'],
+       ['Status', (STATUSES[c.status] || STATUSES.submitted).label]
       ].map(r => '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>').join('') +
-    '<div><dt>Verification</dt><dd>' + (c.nrc && c.docCount ? '<span class="badge tone-ok">ID + ' + c.docCount + ' doc(s)</span>' : c.docCount ? '<span class="badge tone-warn">docs, no NRC typed</span>' : '<span class="badge tone-danger">nothing to verify</span>') + '</dd></div>' +
-    '</div>' +
+      '<div><dt>Verification</dt><dd>' + (c.nrc && c.docCount ? '<span class="badge tone-ok">ID + ' + c.docCount + ' doc(s)</span>'
+        : c.docCount ? '<span class="badge tone-warn">docs, no NRC typed</span>'
+        : '<span class="badge tone-danger">nothing to verify</span>') + '</dd></div></div>' +
     (c.story ? '<div class="sec-t">The need, in their words</div><p class="small">' + esc(c.story) + '</p>' : '') +
     (c.notes ? '<div class="sec-t">Notes</div><p class="small">' + esc(c.notes) + '</p>' : '') +
     '<div class="sec-t">Documents (' + items.length + ')</div>' + docsHtml,
     Object.keys(STATUSES).map(k =>
-      '<button class="btn ' + (c.status === k ? 'primary' : 'ghost') + ' xs" type="button" data-setstat="' + k + '">' + STATUSES[k].label + '</button>'
-    ).join('') +
-    '<span class="grow"></span>' +
-    '<button class="btn danger xs" type="button" id="purgeDocs">🗑 Purge documents</button>');
+      '<button class="btn ' + (c.status === k ? 'primary' : 'ghost') + ' xs" type="button" data-setstat="' + k + '">' + STATUSES[k].label + '</button>').join('') +
+    '<span class="grow"></span><button class="btn danger xs" type="button" id="purgeDocs">🗑 Purge documents</button>');
 
   $$('#drawerFoot [data-setstat]').forEach(b => b.addEventListener('click', async () => {
     c.status = b.dataset.setstat;
     c.history = (c.history || []).concat([{ at:nowISO(), status:c.status, by:'desk' }]);
-    await Store.put('cases', c); await refresh(); renderDesk(); closeDrawer();
-    toast('Status set to ' + STATUSES[c.status].label + '.', 'ok');
+    await Store.put('cases', c);
+    const ok = await updateCaseCloud(c);
+    await refresh(); renderDesk(); closeDrawer();
+    toast('Status set to ' + STATUSES[c.status].label + (ok ? ' in Supabase.' : ' (will sync).'), ok ? 'ok' : 'warn');
   }));
-  const pg = $('#purgeDocs');
-  if (pg) pg.addEventListener('click', async () => {
-    if (!confirm('Delete all documents attached to ' + c.ref + '? This cannot be undone.')) return;
-    await Store.del('docs', c.id);
+  $('#purgeDocs').addEventListener('click', async () => {
+    if (!confirm('Delete all documents attached to ' + c.ref + '? This removes the files from Storage as well. It cannot be undone.')) return;
+    await purgeDocsCloud(c);
     c.docCount = 0; c.docLabels = []; c.docsPurgedAt = nowISO();
-    await Store.put('cases', c); await refresh(); renderDesk(); closeDrawer();
+    await Store.put('cases', c); await updateCaseCloud(c);
+    await refresh(); renderDesk(); closeDrawer();
     toast('Documents deleted.', 'warn');
   });
 }
 
 /* ── register a beneficiary at the desk ── */
-$('#btnAdd') && $('#btnAdd').addEventListener('click', () => { $('#addCard').hidden = false; $('#addCard').scrollIntoView({ behavior:'smooth', block:'start' }); });
-$('#addClose') && $('#addClose').addEventListener('click', () => { $('#addCard').hidden = true; });
-$('#addCancel') && $('#addCancel').addEventListener('click', () => { $('#addCard').hidden = true; $('#addForm').reset(); });
-
-$('#addForm') && $('#addForm').addEventListener('submit', async e => {
+$('#btnAdd').addEventListener('click', () => { $('#addCard').hidden = false; $('#addCard').scrollIntoView({ behavior:'smooth', block:'start' }); });
+$('#addClose').addEventListener('click', () => { $('#addCard').hidden = true; });
+$('#addCancel').addEventListener('click', () => { $('#addCard').hidden = true; $('#addForm').reset(); });
+$('#addForm').addEventListener('submit', async e => {
   e.preventDefault();
-  if (val('adName').length < 3 || !validPhone(val('adPhone')) || !val('adCat')) {
-    toast('Name, phone and category are required.', 'err'); return;
-  }
+  if (val('adName').length < 3 || !validPhone(val('adPhone')) || !val('adCat')) { toast('Name, phone and category are required.', 'err'); return; }
   const btn = $('#addSave'); btn.classList.add('busy');
   const docs = scopeDocs('add');
   const rec = {
@@ -2034,17 +2589,15 @@ $('#addForm') && $('#addForm').addEventListener('submit', async e => {
     status:'approved', createdAt: nowISO(), history:[{ at:nowISO(), status:'approved', by:'desk' }],
     docCount: docs.length, docLabels: docs.map(d => d.label)
   };
-  await Store.put('cases', rec);
-  if (docs.length) await Store.put('docs', { id: rec.id, ref: rec.ref, items: docs, savedAt: nowISO() });
-  await refresh(); btn.classList.remove('busy');
-  $('#addForm').reset();
-  $$('.up', $('#addCard')).forEach(u => { state.uploads['add:' + u.dataset.slot] = []; renderUpload(u); });
-  $('#addCard').hidden = true;
-  renderDesk();
-  toast(rec.name + ' saved to the register as ' + rec.ref + '.', 'ok', 5000);
+  const cloudOk = await saveCase(rec, docs);
+  await refresh();
+  btn.classList.remove('busy');
+  $('#addForm').reset(); resetUploads('add');
+  $('#addCard').hidden = true; renderDesk();
+  toast(rec.name + ' saved as ' + rec.ref + (cloudOk ? ' in Supabase.' : ' (queued on this device).'), cloudOk ? 'ok' : 'warn', 5000);
 });
 
-/* ── CSV exports ── */
+/* ── CSV ── */
 function download(name, text) {
   const blob = new Blob([text], { type:'text/csv;charset=utf-8' });
   const a = document.createElement('a');
@@ -2053,22 +2606,23 @@ function download(name, text) {
   setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
 const csvCell = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
-
-$('#btnCsv') && $('#btnCsv').addEventListener('click', () => {
-  const rows = [['Reference','Name','Phone','NRC','Category','Amount','Urgency','Status','Documents','Received']];
-  filteredCases().forEach(c => rows.push([c.ref, c.name, c.phone, c.nrc, c.category, c.amount, c.urgency, STATUSES[c.status].label, c.docCount || 0, fmtDay(c.createdAt)]));
-  download('jcrgm-cases-' + fmtDay(nowISO()).replace(/ /g, '-') + '.csv', rows.map(r => r.map(csvCell).join(',')).join('\n'));
+$('#btnCsv').addEventListener('click', () => {
+  const rows = [['Reference','Name','Phone','NRC','Category','Amount','Urgency','Status','Documents','Synced','Received']];
+  filteredCases().forEach(c => rows.push([c.ref,c.name,c.phone,c.nrc,c.category,c.amount,c.urgency,
+    (STATUSES[c.status] || STATUSES.submitted).label, c.docCount || 0, c.synced === false ? 'queued' : 'yes', fmtDay(c.createdAt)]));
+  download('jcrgm-cases-' + fmtDay(nowISO()).replace(/ /g,'-') + '.csv', rows.map(r => r.map(csvCell).join(',')).join('\n'));
   toast('Case list exported.', 'ok');
 });
 function exportPartnersCsv() {
-  const rows = [['Reference','Name','Organisation','Email','WhatsApp','Types','Pledge','Frequency','Preferred contact','Status','Registered','Approved','Message']];
-  state.partners.forEach(p => rows.push([p.ref, p.name, p.org, p.email, p.phone, (p.types || []).join('; '), p.amount, p.freq, p.contact, p.status, fmtDay(p.createdAt), p.approvedAt ? fmtDay(p.approvedAt) : '', p.message]));
-  download('jcrgm-partners-' + fmtDay(nowISO()).replace(/ /g, '-') + '.csv', rows.map(r => r.map(csvCell).join(',')).join('\n'));
+  const rows = [['Reference','Name','Organisation','Email','WhatsApp','Types','Pledge','Frequency','Preferred contact','Status','Synced','Registered','Approved','Message']];
+  state.partners.forEach(p => rows.push([p.ref,p.name,p.org,p.email,p.phone,(p.types || []).join('; '),p.amount,p.freq,
+    p.contact,p.status, p.synced === false ? 'queued' : 'yes', fmtDay(p.createdAt), p.approvedAt ? fmtDay(p.approvedAt) : '', p.message]));
+  download('jcrgm-partners-' + fmtDay(nowISO()).replace(/ /g,'-') + '.csv', rows.map(r => r.map(csvCell).join(',')).join('\n'));
   toast('Partner list exported.', 'ok');
 }
-$('#btnPrint') && $('#btnPrint').addEventListener('click', () => window.print());
+$('#btnPrint').addEventListener('click', () => window.print());
 
-/* ── drawer & modal ── */
+/* ── drawer / modal ── */
 function openDrawer(title, sub, body, foot) {
   $('#drawerTitle').textContent = title;
   $('#drawerSub').textContent = sub || '';
@@ -2078,103 +2632,91 @@ function openDrawer(title, sub, body, foot) {
   document.body.style.overflow = 'hidden';
 }
 function closeDrawer() { $('#scrim').hidden = true; $('#drawer').hidden = true; document.body.style.overflow = ''; }
-$('#drawerClose') && $('#drawerClose').addEventListener('click', closeDrawer);
-$('#scrim') && $('#scrim').addEventListener('click', closeDrawer);
-
+$('#drawerClose').addEventListener('click', closeDrawer);
+$('#scrim').addEventListener('click', closeDrawer);
 function openModal(title, body, foot) {
   $('#modalTitle').innerHTML = title;
   $('#modalBody').innerHTML = body;
   $('#modalFoot').innerHTML = foot || '<button class="btn ghost" type="button" data-close="1">Close</button>';
-  $('#modal').hidden = false;
-  document.body.style.overflow = 'hidden';
+  $('#modal').hidden = false; document.body.style.overflow = 'hidden';
 }
-function closeModal() {
-  $('#modal').hidden = true;
-  if ($('#drawer').hidden) document.body.style.overflow = '';
-}
+function closeModal() { $('#modal').hidden = true; if ($('#drawer').hidden) document.body.style.overflow = ''; }
 document.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeModal(); });
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
-  if (!$('#modal').hidden) closeModal();
-  else if (!$('#drawer').hidden) closeDrawer();
+  if (!$('#modal').hidden) closeModal(); else if (!$('#drawer').hidden) closeDrawer();
 });
 
-/* ── refresh from storage ── */
-async function refresh() {
-  state.cases = (await Store.all('cases')).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-  state.partners = (await Store.all('partners')).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-  renderHomeStats();
-  updateBadge();
-  if (state.unlocked) { renderRegister(); renderPartners(); renderDeskStats(); }
-}
-function renderDeskStats() {
-  const el = $('#deskStats'); if (!el || !state.unlocked) return;
-  const cases = state.cases, pend = state.partners.filter(p => p.status === 'pending');
-  el.innerHTML = [
-    ['', cases.length, 'Cases on file'],
-    ['gold', cases.filter(c => c.status === 'submitted').length, 'Awaiting vetting'],
-    ['ok', state.partners.filter(p => p.status === 'approved').length, 'Approved partners'],
-    ['', cases.reduce((a, c) => a + (c.docCount || 0), 0), 'Documents held'],
-    ['gold', pend.length, 'Partners to approve']
-  ].map(s => '<div class="stat ' + s[0] + '"><b>' + s[1] + '</b><span>' + s[2] + '</span></div>').join('');
-}
-function renderHomeStats() {
-  const el = $('#homeStats');
-  if (!el) return;
-  const open = state.cases.filter(c => ['submitted', 'vetting'].indexOf(c.status) > -1).length;
-  const paid = state.cases.filter(c => c.status === 'paid').length;
-  const docs = state.cases.reduce((a, c) => a + (c.docCount || 0), 0);
-  el.innerHTML =
-    '<div class="stat"><b>' + state.cases.length + '</b><span>Cases filed</span></div>' +
-    '<div class="stat gold"><b>' + open + '</b><span>In progress</span></div>' +
-    '<div class="stat ok"><b>' + paid + '</b><span>Completed</span></div>' +
-    '<div class="stat"><b>' + state.partners.filter(p => p.status === 'approved').length + '</b><span>Partners</span></div>' +
-    '<div class="stat"><b>' + docs + '</b><span>Documents</span></div>';
+/* ═══════════════════════ refresh ═══════════════════════ */
+async function refresh(pull) {
+  state.cases = (await Store.all('cases')).sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+  state.partners = (await Store.all('partners')).sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+  if (pull !== false && Sb.ready() && Sb.signedIn()) await pullAll();
+  await countPending();
+  state.signedIn = Sb.signedIn();
+  renderHomeStats(); updateBadge(); updatePill();
+  if (state.unlocked) { renderDeskStats(); renderRegister(); renderPartners(); renderSbCard(); }
 }
 
-/* ── boot ── */
+/* ═══════════════════════ BOOT ═══════════════════════ */
 (async function boot() {
-  buildCats();
-  loadUploads();
-  renderSteps();
-  $('#footYear').textContent = new Date().getFullYear();
-  $('#lockFoot').textContent = new Date().getFullYear();
+  /* one place to change the desk contact details: CONFIG at the top of this script */
+  (function wireContacts() {
+    const tel = 'tel:' + CONFIG.deskPhone.replace(/[^\d+]/g, '');
+    const wa  = 'https://wa.me/' + CONFIG.deskWhatsApp;
+    ['#pillCall', '#footCall'].forEach(sel => { const a = $(sel); if (a) a.href = tel; });
+    const pc = $('#pillCall span'); if (pc) pc.textContent = CONFIG.deskPhone.replace(/^\+260\s?/, '0').replace(/\s/g, ' ');
+    const pw = $('#pillWa'); if (pw) pw.href = wa + '?text=' + encodeURIComponent('Good day. I would like to speak to the Compassion & Welfare desk.');
+    const em = $('#emergCall'); if (em) { em.href = tel; em.textContent = CONFIG.deskPhone.replace(/^\+260\s?/, '0').replace(/\s/g, ' '); }
+    const fm = $('#footMail'); if (fm) { fm.href = 'mailto:' + CONFIG.deskEmail; const sp = $('span', fm); if (sp) sp.textContent = CONFIG.deskEmail; }
+  })();
 
+  buildCats(); loadUploads(); renderSteps();
+  $('#footYear').textContent = new Date().getFullYear();
   const v = VERSES[Math.floor(Math.random() * VERSES.length)];
   $('#mastVerse').textContent = '“' + v[0] + '” — ' + v[1];
   $('#homeVerse').innerHTML = '“' + esc(v[0]) + '”<cite>' + esc(v[1]) + '</cite>';
 
-  // wire uploaders
   $$('.up').forEach(up => {
-    const input = $('input[type=file]', up);
-    if (!input) return;
+    const input = $('input[type=file]', up); if (!input) return;
     input.addEventListener('change', () => handleFiles(input, up));
-    ['dragenter', 'dragover'].forEach(ev => up.addEventListener(ev, e => { e.preventDefault(); up.classList.add('drag'); }));
-    ['dragleave', 'drop'].forEach(ev => up.addEventListener(ev, e => { e.preventDefault(); up.classList.remove('drag'); }));
+    ['dragenter','dragover'].forEach(ev => up.addEventListener(ev, e => { e.preventDefault(); up.classList.add('drag'); }));
+    ['dragleave','drop'].forEach(ev => up.addEventListener(ev, e => { e.preventDefault(); up.classList.remove('drag'); }));
     up.addEventListener('drop', e => { if (e.dataTransfer && e.dataTransfer.files) { input.files = e.dataTransfer.files; handleFiles(input, up); } });
   });
 
-  const backend = await Store.init();
-  const dot = $('#pillMode .dot');
-  if (dot) dot.className = 'dot' + (backend === 'memory' ? ' off' : '');
-  $('#pillMode').innerHTML = '<span class="dot' + (backend === 'memory' ? ' off' : '') + '"></span>Saved ' + Store.bname();
+  await Store.init();
+  state.cloud = Sb.ready() ? (Sb.signedIn() ? 'ok' : 'auth') : 'offline';
+  state.signedIn = Sb.signedIn();
 
   try {
-    if (sessionStorage.getItem(LOCK_KEY) === '1') {
-      state.unlocked = true; $('#lockCard').hidden = true; $('#desk').hidden = false;
-    }
+    if (sessionStorage.getItem(LOCK_KEY) === '1') { state.unlocked = true; $('#lockCard').hidden = true; $('#desk').hidden = false; }
   } catch (e) {}
 
+  setLockMode();
   await refresh();
-  if (state.unlocked) renderDesk();
 
-  // restore draft
+  /* opportunistically re-send anything left in the outbox */
+  if (Sb.ready()) {
+    countPending().then(async n => {
+      if (!n) return;
+      const ok = await flushOutbox(true);
+      if (ok) { toast('Queued records are now in Supabase.', 'ok'); await refresh(); }
+    });
+  }
+
+  window.addEventListener('online', async () => {
+    toast('Back online — syncing queued records…');
+    if (Sb.ready()) { const ok = await flushOutbox(true); if (ok) { await refresh(); toast('Sync complete.', 'ok'); } }
+  });
+  window.addEventListener('offline', () => { state.cloud = 'offline'; updatePill(); });
+
   try {
     const d = await Store.get('drafts', 'draft-apply');
     if (d && d.name) {
-      if (!$('#apName').value && d.name) $('#apName').value = d.name;
-      if (!$('#apPhone').value && d.phone) $('#apPhone').value = d.phone;
-      if (!$('#apNrc').value && d.nrc) $('#apNrc').value = d.nrc;
+      if (!$('#apName').value) $('#apName').value = d.name;
+      if (!$('#apPhone').value) $('#apPhone').value = d.phone || '';
+      if (!$('#apNrc').value) $('#apNrc').value = d.nrc || '';
       if (!$('#apStory').value && d.story) { $('#apStory').value = d.story; $('#apStoryCount').textContent = d.story.length; }
       toast('A saved draft was restored.', '', 4000);
     }
@@ -2185,5 +2727,5 @@ function renderHomeStats() {
 })();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a562af025c50b572',t:'MTc5Mzk1MzI3NQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a562af025c50b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a562e0b1da69b6da',t:'MTc5Mzk1NTMxMA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a562e0b1da69b6da',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
