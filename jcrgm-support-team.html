@@ -1133,7 +1133,7 @@ details.adv[open] summary{border-bottom-left-radius:0;border-bottom-right-radius
   <footer class="pfoot">
     <span>Jesus Christ Redeems Global Ministries</span><span class="sep">·</span>
     <a href="tel:+260979554970" id="footCall">📞 <span>0979 554 970</span></a><span class="sep">·</span>
-    <a href="/cdn-cgi/l/email-protection#6e1e0b0a0f06141b1c030700071d1a1c070b1d2e09030f0702400d0103" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="7a0a1f1e1b12000f0817131413090e08131f093a1d171b131654191517">[email&#160;protected]</span></span></a><br>
+    <a href="/cdn-cgi/l/email-protection#99e9fcfdf8f1e3ecebf4f0f7f0eaedebf0fcead9fef4f8f0f5b7faf6f4" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="46362322272e3c33342b2f282f3532342f233506212b272f2a6825292b">[email&#160;protected]</span></span></a><br>
     <span id="footVer">v2.0</span> · Confidential welfare record · <span id="footYear"></span>
   </footer>
 </main>
@@ -1765,8 +1765,10 @@ async function pullAll() {
     // keep anything still waiting to upload visible
     const localCases = await Store.all('cases'), localPartners = await Store.all('partners');
     const idsC = new Set(cloudCases.map(c => c.id)), idsP = new Set(cloudPartners.map(p => p.id));
-    localCases.filter(c => c.synced === false && !idsC.has(c.id)).forEach(c => cloudCases.unshift(c));
-    localPartners.filter(p => p.synced === false && !idsP.has(p.id)).forEach(p => cloudPartners.unshift(p));
+    /* records captured by an older build carry no `synced` flag at all — they must
+       stay visible and keep retrying, or they silently vanish from the register    */
+    localCases.filter(c => c.synced !== true && !idsC.has(c.id)).forEach(c => cloudCases.unshift(c));
+    localPartners.filter(p => p.synced !== true && !idsP.has(p.id)).forEach(p => cloudPartners.unshift(p));
     state.cloud = 'ok';
     state.lastSync = nowISO();
     state.cloudCaseRows = (cases || []).length;
@@ -2537,7 +2539,7 @@ function renderDesk() {
       warn.hidden = false;
       warn.className = 'note warn';
       warn.innerHTML = '<span class="ni">⏳</span><div><b>' + state.pending + ' record(s) still waiting to upload.</b> Press <b>Sync now</b>. Other devices will not see them until they land in Supabase.</div>';
-    } else if (state.publicStats && Number(state.publicStats.cases_total || 0) > state.cloudCaseRows) {
+    } else if (state.lastSync && state.publicStats && Number(state.publicStats.cases_total || 0) > state.cloudCaseRows) {
       warn.hidden = false;
       warn.className = 'note danger';
       warn.innerHTML = '<span class="ni">🔒</span><div><b>The database holds ' + state.publicStats.cases_total + ' case(s) but this account can read only ' + state.cloudCaseRows + '.</b> ' +
@@ -2630,12 +2632,14 @@ function renderPartners() {
         '<td>' + esc(p.email) + '<br><span class="small" style="color:#5b6478">' + esc(p.phone) + ' · ' + esc(p.contact) + '</span></td>' +
         '<td>' + (p.amount ? money(p.amount) + (p.freq ? '<br><span class="small" style="color:#5b6478">' + esc(p.freq) + '</span>' : '') : '—') + '</td>' +
         '<td><span class="badge tone-' + tone + '">' + label + '</span></td>' +
-        '<td>' + (p.synced === false ? '<span class="badge tone-warn">⏳ queued</span>' : '<span class="badge tone-ok">☁ synced</span>') + '</td>' +
-        '<td style="white-space:nowrap"><button class="btn ghost xs" data-pview="' + p.id + '">Open</button> ' + acts + '</td></tr>';
+        '<td>' + (!p.synced ? '<span class="badge tone-warn">⏳ queued</span>' : '<span class="badge tone-ok">☁ synced</span>') + '</td>' +
+        '<td style="white-space:nowrap"><button class="btn ghost xs" data-pview="' + p.id + '">Open</button> ' + acts +
+          ' <button class="btn danger xs" data-pdel="' + p.id + '" title="Delete this partner">🗑</button></td></tr>';
     }).join('') + '</tbody></table></div>';
   $$('[data-pview]', wrap).forEach(b => b.addEventListener('click', () => openPartnerDrawer(b.dataset.pview)));
   $$('[data-approve]', wrap).forEach(b => b.addEventListener('click', () => approvePartner(b.dataset.approve)));
   $$('[data-decline]', wrap).forEach(b => b.addEventListener('click', () => declinePartner(b.dataset.decline)));
+  $$('[data-pdel]', wrap).forEach(b => b.addEventListener('click', () => deleteRecord('partner', b.dataset.pdel)));
 }
 
 async function declinePartner(id) {
@@ -2743,7 +2747,9 @@ function openPartnerDrawer(id) {
       ? '<button class="btn ok" type="button" data-approve="' + p.id + '">✓ Approve &amp; thank</button>' +
         '<button class="btn danger" type="button" data-decline="' + p.id + '">✕ Decline</button>'
       : '<button class="btn ghost" type="button" data-approve="' + p.id + '">✉ Send message again</button>') +
+      '<button class="btn danger" type="button" id="delPartner">🗑 Delete partner</button>' +
       '<span class="grow"></span><span class="badge tone-' + tone + '">' + esc(p.contact) + '</span>');
+  $('#delPartner').addEventListener('click', () => deleteRecord('partner', p.id));
   $$('#drawerFoot [data-approve]').forEach(b => b.addEventListener('click', () => { closeDrawer(); approvePartner(b.dataset.approve); }));
   $$('#drawerFoot [data-decline]').forEach(b => b.addEventListener('click', () => { closeDrawer(); declinePartner(b.dataset.decline); }));
 }
@@ -2787,9 +2793,11 @@ function renderRegister() {
       '<td><span class="badge tone-' + (STATUSES[c.status] || STATUSES.submitted).tone + '">' + (STATUSES[c.status] || STATUSES.submitted).label + '</span></td>' +
       '<td>' + (!c.synced ? '<span class="badge tone-warn">⏳ queued</span>' : '<span class="badge tone-ok">☁ synced</span>') + '</td>' +
       '<td class="small">' + fmtDay(c.createdAt) + '</td>' +
-      '<td><button class="btn ghost xs" data-case="' + c.id + '">Open</button></td></tr>').join('') +
+      '<td style="white-space:nowrap"><button class="btn ghost xs" data-case="' + c.id + '">Open</button> ' +
+        '<button class="btn danger xs" data-del="' + c.id + '" title="Delete this case">🗑</button></td></tr>').join('') +
     '</tbody></table></div>';
   $$('[data-case]', wrap).forEach(b => b.addEventListener('click', () => openCaseDrawer(b.dataset.case)));
+  $$('[data-del]', wrap).forEach(b => b.addEventListener('click', () => deleteRecord('case', b.dataset.del)));
 }
 
 async function loadDocsFor(c) {
@@ -2856,7 +2864,10 @@ async function openCaseDrawer(id) {
     '<div class="sec-t">Documents (' + items.length + ')</div>' + docsHtml,
     Object.keys(STATUSES).map(k =>
       '<button class="btn ' + (c.status === k ? 'primary' : 'ghost') + ' xs" type="button" data-setstat="' + k + '">' + STATUSES[k].label + '</button>').join('') +
-    '<span class="grow"></span><button class="btn danger xs" type="button" id="purgeDocs">🗑 Purge documents</button>');
+    '<span class="grow"></span>' +
+    '<button class="btn ghost xs" type="button" id="purgeDocs">🧹 Purge documents</button>' +
+    '<button class="btn danger xs" type="button" id="delCase">🗑 Delete case</button>');
+  $('#delCase').addEventListener('click', () => deleteRecord('case', c.id));
 
   $$('#drawerFoot [data-setstat]').forEach(b => b.addEventListener('click', async () => {
     c.status = b.dataset.setstat;
@@ -2876,6 +2887,48 @@ async function openCaseDrawer(id) {
     toast('Documents deleted.', 'warn');
   });
 }
+
+/* ── deleting an entry (case or partner) ── */
+async function deleteRecord(kind, id) {
+  const arr = kind === 'case' ? state.cases : state.partners;
+  const rec = arr.find(x => x.id === id);
+  if (!rec) return;
+  const isCase = kind === 'case';
+  const what = (isCase ? 'case ' : 'partner ') + rec.ref + ' — ' + (rec.name || '');
+  const extra = isCase ? '\n\nIts documents and the uploaded files are deleted too.' : '';
+
+  if (!confirm('Delete ' + what + ' permanently?' + extra +
+      '\n\nThis cannot be undone. If you only want it out of the way, set its status instead.')) return;
+
+  const inCloud = rec.synced === true;
+  if (inCloud && Sb.ready() && !Sb.signedIn()) {
+    toast('Sign in with a Support Team account to delete a record that is already in the database.', 'err', 6500);
+    return;
+  }
+
+  let cloudOk = true;
+  if (Sb.ready() && Sb.signedIn()) {
+    try {
+      if (isCase) await purgeDocsCloud(rec);
+      await Sb.remove(isCase ? CONFIG.sb.tables.cases : CONFIG.sb.tables.partners, { id: id });
+    } catch (e) {
+      cloudOk = false;
+      toast('The database refused the delete: ' + ((e && e.message) || 'no reason given') +
+            '. It was removed on this device only and will return on the next sync.', 'err', 9000);
+    }
+  }
+
+  await Store.del(isCase ? 'cases' : 'partners', id);
+  if (isCase) await Store.del('docs', id);
+  closeDrawer();
+  await refresh();
+  renderDesk();
+  if (cloudOk) toast(what + ' deleted.', 'ok', 5000);
+}
+
+$('#btnDeleteRecord') && $('#btnDeleteRecord').addEventListener('click', (e) => {
+  deleteRecord(e.target.dataset.kind, e.target.dataset.id);
+});
 
 /* ── register a beneficiary at the desk ── */
 $('#btnSyncNow').addEventListener('click', async () => {
@@ -2923,7 +2976,7 @@ const csvCell = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
 $('#btnCsv').addEventListener('click', () => {
   const rows = [['Reference','Name','Phone','NRC','Category','Amount','Urgency','Status','Documents','Synced','Received']];
   filteredCases().forEach(c => rows.push([c.ref,c.name,c.phone,c.nrc,c.category,c.amount,c.urgency,
-    (STATUSES[c.status] || STATUSES.submitted).label, c.docCount || 0, c.synced === false ? 'queued' : 'yes', fmtDay(c.createdAt)]));
+    (STATUSES[c.status] || STATUSES.submitted).label, c.docCount || 0, !c.synced ? 'queued' : 'yes', fmtDay(c.createdAt)]));
   download('jcrgm-cases-' + fmtDay(nowISO()).replace(/ /g,'-') + '.csv', rows.map(r => r.map(csvCell).join(',')).join('\n'));
   toast('Case list exported.', 'ok');
 });
@@ -3059,5 +3112,5 @@ async function refresh(pull) {
 })();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a563c40aee64b56f',t:'MTc5Mzk2NDYyMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a563c40aee64b56f',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a563f6abde2bb56c',t:'MTc5Mzk2NjY5Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a563f6abde2bb56c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
