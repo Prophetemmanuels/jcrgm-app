@@ -1005,6 +1005,23 @@ details.adv[open] summary{border-bottom-left-radius:0;border-bottom-right-radius
         </div>
       </div>
 
+      <!-- ── why can't this device see the register? ── -->
+      <div class="card" id="diagCard">
+        <div class="card-hd">
+          <span class="ico" aria-hidden="true" style="background:linear-gradient(150deg,#eef2ff,#dfe6f8);border-color:#dbe2f4">🩺</span>
+          <div class="grow"><span class="eyebrow-sm">Troubleshooting</span>
+            <h2>Why can't this device see the register?</h2>
+            <p>Runs the real queries against the church database and prints exactly what came back. Nothing private is shown — only counts, the signed-in email and error messages.</p>
+          </div>
+        </div>
+        <div class="formbar" style="margin-top:0;border-top:0;padding-top:0">
+          <span class="grow"></span>
+          <button class="btn ghost sm" type="button" id="diagCopy">📋 Copy report</button>
+          <button class="btn primary sm" type="button" id="diagRun">🩺 Run the check</button>
+        </div>
+        <div id="diagOut" style="margin-top:12px"></div>
+      </div>
+
       <!-- register a beneficiary on their behalf -->
       <div class="card" id="addCard" hidden>
         <div class="card-hd">
@@ -1113,7 +1130,7 @@ details.adv[open] summary{border-bottom-left-radius:0;border-bottom-right-radius
   <footer class="pfoot">
     <span>Jesus Christ Redeems Global Ministries</span><span class="sep">·</span>
     <a href="tel:+260979554970" id="footCall">📞 <span>0979 554 970</span></a><span class="sep">·</span>
-    <a href="/cdn-cgi/l/email-protection#daaabfbebbb2a0afa8b7b3b4b3a9aea8b3bfa99abdb7bbb3b6f4b9b5b7" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="fa8a9f9e9b92808f8897939493898e88939f89ba9d979b9396d4999597">[email&#160;protected]</span></span></a><br>
+    <a href="/cdn-cgi/l/email-protection#c4b4a1a0a5acbeb1b6a9adaaadb7b0b6ada1b784a3a9a5ada8eaa7aba9" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="c0b0a5a4a1a8bab5b2ada9aea9b3b4b2a9a5b380a7ada1a9aceea3afad">[email&#160;protected]</span></span></a><br>
     <span id="footVer">v2.0</span> · Confidential welfare record · <span id="footYear"></span>
   </footer>
 </main>
@@ -1494,7 +1511,7 @@ const Store = (() => {
 })();
 /* ═══════════════════════ SYNC LAYER ═══════════════════════ */
 const state = { cases:[], partners:[], step:1, uploads:{}, partnerFilter:'pending',
-                unlocked:false, cloud:'offline', signedIn:false, pending:0, publicStats:null, lastSync:null };
+                unlocked:false, cloud:'offline', signedIn:false, pending:0, publicStats:null, lastSync:null, cloudCaseRows:0, cloudPartnerRows:0 };
 
 /* ── row <-> record ── */
 const numOrNull = v => (v === '' || v == null || isNaN(v)) ? null : Number(v);
@@ -1707,6 +1724,8 @@ async function pullAll() {
     localPartners.filter(p => p.synced === false && !idsP.has(p.id)).forEach(p => cloudPartners.unshift(p));
     state.cloud = 'ok';
     state.lastSync = nowISO();
+    state.cloudCaseRows = (cases || []).length;
+    state.cloudPartnerRows = (partners || []).length;
     await Store.bulk('cases', cloudCases);
     await Store.bulk('partners', cloudPartners);
     return { cases:cloudCases, partners:cloudPartners };
@@ -2321,6 +2340,105 @@ $('#btnFlush').addEventListener('click', async () => {
   await refresh(); renderSbCard();
 });
 
+/* ═══════════════════════ WHO IS AT THE DESK ═══════════════════════ */
+function staffTag() {
+  const sess = Sb.session();
+  return (sess && sess.email) ? sess.email : 'desk (offline, unsynced)';
+}
+
+/* ═══════════════════════ DIAGNOSTICS ═══════════════════════ */
+async function runDiagnostics() {
+  const box = $('#diagOut');
+  if (!box) return;
+  box.innerHTML = '<p class="small">Running…</p>';
+  const rows = [];
+  const log = (k, v, tone) => rows.push({ k, v: (v === undefined || v === null) ? '—' : String(v), tone: tone || '' });
+
+  log('Page address', location.origin === 'null' ? 'opened as a local file' : location.origin);
+  log('Database project', Sb.url() || 'NONE — no project configured');
+  log('Key type', CONFIG.sb.key ? (CONFIG.sb.key.indexOf('sb_publishable') === 0 ? 'publishable key ✓' : 'other / anon key') : 'none');
+  log('Browser online', navigator.onLine ? 'yes ✓' : 'NO ✗', navigator.onLine ? '' : 'bad');
+
+  const sess = Sb.session();
+  log('Signed in', sess && sess.access_token
+      ? sess.email + (sess.expires_at ? ' · session valid until ' + new Date(sess.expires_at * 1000).toLocaleTimeString() : '')
+      : 'NO — the register cannot be read without signing in',
+      sess && sess.access_token ? '' : 'bad');
+
+  log('This device\u2019s cache', state.cases.length + ' cases · ' + state.partners.length + ' partners · ' + state.pending + ' waiting to upload');
+  log('Last successful sync', state.lastSync ? fmtDate(state.lastSync) : 'never');
+
+  let dbTotals = null, teamOk = null, readCases = null, readPartners = null;
+  if (Sb.ready()) {
+    try { dbTotals = await Sb.rpc('welfare_public_stats', {}); } catch (e) { log('Public counters', 'error: ' + e.message, 'bad'); }
+    if (dbTotals) {
+      const t = Array.isArray(dbTotals) ? dbTotals[0] : dbTotals;
+      log('Database totals (world-readable)', 'cases ' + t.cases_total + ' · partners ' + t.partners_approved + ' approved of ' + t.partners_total + ' · docs ' + t.documents, '');
+    }
+    if (sess && sess.access_token) {
+      try {
+        const r = await Sb.rpc('welfare_is_team', {});
+        teamOk = (r === true || r === 'true' || (Array.isArray(r) && r[0] === true));
+        log('welfare_is_team() — is this email on the allowlist?', teamOk ? 'YES ✓' : 'NO ✗', teamOk ? '' : 'bad');
+      } catch (e) { log('welfare_is_team()', 'error: ' + e.message + ' (has the lockdown SQL been run?)', 'bad'); }
+
+      try {
+        const rc = await Sb.select(CONFIG.sb.tables.cases, 'select=id&limit=1000');
+        readCases = rc.length;
+        log('Case rows this account can read', readCases, readCases > 0 ? '' : 'warn');
+      } catch (e) { log('Read cases', 'error: ' + e.message, 'bad'); }
+
+      try {
+        const rp = await Sb.select(CONFIG.sb.tables.partners, 'select=id&limit=1000');
+        readPartners = rp.length;
+        log('Partner rows this account can read', readPartners, readPartners > 0 ? '' : 'warn');
+      } catch (e) { log('Read partners', 'error: ' + e.message, 'bad'); }
+    }
+  }
+
+  /* verdict */
+  let verdict = '', tone = 'warn';
+  if (!Sb.ready()) {
+    verdict = 'No Supabase project is configured in this copy of the page — you are on an old or edited file. Re-upload jcrgm-support-team.html.';
+    tone = 'bad';
+  } else if (!sess || !sess.access_token) {
+    verdict = 'This device is not signed in, so it can only show what was captured on it. Lock the desk and sign in with the Support Team account.';
+    tone = 'bad';
+  } else if (teamOk === false) {
+    verdict = 'You are signed in as ' + sess.email + ', but that email is not in the welfare_team allowlist — the database returns nothing. Add it with the SQL snippet, then sign out and in again.';
+    tone = 'bad';
+  } else if (readCases === 0 && dbTotals && (Array.isArray(dbTotals) ? dbTotals[0].cases_total : dbTotals.cases_total) > 0) {
+    verdict = 'The database holds cases but this account reads none — the allowlist or the policy is still blocking it. Check that the email in welfare_team matches exactly.';
+    tone = 'bad';
+  } else if (state.pending > 0) {
+    verdict = state.pending + ' record(s) on this device have not uploaded yet. Press Sync now.';
+    tone = 'warn';
+  } else {
+    verdict = 'Everything is wired correctly: ' + readCases + ' cases and ' + readPartners + ' partners readable from the database.';
+    tone = 'ok';
+  }
+
+  box.innerHTML =
+    '<div class="note ' + (tone === 'ok' ? 'ok' : tone === 'warn' ? 'warn' : 'danger') + '" style="margin-bottom:12px"><span class="ni">' +
+      (tone === 'ok' ? '✓' : tone === 'warn' ? '!' : '⚠') + '</span><div>' + esc(verdict) + '</div></div>' +
+    '<div class="tbl-wrap"><table class="tbl" style="min-width:0"><tbody>' +
+      rows.map(r => '<tr><td style="font-weight:700;color:#5b6478;width:42%">' + esc(r.k) + '</td>' +
+        '<td style="color:' + (r.tone === 'bad' ? '#b42318' : r.tone === 'warn' ? '#8a5205' : '#0f172a') + '">' + esc(r.v) + '</td></tr>').join('') +
+    '</tbody></table></div>';
+  return rows;
+}
+
+$('#diagRun') && $('#diagRun').addEventListener('click', async () => {
+  const b = $('#diagRun'); b.classList.add('busy');
+  await runDiagnostics();
+  b.classList.remove('busy');
+});
+$('#diagCopy') && $('#diagCopy').addEventListener('click', () => {
+  const txt = ($('#diagOut') || {}).innerText || '';
+  try { navigator.clipboard.writeText(txt); toast('Report copied — paste it to the developer.', 'ok'); }
+  catch (e) { toast('Could not copy; select the text manually.', 'warn'); }
+});
+
 /* ═══════════════════════ ADMIN: desk ═══════════════════════ */
 function renderDesk() {
   if (!state.unlocked) return;
@@ -2338,6 +2456,11 @@ function renderDesk() {
       warn.hidden = false;
       warn.className = 'note warn';
       warn.innerHTML = '<span class="ni">⏳</span><div><b>' + state.pending + ' record(s) still waiting to upload.</b> Press <b>Sync now</b>. Other devices will not see them until they land in Supabase.</div>';
+    } else if (state.publicStats && Number(state.publicStats.cases_total || 0) > state.cloudCaseRows) {
+      warn.hidden = false;
+      warn.className = 'note danger';
+      warn.innerHTML = '<span class="ni">🔒</span><div><b>The database holds ' + state.publicStats.cases_total + ' case(s) but this account can read only ' + state.cloudCaseRows + '.</b> ' +
+        'Your signed-in email is probably not on the <code>welfare_team</code> allowlist, or the lockdown SQL was re-run after the schema. Open <b>Why can\'t this device see the register?</b> below to confirm.</div>';
     } else {
       warn.hidden = true;
     }
@@ -2481,7 +2604,7 @@ function approvePartner(id) {
   $('#tyEmail').addEventListener('click', () => dispatch(p, 'Email', $('#tyMsg').value));
   $('#tyWa').addEventListener('click', () => dispatch(p, 'WhatsApp', $('#tyMsg').value));
   $('#tyApprove').addEventListener('click', async () => {
-    p.status = 'approved'; p.approvedAt = nowISO(); p.approvedBy = 'Support Team desk';
+    p.status = 'approved'; p.approvedAt = nowISO(); p.approvedBy = staffTag();
     p.thankYou = $('#tyMsg').value;
     await Store.put('partners', p);
     const ok = await updatePartnerCloud(p);
@@ -2504,7 +2627,7 @@ async function dispatch(p, channel, message) {
   } else {
     openWhatsApp(p.phone, message);
   }
-  p.notifyLog = (p.notifyLog || []).concat([{ at:nowISO(), channel, by:'desk' }]);
+  p.notifyLog = (p.notifyLog || []).concat([{ at:nowISO(), channel, by:staffTag() }]);
   if (p.status !== 'approved') { p.status = 'approved'; p.approvedAt = nowISO(); }
   p.thankYou = message;
   await Store.put('partners', p);
@@ -2530,7 +2653,7 @@ function openPartnerDrawer(id) {
        ['Home church',p.church || '—'],['Partnership types',(p.types || []).join(', ')],
        ['Pledge', p.amount ? money(p.amount) + (p.freq ? ' · ' + p.freq : '') : '—'],
        ['Preferred contact',p.contact],['Registered',fmtDate(p.createdAt)],
-       ['Approved', p.approvedAt ? fmtDate(p.approvedAt) : '—'],
+       ['Approved', p.approvedAt ? fmtDate(p.approvedAt) + ' by ' + (p.approvedBy || 'desk') : '—'],
        ['Messages sent', (p.notifyLog || []).map(l => l.channel + ' ' + fmtDate(l.at)).join(' · ') || 'none yet']
       ].map(r => '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>').join('') + '</div>' +
     (p.message ? '<div class="sec-t">What is on their heart</div><p class="small">' + esc(p.message) + '</p>' : '') +
@@ -2656,7 +2779,8 @@ async function openCaseDrawer(id) {
 
   $$('#drawerFoot [data-setstat]').forEach(b => b.addEventListener('click', async () => {
     c.status = b.dataset.setstat;
-    c.history = (c.history || []).concat([{ at:nowISO(), status:c.status, by:'desk' }]);
+    c.history = (c.history || []).concat([{ at:nowISO(), status:c.status, by:staffTag() }]);
+    c.lastActionBy = staffTag();
     await Store.put('cases', c);
     const ok = await updateCaseCloud(c);
     await refresh(); renderDesk(); closeDrawer();
@@ -2854,5 +2978,5 @@ async function refresh(pull) {
 })();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5634feff9dfb572',t:'MTc5Mzk1OTg2Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5634feff9dfb572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5639310581cb56f',t:'MTc5Mzk2MjYxNg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5639310581cb56f',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
