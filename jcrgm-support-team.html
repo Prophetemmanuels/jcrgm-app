@@ -1015,6 +1015,9 @@ details.adv[open] summary{border-bottom-left-radius:0;border-bottom-right-radius
           </div>
         </div>
         <div class="formbar" style="margin-top:0;border-top:0;padding-top:0">
+          <button class="btn ghost sm" type="button" id="exportData">⬇ Export this device's records</button>
+          <label class="btn ghost sm" for="importFile" style="margin:0">⬆ Import a backup</label>
+          <input type="file" id="importFile" accept="application/json,.json" hidden>
           <span class="grow"></span>
           <button class="btn ghost sm" type="button" id="diagCopy">📋 Copy report</button>
           <button class="btn primary sm" type="button" id="diagRun">🩺 Run the check</button>
@@ -1130,7 +1133,7 @@ details.adv[open] summary{border-bottom-left-radius:0;border-bottom-right-radius
   <footer class="pfoot">
     <span>Jesus Christ Redeems Global Ministries</span><span class="sep">·</span>
     <a href="tel:+260979554970" id="footCall">📞 <span>0979 554 970</span></a><span class="sep">·</span>
-    <a href="/cdn-cgi/l/email-protection#c4b4a1a0a5acbeb1b6a9adaaadb7b0b6ada1b784a3a9a5ada8eaa7aba9" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="c0b0a5a4a1a8bab5b2ada9aea9b3b4b2a9a5b380a7ada1a9aceea3afad">[email&#160;protected]</span></span></a><br>
+    <a href="/cdn-cgi/l/email-protection#35455051545d4f4047585c5b5c4641475c5046755258545c591b565a58" id="footMail">✉ <span><span class="__cf_email__" data-cfemail="7101141510190b04031c181f1802050318140231161c10181d5f121e1c">[email&#160;protected]</span></span></a><br>
     <span id="footVer">v2.0</span> · Confidential welfare record · <span id="footYear"></span>
   </footer>
 </main>
@@ -1575,6 +1578,8 @@ async function saveCase(rec, docs) {
       if (docs && docs.length) await pushDocs(rec, await Store.get('docs', rec.id));
     } catch (e) {
       state.cloud = 'error'; noteSyncError(e);
+      state.lastWriteError = (e && e.message) || 'unknown database error';
+      state.lastWriteErrorAt = nowISO();
     }
   }
   await countPending();
@@ -1591,7 +1596,11 @@ async function savePartner(rec) {
       await Sb.upsert(CONFIG.sb.tables.partners, [partnerToRow(rec)], 'id');
       rec.synced = true;
       await Store.put('partners', rec); cloudOk = true;
-    } catch (e) { state.cloud = 'error'; noteSyncError(e); }
+    } catch (e) {
+      state.cloud = 'error'; noteSyncError(e);
+      state.lastWriteError = (e && e.message) || 'unknown database error';
+      state.lastWriteErrorAt = nowISO();
+    }
   }
   await countPending(); updatePill();
   return cloudOk;
@@ -1670,7 +1679,7 @@ function noteSyncError(e) {
 /* ── outbox flush ── */
 async function countPending() {
   const cases = await Store.all('cases'), partners = await Store.all('partners'), docs = await Store.all('docs');
-  let n = cases.filter(c => c.synced === false).length + partners.filter(p => p.synced === false).length;
+  let n = cases.filter(c => c.synced !== true).length + partners.filter(p => p.synced !== true).length;
   docs.forEach(d => { n += (d.items || []).filter(i => !i.uploaded).length; });
   state.pending = n;
   return n;
@@ -1679,8 +1688,8 @@ async function countPending() {
 async function flushOutbox(quiet) {
   if (!Sb.ready()) { if (!quiet) toast('No Supabase project is connected yet — open the desk settings.', 'warn'); return false; }
   const before = state.pending;
-  const cases = (await Store.all('cases')).filter(c => c.synced === false);
-  const partners = (await Store.all('partners')).filter(p => p.synced === false);
+  const cases = (await Store.all('cases')).filter(c => c.synced !== true);
+  const partners = (await Store.all('partners')).filter(p => p.synced !== true);
   const docs = await Store.all('docs');
   let failed = 0;
   for (const c of cases) { try { await pushCase(c); } catch (e) { failed++; noteSyncError(e); } }
@@ -2367,6 +2376,7 @@ async function runDiagnostics() {
 
   log('This device\u2019s cache', state.cases.length + ' cases · ' + state.partners.length + ' partners · ' + state.pending + ' waiting to upload');
   log('Last successful sync', state.lastSync ? fmtDate(state.lastSync) : 'never');
+  if (state.lastWriteError) log('LAST UPLOAD REFUSED BY THE DATABASE', state.lastWriteError + (state.lastWriteErrorAt ? '  (' + fmtDate(state.lastWriteErrorAt) + ')' : ''), 'bad');
 
   let dbTotals = null, teamOk = null, readCases = null, readPartners = null;
   if (Sb.ready()) {
@@ -2427,6 +2437,41 @@ async function runDiagnostics() {
     '</tbody></table></div>';
   return rows;
 }
+
+/* ── move records between devices / browsers, then upload them ── */
+$('#exportData') && $('#exportData').addEventListener('click', async () => {
+  const cases = await Store.all('cases'), partners = await Store.all('partners'), docs = await Store.all('docs');
+  if (!cases.length && !partners.length) { toast('This device holds no records to export.', 'warn'); return; }
+  const payload = { app:'jcrgm-welfare', version:3, exportedAt:nowISO(),
+                    exportedFrom: location.origin, cases, partners, docs };
+  const blob = new Blob([JSON.stringify(payload, null, 1)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'jcrgm-welfare-backup-' + fmtDay(nowISO()).replace(/ /g,'-') + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  toast('Exported ' + cases.length + ' case(s), ' + partners.length + ' partner(s) and their documents.', 'ok', 5000);
+});
+
+$('#importFile') && $('#importFile').addEventListener('change', async e => {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  try {
+    const p = JSON.parse(await f.text());
+    if (!p || p.app !== 'jcrgm-welfare') throw new Error('not a welfare backup');
+    let n = 0;
+    for (const c of (p.cases || [])) { c.synced = false; await Store.put('cases', c); n++; }
+    for (const x of (p.partners || [])) { x.synced = false; await Store.put('partners', x); n++; }
+    for (const d of (p.docs || [])) { await Store.put('docs', d); }
+    await refresh(false);
+    const ok = await flushOutbox(true);
+    await refresh(false); if (state.unlocked) renderDesk();
+    toast('Imported ' + n + ' record(s)' + (ok ? ' — now in the church database.' : ' — they will upload when the connection allows.'), ok ? 'ok' : 'warn', 6000);
+  } catch (err) {
+    toast('That file could not be read: ' + err.message, 'err', 6000);
+  }
+  e.target.value = '';
+});
 
 $('#diagRun') && $('#diagRun').addEventListener('click', async () => {
   const b = $('#diagRun'); b.classList.add('busy');
@@ -2648,7 +2693,7 @@ function openPartnerDrawer(id) {
   openDrawer(p.name + ' · ' + p.ref, (p.types || []).join(' · '),
     '<div class="dl">' +
       [['Reference',p.ref],['Status', p.status === 'approved' ? 'Approved' : p.status === 'declined' ? 'Not approved' : 'Awaiting approval'],
-       ['Cloud', p.synced === false ? 'Queued — not yet in Supabase' : 'Synced to Supabase'],
+       ['Cloud', !p.synced ? 'Queued — not yet in Supabase' : 'Synced to Supabase'],
        ['Organisation',p.org || '—'],['Email',p.email],['WhatsApp',p.phone],['City / country',p.city || '—'],
        ['Home church',p.church || '—'],['Partnership types',(p.types || []).join(', ')],
        ['Pledge', p.amount ? money(p.amount) + (p.freq ? ' · ' + p.freq : '') : '—'],
@@ -2704,7 +2749,7 @@ function renderRegister() {
       '<td>' + (c.docCount ? '<span class="badge tone-teal">📎 ' + c.docCount + '</span>' : '<span class="badge tone-warn">none</span>') + '</td>' +
       '<td>' + (c.amount ? money(c.amount) : '—') + '</td>' +
       '<td><span class="badge tone-' + (STATUSES[c.status] || STATUSES.submitted).tone + '">' + (STATUSES[c.status] || STATUSES.submitted).label + '</span></td>' +
-      '<td>' + (c.synced === false ? '<span class="badge tone-warn">⏳ queued</span>' : '<span class="badge tone-ok">☁ synced</span>') + '</td>' +
+      '<td>' + (!c.synced ? '<span class="badge tone-warn">⏳ queued</span>' : '<span class="badge tone-ok">☁ synced</span>') + '</td>' +
       '<td class="small">' + fmtDay(c.createdAt) + '</td>' +
       '<td><button class="btn ghost xs" data-case="' + c.id + '">Open</button></td></tr>').join('') +
     '</tbody></table></div>';
@@ -2764,7 +2809,7 @@ async function openCaseDrawer(id) {
        ['Help needed',c.category || '—'],['Amount', c.amount ? money(c.amount) : '—'],
        ['Urgency',c.urgency || '—'],['Household',c.household || '—'],['Referee',c.referee || '—'],
        ['Previously helped',c.previous || '—'],
-       ['Cloud', c.synced === false ? 'Queued — not yet in Supabase' : 'Synced to Supabase'],
+       ['Cloud', !c.synced ? 'Queued — not yet in Supabase' : 'Synced to Supabase'],
        ['Status', (STATUSES[c.status] || STATUSES.submitted).label]
       ].map(r => '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>').join('') +
       '<div><dt>Verification</dt><dd>' + (c.nrc && c.docCount ? '<span class="badge tone-ok">ID + ' + c.docCount + ' doc(s)</span>'
@@ -2849,7 +2894,7 @@ $('#btnCsv').addEventListener('click', () => {
 function exportPartnersCsv() {
   const rows = [['Reference','Name','Organisation','Email','WhatsApp','Types','Pledge','Frequency','Preferred contact','Status','Synced','Registered','Approved','Message']];
   state.partners.forEach(p => rows.push([p.ref,p.name,p.org,p.email,p.phone,(p.types || []).join('; '),p.amount,p.freq,
-    p.contact,p.status, p.synced === false ? 'queued' : 'yes', fmtDay(p.createdAt), p.approvedAt ? fmtDay(p.approvedAt) : '', p.message]));
+    p.contact,p.status, !p.synced ? 'queued' : 'yes', fmtDay(p.createdAt), p.approvedAt ? fmtDay(p.approvedAt) : '', p.message]));
   download('jcrgm-partners-' + fmtDay(nowISO()).replace(/ /g,'-') + '.csv', rows.map(r => r.map(csvCell).join(',')).join('\n'));
   toast('Partner list exported.', 'ok');
 }
@@ -2978,5 +3023,5 @@ async function refresh(pull) {
 })();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5639310581cb56f',t:'MTc5Mzk2MjYxNg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5639310581cb56f',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a563a81c0dc7b575',t:'MTc5Mzk2MzQ3OA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a563a81c0dc7b575',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
