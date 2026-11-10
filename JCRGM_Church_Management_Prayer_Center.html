@@ -314,8 +314,11 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
    linear-gradient(to right,transparent calc(66.6% - 1px),rgba(255,255,255,.35) 66.6%,transparent calc(66.6% + 1px)),
    linear-gradient(to bottom,transparent calc(33.3% - 1px),rgba(255,255,255,.35) 33.3%,transparent calc(33.3% + 1px)),
    linear-gradient(to bottom,transparent calc(66.6% - 1px),rgba(255,255,255,.35) 66.6%,transparent calc(66.6% + 1px))}
-.crop-controls{display:flex;align-items:center;gap:9px;max-width:340px;margin:9px auto 4px}
-.crop-controls input[type=range]{flex:1;width:auto}
+.crop-controls{display:flex;align-items:center;gap:8px;max-width:370px;margin:10px auto 4px}
+.crop-controls input[type=range]{flex:1;width:auto;-webkit-appearance:none!important;appearance:none!important;height:8px;border:0!important;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--primary))!important;padding:0!important;outline:none;box-shadow:none!important;cursor:pointer}
+.crop-controls input[type=range]::-webkit-slider-thumb{-webkit-appearance:none!important;appearance:none!important;width:28px;height:28px;border-radius:50%;background:#fff;border:3px solid var(--primary);box-shadow:0 2px 8px rgba(0,0,0,.35);cursor:grab}
+.crop-controls input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--primary);box-shadow:0 2px 8px rgba(0,0,0,.35);cursor:grab}
+.zoom-pct{min-width:50px;text-align:center;font-weight:900;color:var(--primary);font-size:14px}
 @media(max-width:600px){
   .members-gallery{grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:12px}
   .member-photo{width:100px;height:100px}
@@ -1241,8 +1244,8 @@ function openMemberUpload(id){
     '<div id="memberCropBox" style="display:none;margin-top:10px">'+
       '<label class="lbl">✂ Crop your photo</label>'+
       '<div class="crop-wrap" id="memberCropWrap"><img id="memberCropImg" alt=""><div class="crop-grid"></div></div>'+
-      '<div class="crop-controls"><span aria-hidden="true">🔍</span><input id="memberCropZoom" type="range" min="100" max="300" value="100" oninput="memberCropZoom(this.value)" aria-label="Zoom photo"><span aria-hidden="true">➕</span></div>'+
-      '<div class="hint" style="text-align:center">Drag the photo to position your face in the square, use the slider to zoom. The square is exactly how you will appear in the gallery.</div>'+
+      '<div class="crop-controls"><button class="btn secondary small" type="button" onclick="memberZoomStep(-25)" aria-label="Zoom out">➖</button><input id="memberCropZoom" type="range" min="100" max="300" step="1" value="100" oninput="memberCropZoom(this.value)" aria-label="Zoom photo"><button class="btn secondary small" type="button" onclick="memberZoomStep(25)" aria-label="Zoom in">➕</button><span class="zoom-pct" id="memberZoomPct">100%</span></div>'+
+      '<div class="hint" style="text-align:center">Drag the photo to position your face in the square. Zoom with the ➖ / ➕ buttons, the slider, or pinch with two fingers. The square is exactly how you will appear in the gallery.</div>'+
       '<div class="actions" style="justify-content:center;margin-top:9px"><button class="btn success" type="button" onclick="applyMemberCrop()">✂ Crop &amp; Use This Photo</button>'+
       '<button class="btn secondary" type="button" onclick="cancelMemberCrop()">Cancel</button></div>'+
     '</div>'+
@@ -1254,17 +1257,63 @@ function openMemberUpload(id){
 function previewMemberPhoto(input){
   const file=input&&input.files&&input.files[0];
   if(!file) return;
-  if(!/^image\//.test(file.type||"")){ toast('Please choose a photo (image file).','err',4500); return; }
-  const reader=new FileReader();
-  reader.onload=function(){
-    const img=new Image();
-    img.onload=function(){ window.__cropApplied=false; memberSetupCrop(img); };
-    img.onerror=function(){ toast('That photo could not be read — please try another one.','err',5000); };
-    img.src=String(reader.result||"");
-  };
-  reader.onerror=function(){ toast('That photo could not be read — please try another one.','err',5000); };
-  reader.readAsDataURL(file);
+  if(file.type&&!/^image\//.test(file.type)){ toast('Please choose a photo (image file).','err',4500); try{ input.value=''; }catch(e){} return; }
+  toast('Loading photo…','ok',1800);
+  loadMemberPhoto(file,function(err,img){
+    if(err||!img){
+      toast('That photo could not be loaded — it may be too large for this phone\u2019s memory. Close a few other apps and try Capture again, or use Upload Photo with a smaller picture.','err',8000);
+      return;
+    }
+    window.__cropApplied=false;
+    memberSetupCrop(img);
+  });
   try{ input.value=''; }catch(e){}
+}
+/* Low-memory photo loading: camera photos can be 6000px+ (200MB+ decoded).
+   Shrink to max 1024px IMMEDIATELY and free the original before cropping. */
+function loadMemberPhoto(file,cb){
+  const MAX=1024;
+  function finish(canvas){
+    let data;
+    try{ data=canvas.toDataURL('image/jpeg',0.87); }
+    catch(e){ cb(e||new Error('encode')); return; }
+    canvas.width=1; canvas.height=1; /* release the canvas bitmap */
+    const img=new Image();
+    img.onload=function(){ cb(null,img); };
+    img.onerror=function(){ cb(new Error('decode')); };
+    img.src=data;
+  }
+  function drawScaled(source,sw,sh){
+    const scale=Math.min(1,MAX/Math.max(sw,sh));
+    const w=Math.max(1,Math.round(sw*scale)), h=Math.max(1,Math.round(sh*scale));
+    const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
+    canvas.getContext('2d').drawImage(source,0,0,w,h);
+    return canvas;
+  }
+  function fallback(){
+    let url;
+    try{ url=URL.createObjectURL(file); }catch(e){ cb(e); return; }
+    const img=new Image();
+    img.onload=function(){
+      try{
+        const canvas=drawScaled(img,img.naturalWidth,img.naturalHeight);
+        URL.revokeObjectURL(url);
+        img.src=''; /* free the full-size decode as soon as possible */
+        finish(canvas);
+      }catch(e){ try{ URL.revokeObjectURL(url); }catch(_){} cb(e); }
+    };
+    img.onerror=function(){ try{ URL.revokeObjectURL(url); }catch(_){} cb(new Error('load')); };
+    img.src=url;
+  }
+  if(window.createImageBitmap){
+    createImageBitmap(file).then(function(bmp){
+      try{
+        const canvas=drawScaled(bmp,bmp.width,bmp.height);
+        if(bmp.close) bmp.close(); /* free the giant camera bitmap immediately */
+        finish(canvas);
+      }catch(e){ fallback(); }
+    }).catch(function(){ fallback(); });
+  }else fallback();
 }
 /* ---- square photo cropping: drag to position, slider to zoom ---- */
 function memberCropEls(){ return {box:el('memberCropBox'),wrap:el('memberCropWrap'),img:el('memberCropImg'),zoom:el('memberCropZoom')}; }
@@ -1280,7 +1329,8 @@ function memberSetupCrop(img){
     const scale0=Math.max(W/img.naturalWidth,W/img.naturalHeight);
     window.__crop={W:W,scale0:scale0,zoom:1,scale:scale0,
       x:(W-img.naturalWidth*scale0)/2,y:(W-img.naturalHeight*scale0)/2};
-    if(els.zoom) els.zoom.value=100;
+    if(els.zoom){ els.zoom.value=100; memberBindZoom(els.zoom); }
+    const zp=el('memberZoomPct'); if(zp) zp.textContent='100%';
     memberInitCropDrag();
     memberRenderCrop();
     toast('Crop your photo: drag to position, slide to zoom, then press “Crop & Use This Photo”.','ok',4200);
@@ -1299,33 +1349,66 @@ function memberClampCrop(){
   c.x=dw<=c.W?(c.W-dw)/2:Math.min(0,Math.max(c.W-dw,c.x));
   c.y=dh<=c.W?(c.W-dh)/2:Math.min(0,Math.max(c.W-dh,c.y));
 }
-function memberCropZoom(v){
+function memberSetZoom(z){
   const c=window.__crop, img=window.__cropImg; if(!c||!img) return;
   const cx=c.W/2, cy=c.W/2;
   const px=(cx-c.x)/c.scale, py=(cy-c.y)/c.scale;
-  c.zoom=Math.max(1,Math.min(3,(Number(v)||100)/100));
+  c.zoom=Math.max(1,Math.min(3,Number(z)||1));
   c.scale=c.scale0*c.zoom;
   c.x=cx-px*c.scale; c.y=cy-py*c.scale;
   memberClampCrop(); memberRenderCrop();
+  const slider=el('memberCropZoom');
+  if(slider&&Math.round(Number(slider.value)||100)!==Math.round(c.zoom*100)) slider.value=Math.round(c.zoom*100);
+  const zp=el('memberZoomPct'); if(zp) zp.textContent=Math.round(c.zoom*100)+'%';
+}
+function memberCropZoom(v){ memberSetZoom((Number(v)||100)/100); }
+function memberZoomStep(d){
+  const c=window.__crop; if(!c){ toast('Choose a photo first, then zoom.','err',3500); return; }
+  memberSetZoom(c.zoom+(Number(d)||0)/100);
+}
+function memberBindZoom(slider){
+  if(!slider||slider.__zoomBound) return;
+  slider.__zoomBound=true;
+  slider.addEventListener('input',function(){ memberCropZoom(this.value); });
+  slider.addEventListener('change',function(){ memberCropZoom(this.value); });
 }
 function memberInitCropDrag(){
   const wrap=memberCropEls().wrap;
   if(!wrap||wrap.__cropInit) return;
   wrap.__cropInit=true;
   let drag=null;
+  const pointers={};
+  let pinch=null;
+  function dist(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.sqrt(dx*dx+dy*dy); }
   wrap.addEventListener('pointerdown',function(e){
     const c=window.__crop; if(!c) return;
-    drag={x:e.clientX,y:e.clientY,ox:c.x,oy:c.y};
+    pointers[e.pointerId]={x:e.clientX,y:e.clientY};
+    const pts=Object.keys(pointers).map(function(k){ return pointers[k]; });
+    if(pts.length===2){ pinch={d:dist(pts[0],pts[1]),zoom:c.zoom}; drag=null; }
+    else { drag={x:e.clientX,y:e.clientY,ox:c.x,oy:c.y}; }
     try{ wrap.setPointerCapture(e.pointerId); }catch(err){}
     e.preventDefault();
   });
   wrap.addEventListener('pointermove',function(e){
-    if(!drag) return;
     const c=window.__crop; if(!c) return;
+    if(pointers[e.pointerId]) pointers[e.pointerId]={x:e.clientX,y:e.clientY};
+    const pts=Object.keys(pointers).map(function(k){ return pointers[k]; });
+    if(pinch&&pts.length===2){
+      const nd=dist(pts[0],pts[1]);
+      if(pinch.d>0) memberSetZoom(pinch.zoom*(nd/pinch.d));
+      return;
+    }
+    if(!drag) return;
     c.x=drag.ox+(e.clientX-drag.x); c.y=drag.oy+(e.clientY-drag.y);
     memberClampCrop(); memberRenderCrop();
   });
-  ['pointerup','pointercancel'].forEach(function(ev){ wrap.addEventListener(ev,function(){ drag=null; }); });
+  ['pointerup','pointercancel'].forEach(function(ev){
+    wrap.addEventListener(ev,function(e){
+      delete pointers[e.pointerId];
+      if(Object.keys(pointers).length<2) pinch=null;
+      drag=null;
+    });
+  });
 }
 function applyMemberCrop(){
   const c=window.__crop, img=window.__cropImg;
@@ -4126,5 +4209,5 @@ window.addEventListener('error',function(e){ if(e&&e.message&&String(document.lo
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a588592d5eecb572',t:'MTc5NDM0ODIxOA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a588592d5eecb572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58867b058a3b572',t:'MTc5NDM0ODgxMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58867b058a3b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
