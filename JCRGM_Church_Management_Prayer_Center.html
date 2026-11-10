@@ -359,10 +359,6 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
     </div>
 
     <div class="nav-sec">Ministry</div>
-    <button type="button" data-page="departments"><span class="ic">▦</span> Departments</button>
-    <button type="button" data-page="giving"><span class="ic">◇</span> Giving</button>
-    <button type="button" data-page="prayerrequests"><span class="ic">♡</span> Prayer Requests</button>
-    <button type="button" data-page="pastoral"><span class="ic">▤</span> Pastoral Notes</button>
     <button type="button" class="prayer-link" data-action="openPrayerLink"><span class="ic">🙏</span> Prayer Link</button>
 
     <div class="nav-sec">Records</div>
@@ -404,7 +400,6 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
       <div class="card stat"><div class="label">Service Meetings</div><strong id="statMeetings">0</strong><span class="muted">Consolidated in Admin</span></div>
       <div class="card stat"><div class="label">Offering Recorded</div><strong id="statOfferingTotal">0</strong><span class="muted">All ushers records</span></div>
       <div class="card stat"><div class="label">Ushers Records</div><strong id="statUshers">0</strong><span class="muted" id="statUshersSub">Services captured</span></div>
-      <div class="card stat"><div class="label">Prayer Requests</div><strong id="statRequests">0</strong><span class="muted">Active requests</span></div>
       <div class="card stat"><div class="label">Ceremonies</div><strong id="statEvents">0</strong><span class="muted">Upcoming on calendar</span></div>
       <div class="card stat"><div class="label">Registrations</div><strong id="statRegs">0</strong><span class="muted">Awaiting confirmation</span></div>
     </div>
@@ -671,60 +666,6 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
     </div>
   </section>
 
-  <!-- ================= DEPARTMENTS ================= -->
-  <section id="departments" class="page" aria-labelledby="deptH">
-    <h2 id="deptH" style="position:absolute;left:-9999px">Departments</h2>
-    <div class="card">
-      <div class="toolbar">
-        <div><h3 style="margin:0">Departments &amp; Leadership</h3><div class="sub muted">Record departments, leaders and ministry assignments</div></div>
-        <div class="actions no-print"><button class="btn" onclick="openDepartment()">+ Add Department</button><button class="btn secondary" onclick="savePdf('departments')">Save as PDF</button></div>
-      </div>
-      <div class="tablewrap"><table><thead><tr><th>Department</th><th>Leader</th><th>Assistant</th><th>Meeting Day</th><th>Members</th><th>Notes</th><th class="no-print">Actions</th></tr></thead><tbody id="departmentsTable"></tbody></table></div>
-    </div>
-  </section>
-
-  <!-- ================= GIVING ================= -->
-  <section id="giving" class="page" aria-labelledby="givingH">
-    <h2 id="givingH" style="position:absolute;left:-9999px">Giving</h2>
-    <div class="card">
-      <div class="toolbar">
-        <div><h3 style="margin:0">Giving &amp; Financial Record</h3><div class="sub muted">Offerings, tithes, pledges and other church income</div></div>
-        <div class="actions no-print"><button class="btn" onclick="openGiving()">+ Add Record</button><button class="btn secondary" onclick="savePdf('giving')">Save as PDF</button><button class="btn whatsapp" onclick="sendWhatsAppReport('giving')">WhatsApp Report</button></div>
-      </div>
-      <div class="alert dangerbox">Keep financial records carefully and restrict access to authorized church leaders. Records stay on this device.</div>
-      <div class="grid stats" style="margin-bottom:14px">
-        <div class="card stat tight"><div class="label">Total Recorded</div><strong id="giveTotal">0</strong><span class="muted" id="giveTotalCur">ZMW</span></div>
-        <div class="card stat tight"><div class="label">Records</div><strong id="giveCount">0</strong></div>
-        <div class="card stat tight"><div class="label">This Month</div><strong id="giveMonth">0</strong></div>
-      </div>
-      <div class="tablewrap"><table><thead><tr><th>Date</th><th>Person/Source</th><th>Type</th><th class="num">Amount</th><th>Method</th><th>Reference</th><th class="no-print">Actions</th></tr></thead><tbody id="givingTable"></tbody></table></div>
-    </div>
-  </section>
-
-  <!-- ================= PRAYER REQUESTS ================= -->
-  <section id="prayerrequests" class="page" aria-labelledby="reqH">
-    <h2 id="reqH" style="position:absolute;left:-9999px">Prayer Requests</h2>
-    <div class="card">
-      <div class="toolbar">
-        <div><h3 style="margin:0">Prayer Request Register</h3><div class="sub muted">Record requests and track prayer status</div></div>
-        <div class="actions no-print"><button class="btn" onclick="openRequest()">+ Add Request</button><button class="btn secondary" onclick="savePdf('requests')">Save as PDF</button><button class="btn whatsapp" onclick="sendWhatsAppReport('prayer')">WhatsApp Requests</button></div>
-      </div>
-      <div class="tablewrap"><table><thead><tr><th>Date</th><th>Name</th><th>Request</th><th>Category</th><th>Status</th><th>Follow-up</th><th>Actions</th></tr></thead><tbody id="requestsTable"></tbody></table></div>
-    </div>
-  </section>
-
-  <!-- ================= PASTORAL ================= -->
-  <section id="pastoral" class="page" aria-labelledby="pastH">
-    <h2 id="pastH" style="position:absolute;left:-9999px">Pastoral Notes</h2>
-    <div class="card">
-      <div class="toolbar">
-        <div><h3 style="margin:0">Pastoral / Confidential Notes</h3><div class="sub muted">For authorized pastoral records only — stored in this browser on this device.</div></div>
-        <div class="actions no-print"><button class="btn" onclick="openPastoral()">+ Add Note</button><button class="btn secondary" onclick="savePdf('pastoral')">Save as PDF</button></div>
-      </div>
-      <div class="tablewrap"><table><thead><tr><th>Date</th><th>Person</th><th>Category</th><th>Pastor/Leader</th><th>Summary</th><th>Actions</th></tr></thead><tbody id="pastoralTable"></tbody></table></div>
-    </div>
-  </section>
-
   <!-- ================= REPORTS ================= -->
   <section id="reports" class="page" aria-labelledby="reportsH">
     <h2 id="reportsH" style="position:absolute;left:-9999px">Reports</h2>
@@ -733,8 +674,6 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
       <div class="card"><h3>Admin Consolidated</h3><div class="kpi"><span>Meetings</span><b id="rMeetings">0</b></div><div class="kpi"><span>Ushers submissions</span><b id="rSubmissions">0</b></div><div class="actions"><button class="btn gold small" onclick="openAdminGate()">🔐 Open Admin</button></div></div>
       <div class="card"><h3>Ushers Records</h3><div class="kpi"><span>Services</span><b id="rUshers">0</b></div><div class="kpi"><span>Last total attendance</span><b id="rUsherLast">0</b></div><div class="actions"><button class="btn secondary small" onclick="savePdf('usherattendance')">PDF</button><button class="btn ghost small" onclick="printReport('usherattendance')">Print</button></div></div>
       <div class="card"><h3>Ceremonies</h3><div class="kpi"><span>Scheduled</span><b id="rCeremonies">0</b></div><div class="kpi"><span>Registrations</span><b id="rRegs">0</b></div><div class="actions"><button class="btn secondary small" onclick="savePdf('ceremonyRegistrations')">PDF</button><button class="btn ghost small" onclick="printReport('register')">Print</button></div></div>
-      <div class="card"><h3>Prayer</h3><div class="kpi"><span>Requests</span><b id="rRequests">0</b></div><div class="actions"><button class="btn secondary small" onclick="savePdf('requests')">PDF</button><button class="btn ghost small" onclick="navTo('prayerrequests')">Prayer Requests</button></div></div>
-      <div class="card"><h3>Giving</h3><div class="kpi"><span>Records</span><b id="rGiving">0</b></div><div class="kpi"><span>Total</span><b id="rGivingSum">0</b></div><div class="actions"><button class="btn secondary small" onclick="savePdf('giving')">PDF</button><button class="btn ghost small" onclick="printReport('giving')">Print</button></div></div>
     </div>
 
     <div class="card" style="margin-top:16px"><h3>Send Reports to WhatsApp — <span class="gold" id="waNumberInline">0979 554 970</span></h3>
@@ -743,7 +682,6 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
         <button class="btn whatsapp" onclick="sendWhatsAppReport('summary')">Church Summary</button>
         <button class="btn whatsapp" onclick="sendWhatsAppReport('usherattendance')">Ushers Record</button>
         <button class="btn whatsapp" onclick="sendAllRegistrationsWhatsApp()">Ceremony Registrations</button>
-        <button class="btn whatsapp" onclick="sendWhatsAppReport('giving')">Giving Report</button>
       </div>
     </div>
 
@@ -1296,7 +1234,7 @@ document.addEventListener('keydown',function(e){
 });
 
 /* ---------- router: every tab goes exactly where it is meant to ---------- */
-const PAGE_TITLES={dashboard:'Dashboard',usherattendance:'Ushers Record',admin:'Admin — Consolidated Church Record',events:'Ceremonies & Events',departments:'Departments',giving:'Giving',prayerrequests:'Prayer Requests',pastoral:'Pastoral Notes',reports:'Reports & PDF',settings:'Data & Settings'};
+const PAGE_TITLES={dashboard:'Dashboard',usherattendance:'Ushers Record',admin:'Admin — Consolidated Church Record',events:'Ceremonies & Events',reports:'Reports & PDF',settings:'Data & Settings'};
 const EVENTS_SECTIONS={calendar:'Ceremony Calendar',forms:'Ceremony Request Form',registry:'Ceremony Register',certificates:'Certificates'};
 let current={page:'dashboard',section:'calendar'};
 
@@ -3676,7 +3614,6 @@ function clearAllData(){
 function renderAll(){
   renderDashboard();
   renderUsherAttendance();
-  renderDepartments(); renderGiving(); renderRequests(); renderPastoral();
   renderEvents(); renderCeremonyRegistrations(); renderCertificates();
   renderReports();
   if(current&&current.page==='admin') renderAdminConsolidated();
@@ -3747,5 +3684,5 @@ window.addEventListener('error',function(e){ if(e&&e.message&&String(document.lo
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a587540a890db578',t:'MTc5NDMzNzUyMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a587540a890db578',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58770afcbffb56f',t:'MTc5NDMzODY5NQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58770afcbffb56f',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
