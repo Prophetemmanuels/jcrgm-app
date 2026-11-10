@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#111827">
-<title>JCRGM SERVICE SCHEDULE ROUTER</title>
+<title>JCRGM SERVICE SCHEDULE ROUTER — Synced</title>
 <style>
 
 /* =========================================================
@@ -861,6 +861,30 @@ footer{
     }
 
 }
+
+/* =========================================================
+   SYNC BAR + PASSWORD LOCK
+========================================================= */
+.sync-card{ border:2px solid #17365d; }
+.sync-row{ display:flex; flex-wrap:wrap; gap:10px; align-items:end; margin:10px 0; }
+.sync-row > div{ flex:1 1 200px; min-width:180px; }
+.sync-row label{ margin-top:0; }
+.sync-status{ display:flex; align-items:center; gap:10px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:10px 12px; margin:10px 0; font-size:14px; }
+.sync-status.off{ background:#fffbeb; border-color:#fde68a; }
+.sync-status.err{ background:#fef2f2; border-color:#fecaca; }
+.dot{ width:12px; height:12px; border-radius:50%; background:#16a34a; flex-shrink:0; }
+.dot.amber{ background:#d97706; }
+.dot.red{ background:#dc2626; }
+.lock-banner{ border-radius:10px; padding:12px 14px; margin:10px 0; font-size:14px; }
+.lock-banner.locked{ background:#fef2f2; border:1px solid #fecaca; color:#7f1d1d; }
+.lock-banner.unlocked{ background:#f0fdf4; border:1px solid #bbf7d0; color:#14532d; }
+details.sync-setup{ border:1px solid var(--border); border-radius:10px; padding:10px 12px; margin-top:12px; background:#f8fafc; }
+details.sync-setup summary{ cursor:pointer; font-weight:800; color:var(--primary); }
+details.sync-setup .help{ font-size:13px; color:#475467; line-height:1.5; margin:10px 0; }
+details.sync-setup code{ background:#eef2ff; padding:1px 5px; border-radius:5px; font-size:12px; }
+.sync-small{ font-size:12px; color:var(--muted); margin-top:6px; }
+@media(max-width:700px){ .sync-row > div{ flex-basis:100%; } }
+
 </style>
 </head>
 <body>
@@ -880,6 +904,98 @@ footer{
 </header>
 
 <div class="container">
+<!-- =====================================================
+     CHURCH SYNC — ALL DEVICES
+===================================================== -->
+<div class="card sync-card no-print">
+    <h2>☁️ Church Sync — All Devices</h2>
+
+    <div id="syncStatus" class="sync-status off">
+        <span class="dot amber" id="syncDot"></span>
+        <span id="syncStatusText"><b>Local mode:</b> data is saved on this device only. Use Export / Import below to share, or add your Supabase URL + key for automatic sync.</span>
+    </div>
+
+    <div id="editBanner" class="lock-banner locked">
+        🔒 <b>View-only mode.</b> Everyone can see the schedule. Enter the edit password to add pastors or generate the schedule.
+    </div>
+
+    <div class="sync-row">
+        <div>
+            <label for="syncCodeInput">Church Sync Code (same on every device)</label>
+            <input id="syncCodeInput" type="text" placeholder="e.g. JCRGM-CHURCH" autocomplete="off">
+            <div class="sync-small">All devices with the same code see the same schedule.</div>
+        </div>
+        <div style="flex:0 0 auto; min-width:120px;">
+            <label>&nbsp;</label>
+            <button class="primary" onclick="saveSyncCode()" style="width:100%">Join / Save Code</button>
+        </div>
+        <div>
+            <label for="editPasswordInput">Edit Password</label>
+            <input id="editPasswordInput" type="password" placeholder="Enter password to edit" autocomplete="off" onkeydown="if(event.key==='Enter'){unlockEditing();}">
+            <div class="sync-small">Default password: <b>19922</b> (change it in Cloud Setup below).</div>
+        </div>
+        <div style="flex:0 0 auto; min-width:120px;">
+            <label>&nbsp;</label>
+            <button class="gold" id="unlockBtn" onclick="unlockEditing()" style="width:100%">Unlock Editing</button>
+            <button class="light" id="lockBtn" onclick="lockEditing()" style="width:100%; display:none; margin-top:6px;">Lock Editing</button>
+        </div>
+    </div>
+
+    <div class="sync-row">
+        <div>
+            <label>Share without cloud (works now)</label>
+            <div class="actions" style="margin-top:0">
+                <button class="primary" onclick="exportDataFile()">⬇ Export Schedule File</button>
+                <button class="light" onclick="document.getElementById('importFile').click()">⬆ Import File</button>
+                <input type="file" id="importFile" accept=".json,application/json" style="display:none" onchange="importDataFile(event)">
+            </div>
+            <div class="sync-small">Export on one device → send via WhatsApp / email → Import on the other device. No account needed.</div>
+        </div>
+        <div>
+            <label>Last synced</label>
+            <div id="lastSyncedText" style="font-size:14px; padding:10px 0;">Never</div>
+            <div class="sync-small" id="deviceText"></div>
+        </div>
+        <div style="flex:0 0 auto;">
+            <label>&nbsp;</label>
+            <button class="light" onclick="syncNow()" style="width:100%">⟳ Sync Now</button>
+        </div>
+    </div>
+
+    <details class="sync-setup" id="syncSetupDetails">
+        <summary>⚙️ Automatic Cloud Sync Setup — Supabase (free)</summary>
+        <div class="help">
+            <b>✅ Your Supabase project is pre-configured in this app</b> (<code>https://yisfzexlbjeoeujvmmno.supabase.co</code>) — every device using this file syncs automatically, no typing needed.<br><br>
+            <b>Why?</b> Export/Import works immediately, but automatic sync needs your Supabase database so every phone/laptop updates itself.<br><br>
+            <b>One-time setup in Supabase (do once):</b><br>
+            1. Open your Supabase project → <b>SQL Editor</b> → <b>New query</b> → paste this and click <b>Run</b>:<br>
+            <code style="display:block; white-space:pre-wrap; margin:6px 0; padding:8px;">create table if not exists public.jcrgm_sync (code text primary key, payload jsonb not null, updated_at timestamptz not null default now());<br>alter table public.jcrgm_sync enable row level security;<br>create policy "jcrgm anon all" on public.jcrgm_sync for all using (true) with check (true);</code>
+            2. Go to <b>Project Settings → API</b> and copy:<br>
+            • <b>Project URL</b> (e.g. <code>https://abcdefgh.supabase.co</code>)<br>
+            • <b>anon public</b> key (the long key starting with <code>eyJ...</code>)<br>
+            3. Paste both below on <b>every device</b>, enter the <b>same Sync Code</b> (e.g. <code>JCRGM-CHURCH</code>), click <b>Save Cloud Settings</b>.<br>
+            4. From then on, every change syncs automatically. You can also change the edit password here (admin only).<br><br>
+            <b>Security note:</b> The anon key is public by design — keep the URL + key private (only share with church leaders). The app password (<code>19922</code> by default) protects editing. Firebase URL below is kept only for older setups — leave it blank if you use Supabase.
+        </div>
+        <label for="supabaseUrl">Supabase Project URL</label>
+        <input id="supabaseUrl" type="text" placeholder="https://your-project.supabase.co" autocomplete="off">
+        <label for="supabaseKey">Supabase anon public key</label>
+        <input id="supabaseKey" type="text" placeholder="eyJhbGciOi..." autocomplete="off">
+        <label for="supabaseTable">Table name (default: jcrgm_sync)</label>
+        <input id="supabaseTable" type="text" placeholder="jcrgm_sync" autocomplete="off">
+        <label for="cloudDbUrl">Firebase Database URL (optional — only if you used Firebase before)</label>
+        <input id="cloudDbUrl" type="text" placeholder="https://your-project-default-rtdb.firebaseio.com" autocomplete="off">
+        <label for="newPasswordInput">New Edit Password (leave blank to keep current)</label>
+        <input id="newPasswordInput" type="password" placeholder="e.g. 19922" autocomplete="off">
+        <div class="actions">
+            <button class="primary" onclick="saveCloudSettings()">Save Cloud Settings</button>
+            <button class="light" onclick="testCloudConnection()">Test Connection</button>
+            <button class="danger" onclick="removeCloudSettings()">Remove Cloud (back to Local)</button>
+        </div>
+        <div id="cloudStatus" class="sync-small" style="margin-top:8px;"></div>
+    </details>
+</div>
+
 
 <!-- =====================================================
      SERVICE TIMES
@@ -1131,6 +1247,29 @@ let people   = [];
 let schedule = [];
 
 /* =========================================================
+   CHURCH SYNC + PASSWORD LOCK
+   - Edit password default: 19922 (changeable in Cloud Setup)
+   - Sync Code: all devices with same code share one schedule
+   - Cloud: Supabase REST (primary) + Firebase REST (legacy fallback)
+   - Fallback: localStorage + Export/Import file (works offline)
+========================================================= */
+const DEFAULT_EDIT_PASSWORD = "19922";
+// JCRGM Supabase project — baked in so every device syncs with zero setup.
+// Project ref: yisfzexlbjeoeujvmmno (publishable/anon key is safe to embed;
+// editing is still protected by the edit password, and RLS is on).
+const DEFAULT_SUPABASE_URL = "https://yisfzexlbjeoeujvmmno.supabase.co";
+const DEFAULT_SUPABASE_KEY = "sb_publishable_NJvHqe_S_6QxZwQD0THexg_-Za92muj";
+const DEFAULT_SUPABASE_TABLE = "jcrgm_sync";
+let editUnlocked = false;
+let syncConfig = { code: "JCRGM-CHURCH", dbUrl: "", supabaseUrl: DEFAULT_SUPABASE_URL, supabaseKey: DEFAULT_SUPABASE_KEY, supabaseTable: DEFAULT_SUPABASE_TABLE, password: DEFAULT_EDIT_PASSWORD, cloudDisabled: false };
+let lastUpdatedAt = 0;
+let deviceId = "";
+let syncTimer = null;
+let pushTimer = null;
+let isPulling = false;
+
+
+/* =========================================================
    SAFE STORAGE
    Sandboxed preview frames can block localStorage, so every
    access is guarded and the app still runs without it.
@@ -1168,6 +1307,438 @@ const storage = {
         }
     }
 };
+
+
+/* =========================================================
+   SYNC ENGINE
+========================================================= */
+function getDeviceId(){
+    let id = storage.get("jcrgm_device_id");
+    if(!id){
+        id = "dev-" + Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+        storage.set("jcrgm_device_id", id);
+    }
+    return id;
+}
+
+function loadSyncConfig(){
+    try{
+        const raw = storage.get("jcrgm_sync_config");
+        if(raw){
+            const c = JSON.parse(raw);
+            syncConfig = {
+                code: (c.code || "JCRGM-CHURCH").trim() || "JCRGM-CHURCH",
+                dbUrl: (c.dbUrl || "").trim(),
+                supabaseUrl: (c.supabaseUrl || "").trim(),
+                supabaseKey: (c.supabaseKey || "").trim(),
+                supabaseTable: (c.supabaseTable || DEFAULT_SUPABASE_TABLE).trim() || DEFAULT_SUPABASE_TABLE,
+                password: c.password || DEFAULT_EDIT_PASSWORD,
+                cloudDisabled: !!c.cloudDisabled
+            };
+            // Upgrade devices saved by an older version (no cloud yet):
+            // fill in the baked-in JCRGM Supabase project automatically.
+            if(!syncConfig.cloudDisabled && !syncConfig.dbUrl && (!syncConfig.supabaseUrl || !syncConfig.supabaseKey)){
+                syncConfig.supabaseUrl = DEFAULT_SUPABASE_URL;
+                syncConfig.supabaseKey = DEFAULT_SUPABASE_KEY;
+            }
+        }
+    }catch(e){ /* keep defaults */ }
+    deviceId = getDeviceId();
+    const codeEl = document.getElementById("syncCodeInput");
+    if(codeEl) codeEl.value = syncConfig.code;
+    const urlEl = document.getElementById("cloudDbUrl");
+    if(urlEl) urlEl.value = syncConfig.dbUrl;
+    const sbUrlEl = document.getElementById("supabaseUrl");
+    if(sbUrlEl) sbUrlEl.value = syncConfig.supabaseUrl;
+    const sbKeyEl = document.getElementById("supabaseKey");
+    if(sbKeyEl) sbKeyEl.value = syncConfig.supabaseKey;
+    const sbTableEl = document.getElementById("supabaseTable");
+    if(sbTableEl) sbTableEl.value = syncConfig.supabaseTable;
+    const devEl = document.getElementById("deviceText");
+    if(devEl) devEl.textContent = "This device: " + deviceId;
+    updateSyncStatus();
+}
+
+function persistSyncConfig(){
+    storage.set("jcrgm_sync_config", JSON.stringify(syncConfig));
+}
+
+function saveSyncCode(){
+    const codeEl = document.getElementById("syncCodeInput");
+    const code = (codeEl.value || "").trim().toUpperCase() || "JCRGM-CHURCH";
+    syncConfig.code = code;
+    codeEl.value = code;
+    persistSyncConfig();
+    updateSyncStatus();
+    alert("Sync Code saved: " + code + "\n\nUse this exact code on every device.");
+    syncNow();
+}
+
+function saveCloudSettings(){
+    if(!requireEdit(true)) return;
+    const urlEl = document.getElementById("cloudDbUrl");
+    const sbUrlEl = document.getElementById("supabaseUrl");
+    const sbKeyEl = document.getElementById("supabaseKey");
+    const sbTableEl = document.getElementById("supabaseTable");
+    const pwEl = document.getElementById("newPasswordInput");
+    let url = (urlEl.value || "").trim().replace(/\/+$/, "");
+    if(url && !/^https?:\/\//i.test(url)) url = "https://" + url;
+    let sbUrl = (sbUrlEl.value || "").trim().replace(/\/+$/, "");
+    if(sbUrl && !/^https?:\/\//i.test(sbUrl)) sbUrl = "https://" + sbUrl;
+    syncConfig.dbUrl = url;
+    syncConfig.cloudDisabled = false;
+    syncConfig.supabaseUrl = sbUrl;
+    syncConfig.supabaseKey = (sbKeyEl.value || "").trim();
+    syncConfig.supabaseTable = ((sbTableEl.value || "").trim() || "jcrgm_sync").replace(/[^a-zA-Z0-9_]/g, "") || "jcrgm_sync";
+    const newPw = (pwEl.value || "").trim();
+    if(newPw) syncConfig.password = newPw;
+    persistSyncConfig();
+    updateSyncStatus();
+    const hasCloud = !!(syncConfig.supabaseUrl && syncConfig.supabaseKey) || !!syncConfig.dbUrl;
+    document.getElementById("cloudStatus").textContent = hasCloud ? ("Saved. Testing connection...") : "Cloud removed. Local mode active.";
+    if(hasCloud){ testCloudConnection(); } else { alert("Cloud removed. App is back to Local + Export/Import mode."); }
+}
+
+function removeCloudSettings(){
+    if(!requireEdit(true)) return;
+    if(!confirm("Remove cloud sync from this device? Data on this device stays. Other devices keep their cloud copy.")) return;
+    syncConfig.dbUrl = "";
+    syncConfig.cloudDisabled = true;
+    syncConfig.supabaseUrl = "";
+    syncConfig.supabaseKey = "";
+    persistSyncConfig();
+    document.getElementById("cloudDbUrl").value = "";
+    document.getElementById("supabaseUrl").value = "";
+    document.getElementById("supabaseKey").value = "";
+    updateSyncStatus();
+    alert("Cloud removed from this device. Local mode active.");
+}
+
+function cloudMode(){
+    if(syncConfig.supabaseUrl && syncConfig.supabaseKey) return "supabase";
+    if(syncConfig.dbUrl) return "firebase";
+    return null;
+}
+function hasCloud(){ return !!cloudMode(); }
+function firebaseUrl(){
+    if(!syncConfig.dbUrl) return null;
+    const base = syncConfig.dbUrl.replace(/\/+$/, "");
+    const code = encodeURIComponent(syncConfig.code || "JCRGM-CHURCH");
+    return base + "/" + code + ".json";
+}
+function supabaseTableName(){
+    return (syncConfig.supabaseTable || "jcrgm_sync").replace(/[^a-zA-Z0-9_]/g, "") || "jcrgm_sync";
+}
+function supabaseHeaders(){
+    return {
+        "apikey": syncConfig.supabaseKey,
+        "Authorization": "Bearer " + syncConfig.supabaseKey,
+        "Content-Type": "application/json"
+    };
+}
+function cloudUrl(){
+    // kept for backward compatibility — returns Firebase URL or null
+    return firebaseUrl();
+}
+
+function setSyncStatus(mode, text){
+    const box = document.getElementById("syncStatus");
+    const dot = document.getElementById("syncDot");
+    const txt = document.getElementById("syncStatusText");
+    if(!box) return;
+    box.className = "sync-status" + (mode === "off" ? " off" : mode === "err" ? " err" : "");
+    dot.className = "dot" + (mode === "off" ? " amber" : mode === "err" ? " red" : "");
+    txt.innerHTML = text;
+}
+
+function updateSyncStatus(){
+    const last = storage.get("jcrgm_last_synced");
+    const lastEl = document.getElementById("lastSyncedText");
+    if(lastEl) lastEl.textContent = last ? new Date(Number(last)).toLocaleString("en-GB") : "Never";
+    const mode = cloudMode();
+    if(!mode){
+        setSyncStatus("off", "<b>Local mode:</b> data is saved on this device only. Use Export / Import below to share, or add your Supabase URL + key for automatic sync.");
+    } else if(mode === "supabase"){
+        setSyncStatus("ok", "<b>Supabase sync ON</b> • Code: <b>" + escapeHtml(syncConfig.code) + "</b> • Table: <b>" + escapeHtml(supabaseTableName()) + "</b> • Changes sync automatically to all devices with this code.");
+    } else {
+        setSyncStatus("ok", "<b>Cloud sync ON (Firebase)</b> • Code: <b>" + escapeHtml(syncConfig.code) + "</b> • Changes sync automatically to all devices with this code.");
+    }
+}
+
+function markSynced(){
+    storage.set("jcrgm_last_synced", String(Date.now()));
+    updateSyncStatus();
+}
+
+async function pushToCloud(){
+    const mode = cloudMode();
+    if(!mode) return;
+    const payload = {
+        version: 2,
+        people, schedule,
+        month: document.getElementById("month").value,
+        pattern: document.getElementById("servicePattern").value,
+        rotation: rotationMode(),
+        updatedAt: lastUpdatedAt || Date.now(),
+        deviceId: deviceId
+    };
+    try{
+        if(mode === "supabase"){
+            const base = syncConfig.supabaseUrl.replace(/\/+$/, "");
+            const table = supabaseTableName();
+            const res = await fetch(base + "/rest/v1/" + table, {
+                method: "POST",
+                headers: { ...supabaseHeaders(), "Prefer": "resolution=merge-duplicates" },
+                body: JSON.stringify({ code: syncConfig.code, payload: payload, updated_at: new Date().toISOString() })
+            });
+            if(!res.ok) throw new Error("HTTP " + res.status + " " + (await res.text()).slice(0,200));
+        } else {
+            const url = firebaseUrl();
+            const res = await fetch(url, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+            if(!res.ok) throw new Error("HTTP " + res.status);
+        }
+        markSynced();
+        updateSyncStatus();
+        setSyncStatus("ok", (mode === "supabase" ? "<b>Supabase sync ON</b>" : "<b>Cloud sync ON</b>") + " • Code: <b>" + escapeHtml(syncConfig.code) + "</b> • Synced ✓ " + new Date().toLocaleTimeString("en-GB"));
+    }catch(err){
+        console.warn("Cloud push failed:", err);
+        setSyncStatus("err", "<b>Cloud sync paused (offline?):</b> changes are saved on this device and will push when connection returns. Code: <b>" + escapeHtml(syncConfig.code) + "</b>");
+    }
+}
+
+function schedulePush(){
+    if(!hasCloud()) return;
+    clearTimeout(pushTimer);
+    pushTimer = setTimeout(pushToCloud, 800);
+}
+
+async function pullFromCloud(){
+    const mode = cloudMode();
+    if(!mode || isPulling) return;
+    isPulling = true;
+    try{
+        let data = null;
+        if(mode === "supabase"){
+            const base = syncConfig.supabaseUrl.replace(/\/+$/, "");
+            const table = supabaseTableName();
+            const code = encodeURIComponent(syncConfig.code);
+            const res = await fetch(base + "/rest/v1/" + table + "?code=eq." + code + "&select=payload,updated_at", {
+                method: "GET", headers: supabaseHeaders()
+            });
+            if(!res.ok) throw new Error("HTTP " + res.status + " " + (await res.text()).slice(0,200));
+            const rows = await res.json();
+            if(!rows || !rows.length) return; // empty cloud — nothing to pull
+            data = rows[0].payload;
+        } else {
+            const url = firebaseUrl();
+            const res = await fetch(url, { method: "GET" });
+            if(!res.ok) throw new Error("HTTP " + res.status);
+            data = await res.json();
+        }
+        if(!data) return;
+        const remoteAt = Number(data.updatedAt || 0);
+        if(remoteAt > lastUpdatedAt && data.deviceId !== deviceId){
+            applyRemoteData(data);
+            markSynced();
+        }
+    }catch(err){
+        console.warn("Cloud pull failed:", err);
+    }finally{
+        isPulling = false;
+    }
+}
+
+function applyRemoteData(data){
+    people   = Array.isArray(data.people)   ? data.people   : [];
+    schedule = Array.isArray(data.schedule) ? data.schedule : [];
+    schedule = schedule
+        .filter(item => item && item.date && item.service)
+        .map(item => ({
+            ...item,
+            id: item.id || createServiceId(item.date, item.service),
+            groupIndex: Number(item.groupIndex || 0),
+            groupName: item.groupName || groupLabel(Number(item.groupIndex || 0)),
+            occurrence: Number(item.occurrence || 1),
+            shuffleCount: Number(item.shuffleCount || 0),
+            isSunday: item.isSunday !== undefined ? item.isSunday : item.day === "Sunday"
+        }));
+    lastUpdatedAt = Number(data.updatedAt || Date.now());
+    if(data.month) document.getElementById("month").value = data.month;
+    if(data.pattern) document.getElementById("servicePattern").value = data.pattern;
+    if(data.rotation) document.getElementById("rotationMode").value = data.rotation;
+    // keep local copy in sync without re-pushing
+    storage.set("jcrgm_schedule_data_v2", JSON.stringify({
+        version: 2, people, schedule,
+        month: document.getElementById("month").value,
+        pattern: document.getElementById("servicePattern").value,
+        rotation: rotationMode(),
+        updatedAt: lastUpdatedAt
+    }));
+    renderPeople(); renderGroups(); renderSchedule(); updateCurrentService();
+}
+
+async function syncNow(){
+    if(!hasCloud()){
+        updateSyncStatus();
+        alert("Local mode: no cloud database set.\n\nUse Export / Import to share now, or open 'Automatic Cloud Sync Setup' below to enable auto-sync.");
+        return;
+    }
+    await pullFromCloud();
+    await pushToCloud();
+    alert("Sync complete.");
+}
+
+async function testCloudConnection(){
+    const statusEl = document.getElementById("cloudStatus");
+    const mode = cloudMode();
+    if(!mode){ statusEl.textContent = "Enter your Supabase Project URL + anon key first (or a Firebase URL)."; return; }
+    statusEl.textContent = "Testing...";
+    try{
+        if(mode === "supabase"){
+            const base = syncConfig.supabaseUrl.replace(/\/+$/, "");
+            const table = supabaseTableName();
+            const code = encodeURIComponent(syncConfig.code);
+            const res = await fetch(base + "/rest/v1/" + table + "?code=eq." + code + "&select=payload", {
+                method: "GET", headers: supabaseHeaders()
+            });
+            if(!res.ok) throw new Error("HTTP " + res.status + " " + (await res.text()).slice(0,200));
+            statusEl.textContent = "✓ Supabase connection OK. Click 'Sync Now' to push this device's data.";
+        } else {
+            const url = firebaseUrl();
+            const res = await fetch(url, { method: "GET" });
+            if(!res.ok) throw new Error("HTTP " + res.status);
+            statusEl.textContent = "✓ Connection OK. Cloud is reachable. Click 'Sync Now' to push this device's data.";
+        }
+        await pullFromCloud();
+    }catch(err){
+        statusEl.textContent = "✗ Could not reach cloud: " + err.message + ". Check the Supabase URL/key, that the table exists, and that RLS allows anon access (see setup steps).";
+    }
+}
+
+function startAutoSync(){
+    clearInterval(syncTimer);
+    if(hasCloud()){
+        syncTimer = setInterval(pullFromCloud, 8000);
+        pullFromCloud();
+    }
+}
+
+/* =========================================================
+   EXPORT / IMPORT (works without any cloud account)
+========================================================= */
+function exportDataFile(){
+    const data = {
+        app: "JCRGM Service Schedule Router",
+        version: 2,
+        syncCode: syncConfig.code,
+        people, schedule,
+        month: document.getElementById("month").value,
+        pattern: document.getElementById("servicePattern").value,
+        rotation: rotationMode(),
+        updatedAt: lastUpdatedAt || Date.now(),
+        exportedAt: new Date().toISOString(),
+        deviceId: deviceId
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "JCRGM_Schedule_" + (data.month || "export") + ".json";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    alert("Schedule file downloaded.\n\nSend it via WhatsApp/email to other devices, then use 'Import File' there.");
+}
+
+function importDataFile(event){
+    if(!requireEdit()){ event.target.value = ""; return; }
+    const file = event.target.files && event.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(){
+        try{
+            const data = JSON.parse(reader.result);
+            if(!Array.isArray(data.people) || !Array.isArray(data.schedule)){
+                alert("That file does not look like a JCRGM schedule file.");
+                return;
+            }
+            if(!confirm("Replace this device's schedule with the imported file?\n\nPeople: " + data.people.length + " • Services: " + data.schedule.length + (data.exportedAt ? "\nExported: " + new Date(data.exportedAt).toLocaleString("en-GB") : ""))) return;
+            applyRemoteData(data);
+            saveData(false);
+            alert("Imported successfully. This device now matches the shared file.");
+        }catch(err){
+            console.error(err);
+            alert("Could not read that file. Please choose a JCRGM schedule .json file.");
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = "";
+}
+
+/* =========================================================
+   PASSWORD LOCK (view-only until unlocked)
+========================================================= */
+function isUnlocked(){
+    try{ return sessionStorage.getItem("jcrgm_unlocked") === "1"; }catch(e){ return editUnlocked; }
+}
+function requireEdit(silent){
+    if(isUnlocked()) return true;
+    if(!silent) alert("View-only mode.\n\nEnter the edit password (default 19922) at the top to make changes.");
+    return false;
+}
+function unlockEditing(){
+    const input = document.getElementById("editPasswordInput");
+    const val = (input.value || "").trim();
+    if(val === syncConfig.password){
+        editUnlocked = true;
+        try{ sessionStorage.setItem("jcrgm_unlocked", "1"); }catch(e){}
+        input.value = "";
+        applyEditMode();
+        alert("Editing unlocked on this device.");
+    } else {
+        alert("Incorrect password.");
+        input.focus();
+    }
+}
+function lockEditing(){
+    editUnlocked = false;
+    try{ sessionStorage.removeItem("jcrgm_unlocked"); }catch(e){}
+    applyEditMode();
+}
+function applyEditMode(){
+    const unlocked = isUnlocked();
+    const banner = document.getElementById("editBanner");
+    const unlockBtn = document.getElementById("unlockBtn");
+    const lockBtn = document.getElementById("lockBtn");
+    const pwInput = document.getElementById("editPasswordInput");
+    if(banner){
+        banner.className = "lock-banner " + (unlocked ? "unlocked" : "locked");
+        banner.innerHTML = unlocked
+            ? "🔓 <b>Editing unlocked</b> on this device. Changes will sync to all devices with code <b>" + escapeHtml(syncConfig.code) + "</b>."
+            : "🔒 <b>View-only mode.</b> Everyone can see the schedule. Enter the edit password to add pastors or generate the schedule.";
+    }
+    if(unlockBtn) unlockBtn.style.display = unlocked ? "none" : "";
+    if(lockBtn) lockBtn.style.display = unlocked ? "" : "none";
+    if(pwInput) pwInput.style.display = unlocked ? "none" : "";
+    const lockables = ["personName","month","servicePattern","rotationMode"];
+    lockables.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.disabled = !unlocked;
+    });
+    // disable edit buttons (keep Print/Export/Search enabled)
+    document.querySelectorAll("button").forEach(btn => {
+        const oc = (btn.getAttribute("onclick") || "");
+        if(/addPerson|shuffleGroups|generate\(|clearAll|freshShuffle|removePerson/.test(oc)){
+            btn.disabled = !unlocked;
+            btn.style.opacity = unlocked ? "" : "0.45";
+            btn.style.cursor = unlocked ? "" : "not-allowed";
+        }
+    });
+    renderPeople();
+    renderSchedule();
+}
+
 
 /* =========================================================
    ZAMBIA CLOCK
@@ -1458,7 +2029,7 @@ function renderPeople(){
                     <span class="tag ${groupClass(g)}">G${g + 1}</span>
                     ${index + 1}. ${escapeHtml(person)}
                 </span>
-                <button class="danger" onclick="removePerson(${index})">Remove</button>
+                ${isUnlocked() ? `<button class="danger" onclick="removePerson(${index})">Remove</button>` : ""}
             </div>
         `;
     }).join("");
@@ -1593,6 +2164,7 @@ function handleNameKey(event){
    ADD / REMOVE PERSON
 ========================================================= */
 function addPerson(){
+    if(!requireEdit()) return;
 
     const input = document.getElementById("personName");
     const name  = input.value.trim();
@@ -1623,6 +2195,7 @@ function addPerson(){
 }
 
 function removePerson(index){
+    if(!requireEdit()) return;
 
     if(index < 0 || index >= people.length){
         return;
@@ -1665,6 +2238,7 @@ function shuffleArray(array){
    SHUFFLE GROUPS
 ========================================================= */
 function shuffleGroups(){
+    if(!requireEdit()) return;
 
     if(people.length < GROUP_COUNT){
         alert(`Add at least ${GROUP_COUNT} leaders so all four groups can be filled.`);
@@ -2001,6 +2575,7 @@ function rotationMode(){
 }
 
 function onRotationModeChange(){
+    if(!requireEdit()){ document.getElementById('rotationMode').value = rotationMode(); return; }
     renderSchedule();
     renderGroups();
 }
@@ -2043,6 +2618,7 @@ function buildRotated(pool, offset){
    5th Sunday  → Group 1 again (cycle restarts)
 ========================================================= */
 function generate(){
+    if(!requireEdit()) return;
 
     if(!people.length){
         alert("Add at least one pastor before auto-scheduling.");
@@ -2319,6 +2895,7 @@ function createServiceId(date, serviceName){
    Keeps the no-repeat rule for that group's other services.
 ========================================================= */
 function freshShuffle(serviceIndex){
+    if(!requireEdit()) return;
 
     if(serviceIndex < 0 || serviceIndex >= schedule.length){
         return;
@@ -2819,10 +3396,10 @@ function renderSchedule(){
                                 <span class="service-time-badge">${escapeHtml(service.time)}</span>
                             </div>
 
-                            <button
+                            ${isUnlocked() ? `<button
                                 class="fresh-shuffle"
                                 onclick="freshShuffle(${actualIndex})"
-                            >Fresh Shuffle</button>
+                            >Fresh Shuffle</button>` : ""}
 
                         </div>
 
@@ -3019,21 +3596,25 @@ function exportCSV(){
 ========================================================= */
 function saveData(show = true){
 
+    lastUpdatedAt = Date.now();
     const data = {
         version: 2,
         people,
         schedule,
         month: document.getElementById("month").value,
         pattern: document.getElementById("servicePattern").value,
-        rotation: rotationMode()
+        rotation: rotationMode(),
+        updatedAt: lastUpdatedAt,
+        deviceId: deviceId
     };
 
     const ok = storage.set("jcrgm_schedule_data_v2", JSON.stringify(data));
+    schedulePush();
 
     if(show){
         alert(
             ok
-            ? "JCRGM schedule and leader records saved on this device."
+            ? (hasCloud() ? "Saved and syncing to all devices (code: " + syncConfig.code + ")." : "JCRGM schedule and leader records saved on this device. Use Export to share, or add Supabase URL + key for automatic sharing.")
             : "Saving is blocked in this preview window. Download the file and open it in your browser to keep records saved."
         );
     }
@@ -3055,6 +3636,7 @@ function loadData(show = true){
 
         const data = JSON.parse(saved);
 
+        lastUpdatedAt = Number(data.updatedAt || 0);
         people   = Array.isArray(data.people)   ? data.people   : [];
         schedule = Array.isArray(data.schedule) ? data.schedule : [];
 
@@ -3099,6 +3681,7 @@ function loadData(show = true){
 }
 
 function clearAll(){
+    if(!requireEdit()) return;
 
     /* Pastors are removed only through removePerson(). */
     if(!confirm("Clear the generated schedule only? All leader records will remain saved.")){
@@ -3136,14 +3719,45 @@ function init(){
         </div>
     `).join("");
 
+    loadSyncConfig();
     loadData(false);
 
     renderPeople();
     renderGroups();
     renderSchedule();
     updateZambiaClock();
+    applyEditMode();
 
     setInterval(updateZambiaClock, 1000);
+    startAutoSync();
+
+    // Instant sync between tabs on the same device
+    window.addEventListener("storage", function(e){
+        if(e.key === "jcrgm_schedule_data_v2" && e.newValue){
+            try{
+                const d = JSON.parse(e.newValue);
+                if(Number(d.updatedAt || 0) > lastUpdatedAt){
+                    applyRemoteData(d);
+                }
+            }catch(err){ /* ignore */ }
+        }
+    });
+    try{
+        const bc = new BroadcastChannel("jcrgm-sync");
+        bc.onmessage = function(ev){
+            if(ev.data && Number(ev.data.updatedAt || 0) > lastUpdatedAt){
+                applyRemoteData(ev.data);
+            }
+        };
+        const origSet = storage.set.bind(storage);
+        storage.set = function(k, v){
+            const r = origSet(k, v);
+            if(k === "jcrgm_schedule_data_v2"){
+                try{ bc.postMessage(JSON.parse(v)); }catch(e){}
+            }
+            return r;
+        };
+    }catch(e){ /* BroadcastChannel not supported */ }
 }
 
 init();
