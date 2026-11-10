@@ -404,13 +404,18 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
       <div class="card stat"><div class="label">Registrations</div><strong id="statRegs">0</strong><span class="muted">Awaiting confirmation</span></div>
     </div>
     <div class="grid two" style="margin-top:16px">
-      <div class="card"><h3>Latest Ushers Service</h3><div id="dashboardUsherSnapshot"><p class="muted">No ushers record captured yet.</p></div></div>
+      <div class="card"><h3>Latest Service — Attendance &amp; Offering</h3><div id="dashboardUsherSnapshot"><p class="muted">No ushers record captured yet.</p></div></div>
       <div class="card"><h3>Quick Records</h3>
         <div class="kpi"><span>Consolidated meetings</span><b id="consolidatedMeetings">0</b></div>
         <div class="kpi"><span>Ushers submissions</span><b id="usherRecordsCount">0</b></div>
         <div class="kpi"><span>Upcoming ceremonies</span><b id="upcomingEvents">0</b></div>
         <div class="kpi"><span>Last recorded service total</span><b id="lastServiceTotal">—</b></div>
       </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="section-head"><div><h3 style="margin:0">Attendance &amp; Total Offering by Service Date</h3><div class="sub muted">Consolidated across all gadgets for each dated service (latest first).</div></div>
+        <div class="actions"><button class="btn small gold" onclick="openAdminGate()">🔐 Admin</button><button class="btn small secondary" onclick="navTo('usherattendance')">Ushers Record</button></div></div>
+      <div id="dashboardServiceDates"><p class="muted">No ushers records yet.</p></div>
     </div>
     <div class="card" style="margin-top:16px">
       <div class="section-head"><div><h3 style="margin:0">Next ceremonies on the calendar</h3><div class="sub">Tap a ceremony to open its registration tab.</div></div>
@@ -437,7 +442,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
         </div>
       </div>
 
-      <div class="alert blue mgmt-sync-box no-print"><b>☁ Supabase sync:</b> <span data-sync-status>Starting sync…</span><br><span class="muted">Ushers records and ceremonies entered on any gadget appear here automatically. Use Admin for the consolidated church record per meeting.</span></div>
+      <div class="alert blue mgmt-sync-box no-print"><b>☁ Supabase sync:</b> <span data-sync-status>Starting sync…</span><br><span class="muted">Ushers records and ceremonies entered on any gadget appear here automatically. Use Admin for the consolidated church record per meeting.<br>🗑 <b>Delete:</b> only Admin, or the gadget that sent the record, can delete an entry.</span></div>
       <div class="form no-print" style="margin-bottom:15px">
         <div><label>From Date</label><input id="usherFrom" type="date" onchange="renderUsherAttendance()"></div>
         <div><label>To Date</label><input id="usherTo" type="date" onchange="renderUsherAttendance()"></div>
@@ -827,8 +832,8 @@ function migrate(d){
     ['men','women','children','visitors','decisions'].forEach(function(f){ x[f]=Number(x[f]||0); });
     if(!x.total) x.total=(x.men+x.women+(x.youth||0)+x.children+x.visitors);
     if(x.offeringTotal===undefined){ x.offeringTotal=Number(x.offering||0); x.offeringGeneral=x.offeringGeneral??x.offering; }
-    x.offeringGeneral=Number(x.offeringGeneral||0);x.offeringThanksgiving=Number(x.offeringThanksgiving||0);
-    x.offeringTithe=Number(x.offeringTithe||0);x.offeringBuilding=Number(x.offeringBuilding||0);x.offeringWelfare=Number(x.offeringWelfare||0);
+    x.offeringGeneral=Number(x.offeringGeneral||0);
+    x.offeringBuilding=Number(x.offeringBuilding||0);x.offeringWelfare=Number(x.offeringWelfare||0);x.offeringSpecial=Number(x.offeringSpecial||0);
     x.status=x.status||'Final';
     if(!x.recordRef) x.recordRef='US-'+(String(usherSeq(d)+1));
   });
@@ -927,8 +932,15 @@ async function mgmtSyncNow(label){
   try{
     let changed=false;
     for(const coll of MGMT_SYNC_COLLECTIONS){
-      const rows=await mgmtPullCollection(coll);
       if(!Array.isArray(db[coll])) db[coll]=[];
+      const pendingDeletes={};
+      Object.keys(mgmtSyncMeta.hashes).forEach(function(k){
+        if(k.indexOf(coll+":")!==0||mgmtSyncMeta.tombstones[k]) return;
+        const knownId=k.slice(coll.length+1);
+        const exists=db[coll].some(function(x){ return String(x.id)===knownId; });
+        if(!exists) pendingDeletes[knownId]=true;
+      });
+      const rows=await mgmtPullCollection(coll);
       rows.forEach(function(row){
         const rec=row.record||{}; const id=String(row.record_id||rec.id||""); if(!id) return;
         const key=coll+":"+id; const rh=mgmtHash(mgmtStable(rec));
@@ -937,6 +949,7 @@ async function mgmtSyncNow(label){
           if(idx>=0&&Number(rec._syncUpdatedAt||0)>=Number(db[coll][idx]._syncUpdatedAt||0)){ db[coll].splice(idx,1); changed=true; }
           mgmtSyncMeta.hashes[key]=rh; mgmtSyncMeta.tombstones[key]=rh; return;
         }
+        if(pendingDeletes[id]) return; /* deleted on this gadget, tombstone not pushed yet — never resurrect */
         const idx=db[coll].findIndex(function(x){ return String(x.id)===id; });
         if(idx<0){ db[coll].push(rec); changed=true; mgmtSyncMeta.hashes[key]=rh; }
         else{
@@ -952,6 +965,7 @@ async function mgmtSyncNow(label){
       db.events.sort(byDate);
       mgmtPersistLocal(); renderAll();
     }
+    mgmtSaveMeta();
     let pushed=0, localChanged=false;
     for(const coll of MGMT_SYNC_COLLECTIONS){
       const currentIds={};
@@ -960,7 +974,7 @@ async function mgmtSyncNow(label){
         currentIds[String(rec.id)]=true;
         const key=coll+":"+String(rec.id);
         if(mgmtSyncMeta.hashes[key]!==mgmtHash(mgmtStable(rec))){
-          rec._deviceId=MGMT_DEVICE_ID; rec._syncUpdatedAt=Date.now();
+          if(!rec._deviceId) rec._deviceId=MGMT_DEVICE_ID; rec._syncUpdatedAt=Date.now();
           await mgmtPushRecord(coll,rec);
           mgmtSyncMeta.hashes[key]=mgmtHash(mgmtStable(rec));
           delete mgmtSyncMeta.tombstones[key];
@@ -1006,6 +1020,12 @@ function startMgmtSync(){
 function isMgmtAdmin(){
   if(window.__mgmtAdminUnlocked) return true;
   try{ return sessionStorage.getItem("jcrgm_mgmt_admin")==="1"; }catch(e){ return false; }
+}
+function usherCanDelete(rec){
+  if(!rec) return false;
+  if(isMgmtAdmin()) return true;
+  if(rec._deviceId) return String(rec._deviceId)===String(MGMT_DEVICE_ID);
+  return !rec._syncUpdatedAt; // legacy local record never sent from elsewhere
 }
 function openAdminGate(){
   if(isMgmtAdmin()){ navTo("admin"); renderAdminConsolidated(); return; }
@@ -1058,7 +1078,7 @@ function adminGroups(){
       order.push(map[key]);
     }
     const g=map[key]; g.records.push(x);
-    ["men","women","youth","children","visitors","firstTimers","total","decisions","counselling","online","latecomers","teamSize","teamAbsent","offeringGeneral","offeringTithe","offeringThanksgiving","offeringBuilding","offeringWelfare","offeringSpecial","offeringTotal"].forEach(function(f){ g.sums[f]=num(g.sums[f])+num(x[f]); });
+    ["men","women","youth","children","visitors","firstTimers","total","decisions","counselling","online","latecomers","teamSize","teamAbsent","offeringGeneral","offeringBuilding","offeringWelfare","offeringSpecial","offeringTotal"].forEach(function(f){ g.sums[f]=num(g.sums[f])+num(x[f]); });
     adminUniquePush(g.venues,x.venue); adminUniquePush(g.times,x.time); adminUniquePush(g.officiants,x.officiant);
     adminUniquePush(g.heads,x.headUsher); adminUniquePush(g.people,x.recordedBy); adminUniquePush(g.people,x.countedBy);
     const st=x.status||"Final"; g.statuses[st]=num(g.statuses[st])+1;
@@ -1079,7 +1099,7 @@ function renderAdminConsolidated(){
   set("adminDecisions",totalDec.toLocaleString()); set("adminOffering",money(totalOff));
   if(!groups.length){ box.innerHTML='<div class="empty">No ushers records match this filter yet. When ushers save a record on any gadget, it will appear here consolidated per meeting.</div>'; return; }
   const attLabels={men:"Men",women:"Women",youth:"Youth",children:"Children",visitors:"Visitors",firstTimers:"First-timers",total:"TOTAL",decisions:"Decisions",counselling:"Counselling",online:"Online",latecomers:"Latecomers"};
-  const offLabels={offeringGeneral:"General",offeringTithe:"Tithes",offeringThanksgiving:"Thanksgiving",offeringBuilding:"Building",offeringWelfare:"Welfare",offeringSpecial:"Special / Vows",offeringTotal:"TOTAL OFFERING"};
+  const offLabels={offeringGeneral:"General",offeringBuilding:"Building",offeringWelfare:"Welfare",offeringSpecial:"Special / Vows",offeringTotal:"TOTAL OFFERING"};
   box.innerHTML=groups.map(function(g){
     const dupRefs=Object.keys(g.refs).filter(function(r){ return g.refs[r]>1; });
     const attRows=Object.keys(attLabels).map(function(f){
@@ -1114,9 +1134,9 @@ function exportAdminCSV(){
   if(!isMgmtAdmin()){ openAdminGate(); return; }
   const groups=adminGroups();
   if(!groups.length){ toast("No consolidated meetings to export.","err"); return; }
-  const rows=[["Date","Service","Submissions","Men","Women","Youth","Children","Visitors","First-timers","Total Attendance","Decisions","Counselling","Online","Latecomers","General Offering","Tithes","Thanksgiving","Building","Welfare","Special","Total Offering","Head Ushers","Recorded / Counted By"]];
+  const rows=[["Date","Service","Submissions","Men","Women","Youth","Children","Visitors","First-timers","Total Attendance","Decisions","Counselling","Online","Latecomers","General Offering","Building","Welfare","Special","Total Offering","Head Ushers","Recorded / Counted By"]];
   groups.forEach(function(g){
-    rows.push([g.date,g.service,g.records.length,g.sums.men,g.sums.women,g.sums.youth,g.sums.children,g.sums.visitors,g.sums.firstTimers,g.sums.total,g.sums.decisions,g.sums.counselling,g.sums.online,g.sums.latecomers,g.sums.offeringGeneral,g.sums.offeringTithe,g.sums.offeringThanksgiving,g.sums.offeringBuilding,g.sums.offeringWelfare,g.sums.offeringSpecial,g.sums.offeringTotal,g.heads.join("; "),g.people.join("; ")]);
+    rows.push([g.date,g.service,g.records.length,g.sums.men,g.sums.women,g.sums.youth,g.sums.children,g.sums.visitors,g.sums.firstTimers,g.sums.total,g.sums.decisions,g.sums.counselling,g.sums.online,g.sums.latecomers,g.sums.offeringGeneral,g.sums.offeringBuilding,g.sums.offeringWelfare,g.sums.offeringSpecial,g.sums.offeringTotal,g.heads.join("; "),g.people.join("; ")]);
   });
   const csv=rows.map(function(r){ return r.map(function(v){ return '"'+String(v===undefined||v===null?"":v).replace(/"/g,'""')+'"'; }).join(","); }).join("\n");
   const a=document.createElement("a");
@@ -1661,9 +1681,13 @@ function submitRecord(e,key,id){
 }
 function delRecord(key,id){
   if(key==='ushers'){
+    const rec=db.usherAttendance.find(function(x){ return x.id===id; });
+    if(!rec){ toast('Record not found.','err'); return; }
+    if(!usherCanDelete(rec)){ toast('Only Admin, or the gadget that sent this record, can delete it.','err',5200); return; }
     if(!confirm('Delete this ushers record? This cannot be undone.')) return;
     db.usherAttendance=db.usherAttendance.filter(function(x){ return x.id!==id; });
-    persist(); renderAll(); toast('Ushers record deleted.','ok'); return;
+    persist(); renderAll(); toast('Ushers record deleted — deletion will sync to all devices.','ok',4200);
+    mgmtSyncNow(false); return;
   }
   const sc=S[key];
   if(!sc){ toast('Unknown record type.','err'); return; }
@@ -1756,8 +1780,6 @@ const USHER_GROUPS=[
    {n:'latecomers',l:'Latecomers Seated',t:'number',min:0,dv:0}]},
  {legend:'Offering for this service (each basket counted separately)',fields:[
    {n:'offeringGeneral',l:'General Offering',t:'number',min:0,step:'0.01',dv:0,extra:'data-grp="off"'},
-   {n:'offeringTithe',l:'Tithes',t:'number',min:0,step:'0.01',dv:0,extra:'data-grp="off"'},
-   {n:'offeringThanksgiving',l:'Thanksgiving',t:'number',min:0,step:'0.01',dv:0,extra:'data-grp="off"'},
    {n:'offeringBuilding',l:'Building / Project Fund',t:'number',min:0,step:'0.01',dv:0,extra:'data-grp="off"'},
    {n:'offeringWelfare',l:'Welfare / Compassion',t:'number',min:0,step:'0.01',dv:0,extra:'data-grp="off"'},
    {n:'offeringSpecial',l:'Special / Vows',t:'number',min:0,step:'0.01',dv:0,extra:'data-grp="off"'},
@@ -1784,7 +1806,7 @@ const USHER_GROUPS=[
 ];
 const USHER_ALL=USHER_GROUPS.reduce(function(a,g){ return a.concat(g.fields); },[]);
 const ATT_FIELDS=['men','women','youth','children','visitors'];
-const OFF_FIELDS=['offeringGeneral','offeringTithe','offeringThanksgiving','offeringBuilding','offeringWelfare','offeringSpecial'];
+const OFF_FIELDS=['offeringGeneral','offeringBuilding','offeringWelfare','offeringSpecial'];
 
 function usherTotals(o){
   const t={};
@@ -1864,8 +1886,7 @@ function submitUsherAttendance(e,id){
   if(o.status==='Final'&&!(o.countedBy||'').trim()){ toast('A final record needs the “Counted By” name — the person who counted the baskets.','err',5200); const f=usForm.querySelector('[name=countedBy]'); if(f){markInvalid(f);f.focus();} return; }
   const arr=db.usherAttendance;
   if(id){ const rec=arr.find(function(x){ return x.id===id; }); if(!rec) return; Object.assign(rec,o); rec.updatedAt=nowStamp(); }
-  else { o.id=uid(); o.createdAt=nowStamp(); arr.unshift(o); }
-  o._deviceId=MGMT_DEVICE_ID;
+  else { o.id=uid(); o.createdAt=nowStamp(); o._deviceId=MGMT_DEVICE_ID; arr.unshift(o); }
   persist(); renderAll(); closeModal();
   toast('Ushers record saved — reference '+o.recordRef+'. Syncing…','ok',4200);
   mgmtSyncNow('Ushers record');
@@ -1930,7 +1951,9 @@ function renderUsherAttendance(){
         iBtn('⧉','Duplicate for today',"duplicateUsherRecord('"+x.id+"')")+
         iBtn('⤓','Save this record as PDF',"saveUsherPdf('"+x.id+"')")+
         iBtn('✆','Send this record to WhatsApp',"sendWhatsAppReport('usher','"+x.id+"')")+
-        iBtn('🗑','Delete record',"delRecord('ushers','"+x.id+"')",'danger')+
+        (usherCanDelete(x)
+          ? iBtn('🗑','Delete record (Admin or sending gadget)',"delRecord('ushers','"+x.id+"')",'danger')
+          : '<button class="btn ibtn secondary" type="button" title="Only Admin or the gadget that sent this record can delete it" aria-label="Delete not allowed on this gadget" disabled style="opacity:.45;cursor:not-allowed">🔒</button>')+
       '</div></td></tr>';
   }).join(''):'<tr><td colspan="14" class="empty">No ushers records match the filter. Click “+ New Usher Record” to capture a service.</td></tr>';
   if(foot) foot.innerHTML=arr.length?'<tr><td colspan="3" style="background:#f6f8fb"><b>Totals for '+arr.length+' service(s)</b></td>'+
@@ -1951,8 +1974,8 @@ function usherSingleText(x){
   L.push('Decisions: '+num(x.decisions)+'   Counselling: '+num(x.counselling)+'   Online: '+num(x.online)+'   Latecomers: '+num(x.latecomers));
   L.push('');
   L.push('OFFERING ('+(db.settings.currency||'ZMW')+')');
-  L.push('General: '+num(x.offeringGeneral)+'   Tithes: '+num(x.offeringTithe)+'   Thanksgiving: '+num(x.offeringThanksgiving));
-  L.push('Building: '+num(x.offeringBuilding)+'   Welfare: '+num(x.offeringWelfare)+'   Special: '+num(x.offeringSpecial));
+  L.push('General: '+num(x.offeringGeneral)+'   Building: '+num(x.offeringBuilding));
+  L.push('Welfare: '+num(x.offeringWelfare)+'   Special: '+num(x.offeringSpecial));
   L.push('TOTAL OFFERING: '+money(x.offeringTotal)+'  ('+(x.offeringMethod||'—')+')');
   L.push('Counted by: '+(x.countedBy||'—')+'   Verified by: '+(x.witnessedBy||'—'));
   L.push('Deposit: '+(x.deposited||'—')+(x.depositRef?' ('+x.depositRef+')':''));
@@ -3483,11 +3506,30 @@ function renderDashboard(){
     if(last){
       const same=db.usherAttendance.filter(function(x){ return x.date===last.date&&x.service===last.service; });
       const tot=same.reduce(function(s,x){ return s+num(x.total); },0), off=same.reduce(function(s,x){ return s+num(x.offeringTotal); },0);
-      snap.innerHTML='<div class="kpi"><span>'+fmtDate(last.date)+' — '+esc(last.service||'Service')+'</span><b>'+tot.toLocaleString()+'</b></div>'+
+      snap.innerHTML='<div class="kpi"><span>Service date</span><b>'+fmtDate(last.date)+'</b></div>'+
+        '<div class="kpi"><span>Service</span><b>'+esc(last.service||'Service')+'</b></div>'+
+        '<div class="kpi"><span>Attendance</span><b>'+tot.toLocaleString()+'</b></div>'+
+        '<div class="kpi"><span>Total offering</span><b>'+money(off)+'</b></div>'+
         '<div class="kpi"><span>Submissions from gadgets</span><b>'+same.length+'</b></div>'+
-        '<div class="kpi"><span>Consolidated offering</span><b>'+money(off)+'</b></div>'+
         '<div class="actions" style="margin-top:10px"><button class="btn small gold" onclick="openAdminGate()">🔐 Admin Consolidated</button><button class="btn small secondary" onclick="navTo(\'usherattendance\')">Ushers Record</button></div>';
     } else snap.innerHTML='<p class="muted">No ushers record captured yet.</p>';
+  }
+  const sd=el('dashboardServiceDates');
+  if(sd){
+    const gmap={}, gorder=[];
+    db.usherAttendance.forEach(function(x){
+      const key=String(x.date||'')+'||'+String(x.service||'Service').trim().toLowerCase();
+      if(!gmap[key]){ gmap[key]={date:x.date||'',service:x.service||'Service',subs:0,total:0,decisions:0,offering:0}; gorder.push(gmap[key]); }
+      const g=gmap[key]; g.subs++; g.total+=num(x.total); g.decisions+=num(x.decisions); g.offering+=num(x.offeringTotal);
+    });
+    gorder.sort(function(a,b){ return String(b.date).localeCompare(String(a.date))||String(a.service).localeCompare(String(b.service)); });
+    const shown=gorder.slice(0,12);
+    sd.innerHTML=shown.length?'<div class="tablewrap"><table><thead><tr><th>Date</th><th>Service</th><th class="num">Submissions</th><th class="num">Attendance</th><th class="num">Decisions</th><th class="num">Total Offering</th></tr></thead><tbody>'+
+      shown.map(function(g){
+        return '<tr><td><b>'+fmtDate(g.date)+'</b></td><td>'+esc(g.service)+'</td><td class="num">'+g.subs+'</td><td class="num"><b>'+g.total.toLocaleString()+'</b></td><td class="num">'+g.decisions.toLocaleString()+'</td><td class="num"><b>'+money(g.offering)+'</b></td></tr>';
+      }).join('')+'</tbody></table></div>'+
+      (gorder.length>shown.length?'<p class="muted" style="margin-top:8px">Showing the latest '+shown.length+' of '+gorder.length+' dated services — open Admin for the full consolidated record.</p>':'')
+      :'<p class="muted">No ushers records yet. Saved records will appear here by service date.</p>';
   }
   const totalRec=db.usherAttendance.length+db.events.length+db.ceremonyRegistrations.length;
   set('sideRecordCount',totalRec+' synced record'+(totalRec===1?'':'s'));
@@ -3684,5 +3726,5 @@ window.addEventListener('error',function(e){ if(e&&e.message&&String(document.lo
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58770afcbffb56f',t:'MTc5NDMzODY5NQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58770afcbffb56f',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a587c5532b59b578',t:'MTc5NDM0MjE2Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a587c5532b59b578',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
