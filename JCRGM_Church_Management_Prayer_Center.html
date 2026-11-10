@@ -300,6 +300,16 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
 
+/* ===== Supabase sync + Admin consolidated ===== */
+.mgmt-sync-box{margin:0 0 14px}
+.admin-meeting{margin-top:16px}
+.admin-stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 0}
+.admin-mini{background:#f6f8fb;border:1px solid var(--border);border-radius:12px;padding:11px}
+.admin-mini span{display:block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.admin-mini b{display:block;font-size:21px;margin-top:4px;color:var(--primary)}
+.admin-note{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:13px}
+@media(max-width:700px){.admin-stat-grid{grid-template-columns:repeat(2,1fr)}}
+
 /* ===== print ===== */
 @media print{
   .sidebar,.topbar,.tabs,.no-print,#toTop,#toasts,.scrim,footer.foot,.actions,.row-actions,input,select,textarea{display:none!important}
@@ -329,21 +339,14 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
   <button class="side-close no-print" type="button" id="navClose" aria-label="Close menu">×</button>
   <div class="brand">
     <h1><span class="brand-mark">✝</span>JCRGM</h1>
-    <p>Jesus Christ Redeems Global Ministries<br>Church Management &amp; Prayer Center</p>
+    <p>Jesus Christ Redeems Global Ministries<br>Church Management Center</p>
   </div>
   <nav class="nav" id="mainNav">
     <div class="nav-sec">Overview</div>
     <button type="button" data-page="dashboard"><span class="ic">⌂</span> Dashboard</button>
-    <button type="button" data-page="prayer"><span class="ic">🙏</span> Daily Prayer</button>
 
-    <div class="nav-sec">People</div>
-    <button type="button" data-page="members"><span class="ic">👥</span> Members</button>
-    <button type="button" data-page="visitors"><span class="ic">🚪</span> Visitors</button>
-    <button type="button" data-page="families"><span class="ic">🏠</span> Families</button>
-    <button type="button" data-page="followup"><span class="ic">☎</span> Follow-up</button>
 
     <div class="nav-sec">Services</div>
-    <button type="button" data-page="attendance"><span class="ic">✓</span> Attendance</button>
     <button type="button" data-page="usherattendance"><span class="ic">👔</span> Ushers Record</button>
 
     <div class="nav-sec">Ceremonies</div>
@@ -363,11 +366,12 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
     <button type="button" class="prayer-link" data-action="openPrayerLink"><span class="ic">🙏</span> Prayer Link</button>
 
     <div class="nav-sec">Records</div>
+    <button type="button" data-page="admin"><span class="ic">🔐</span> Admin</button>
     <button type="button" data-page="reports"><span class="ic">▥</span> Reports &amp; PDF</button>
     <button type="button" data-page="settings"><span class="ic">⚙</span> Data &amp; Settings</button>
   </nav>
   <div class="nav-foot">
-    <b>Daily corporate prayer</b><br>21:00 – 22:30 (Thursday until 01:00)<br>
+    <b>Supabase sync</b><br><span data-sync-status>Starting sync…</span><br>
     <span id="sideRecordCount">0 records</span>
   </div>
 </aside>
@@ -389,29 +393,26 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
     <div class="hero">
       <h1 id="dashboardH">JCRGM Church Center</h1>
       <p id="todayText"></p>
-      <p>Daily corporate prayer: <strong>21:00–22:30</strong></p>
       <div class="actions" style="margin-top:15px">
-        <button class="btn gold" onclick="navTo('prayer')">Open Prayer Guide</button>
-        <button class="btn secondary" onclick="navTo('members');openMember()">+ Register Member</button>
+        <button class="btn gold" onclick="openAdminGate()">🔐 Admin Consolidated Record</button>
         <button class="btn secondary" onclick="navTo('usherattendance');openUsherAttendance()">+ Ushers Record</button>
         <button class="btn secondary" onclick="navTo('events','forms')">Ceremony Request Form</button>
         <button class="btn join" onclick="openPrayerLink()">🙏 Join the Prophet's Prayer Link</button>
       </div>
     </div>
     <div class="grid stats" style="margin-top:16px">
-      <div class="card stat"><div class="label">Members</div><strong id="statMembers">0</strong><span class="muted">Registered people</span></div>
-      <div class="card stat"><div class="label">Visitors</div><strong id="statVisitors">0</strong><span class="muted">Visitor records</span></div>
+      <div class="card stat"><div class="label">Service Meetings</div><strong id="statMeetings">0</strong><span class="muted">Consolidated in Admin</span></div>
+      <div class="card stat"><div class="label">Offering Recorded</div><strong id="statOfferingTotal">0</strong><span class="muted">All ushers records</span></div>
       <div class="card stat"><div class="label">Ushers Records</div><strong id="statUshers">0</strong><span class="muted" id="statUshersSub">Services captured</span></div>
       <div class="card stat"><div class="label">Prayer Requests</div><strong id="statRequests">0</strong><span class="muted">Active requests</span></div>
       <div class="card stat"><div class="label">Ceremonies</div><strong id="statEvents">0</strong><span class="muted">Upcoming on calendar</span></div>
       <div class="card stat"><div class="label">Registrations</div><strong id="statRegs">0</strong><span class="muted">Awaiting confirmation</span></div>
     </div>
     <div class="grid two" style="margin-top:16px">
-      <div class="card"><h3>Today's Focus</h3><div class="guide" id="dashboardGuide"></div></div>
+      <div class="card"><h3>Latest Ushers Service</h3><div id="dashboardUsherSnapshot"><p class="muted">No ushers record captured yet.</p></div></div>
       <div class="card"><h3>Quick Records</h3>
-        <div class="kpi"><span>Active members</span><b id="activeMembers">0</b></div>
-        <div class="kpi"><span>Today's attendance</span><b id="todayAttendance">0</b></div>
-        <div class="kpi"><span>Follow-ups due</span><b id="followupsDue">0</b></div>
+        <div class="kpi"><span>Consolidated meetings</span><b id="consolidatedMeetings">0</b></div>
+        <div class="kpi"><span>Ushers submissions</span><b id="usherRecordsCount">0</b></div>
         <div class="kpi"><span>Upcoming ceremonies</span><b id="upcomingEvents">0</b></div>
         <div class="kpi"><span>Last recorded service total</span><b id="lastServiceTotal">—</b></div>
       </div>
@@ -423,107 +424,17 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
     </div>
   </section>
 
-  <!-- ================= PRAYER ================= -->
-  <section id="prayer" class="page" aria-labelledby="prayerH">
-    <h2 id="prayerH" style="position:absolute;left:-9999px">Daily Prayer</h2>
-    <div class="grid two">
-      <div class="card">
-        <div class="label">Daily Corporate Prayer</div>
-        <h3 id="prayerDayTitle"></h3>
-        <div class="prayer-clock" id="prayerClock">01:30:00</div>
-        <div class="progress"><div id="prayerProgress"></div></div>
-        <p class="muted" id="prayerStatus"></p>
-        <div class="actions no-print">
-          <button class="btn" onclick="startPrayer()">Start Session</button>
-          <button class="btn secondary" onclick="pausePrayer()">Pause</button>
-          <button class="btn secondary" onclick="resetPrayer()">Reset</button>
-          <button class="btn gold" onclick="quickPrint()">Print Guide</button>
-        </div>
-      </div>
-      <div class="card"><div class="label">Meditational Scripture</div><div class="scripture" id="dailyScripture"></div><p class="muted" id="scriptureRef"></p>
-        <div class="actions" style="margin-top:12px"><button class="btn whatsapp small" onclick="sendWhatsAppReport('prayer')">Send Prayer Report to WhatsApp</button></div>
-      </div>
-    </div>
-    <div class="card" style="margin-top:16px"><h3>Today's Prayer Guide</h3><div class="guide" id="prayerGuide"></div></div>
-    <div class="card" style="margin-top:16px">
-      <div class="toolbar"><h3 style="margin:0">Prayer Session Record</h3>
-        <div class="actions"><button class="btn secondary" onclick="savePdf('prayersessions')">Save as PDF</button></div></div>
-      <form class="form no-print" id="prayerSessionForm" onsubmit="savePrayerSession(event)">
-        <div><label>Date</label><input id="psDate" type="date" required></div>
-        <div><label>Number Present</label><input id="psPresent" type="number" min="0" required></div>
-        <div><label>Men</label><input id="psMen" type="number" min="0" value="0"></div>
-        <div><label>Women</label><input id="psWomen" type="number" min="0" value="0"></div>
-        <div class="full"><label>Session Notes / Testimonies</label><textarea id="psNotes" placeholder="Record general notes, testimonies or key outcomes."></textarea></div>
-        <div class="full actions"><button class="btn success">Save Prayer Session</button><button class="btn secondary" type="reset">Clear</button></div>
-      </form>
-      <div class="tablewrap compact" style="margin-top:14px"><table><thead><tr><th>Date</th><th>Present</th><th>Men</th><th>Women</th><th>Notes</th><th class="no-print">Actions</th></tr></thead><tbody id="prayerSessionsTable"></tbody></table></div>
-    </div>
-  </section>
-
-  <!-- ================= MEMBERS ================= -->
-  <section id="members" class="page" aria-labelledby="membersH">
-    <h2 id="membersH" style="position:absolute;left:-9999px">Members</h2>
-    <div class="card">
-      <div class="toolbar">
-        <div><h3 style="margin:0">Member Register</h3><div class="sub muted">Central church membership records</div></div>
-        <div class="actions no-print">
-          <button class="btn" onclick="openMember()">+ Add Member</button>
-          <button class="btn secondary" onclick="savePdf('members')">Save All as PDF</button>
-          <button class="btn whatsapp" onclick="sendAllMembersWhatsApp()">WhatsApp All Members</button>
-          <button class="btn secondary" onclick="exportCSV('members')">Export CSV</button>
-        </div>
-      </div>
-      <input id="memberSearch" placeholder="Search name, phone, ministry, status, address..." oninput="renderMembers()" aria-label="Search members">
-      <div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>Name</th><th>Phone</th><th>Gender</th><th>Joined</th><th>Ministry</th><th>Status</th><th class="no-print">Actions</th></tr></thead><tbody id="membersTable"></tbody></table></div>
-    </div>
-  </section>
-
-  <!-- ================= VISITORS ================= -->
-  <section id="visitors" class="page" aria-labelledby="visitorsH">
-    <h2 id="visitorsH" style="position:absolute;left:-9999px">Visitors</h2>
-    <div class="card">
-      <div class="toolbar">
-        <div><h3 style="margin:0">Visitor &amp; First-Time Guest Register</h3><div class="sub muted">Capture details when people come to church</div></div>
-        <div class="actions no-print">
-          <button class="btn" onclick="openVisitor()">+ Register Visitor</button>
-          <button class="btn secondary" onclick="savePdf('visitors')">Save as PDF</button>
-          <button class="btn whatsapp" onclick="sendAllWhatsApp('visitors')">WhatsApp All Visitors</button>
-        </div>
-      </div>
-      <div class="tablewrap"><table><thead><tr><th>Date</th><th>Name</th><th>Phone</th><th>Location</th><th>Reason / Interest</th><th>Decision</th><th>Follow-up</th><th class="no-print">Actions</th></tr></thead><tbody id="visitorsTable"></tbody></table></div>
-    </div>
-  </section>
-
-  <!-- ================= ATTENDANCE ================= -->
-  <section id="attendance" class="page" aria-labelledby="attendanceH">
-    <h2 id="attendanceH" style="position:absolute;left:-9999px">Attendance</h2>
-    <div class="card">
-      <div class="toolbar">
-        <div><h3 style="margin:0">Attendance Register</h3><div class="sub muted">Sunday services, Bible school, prayer and special meetings</div></div>
-        <div class="actions no-print">
-          <button class="btn" onclick="openAttendance()">+ Record Attendance</button>
-          <button class="btn secondary" onclick="savePdf('attendance')">Save as PDF</button>
-          <button class="btn whatsapp" onclick="sendWhatsAppReport('attendance')">WhatsApp Report</button>
-        </div>
-      </div>
-      <div class="form no-print" style="margin-bottom:15px">
-        <div><label>Filter Date</label><input id="attDateFilter" type="date" onchange="renderAttendance()"></div>
-        <div><label>Meeting</label><select id="attTypeFilter" onchange="renderAttendance()"><option value="">All meetings</option><option>Sunday Service</option><option>Bible School</option><option>Daily Prayer</option><option>Friday Fast</option><option>Special Service</option><option>Other</option></select></div>
-        <div><label>Present</label><select id="attPresentFilter" onchange="renderAttendance()"><option value="">All</option><option>Yes</option><option>No</option></select></div>
-      </div>
-      <div class="tablewrap"><table><thead><tr><th>Date</th><th>Meeting</th><th>Member/Guest</th><th>Phone</th><th>Present</th><th>Notes</th><th class="no-print">Actions</th></tr></thead><tbody id="attendanceTable"></tbody></table></div>
-    </div>
-  </section>
-
   <!-- ================= USHERS RECORD ================= -->
   <section id="usherattendance" class="page" aria-labelledby="ushersH">
     <h2 id="ushersH" style="position:absolute;left:-9999px">Ushers Record</h2>
     <div class="card">
       <div class="toolbar">
-        <div><h3 style="margin:0">Ushers Attendance &amp; Offering Record</h3>
-          <div class="sub muted">Full service report: attendance by group, decisions, offering by basket, ushering team and hand-over details.</div></div>
+        <div><h3 style="margin:0">Ushers Record — Attendance &amp; Offering</h3>
+          <div class="sub muted">Full service report from every gadget. Press <b>Save Ushers Record</b> and it syncs to all devices; Admin consolidates each meeting.</div></div>
         <div class="actions no-print">
           <button class="btn" onclick="openUsherAttendance()">+ New Usher Record</button>
+          <button class="btn gold" onclick="openAdminGate()">🔐 Admin</button>
+          <button class="btn secondary" onclick="mgmtSyncNow('Ushers records')">☁ Sync Now</button>
           <button class="btn secondary" onclick="savePdf('usherattendance')">Save as PDF</button>
           <button class="btn ghost" onclick="printReport('usherattendance')">Print / Save PDF</button>
           <button class="btn whatsapp" onclick="sendWhatsAppReport('usherattendance')">Send to WhatsApp</button>
@@ -531,6 +442,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
         </div>
       </div>
 
+      <div class="alert blue mgmt-sync-box no-print"><b>☁ Supabase sync:</b> <span data-sync-status>Starting sync…</span><br><span class="muted">Ushers records and ceremonies entered on any gadget appear here automatically. Use Admin for the consolidated church record per meeting.</span></div>
       <div class="form no-print" style="margin-bottom:15px">
         <div><label>From Date</label><input id="usherFrom" type="date" onchange="renderUsherAttendance()"></div>
         <div><label>To Date</label><input id="usherTo" type="date" onchange="renderUsherAttendance()"></div>
@@ -563,27 +475,35 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
     </div>
   </section>
 
-  <!-- ================= FOLLOW-UP ================= -->
-  <section id="followup" class="page" aria-labelledby="followupH">
-    <h2 id="followupH" style="position:absolute;left:-9999px">Follow-up</h2>
+  <!-- ================= ADMIN CONSOLIDATED ================= -->
+  <section id="admin" class="page" aria-labelledby="adminH">
+    <h2 id="adminH" style="position:absolute;left:-9999px">Admin Consolidated Church Record</h2>
     <div class="card">
       <div class="toolbar">
-        <div><h3 style="margin:0">Pastoral Follow-up</h3><div class="sub muted">Track visitors, members, calls, visits and care</div></div>
-        <div class="actions no-print"><button class="btn" onclick="openFollowup()">+ Add Follow-up</button><button class="btn secondary" onclick="savePdf('followups')">Save as PDF</button><button class="btn whatsapp" onclick="sendAllWhatsApp('followups')">WhatsApp Follow-up List</button></div>
+        <div><h3 style="margin:0">🔐 Admin — Consolidated Church Record</h3>
+          <div class="sub muted">One organised church record for each meeting, combining every ushers submission from every gadget. The same record saved on two gadgets is counted once.</div></div>
+        <div class="actions no-print">
+          <button class="btn secondary" onclick="mgmtSyncNow('Records')">☁ Sync Now</button>
+          <button class="btn secondary" onclick="exportAdminCSV()">Export CSV</button>
+          <button class="btn ghost" onclick="window.print()">Print / Save PDF</button>
+          <button class="btn danger" onclick="lockMgmtAdmin()">Lock Admin</button>
+        </div>
       </div>
-      <div class="tablewrap"><table><thead><tr><th>Due</th><th>Person</th><th>Phone</th><th>Type</th><th>Assigned To</th><th>Status</th><th>Notes</th><th class="no-print">Actions</th></tr></thead><tbody id="followupTable"></tbody></table></div>
-    </div>
-  </section>
-
-  <!-- ================= FAMILIES ================= -->
-  <section id="families" class="page" aria-labelledby="familiesH">
-    <h2 id="familiesH" style="position:absolute;left:-9999px">Families</h2>
-    <div class="card">
-      <div class="toolbar">
-        <div><h3 style="margin:0">Family Register</h3><div class="sub muted">Households and family information</div></div>
-        <div class="actions no-print"><button class="btn" onclick="openFamily()">+ Add Family</button><button class="btn secondary" onclick="savePdf('families')">Save as PDF</button><button class="btn whatsapp" onclick="sendAllWhatsApp('families')">WhatsApp Families</button></div>
+      <div class="alert blue no-print"><b>☁ Supabase sync:</b> <span data-sync-status>Starting sync…</span></div>
+      <div class="form no-print" style="margin-bottom:15px">
+        <div><label>From Date</label><input id="adminFrom" type="date" onchange="renderAdminConsolidated()"></div>
+        <div><label>To Date</label><input id="adminTo" type="date" onchange="renderAdminConsolidated()"></div>
+        <div><label>Service</label><select id="adminService" onchange="renderAdminConsolidated()"><option value="">All services</option><option>Morning Service</option><option>Evening Service</option><option>Afternoon Prophetic Service</option><option>Friday Night Vigil</option><option>Bible School</option><option>Special Service</option><option>Combined Service</option><option>Other</option></select></div>
+        <div><label>Search</label><input id="adminSearch" placeholder="Usher, venue, minister, reference..." oninput="renderAdminConsolidated()"></div>
       </div>
-      <div class="tablewrap"><table><thead><tr><th>Family</th><th>Head</th><th>Phone</th><th>Address</th><th>Members</th><th>Ordinance Status</th><th>Notes</th><th class="no-print">Actions</th></tr></thead><tbody id="familiesTable"></tbody></table></div>
+      <div class="admin-stat-grid">
+        <div class="admin-mini"><span>Meetings</span><b id="adminMeetings">0</b></div>
+        <div class="admin-mini"><span>Submissions</span><b id="adminSubmissions">0</b></div>
+        <div class="admin-mini"><span>Total Attendance</span><b id="adminAttendance">0</b></div>
+        <div class="admin-mini"><span>Decisions</span><b id="adminDecisions">0</b></div>
+        <div class="admin-mini"><span>Total Offering</span><b id="adminOffering">0</b></div>
+      </div>
+      <div id="adminConsolidated"></div>
     </div>
   </section>
 
@@ -611,11 +531,13 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
           <div><h3 style="margin:0">Scheduled Ceremonies</h3><div class="sub muted">Schedule a ceremony once, then let members register against it.</div></div>
           <div class="actions no-print">
             <button class="btn" onclick="openCeremony()">+ Add Ceremony</button>
+            <button class="btn secondary" onclick="mgmtSyncNow('Ceremonies')">☁ Sync Now</button>
             <button class="btn secondary" onclick="navTo('events','forms')">🧾 Open Request Form</button>
             <button class="btn secondary" onclick="savePdf('events')">Save as PDF</button>
             <button class="btn secondary" onclick="exportCSV('events')">Export CSV</button>
           </div>
         </div>
+        <div class="alert blue mgmt-sync-box no-print"><b>☁ Supabase sync:</b> <span data-sync-status>Starting sync…</span><br><span class="muted">Ceremony calendar and registrations sync to all devices automatically.</span></div>
         <div class="form no-print" style="margin-bottom:15px">
           <div><label>Filter Ceremony Type</label><select id="ceremonyTypeFilter" onchange="renderEvents()"><option value="">All ceremonies</option></select></div>
           <div><label>Show</label><select id="ceremonyDateFilter" onchange="renderEvents()"><option value="all">All records</option><option value="upcoming">Upcoming</option><option value="past">Past</option></select></div>
@@ -807,11 +729,11 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
   <section id="reports" class="page" aria-labelledby="reportsH">
     <h2 id="reportsH" style="position:absolute;left:-9999px">Reports</h2>
     <div class="grid three">
-      <div class="card"><h3>Membership</h3><div class="kpi"><span>Total</span><b id="rMembers">0</b></div><div class="kpi"><span>Active</span><b id="rActive">0</b></div><div class="actions"><button class="btn secondary small" onclick="savePdf('members')">PDF</button><button class="btn ghost small" onclick="printReport('members')">Print</button></div></div>
-      <div class="card"><h3>Attendance</h3><div class="kpi"><span>Total entries</span><b id="rAttendance">0</b></div><div class="kpi"><span>Present</span><b id="rPresent">0</b></div><div class="actions"><button class="btn secondary small" onclick="savePdf('attendance')">PDF</button><button class="btn ghost small" onclick="printReport('attendance')">Print</button></div></div>
+      
+      <div class="card"><h3>Admin Consolidated</h3><div class="kpi"><span>Meetings</span><b id="rMeetings">0</b></div><div class="kpi"><span>Ushers submissions</span><b id="rSubmissions">0</b></div><div class="actions"><button class="btn gold small" onclick="openAdminGate()">🔐 Open Admin</button></div></div>
       <div class="card"><h3>Ushers Records</h3><div class="kpi"><span>Services</span><b id="rUshers">0</b></div><div class="kpi"><span>Last total attendance</span><b id="rUsherLast">0</b></div><div class="actions"><button class="btn secondary small" onclick="savePdf('usherattendance')">PDF</button><button class="btn ghost small" onclick="printReport('usherattendance')">Print</button></div></div>
       <div class="card"><h3>Ceremonies</h3><div class="kpi"><span>Scheduled</span><b id="rCeremonies">0</b></div><div class="kpi"><span>Registrations</span><b id="rRegs">0</b></div><div class="actions"><button class="btn secondary small" onclick="savePdf('ceremonyRegistrations')">PDF</button><button class="btn ghost small" onclick="printReport('register')">Print</button></div></div>
-      <div class="card"><h3>Prayer</h3><div class="kpi"><span>Requests</span><b id="rRequests">0</b></div><div class="kpi"><span>Sessions</span><b id="rSessions">0</b></div><div class="actions"><button class="btn secondary small" onclick="savePdf('prayersessions')">PDF</button><button class="btn ghost small" onclick="navTo('prayer')">Prayer Center</button></div></div>
+      <div class="card"><h3>Prayer</h3><div class="kpi"><span>Requests</span><b id="rRequests">0</b></div><div class="actions"><button class="btn secondary small" onclick="savePdf('requests')">PDF</button><button class="btn ghost small" onclick="navTo('prayerrequests')">Prayer Requests</button></div></div>
       <div class="card"><h3>Giving</h3><div class="kpi"><span>Records</span><b id="rGiving">0</b></div><div class="kpi"><span>Total</span><b id="rGivingSum">0</b></div><div class="actions"><button class="btn secondary small" onclick="savePdf('giving')">PDF</button><button class="btn ghost small" onclick="printReport('giving')">Print</button></div></div>
     </div>
 
@@ -819,11 +741,8 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
       <p class="muted">Each button opens WhatsApp with the full report prepared as a message, ready to send or confirm.</p>
       <div class="actions">
         <button class="btn whatsapp" onclick="sendWhatsAppReport('summary')">Church Summary</button>
-        <button class="btn whatsapp" onclick="sendAllMembersWhatsApp()">Members Report</button>
-        <button class="btn whatsapp" onclick="sendWhatsAppReport('attendance')">Attendance</button>
         <button class="btn whatsapp" onclick="sendWhatsAppReport('usherattendance')">Ushers Record</button>
         <button class="btn whatsapp" onclick="sendAllRegistrationsWhatsApp()">Ceremony Registrations</button>
-        <button class="btn whatsapp" onclick="sendWhatsAppReport('prayer')">Prayer Report</button>
         <button class="btn whatsapp" onclick="sendWhatsAppReport('giving')">Giving Report</button>
       </div>
     </div>
@@ -850,7 +769,6 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
           <div><label>Pastor / Prophet</label><input id="setLeader" placeholder="Name"></div>
           <div><label>Morning Service</label><input id="setMorning" value="09:00–12:00"></div>
           <div><label>Evening / Afternoon Service</label><input id="setEvening" value="15:00–18:30"></div>
-          <div><label>Daily Prayer</label><input id="setPrayer" value="21:00–22:30"></div>
           <div><label>Currency</label><input id="setCurrency" value="ZMW"></div>
           <div><label>WhatsApp Office Number</label><input id="setWhatsapp" value="0979554970" inputmode="tel"><div class="hint">Local number 0979554970 is sent as +260 97 955 4970 on WhatsApp. Change it any time.</div></div>
           <div><label>Default Service Venue</label><input id="setVenue" placeholder="e.g. Main Auditorium, Lusaka"></div>
@@ -859,7 +777,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
           <div class="full actions"><button class="btn">Save Church Settings</button><button class="btn secondary" type="button" onclick="renderSettings()">Undo changes</button></div>
         </form>
       </div>
-      <div class="card"><h3>Prayer &amp; Certificate Defaults</h3>
+      <div class="card"><h3>Certificate Defaults</h3>
         <form class="form no-print" onsubmit="saveCertSettings(event)">
           <div><label>Certificate Prefix</label><input id="setCertPrefix" value="JCRGM"></div>
           <div><label>Issuing Authority Line</label><input id="setCertAuthority" placeholder="e.g. Office of the Prophet"></div>
@@ -871,14 +789,12 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
         <p class="muted" id="storageNote">All records are stored locally in this browser (localStorage) on this device.</p>
         <div class="actions"><button class="btn secondary" onclick="backupJSON()">Download Backup</button><button class="btn danger" onclick="clearAllData()">Clear All Records</button></div>
         <hr style="border:0;border-top:1px solid var(--border);margin:16px 0">
-        <h4>Daily Prayer</h4><p><b id="setPrayerEcho">21:00–22:30 every day</b></p>
-        <p class="muted">The guide changes automatically according to the day of the week.</p>
       </div>
     </div>
   </section>
 
   </div><!-- /wrap -->
-  <footer class="foot">JCRGM Church Management &amp; Prayer Center • Offline local application • Records stored on this device — keep regular backups.</footer>
+  <footer class="foot">JCRGM Church Management Center • Ushers Records &amp; Ceremonies sync via Supabase • Other records stay on this device — keep regular backups.</footer>
 </main>
 </div>
 
@@ -1004,8 +920,274 @@ function loadData(){
 }
 
 let db=loadData();
-function persist(){ try{ LS.setItem(KEY,JSON.stringify(db)); return true; }catch(e){ toast('Could not save to this browser ('+e.message+'). Data is kept for this session only.','err',7000); return false; } }
+function persist(){ let ok=false; try{ LS.setItem(KEY,JSON.stringify(db)); ok=true; }catch(e){ toast('Could not save to this browser ('+e.message+'). Data is kept for this session only.','err',7000); } if(ok&&!window.__mgmtApplyingRemote) mgmtScheduleSync(); return ok; }
 function save(){ persist(); renderAll(); }
+
+/* =========================================================================
+   JCRGM SUPABASE SYNC — Ushers Records + Ceremonies (record-by-record)
+   Project baked in; editing Admin is password-gated (hash only stored).
+   Collections synced: usherAttendance, events, ceremonyRegistrations.
+   ========================================================================= */
+const MGMT_SB_URL="https://yisfzexlbjeoeujvmmno.supabase.co";
+const MGMT_SB_KEY="sb_publishable_NJvHqe_S_6QxZwQD0THexg_-Za92muj";
+const MGMT_SB_TABLE="jcrgm_mgmt_records";
+const MGMT_SYNC_COLLECTIONS=["usherAttendance","events","ceremonyRegistrations"];
+const MGMT_ADMIN_HASH="a9f2381818523487";
+const MGMT_DEVICE_ID=(function(){ let id=""; try{ id=LS.getItem("jcrgm_mgmt_device_id")||""; if(!id){ id="dev-"+Date.now().toString(36)+Math.random().toString(36).slice(2,8); LS.setItem("jcrgm_mgmt_device_id",id); } }catch(e){ id="dev-local"; } return id; })();
+let mgmtSyncMeta=(function(){ try{ const x=JSON.parse(LS.getItem("jcrgm_mgmt_sync_meta_v1")||"null"); if(x&&x.hashes) return {hashes:x.hashes||{},tombstones:x.tombstones||{},last:Number(x.last||0)}; }catch(e){} return {hashes:{},tombstones:{},last:0}; })();
+let mgmtSyncInFlight=false, mgmtSyncPending=false, mgmtPushTimer=null, mgmtSyncTimer=null;
+window.__mgmtApplyingRemote=false;
+
+function mgmtHash(str){
+  let h1=0xdeadbeef,h2=0x41c6ce57;
+  for(let i=0,ch;i<str.length;i++){ ch=str.charCodeAt(i); h1=Math.imul(h1^ch,2654435761); h2=Math.imul(h2^ch,1597334677); }
+  h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);
+  h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
+  return (h2>>>0).toString(16).padStart(8,"0")+(h1>>>0).toString(16).padStart(8,"0");
+}
+function mgmtStable(v){
+  if(v===null||typeof v!=="object") return JSON.stringify(v);
+  if(Array.isArray(v)) return "["+v.map(mgmtStable).join(",")+"]";
+  return "{"+Object.keys(v).sort().filter(function(k){ return v[k]!==undefined&&typeof v[k]!=="function"; }).map(function(k){ return JSON.stringify(k)+":"+mgmtStable(v[k]); }).join(",")+"}";
+}
+function mgmtSaveMeta(){ try{ LS.setItem("jcrgm_mgmt_sync_meta_v1",JSON.stringify(mgmtSyncMeta)); }catch(e){} }
+function mgmtSetStatus(state,msg){
+  qa("[data-sync-status]").forEach(function(e){ e.textContent=msg; });
+  window.__mgmtSyncState=state; window.__mgmtSyncMessage=msg;
+}
+function mgmtHeaders(extra){
+  const h={"apikey":MGMT_SB_KEY,"Authorization":"Bearer "+MGMT_SB_KEY,"Content-Type":"application/json"};
+  if(extra) Object.keys(extra).forEach(function(k){ h[k]=extra[k]; });
+  return h;
+}
+function mgmtPersistLocal(){
+  window.__mgmtApplyingRemote=true;
+  try{ persist(); } finally { window.__mgmtApplyingRemote=false; }
+}
+function mgmtScheduleSync(){
+  if(window.__mgmtApplyingRemote) return;
+  if(mgmtSyncInFlight){ mgmtSyncPending=true; return; }
+  clearTimeout(mgmtPushTimer);
+  mgmtPushTimer=setTimeout(function(){ mgmtSyncNow(false); },700);
+}
+async function mgmtPullCollection(coll){
+  const url=MGMT_SB_URL+"/rest/v1/"+MGMT_SB_TABLE+"?collection=eq."+encodeURIComponent(coll)+"&select=collection,record_id,record,updated_at";
+  const res=await fetch(url,{method:"GET",headers:mgmtHeaders()});
+  if(!res.ok) throw new Error("HTTP "+res.status+" "+(await res.text()).slice(0,220));
+  return await res.json();
+}
+async function mgmtPushRecord(coll,record){
+  const url=MGMT_SB_URL+"/rest/v1/"+MGMT_SB_TABLE+"?on_conflict=collection,record_id";
+  const res=await fetch(url,{method:"POST",headers:mgmtHeaders({"Prefer":"resolution=merge-duplicates,return=minimal"}),
+    body:JSON.stringify({collection:coll,record_id:String(record.id),record:record,updated_at:new Date(Number(record._syncUpdatedAt||Date.now())).toISOString()})});
+  if(!res.ok) throw new Error("HTTP "+res.status+" "+(await res.text()).slice(0,220));
+}
+async function mgmtSyncNow(label){
+  if(mgmtSyncInFlight){ mgmtSyncPending=true; return; }
+  mgmtSyncInFlight=true;
+  mgmtSetStatus("syncing","Syncing…");
+  try{
+    let changed=false;
+    for(const coll of MGMT_SYNC_COLLECTIONS){
+      const rows=await mgmtPullCollection(coll);
+      if(!Array.isArray(db[coll])) db[coll]=[];
+      rows.forEach(function(row){
+        const rec=row.record||{}; const id=String(row.record_id||rec.id||""); if(!id) return;
+        const key=coll+":"+id; const rh=mgmtHash(mgmtStable(rec));
+        if(rec._deleted){
+          const idx=db[coll].findIndex(function(x){ return String(x.id)===id; });
+          if(idx>=0&&Number(rec._syncUpdatedAt||0)>=Number(db[coll][idx]._syncUpdatedAt||0)){ db[coll].splice(idx,1); changed=true; }
+          mgmtSyncMeta.hashes[key]=rh; mgmtSyncMeta.tombstones[key]=rh; return;
+        }
+        const idx=db[coll].findIndex(function(x){ return String(x.id)===id; });
+        if(idx<0){ db[coll].push(rec); changed=true; mgmtSyncMeta.hashes[key]=rh; }
+        else{
+          const lh=mgmtHash(mgmtStable(db[coll][idx]));
+          if(lh!==rh){
+            if(Number(rec._syncUpdatedAt||0)>=Number(db[coll][idx]._syncUpdatedAt||0)){ db[coll][idx]=rec; changed=true; mgmtSyncMeta.hashes[key]=rh; }
+          } else mgmtSyncMeta.hashes[key]=rh;
+        }
+      });
+    }
+    if(changed){
+      db.usherAttendance.sort(function(a,b){ return String(b.date||"").localeCompare(String(a.date||"")); });
+      db.events.sort(byDate);
+      mgmtPersistLocal(); renderAll();
+    }
+    let pushed=0, localChanged=false;
+    for(const coll of MGMT_SYNC_COLLECTIONS){
+      const currentIds={};
+      for(const rec of db[coll]){
+        if(!rec.id){ rec.id=uid(); localChanged=true; }
+        currentIds[String(rec.id)]=true;
+        const key=coll+":"+String(rec.id);
+        if(mgmtSyncMeta.hashes[key]!==mgmtHash(mgmtStable(rec))){
+          rec._deviceId=MGMT_DEVICE_ID; rec._syncUpdatedAt=Date.now();
+          await mgmtPushRecord(coll,rec);
+          mgmtSyncMeta.hashes[key]=mgmtHash(mgmtStable(rec));
+          delete mgmtSyncMeta.tombstones[key];
+          pushed++; localChanged=true;
+        }
+      }
+      const keys=Object.keys(mgmtSyncMeta.hashes).filter(function(k){ return k.indexOf(coll+":")===0; });
+      for(const key of keys){
+        const id=key.slice(coll.length+1);
+        if(!currentIds[id]&&!mgmtSyncMeta.tombstones[key]){
+          const tomb={id:id,_deleted:true,_deviceId:MGMT_DEVICE_ID,_syncUpdatedAt:Date.now()};
+          await mgmtPushRecord(coll,tomb);
+          const th=mgmtHash(mgmtStable(tomb));
+          mgmtSyncMeta.hashes[key]=th; mgmtSyncMeta.tombstones[key]=th; pushed++;
+        }
+      }
+    }
+    if(localChanged) mgmtPersistLocal();
+    mgmtSyncMeta.last=Date.now(); mgmtSaveMeta();
+    mgmtSetStatus("ok","Synced ✓ "+new Date().toLocaleTimeString("en-GB")+" • Ushers & Ceremonies up to date on all devices.");
+    if(label) toast((typeof label==="string"?label:"Records")+" synced to all devices via Supabase.","ok",4200);
+    if(current&&current.page==="admin") renderAdminConsolidated();
+  }catch(err){
+    console.warn("Mgmt sync failed:",err);
+    const missing=/404|PGRST205|jcrgm_mgmt_records/.test(String(err&&err.message||err));
+    mgmtSetStatus("err",missing?"Local only — sync table not created yet. Run the supplied SQL once in Supabase, then tap Sync Now. Records are safe on this device.":"Sync paused (offline?) — records are safe on this device and will sync when connection returns.");
+    if(label) toast(missing?"Saved on this device. Supabase sync table still needs to be created (run the SQL once).":"Saved on this device — will sync when connection returns.","err",5600);
+  }finally{
+    mgmtSyncInFlight=false;
+    if(mgmtSyncPending){ mgmtSyncPending=false; setTimeout(function(){ mgmtSyncNow(false); },150); }
+  }
+}
+function startMgmtSync(){
+  mgmtSetStatus("syncing","Syncing…");
+  mgmtSyncNow(false);
+  if(mgmtSyncTimer) clearInterval(mgmtSyncTimer);
+  mgmtSyncTimer=setInterval(function(){ if(!document.hidden) mgmtSyncNow(false); },20000);
+  window.addEventListener("online",function(){ mgmtSyncNow(false); });
+  document.addEventListener("visibilitychange",function(){ if(!document.hidden) mgmtSyncNow(false); });
+}
+
+/* ---------- Admin gate (same admin password; hash only, never displayed) ---------- */
+function isMgmtAdmin(){
+  if(window.__mgmtAdminUnlocked) return true;
+  try{ return sessionStorage.getItem("jcrgm_mgmt_admin")==="1"; }catch(e){ return false; }
+}
+function openAdminGate(){
+  if(isMgmtAdmin()){ navTo("admin"); renderAdminConsolidated(); return; }
+  modal('<h3 style="padding-right:36px">🔐 Admin</h3>'+
+    '<p class="muted">Enter password to open the consolidated church record.</p>'+
+    '<form class="form" onsubmit="submitMgmtAdmin(event)">'+
+    '<div class="full"><label for="mgmtAdminPassword">Password</label><input id="mgmtAdminPassword" type="password" placeholder="Enter password" autocomplete="off"></div>'+
+    '<div class="full actions" style="margin-top:10px"><button class="btn gold" type="submit">Open Admin</button>'+
+    '<button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>',true);
+}
+function submitMgmtAdmin(e){
+  if(e&&e.preventDefault) e.preventDefault();
+  const input=el("mgmtAdminPassword"); const val=((input&&input.value)||"").trim();
+  if(mgmtHash(val)===MGMT_ADMIN_HASH){
+    window.__mgmtAdminUnlocked=true;
+    try{ sessionStorage.setItem("jcrgm_mgmt_admin","1"); }catch(err){}
+    closeModal(); navTo("admin"); renderAdminConsolidated();
+    toast("Admin opened — consolidated church record.","ok",3600);
+  }else{
+    toast("Incorrect password.","err",3600);
+    if(input){ input.focus(); input.select(); }
+  }
+}
+function lockMgmtAdmin(){
+  window.__mgmtAdminUnlocked=false;
+  try{ sessionStorage.removeItem("jcrgm_mgmt_admin"); }catch(e){}
+  navTo("usherattendance");
+  toast("Admin locked.","ok",2800);
+}
+
+/* ---------- Admin consolidated record: one organised record per meeting ---------- */
+function adminUniquePush(arr,v){ v=String(v||"").trim(); if(v&&arr.indexOf(v)<0) arr.push(v); }
+function adminGroups(){
+  const from=((el("adminFrom")||{}).value||""), to=((el("adminTo")||{}).value||""),
+        svc=((el("adminService")||{}).value||""), term=(((el("adminSearch")||{}).value||"")+"").toLowerCase().trim();
+  const map={}, order=[];
+  db.usherAttendance.slice().sort(function(a,b){
+    return String(b.date||"").localeCompare(String(a.date||""))||String(b.createdAt||"").localeCompare(String(a.createdAt||""));
+  }).forEach(function(x){
+    if(from&&String(x.date||"")<from) return;
+    if(to&&String(x.date||"")>to) return;
+    if(svc&&x.service!==svc) return;
+    if(term){
+      const hay=[x.headUsher,x.venue,x.recordedBy,x.service,x.officiant,x.recordRef,x.countedBy].join(" ").toLowerCase();
+      if(hay.indexOf(term)<0) return;
+    }
+    const key=String(x.date||"")+"||"+String(x.service||"Service").trim().toLowerCase();
+    if(!map[key]){
+      map[key]={key:key,date:x.date||"",service:x.service||"Service",records:[],sums:{},venues:[],times:[],officiants:[],heads:[],people:[],statuses:{},refs:{},notes:[]};
+      order.push(map[key]);
+    }
+    const g=map[key]; g.records.push(x);
+    ["men","women","youth","children","visitors","firstTimers","total","decisions","counselling","online","latecomers","teamSize","teamAbsent","offeringGeneral","offeringTithe","offeringThanksgiving","offeringBuilding","offeringWelfare","offeringSpecial","offeringTotal"].forEach(function(f){ g.sums[f]=num(g.sums[f])+num(x[f]); });
+    adminUniquePush(g.venues,x.venue); adminUniquePush(g.times,x.time); adminUniquePush(g.officiants,x.officiant);
+    adminUniquePush(g.heads,x.headUsher); adminUniquePush(g.people,x.recordedBy); adminUniquePush(g.people,x.countedBy);
+    const st=x.status||"Final"; g.statuses[st]=num(g.statuses[st])+1;
+    if(x.recordRef) g.refs[x.recordRef]=num(g.refs[x.recordRef])+1;
+    if(x.notes) g.notes.push((x.recordRef||"Record")+": "+x.notes);
+    if(x.incidents) g.notes.push((x.recordRef||"Record")+" incident: "+x.incidents);
+  });
+  return order;
+}
+function renderAdminConsolidated(){
+  const box=el("adminConsolidated"); if(!box) return;
+  if(!isMgmtAdmin()){ box.innerHTML='<div class="empty">Admin only — enter password to view the consolidated church record.</div>'; return; }
+  const groups=adminGroups();
+  let submissions=0,totalAtt=0,totalDec=0,totalOff=0;
+  groups.forEach(function(g){ submissions+=g.records.length; totalAtt+=num(g.sums.total); totalDec+=num(g.sums.decisions); totalOff+=num(g.sums.offeringTotal); });
+  const set=function(id,v){ const e=el(id); if(e) e.textContent=v; };
+  set("adminMeetings",groups.length); set("adminSubmissions",submissions); set("adminAttendance",totalAtt.toLocaleString());
+  set("adminDecisions",totalDec.toLocaleString()); set("adminOffering",money(totalOff));
+  if(!groups.length){ box.innerHTML='<div class="empty">No ushers records match this filter yet. When ushers save a record on any gadget, it will appear here consolidated per meeting.</div>'; return; }
+  const attLabels={men:"Men",women:"Women",youth:"Youth",children:"Children",visitors:"Visitors",firstTimers:"First-timers",total:"TOTAL",decisions:"Decisions",counselling:"Counselling",online:"Online",latecomers:"Latecomers"};
+  const offLabels={offeringGeneral:"General",offeringTithe:"Tithes",offeringThanksgiving:"Thanksgiving",offeringBuilding:"Building",offeringWelfare:"Welfare",offeringSpecial:"Special / Vows",offeringTotal:"TOTAL OFFERING"};
+  box.innerHTML=groups.map(function(g){
+    const dupRefs=Object.keys(g.refs).filter(function(r){ return g.refs[r]>1; });
+    const attRows=Object.keys(attLabels).map(function(f){
+      return '<tr><td>'+attLabels[f]+'</td><td class="num"><b>'+num(g.sums[f]).toLocaleString()+'</b></td></tr>';
+    }).join("");
+    const offRows=Object.keys(offLabels).map(function(f){
+      return '<tr><td>'+offLabels[f]+'</td><td class="num">'+money(g.sums[f])+'</td></tr>';
+    }).join("");
+    const statusText=Object.keys(g.statuses).map(function(s){ return s+": "+g.statuses[s]; }).join(" • ");
+    const subRows=g.records.map(function(x){
+      return '<tr><td><b>'+esc(x.recordRef||"—")+'</b></td><td>'+esc(x.recordedBy||"—")+'</td><td>'+esc(x.headUsher||"—")+'</td>'+
+        '<td>'+esc(x.countedBy||"—")+'</td><td><span class="status '+String(x.status||"Final").toLowerCase()+'">'+esc(x.status||"Final")+'</span></td>'+
+        '<td class="num">'+num(x.total).toLocaleString()+'</td><td class="num">'+money(x.offeringTotal)+'</td>'+
+        '<td>'+esc(x._deviceId?("…"+String(x._deviceId).slice(-6)):"—")+'</td></tr>';
+    }).join("");
+    return '<div class="card admin-meeting"><div class="toolbar"><div>'+
+      '<h3 style="margin:0">'+fmtDate(g.date)+' — '+esc(g.service)+'</h3>'+
+      '<div class="sub muted">'+(g.times.length?esc(g.times.join(", "))+" • ":"")+(g.venues.length?esc(g.venues.join(", ")):"")+
+      (g.officiants.length?'<br>Minister: '+esc(g.officiants.join(", ")):"")+
+      (g.heads.length?'<br>Head usher: '+esc(g.heads.join(", ")):"")+'</div></div>'+
+      '<div><span class="badge blue">'+g.records.length+' submission'+(g.records.length===1?"":"s")+'</span> <span class="badge">'+esc(statusText)+'</span></div></div>'+
+      (dupRefs.length?'<div class="admin-note">⚠ Possible duplicate: reference '+esc(dupRefs.join(", "))+' appears more than once for this meeting. Check the submissions below before using the totals.</div>':"")+
+      '<div class="grid two"><div><h4>Consolidated Attendance</h4><div class="tablewrap compact"><table style="min-width:0"><tbody>'+attRows+'</tbody></table></div></div>'+
+      '<div><h4>Consolidated Offering</h4><div class="tablewrap compact"><table style="min-width:0"><tbody>'+offRows+'</tbody></table></div></div></div>'+
+      '<h4 style="margin:16px 0 8px">Submissions from all gadgets (counted once each)</h4>'+
+      '<div class="tablewrap"><table><thead><tr><th>Ref</th><th>Recorded By</th><th>Head Usher</th><th>Counted By</th><th>Status</th><th class="num">Total</th><th class="num">Offering</th><th>Device</th></tr></thead><tbody>'+subRows+'</tbody></table></div>'+
+      (g.notes.length?'<h4 style="margin:16px 0 8px">Notes & Incidents</h4>'+g.notes.map(function(n){ return '<div class="admin-note">'+esc(n)+'</div>'; }).join(""):"")+
+      '</div>';
+  }).join("");
+}
+function exportAdminCSV(){
+  if(!isMgmtAdmin()){ openAdminGate(); return; }
+  const groups=adminGroups();
+  if(!groups.length){ toast("No consolidated meetings to export.","err"); return; }
+  const rows=[["Date","Service","Submissions","Men","Women","Youth","Children","Visitors","First-timers","Total Attendance","Decisions","Counselling","Online","Latecomers","General Offering","Tithes","Thanksgiving","Building","Welfare","Special","Total Offering","Head Ushers","Recorded / Counted By"]];
+  groups.forEach(function(g){
+    rows.push([g.date,g.service,g.records.length,g.sums.men,g.sums.women,g.sums.youth,g.sums.children,g.sums.visitors,g.sums.firstTimers,g.sums.total,g.sums.decisions,g.sums.counselling,g.sums.online,g.sums.latecomers,g.sums.offeringGeneral,g.sums.offeringTithe,g.sums.offeringThanksgiving,g.sums.offeringBuilding,g.sums.offeringWelfare,g.sums.offeringSpecial,g.sums.offeringTotal,g.heads.join("; "),g.people.join("; ")]);
+  });
+  const csv=rows.map(function(r){ return r.map(function(v){ return '"'+String(v===undefined||v===null?"":v).replace(/"/g,'""')+'"'; }).join(","); }).join("\n");
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  a.download="JCRGM-Consolidated-Church-Record-"+today()+".csv";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); },4000);
+}
+
 
 /* ---------- tiny helpers ---------- */
 function el(id){ return document.getElementById(id); }
@@ -1082,7 +1264,6 @@ function churchFooter(){
   const s=db.settings;
   let out='\n\n—\n'+(s.short||'JCRGM')+' • '+(s.church||'');
   if(s.address) out+='\n'+s.address;
-  out+='\nDaily prayer '+(s.prayer||'21:00–22:30');
   if(s.waFooter) out+='\n\n'+s.waFooter;
   out+='\n\n“All things are possible with God.” — Matthew 19:26';
   return out;
@@ -1115,11 +1296,12 @@ document.addEventListener('keydown',function(e){
 });
 
 /* ---------- router: every tab goes exactly where it is meant to ---------- */
-const PAGE_TITLES={dashboard:'Dashboard',prayer:'Daily Prayer',members:'Members',visitors:'Visitors',attendance:'Attendance',usherattendance:'Ushers Record',followup:'Follow-up',families:'Families',events:'Ceremonies & Events',departments:'Departments',giving:'Giving',prayerrequests:'Prayer Requests',pastoral:'Pastoral Notes',reports:'Reports & PDF',settings:'Data & Settings'};
+const PAGE_TITLES={dashboard:'Dashboard',usherattendance:'Ushers Record',admin:'Admin — Consolidated Church Record',events:'Ceremonies & Events',departments:'Departments',giving:'Giving',prayerrequests:'Prayer Requests',pastoral:'Pastoral Notes',reports:'Reports & PDF',settings:'Data & Settings'};
 const EVENTS_SECTIONS={calendar:'Ceremony Calendar',forms:'Ceremony Request Form',registry:'Ceremony Register',certificates:'Certificates'};
 let current={page:'dashboard',section:'calendar'};
 
 function navTo(page,section,extra){
+  if(page==='admin'&&!isMgmtAdmin()){ openAdminGate(); return; }
   if(!el(page)){ page='dashboard'; }
   qa('.page').forEach(function(p){ p.classList.toggle('active',p.id===page); });
   qa('#mainNav button').forEach(function(b){
@@ -1745,8 +1927,10 @@ function submitUsherAttendance(e,id){
   const arr=db.usherAttendance;
   if(id){ const rec=arr.find(function(x){ return x.id===id; }); if(!rec) return; Object.assign(rec,o); rec.updatedAt=nowStamp(); }
   else { o.id=uid(); o.createdAt=nowStamp(); arr.unshift(o); }
+  o._deviceId=MGMT_DEVICE_ID;
   persist(); renderAll(); closeModal();
-  toast('Ushers record saved — reference '+o.recordRef+'.','ok',4200);
+  toast('Ushers record saved — reference '+o.recordRef+'. Syncing…','ok',4200);
+  mgmtSyncNow('Ushers record');
 }
 function duplicateUsherRecord(id){
   const src=db.usherAttendance.find(function(x){ return x.id===id; }); if(!src) return;
@@ -2223,7 +2407,8 @@ function submitCeremony(e,id){
   else { o.id=uid(); o.createdAt=nowStamp(); db.events.unshift(o); }
   db.events.sort(byDate);
   persist(); renderAll(); closeModal();
-  toast('Ceremony saved to the calendar: '+o.event,'ok',4200);
+  toast('Ceremony saved to the calendar: '+o.event+'. Syncing…','ok',4200);
+  mgmtSyncNow('Ceremony');
   if(!id&&o.registrationRequired!=='No') startRequestForEvent(db.events.find(function(x){ return x.event===o.event&&x.date===o.date; }).id,'ask');
 }
 function delEvent(id){
@@ -2399,6 +2584,7 @@ function saveCeremonyForm(e){
     toast('Saved to the ceremony register — reference '+o.referenceNo+'.','ok',4500);
   }
   persist(); renderAll();
+  mgmtSyncNow('Ceremony registration');
   el('formDocStatus').textContent='Saved '+nowStamp();
   const ev=db.events.find(function(x){ return x.id===o.ceremonyId; });
   if(ev&&confirm('Registration saved. Send the completed form to '+waPretty(db.settings.whatsapp)+' for '+(o.purpose.toLowerCase())+'?')) sendCeremonyFormWhatsApp();
@@ -3234,7 +3420,7 @@ function pageReportKind(pg){
 }
 function printCurrentPage(){ printReport(pageReportKind()); }
 function saveCurrentPagePdf(){ savePdf(pageReportKind()); }
-function quickPrint(){ printReport(pageReportKind()); }
+function quickPrint(){ if(current&&current.page==='admin'){ window.print(); return; } printReport(pageReportKind()); }
 
 /* ---------- WhatsApp reports ---------- */
 function sendWhatsAppReport(type,id){
@@ -3349,8 +3535,24 @@ function renderDashboard(){
   set('upcomingEvents',db.events.filter(function(x){ return (x.date||'')>=today(); }).length);
   const last=db.usherAttendance.slice().sort(function(a,b){ return String(b.date||'').localeCompare(String(a.date||'')); })[0];
   set('lastServiceTotal',last?(num(last.total)+' ('+fmtDate(last.date)+')'):'—');
-  const totalRec=COLLECTIONS.reduce(function(s,k){ return s+(db[k]||[]).length; },0);
-  set('sideRecordCount',totalRec+' record'+(totalRec===1?'':'s')+' on this device');
+  const meetingMap={}; db.usherAttendance.forEach(function(x){ meetingMap[String(x.date||'')+'||'+String(x.service||'').toLowerCase()]=true; });
+  set('statMeetings',Object.keys(meetingMap).length);
+  set('consolidatedMeetings',Object.keys(meetingMap).length);
+  set('usherRecordsCount',db.usherAttendance.length);
+  set('statOfferingTotal',money(db.usherAttendance.reduce(function(s,x){ return s+num(x.offeringTotal); },0)));
+  const snap=el('dashboardUsherSnapshot');
+  if(snap){
+    if(last){
+      const same=db.usherAttendance.filter(function(x){ return x.date===last.date&&x.service===last.service; });
+      const tot=same.reduce(function(s,x){ return s+num(x.total); },0), off=same.reduce(function(s,x){ return s+num(x.offeringTotal); },0);
+      snap.innerHTML='<div class="kpi"><span>'+fmtDate(last.date)+' — '+esc(last.service||'Service')+'</span><b>'+tot.toLocaleString()+'</b></div>'+
+        '<div class="kpi"><span>Submissions from gadgets</span><b>'+same.length+'</b></div>'+
+        '<div class="kpi"><span>Consolidated offering</span><b>'+money(off)+'</b></div>'+
+        '<div class="actions" style="margin-top:10px"><button class="btn small gold" onclick="openAdminGate()">🔐 Admin Consolidated</button><button class="btn small secondary" onclick="navTo(\'usherattendance\')">Ushers Record</button></div>';
+    } else snap.innerHTML='<p class="muted">No ushers record captured yet.</p>';
+  }
+  const totalRec=db.usherAttendance.length+db.events.length+db.ceremonyRegistrations.length;
+  set('sideRecordCount',totalRec+' synced record'+(totalRec===1?'':'s'));
 }
 function renderGivingStats(){
   const set=function(id,v){ const e=el(id); if(e) e.textContent=v; };
@@ -3367,6 +3569,8 @@ function renderReports(){
   set('rAttendance',db.attendance.length);
   set('rPresent',db.attendance.filter(function(x){ return x.present==='Yes'; }).length);
   set('rUshers',db.usherAttendance.length);
+  const rMeetings={}; db.usherAttendance.forEach(function(x){ rMeetings[String(x.date||'')+'||'+String(x.service||'').toLowerCase()]=true; });
+  set('rMeetings',Object.keys(rMeetings).length); set('rSubmissions',db.usherAttendance.length);
   const last=db.usherAttendance.slice().sort(function(a,b){ return String(b.date||'').localeCompare(String(a.date||'')); })[0];
   set('rUsherLast',last?num(last.total):0);
   set('rCeremonies',db.events.length);
@@ -3388,7 +3592,7 @@ function renderSettings(){
   if(note){
     const bytes=(function(){ try{ return (LS.getItem(KEY)||'').length; }catch(e){ return 0; } })();
     const total=COLLECTIONS.reduce(function(a,k){ return a+(db[k]||[]).length; },0);
-    note.textContent=(LS===window.localStorage?'Records are saved in this browser (localStorage) on this device.':'This browser blocks local storage — records will only last for this session. Export a backup before closing.')+'  Currently '+total+' record(s), about '+Math.max(1,Math.round(bytes/1024))+' KB.';
+    note.textContent='Ushers Records and Ceremonies sync via Supabase to all devices (local cache on this device too). Other records are stored in this browser. Currently '+total+' record(s), about '+Math.max(1,Math.round(bytes/1024))+' KB.';
   }
   const wl=el('waNumberLabel'); if(wl) wl.textContent=waPretty(s.whatsapp);
   const wi=el('waNumberInline'); if(wi) wi.textContent=waPretty(s.whatsapp);
@@ -3470,12 +3674,12 @@ function clearAllData(){
 
 /* ---------- render everything + boot ---------- */
 function renderAll(){
-  renderDashboard(); renderPrayer(); updatePrayerClock();
-  renderMembers(); renderVisitors(); renderAttendance();
+  renderDashboard();
   renderUsherAttendance();
-  renderFollowup(); renderFamilies(); renderDepartments(); renderGiving(); renderRequests(); renderPastoral();
+  renderDepartments(); renderGiving(); renderRequests(); renderPastoral();
   renderEvents(); renderCeremonyRegistrations(); renderCertificates();
   renderReports();
+  if(current&&current.page==='admin') renderAdminConsolidated();
 }
 let bootError=null;
 function injectGenericExports(){
@@ -3515,7 +3719,7 @@ function boot(){
     });
     renderAll(); injectGenericExports();
     renderSettings();
-    resetPrayer();
+    startMgmtSync();
     updateClock();
     setInterval(updateClock,1000);
     if(location.hash) routeFromHash(); else navTo('dashboard');
@@ -3543,5 +3747,5 @@ window.addEventListener('error',function(e){ if(e&&e.message&&String(document.lo
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a587540a890db578',t:'MTc5NDMzNzUyMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a587540a890db578',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
