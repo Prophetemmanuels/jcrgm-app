@@ -931,8 +931,8 @@ details.sync-setup code{ background:#eef2ff; padding:1px 5px; border-radius:5px;
         </div>
         <div>
             <label for="editPasswordInput">Edit Password</label>
-            <input id="editPasswordInput" type="password" placeholder="Enter password to edit" autocomplete="off" onkeydown="if(event.key==='Enter'){unlockEditing();}">
-            <div class="sync-small">Default password: <b>19922</b> (change it in Cloud Setup below).</div>
+            <input id="editPasswordInput" type="password" placeholder="Enter password" autocomplete="off" onkeydown="if(event.key==='Enter'){unlockEditing();}">
+            <div class="sync-small">Enter password to unlock editing.</div>
         </div>
         <div style="flex:0 0 auto; min-width:120px;">
             <label>&nbsp;</label>
@@ -975,7 +975,7 @@ details.sync-setup code{ background:#eef2ff; padding:1px 5px; border-radius:5px;
             • <b>anon public</b> key (the long key starting with <code>eyJ...</code>)<br>
             3. Paste both below on <b>every device</b>, enter the <b>same Sync Code</b> (e.g. <code>JCRGM-CHURCH</code>), click <b>Save Cloud Settings</b>.<br>
             4. From then on, every change syncs automatically. You can also change the edit password here (admin only).<br><br>
-            <b>Security note:</b> The anon key is public by design — keep the URL + key private (only share with church leaders). The app password (<code>19922</code> by default) protects editing. Firebase URL below is kept only for older setups — leave it blank if you use Supabase.
+            <b>Security note:</b> The anon key is public by design — keep the URL + key private (only share with church leaders). The app edit password protects editing. Firebase URL below is kept only for older setups — leave it blank if you use Supabase.
         </div>
         <label for="supabaseUrl">Supabase Project URL</label>
         <input id="supabaseUrl" type="text" placeholder="https://your-project.supabase.co" autocomplete="off">
@@ -986,7 +986,7 @@ details.sync-setup code{ background:#eef2ff; padding:1px 5px; border-radius:5px;
         <label for="cloudDbUrl">Firebase Database URL (optional — only if you used Firebase before)</label>
         <input id="cloudDbUrl" type="text" placeholder="https://your-project-default-rtdb.firebaseio.com" autocomplete="off">
         <label for="newPasswordInput">New Edit Password (leave blank to keep current)</label>
-        <input id="newPasswordInput" type="password" placeholder="e.g. 19922" autocomplete="off">
+        <input id="newPasswordInput" type="password" placeholder="Enter new password" autocomplete="off">
         <div class="actions">
             <button class="primary" onclick="saveCloudSettings()">Save Cloud Settings</button>
             <button class="light" onclick="testCloudConnection()">Test Connection</button>
@@ -1248,12 +1248,25 @@ let schedule = [];
 
 /* =========================================================
    CHURCH SYNC + PASSWORD LOCK
-   - Edit password default: 19922 (changeable in Cloud Setup)
+   - Edit password: required to unlock editing (hash only, never shown)
    - Sync Code: all devices with same code share one schedule
    - Cloud: Supabase REST (primary) + Firebase REST (legacy fallback)
    - Fallback: localStorage + Export/Import file (works offline)
 ========================================================= */
-const DEFAULT_EDIT_PASSWORD = "19922";
+// Only a hash of the edit password is stored here — the password itself
+// never appears in this file, on screen, or in any message.
+const DEFAULT_EDIT_PASSWORD_HASH = "a9f2381818523487";
+function hashPassword(str){
+    let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+    for(let i = 0, ch; i < str.length; i++){
+        ch = str.charCodeAt(i);
+        h1 = Math.imul(h1 ^ ch, 2654435761);
+        h2 = Math.imul(h2 ^ ch, 1597334677);
+    }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return (h2 >>> 0).toString(16).padStart(8, "0") + (h1 >>> 0).toString(16).padStart(8, "0");
+}
 // JCRGM Supabase project — baked in so every device syncs with zero setup.
 // Project ref: yisfzexlbjeoeujvmmno (publishable/anon key is safe to embed;
 // editing is still protected by the edit password, and RLS is on).
@@ -1261,7 +1274,7 @@ const DEFAULT_SUPABASE_URL = "https://yisfzexlbjeoeujvmmno.supabase.co";
 const DEFAULT_SUPABASE_KEY = "sb_publishable_NJvHqe_S_6QxZwQD0THexg_-Za92muj";
 const DEFAULT_SUPABASE_TABLE = "jcrgm_sync";
 let editUnlocked = false;
-let syncConfig = { code: "JCRGM-CHURCH", dbUrl: "", supabaseUrl: DEFAULT_SUPABASE_URL, supabaseKey: DEFAULT_SUPABASE_KEY, supabaseTable: DEFAULT_SUPABASE_TABLE, password: DEFAULT_EDIT_PASSWORD, cloudDisabled: false };
+let syncConfig = { code: "JCRGM-CHURCH", dbUrl: "", supabaseUrl: DEFAULT_SUPABASE_URL, supabaseKey: DEFAULT_SUPABASE_KEY, supabaseTable: DEFAULT_SUPABASE_TABLE, passwordHash: DEFAULT_EDIT_PASSWORD_HASH, cloudDisabled: false };
 let lastUpdatedAt = 0;
 let deviceId = "";
 let syncTimer = null;
@@ -1332,7 +1345,7 @@ function loadSyncConfig(){
                 supabaseUrl: (c.supabaseUrl || "").trim(),
                 supabaseKey: (c.supabaseKey || "").trim(),
                 supabaseTable: (c.supabaseTable || DEFAULT_SUPABASE_TABLE).trim() || DEFAULT_SUPABASE_TABLE,
-                password: c.password || DEFAULT_EDIT_PASSWORD,
+                passwordHash: c.passwordHash || (c.password ? hashPassword(c.password) : DEFAULT_EDIT_PASSWORD_HASH),
                 cloudDisabled: !!c.cloudDisabled
             };
             // Upgrade devices saved by an older version (no cloud yet):
@@ -1391,7 +1404,7 @@ function saveCloudSettings(){
     syncConfig.supabaseKey = (sbKeyEl.value || "").trim();
     syncConfig.supabaseTable = ((sbTableEl.value || "").trim() || "jcrgm_sync").replace(/[^a-zA-Z0-9_]/g, "") || "jcrgm_sync";
     const newPw = (pwEl.value || "").trim();
-    if(newPw) syncConfig.password = newPw;
+    if(newPw) syncConfig.passwordHash = hashPassword(newPw);
     persistSyncConfig();
     updateSyncStatus();
     const hasCloud = !!(syncConfig.supabaseUrl && syncConfig.supabaseKey) || !!syncConfig.dbUrl;
@@ -1684,13 +1697,13 @@ function isUnlocked(){
 }
 function requireEdit(silent){
     if(isUnlocked()) return true;
-    if(!silent) alert("View-only mode.\n\nEnter the edit password (default 19922) at the top to make changes.");
+    if(!silent) alert("View-only mode.\n\nEnter the edit password at the top to make changes.");
     return false;
 }
 function unlockEditing(){
     const input = document.getElementById("editPasswordInput");
     const val = (input.value || "").trim();
-    if(val === syncConfig.password){
+    if(hashPassword(val) === syncConfig.passwordHash){
         editUnlocked = true;
         try{ sessionStorage.setItem("jcrgm_unlocked", "1"); }catch(e){}
         input.value = "";
@@ -3763,5 +3776,5 @@ function init(){
 init();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a556d7432ff4b572',t:'MTc5MzgyOTA5NA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a556d7432ff4b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a556d7432ff4b572',t:'MTc5MzgyOTA5NA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a556d7432ff4b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a586e6abf80bb56c',t:'MTc5NDMzMzA0Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a586e6abf80bb56c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
