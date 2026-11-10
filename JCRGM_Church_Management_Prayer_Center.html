@@ -291,6 +291,22 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
   100%{box-shadow:0 0 0 0 rgba(212,175,55,0),0 10px 24px rgba(212,175,55,.35)!important}
 }
 @keyframes prayerBlink{50%{opacity:.45}}
+/* ===== Members photo gallery ===== */
+.member-upload-btn{font-size:15px!important;padding:14px 20px!important;border-radius:13px!important}
+.members-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px;margin-top:18px;align-items:start}
+.member-card{text-align:center;background:#fff;border:1px solid var(--border);border-radius:15px;padding:14px 10px 12px;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.member-photo{width:150px;height:150px;max-width:100%;object-fit:cover;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,.2);transition:transform .3s,box-shadow .3s;background:#eef2f8}
+.member-card:hover .member-photo{transform:scale(1.04);box-shadow:0 5px 15px rgba(0,0,0,.28)}
+.member-initials{display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:42px;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--primary),#1f4d8f)}
+.member-name{margin-top:8px;font-weight:800;color:var(--primary);font-size:14px;line-height:1.3;word-break:break-word}
+.member-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.member-actions{display:flex;gap:6px;justify-content:center;margin-top:8px}
+.member-preview{display:block;margin:0 auto 10px;width:170px;height:170px;object-fit:cover;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.22);background:#eef2f8}
+@media(max-width:600px){
+  .members-gallery{grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:12px}
+  .member-photo{width:100px;height:100px}
+  .member-initials{font-size:30px}
+}
 .prayer-close{position:absolute;top:14px;right:14px;border:0;background:rgba(255,255,255,.15);color:#fff;border-radius:50%;width:34px;height:34px;font-size:18px;z-index:2}
 
 /* ===== responsive ===== */
@@ -372,6 +388,9 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
 
     <div class="nav-sec">Services</div>
     <button type="button" data-page="usherattendance"><span class="ic">👔</span> Ushers Record</button>
+
+    <div class="nav-sec">People</div>
+    <button type="button" data-page="members"><span class="ic">👥</span> Members</button>
 
     <div class="nav-sec">Ceremonies</div>
     <button type="button" data-page="events" data-section="calendar" id="eventsNavButton" aria-expanded="false"><span class="ic">📅</span> Ceremonies <span class="ic caret">⌄</span></button>
@@ -496,6 +515,29 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
           <tfoot id="usherAttendanceFoot"></tfoot>
         </table>
       </div>
+    </div>
+  </section>
+
+  <!-- ================= MEMBERS PHOTO GALLERY ================= -->
+  <section id="members" class="page" aria-labelledby="membersH">
+    <h2 id="membersH" style="position:absolute;left:-9999px">Church Members</h2>
+    <div class="card">
+      <div class="toolbar">
+        <div><h3 style="margin:0">👥 Church Members — Photo Gallery</h3>
+          <div class="sub muted">Become a member? There is only <b>one button</b> to press — enter your <b>full name</b> and upload your <b>photo</b>. It is saved in the church database and shows on <b>all phones</b>.</div></div>
+        <div class="actions no-print">
+          <button class="btn join prayer-cta member-upload-btn" type="button" onclick="openMemberUpload()">📸 Become a Member — Upload My Photo &amp; Name <span class="prayer-press">PRESS</span></button>
+        </div>
+      </div>
+      <div class="alert blue mgmt-sync-box no-print"><b>☁ Supabase sync:</b> <span data-sync-status>Starting sync…</span><br><span class="muted">Every new upload creates a new member in the gallery, aligned A–Z by full name, on every phone automatically.<br>✎ / 🗑 <b>Edit &amp; delete:</b> only Admin, or the gadget that uploaded the photo, can change or remove an entry — everyone else just presses the one button and joins.</span></div>
+      <div class="form no-print" style="margin-bottom:6px">
+        <div><label>Search member name</label><input id="memberSearch" placeholder="Search member name..." oninput="renderMembersGallery()"></div>
+      </div>
+      <div class="admin-stat-grid">
+        <div class="admin-mini"><span>Members</span><b id="membersCount">0</b></div>
+        <div class="admin-mini"><span>Showing</span><b id="membersShowing">0</b></div>
+      </div>
+      <div id="membersGallery" class="members-gallery"></div>
     </div>
   </section>
 
@@ -893,12 +935,12 @@ function save(){ persist(); renderAll(); }
 /* =========================================================================
    JCRGM SUPABASE SYNC — Ushers Records + Ceremonies (record-by-record)
    Project baked in; editing Admin is password-gated (hash only stored).
-   Collections synced: usherAttendance, events, ceremonyRegistrations.
+   Collections synced: usherAttendance, events, ceremonyRegistrations, members.
    ========================================================================= */
 const MGMT_SB_URL="https://yisfzexlbjeoeujvmmno.supabase.co";
 const MGMT_SB_KEY="sb_publishable_NJvHqe_S_6QxZwQD0THexg_-Za92muj";
 const MGMT_SB_TABLE="jcrgm_mgmt_records";
-const MGMT_SYNC_COLLECTIONS=["usherAttendance","events","ceremonyRegistrations"];
+const MGMT_SYNC_COLLECTIONS=["usherAttendance","events","ceremonyRegistrations","members"];
 const MGMT_ADMIN_HASH="a9f2381818523487";
 const MGMT_DEVICE_ID=(function(){ let id=""; try{ id=LS.getItem("jcrgm_mgmt_device_id")||""; if(!id){ id="dev-"+Date.now().toString(36)+Math.random().toString(36).slice(2,8); LS.setItem("jcrgm_mgmt_device_id",id); } }catch(e){ id="dev-local"; } return id; })();
 let mgmtSyncMeta=(function(){ try{ const x=JSON.parse(LS.getItem("jcrgm_mgmt_sync_meta_v1")||"null"); if(x&&x.hashes) return {hashes:x.hashes||{},tombstones:x.tombstones||{},last:Number(x.last||0)}; }catch(e){} return {hashes:{},tombstones:{},last:0}; })();
@@ -1018,7 +1060,7 @@ async function mgmtSyncNow(label){
     }
     if(localChanged) mgmtPersistLocal();
     mgmtSyncMeta.last=Date.now(); mgmtSaveMeta();
-    mgmtSetStatus("ok","Synced ✓ "+new Date().toLocaleTimeString("en-GB")+" • Ushers & Ceremonies up to date on all devices.");
+    mgmtSetStatus("ok","Synced ✓ "+new Date().toLocaleTimeString("en-GB")+" • Ushers, Ceremonies & Members up to date on all devices.");
     if(label) toast((typeof label==="string"?label:"Records")+" synced to all devices via Supabase.","ok",4200);
     if(current&&current.page==="admin") renderAdminConsolidated();
   }catch(err){
@@ -1078,6 +1120,137 @@ function lockMgmtAdmin(){
   try{ sessionStorage.removeItem("jcrgm_mgmt_admin"); }catch(e){}
   navTo("usherattendance");
   toast("Admin locked.","ok",2800);
+}
+
+/* ---------- Members photo gallery: one button — full name + photo ---------- */
+function memberDisplayName(rec){ return String((rec&&(rec.fullName||rec.name))||"").trim(); }
+function memberCanManage(rec){
+  if(!rec) return false;
+  if(isMgmtAdmin()) return true;
+  if(rec._deviceId) return String(rec._deviceId)===String(MGMT_DEVICE_ID);
+  return !rec._syncUpdatedAt; /* legacy local record never sent from elsewhere */
+}
+function memberInitials(name){
+  const parts=String(name||"?").trim().split(/\s+/).filter(Boolean);
+  return ((parts[0]||"?").charAt(0)+((parts[1]||"").charAt(0)||"")).toUpperCase();
+}
+function renderMembersGallery(){
+  const grid=el('membersGallery'); if(!grid) return;
+  const term=String((el('memberSearch')&&el('memberSearch').value)||"").trim().toLowerCase();
+  const all=(db.members||[]).slice();
+  const list=all.filter(function(x){ return memberDisplayName(x); })
+    .filter(function(x){ return !term||memberDisplayName(x).toLowerCase().indexOf(term)>=0; })
+    .sort(function(a,b){ return memberDisplayName(a).localeCompare(memberDisplayName(b)); });
+  const c=el('membersCount'); if(c) c.textContent=all.filter(function(x){ return memberDisplayName(x); }).length;
+  const s=el('membersShowing'); if(s) s.textContent=list.length;
+  if(!list.length){
+    grid.innerHTML='<div class="empty" style="grid-column:1/-1">'+(term?'No member matches that name yet.':'No members in the gallery yet — be the first! Press <b>“Become a Member — Upload My Photo &amp; Name”</b> above, enter your full name, upload your photo, and you will appear here on every phone.')+'</div>';
+    return;
+  }
+  grid.innerHTML=list.map(function(x){
+    const name=memberDisplayName(x);
+    const photo=String(x.photo||"");
+    const since=x.joinedDate||x.joined||x.createdAt||"";
+    const actions=memberCanManage(x)?'<div class="member-actions no-print">'+
+      iBtn('✎','Edit name / replace photo',"openMemberUpload('"+x.id+"')")+
+      iBtn('🗑','Delete this member',"deleteMemberUpload('"+x.id+"')",'danger')+'</div>':
+      '<div class="member-meta no-print">Synced member</div>';
+    return '<div class="member-card">'+
+      (photo?'<img class="member-photo" src="'+esc(photo)+'" alt="Photo of '+esc(name)+'" loading="lazy">':'<div class="member-photo member-initials" aria-hidden="true">'+esc(memberInitials(name))+'</div>')+
+      '<div class="member-name">'+esc(name)+'</div>'+
+      (since?'<div class="member-meta">Member • '+esc(fmtDate(String(since).slice(0,10))||since)+'</div>':'<div class="member-meta">Church member</div>')+
+      actions+'</div>';
+  }).join("");
+}
+function openMemberUpload(id){
+  let rec=null;
+  if(id){
+    rec=(db.members||[]).find(function(x){ return x.id===id; });
+    if(!rec){ toast('Member not found.','err'); return; }
+    if(!memberCanManage(rec)){ toast('Only Admin, or the gadget that uploaded this photo, can edit it.','err',5200); return; }
+  }
+  window.__memberEditId=id||"";
+  window.__memberPhotoData=rec?String(rec.photo||""):"";
+  const name=rec?memberDisplayName(rec):"";
+  modal('<h3 style="padding-right:36px">'+(rec?'✎ Edit Member':'📸 Become a Member')+'</h3>'+
+    '<p class="muted">Enter your <b>full name</b> and upload your <b>photo</b>. When you save, it is saved in the church database and shows on <b>all phones</b>.'+(rec?'':' Every upload creates a new member in the gallery.')+'</p>'+
+    '<form onsubmit="saveMemberUpload(event)">'+
+    '<div style="margin-bottom:12px"><label class="lbl" for="memberFullName">Full Name *</label>'+
+    '<input id="memberFullName" type="text" autocomplete="name" placeholder="e.g. Mary Banda" value="'+esc(name)+'"></div>'+
+    '<div style="margin-bottom:12px"><label class="lbl">Your Photo *</label>'+
+    '<img id="memberPhotoPreview" class="member-preview" alt="Your photo preview" src="'+(rec&&rec.photo?esc(rec.photo):"")+'" style="display:'+(rec&&rec.photo?'block':'none')+'">'+
+    '<input id="memberPhotoInput" type="file" accept="image/*" onchange="previewMemberPhoto(this)">'+
+    '<div class="hint">On a phone, tap to take a photo or choose one from your gallery. The photo is resized automatically so it uploads fast.</div></div>'+
+    '<div class="actions" style="margin-top:14px"><button class="btn join prayer-cta" type="submit">💾 '+(rec?'Save Changes':'Save — Show on All Phones')+'</button>'+
+    '<button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>',true);
+  const inp=el('memberFullName'); if(inp) setTimeout(function(){ inp.focus(); },40);
+}
+function previewMemberPhoto(input){
+  const file=input&&input.files&&input.files[0];
+  if(!file) return;
+  if(!/^image\//.test(file.type||"")){ toast('Please choose a photo (image file).','err',4500); return; }
+  const reader=new FileReader();
+  reader.onload=function(){
+    const img=new Image();
+    img.onload=function(){
+      try{
+        const max=480;
+        const scale=Math.min(1,max/Math.max(img.width,img.height));
+        const w=Math.max(1,Math.round(img.width*scale)), h=Math.max(1,Math.round(img.height*scale));
+        const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        let data=canvas.toDataURL('image/jpeg',0.78), q=0.78;
+        while(data.length>260000&&q>0.45){ q-=0.1; data=canvas.toDataURL('image/jpeg',q); }
+        window.__memberPhotoData=data;
+        const prev=el('memberPhotoPreview'); if(prev){ prev.src=data; prev.style.display='block'; }
+        toast('Photo ready — now press Save.','ok',2600);
+      }catch(e){ toast('That photo could not be read — please try another one.','err',5000); }
+    };
+    img.onerror=function(){ toast('That photo could not be read — please try another one.','err',5000); };
+    img.src=String(reader.result||"");
+  };
+  reader.onerror=function(){ toast('That photo could not be read — please try another one.','err',5000); };
+  reader.readAsDataURL(file);
+}
+function saveMemberUpload(e){
+  if(e&&e.preventDefault) e.preventDefault();
+  const id=window.__memberEditId||"";
+  const input=el('memberFullName');
+  const name=String((input&&input.value)||"").trim().replace(/\s+/g," ");
+  if(name.split(" ").filter(Boolean).length<2){ toast('Please enter your full name (first name and surname).','err',4800); if(input) input.focus(); return; }
+  const photo=String(window.__memberPhotoData||"");
+  if(!photo){ toast('Please upload your photo first.','err',4800); const fi=el('memberPhotoInput'); if(fi) fi.focus(); return; }
+  if(id){
+    const rec=(db.members||[]).find(function(x){ return x.id===id; });
+    if(!rec){ toast('Member not found.','err'); return; }
+    if(!memberCanManage(rec)){ toast('Only Admin, or the gadget that uploaded this photo, can edit it.','err',5200); return; }
+    rec.name=name; rec.fullName=name; rec.photo=photo; rec.updatedAt=nowStamp(); rec._syncUpdatedAt=Date.now();
+    if(!rec._deviceId) rec._deviceId=MGMT_DEVICE_ID;
+    persist(); renderAll(); closeModal();
+    window.__memberPhotoData=""; window.__memberEditId="";
+    toast('Member updated — changes will show on all phones.','ok',4200);
+    mgmtSyncNow('Member');
+    return;
+  }
+  const dup=(db.members||[]).some(function(x){ return memberDisplayName(x).toLowerCase()===name.toLowerCase(); });
+  if(dup&&!confirm(name+' is already in the members gallery. Create a new upload with the same name anyway?')) return;
+  const rec={id:uid(),name:name,fullName:name,photo:photo,joined:today(),joinedDate:today(),createdAt:nowStamp(),status:'Active',_deviceId:MGMT_DEVICE_ID,_syncUpdatedAt:Date.now()};
+  if(!Array.isArray(db.members)) db.members=[];
+  db.members.push(rec);
+  persist(); renderAll(); closeModal();
+  window.__memberPhotoData=""; window.__memberEditId="";
+  toast('Welcome, '+name+'! 🎉 Your photo is saved in the church database and now shows on all phones.','ok',5200);
+  mgmtSyncNow('Member photo');
+}
+function deleteMemberUpload(id){
+  const rec=(db.members||[]).find(function(x){ return x.id===id; });
+  if(!rec){ toast('Member not found.','err'); return; }
+  if(!memberCanManage(rec)){ toast('Only Admin, or the gadget that uploaded this photo, can delete it.','err',5200); return; }
+  if(!confirm('Delete '+memberDisplayName(rec)+' from the members gallery? This cannot be undone.')) return;
+  db.members=db.members.filter(function(x){ return x.id!==id; });
+  persist(); renderAll();
+  toast('Member deleted — deletion will sync to all devices.','ok',4200);
+  mgmtSyncNow(false);
 }
 
 /* ---------- Admin consolidated record: one organised record per meeting ---------- */
@@ -1282,7 +1455,7 @@ document.addEventListener('keydown',function(e){
 });
 
 /* ---------- router: every tab goes exactly where it is meant to ---------- */
-const PAGE_TITLES={dashboard:'Dashboard',usherattendance:'Ushers Record',admin:'Admin — Consolidated Church Record',events:'Ceremonies & Events',reports:'Reports & PDF',settings:'Data & Settings'};
+const PAGE_TITLES={dashboard:'Dashboard',members:'Members — Photo Gallery',usherattendance:'Ushers Record',admin:'Admin — Consolidated Church Record',events:'Ceremonies & Events',reports:'Reports & PDF',settings:'Data & Settings'};
 const EVENTS_SECTIONS={calendar:'Ceremony Calendar',forms:'Ceremony Request Form',registry:'Ceremony Register',certificates:'Certificates'};
 let current={page:'dashboard',section:'calendar'};
 
@@ -3683,6 +3856,7 @@ function clearAllData(){
 /* ---------- render everything + boot ---------- */
 function renderAll(){
   renderDashboard();
+  renderMembersGallery();
   renderUsherAttendance();
   renderEvents(); renderCeremonyRegistrations(); renderCertificates();
   renderReports();
@@ -3754,5 +3928,5 @@ window.addEventListener('error',function(e){ if(e&&e.message&&String(document.lo
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a587e72ef880b578',t:'MTc5NDM0MzU0OQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a587e72ef880b578',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5881283aea5b56c',t:'MTc5NDM0NTMyNA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5881283aea5b56c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
