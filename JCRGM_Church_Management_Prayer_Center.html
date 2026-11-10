@@ -301,6 +301,9 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
 .member-name{margin-top:8px;font-weight:800;color:var(--primary);font-size:14px;line-height:1.3;word-break:break-word}
 .member-meta{font-size:11px;color:var(--muted);margin-top:2px}
 .member-actions{display:flex;gap:6px;justify-content:center;margin-top:8px}
+.member-card.pending{border:2px dashed var(--accent);background:#fffbeb}
+.pending-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;background:#fffbeb;border:1px solid #fde68a;border-radius:11px;padding:10px 13px;margin-top:16px;font-size:13.5px}
+.approve-actions{display:flex;gap:6px;justify-content:center;margin-top:9px;flex-wrap:wrap}
 .member-preview{display:block;margin:0 auto 10px;width:170px;height:170px;object-fit:cover;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.22);background:#eef2f8}
 @media(max-width:600px){
   .members-gallery{grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:12px}
@@ -524,18 +527,21 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
     <div class="card">
       <div class="toolbar">
         <div><h3 style="margin:0">👥 Church Members — Photo Gallery</h3>
-          <div class="sub muted">Become a member? There is only <b>one button</b> to press — enter your <b>full name</b> and upload your <b>photo</b>. It is saved in the church database and shows on <b>all phones</b>.</div></div>
+          <div class="sub muted">Become a member? There is only <b>one button</b> to press — enter your <b>full name</b> and upload your <b>photo</b>. It is saved in the church database. <b>After Admin approval</b>, it appears in the gallery on <b>all phones</b>.</div></div>
         <div class="actions no-print">
           <button class="btn join prayer-cta member-upload-btn" type="button" onclick="openMemberUpload()">📸 Become a Member — Upload My Photo &amp; Name <span class="prayer-press">PRESS</span></button>
+          <button class="btn gold small" type="button" onclick="memberAdminLogin()">🔐 Admin: Approve Photos</button>
         </div>
       </div>
-      <div class="alert blue mgmt-sync-box no-print"><b>☁ Supabase sync:</b> <span data-sync-status>Starting sync…</span><br><span class="muted">Every new upload creates a new member in the gallery, aligned A–Z by full name, on every phone automatically.<br>✎ / 🗑 <b>Edit &amp; delete:</b> only Admin, or the gadget that uploaded the photo, can change or remove an entry — everyone else just presses the one button and joins.</span></div>
-      <div class="form no-print" style="margin-bottom:6px">
+      <div class="alert blue mgmt-sync-box no-print"><b>☁ Supabase sync:</b> <span data-sync-status>Starting sync…</span><br><span class="muted">After saving, a photo stays <b>hidden</b> — <b>Admin must Approve it first</b>, then it creates the member in the gallery, aligned A–Z by full name, on every phone automatically.<br>✎ / 🗑 <b>Edit &amp; delete:</b> only Admin, or the gadget that uploaded the photo, can change or remove an entry — everyone else just presses the one button and joins.</span></div>
+      <div id="membersPending"></div>
+      <div class="form no-print" style="margin:14px 0 6px">
         <div><label>Search member name</label><input id="memberSearch" placeholder="Search member name..." oninput="renderMembersGallery()"></div>
       </div>
       <div class="admin-stat-grid">
         <div class="admin-mini"><span>Members</span><b id="membersCount">0</b></div>
         <div class="admin-mini"><span>Showing</span><b id="membersShowing">0</b></div>
+        <div class="admin-mini"><span>Waiting Approval</span><b id="membersPendingCount">0</b></div>
       </div>
       <div id="membersGallery" class="members-gallery"></div>
     </div>
@@ -1137,14 +1143,18 @@ function memberInitials(name){
 function renderMembersGallery(){
   const grid=el('membersGallery'); if(!grid) return;
   const term=String((el('memberSearch')&&el('memberSearch').value)||"").trim().toLowerCase();
-  const all=(db.members||[]).slice();
-  const list=all.filter(function(x){ return memberDisplayName(x); })
+  const all=(db.members||[]).filter(function(x){ return memberDisplayName(x); });
+  const approved=all.filter(function(x){ return x.approval!=='pending'; });
+  const pending=all.filter(function(x){ return x.approval==='pending'; });
+  const list=approved
     .filter(function(x){ return !term||memberDisplayName(x).toLowerCase().indexOf(term)>=0; })
     .sort(function(a,b){ return memberDisplayName(a).localeCompare(memberDisplayName(b)); });
-  const c=el('membersCount'); if(c) c.textContent=all.filter(function(x){ return memberDisplayName(x); }).length;
+  const c=el('membersCount'); if(c) c.textContent=approved.length;
+  const pc=el('membersPendingCount'); if(pc) pc.textContent=pending.length;
   const s=el('membersShowing'); if(s) s.textContent=list.length;
+  renderPendingMembers(pending);
   if(!list.length){
-    grid.innerHTML='<div class="empty" style="grid-column:1/-1">'+(term?'No member matches that name yet.':'No members in the gallery yet — be the first! Press <b>“Become a Member — Upload My Photo &amp; Name”</b> above, enter your full name, upload your photo, and you will appear here on every phone.')+'</div>';
+    grid.innerHTML='<div class="empty" style="grid-column:1/-1">'+(term?'No member matches that name yet.':'No approved members in the gallery yet — press <b>“Become a Member — Upload My Photo &amp; Name”</b> above, enter your full name and upload your photo. After Admin approval, you will appear here on every phone.')+'</div>';
     return;
   }
   grid.innerHTML=list.map(function(x){
@@ -1162,6 +1172,37 @@ function renderMembersGallery(){
       actions+'</div>';
   }).join("");
 }
+function renderPendingMembers(pending){
+  const box=el('membersPending'); if(!box) return;
+  const admin=isMgmtAdmin();
+  const visible=admin?pending:pending.filter(function(x){ return memberCanManage(x); });
+  if(!visible.length){ box.innerHTML=""; return; }
+  const cards=visible.map(function(x){
+    const name=memberDisplayName(x);
+    const photo=String(x.photo||"");
+    const when=x.createdAt||x.joinedDate||"";
+    const fromHere=x._deviceId&&String(x._deviceId)===String(MGMT_DEVICE_ID);
+    let actions;
+    if(admin){
+      actions='<div class="approve-actions no-print">'+
+        '<button class="btn success small" type="button" onclick="approveMemberUpload(\''+x.id+'\')">✓ Approve — Show on All Phones</button>'+
+        '<button class="btn danger small" type="button" onclick="rejectMemberUpload(\''+x.id+'\')">✗ Reject</button></div>';
+    }else{
+      actions='<div class="member-meta" style="margin-top:7px"><b>⏳ Waiting for Admin approval</b> — not in the gallery yet</div>'+
+        '<div class="member-actions no-print">'+
+        iBtn('✎','Edit while waiting',"openMemberUpload('"+x.id+"')")+
+        iBtn('🗑','Withdraw this upload',"deleteMemberUpload('"+x.id+"')",'danger')+'</div>';
+    }
+    return '<div class="member-card pending">'+
+      (photo?'<img class="member-photo" src="'+esc(photo)+'" alt="Photo of '+esc(name)+'" loading="lazy">':'<div class="member-photo member-initials" aria-hidden="true">'+esc(memberInitials(name))+'</div>')+
+      '<div class="member-name">'+esc(name)+'</div>'+
+      '<div class="member-meta">Uploaded'+(when?' • '+esc(when):'')+(admin?(fromHere?' • from this gadget':' • from another gadget'):' • from this gadget')+'</div>'+
+      actions+'</div>';
+  }).join("");
+  box.innerHTML='<div class="pending-head no-print"><b>'+(admin?'⏳ Photos waiting for your approval ('+visible.length+')':'⏳ Your uploads waiting for Admin approval ('+visible.length+')')+'</b>'+
+    '<span class="muted">'+(admin?'Check each photo and name, then Approve to publish it in the gallery on all phones, or Reject to delete it.':'Only you can see these on this gadget. They will appear in the gallery on all phones after Admin approves them.')+'</span></div>'+
+    '<div class="members-gallery" style="margin-top:12px">'+cards+'</div>';
+}
 function openMemberUpload(id){
   let rec=null;
   if(id){
@@ -1173,7 +1214,7 @@ function openMemberUpload(id){
   window.__memberPhotoData=rec?String(rec.photo||""):"";
   const name=rec?memberDisplayName(rec):"";
   modal('<h3 style="padding-right:36px">'+(rec?'✎ Edit Member':'📸 Become a Member')+'</h3>'+
-    '<p class="muted">Enter your <b>full name</b> and upload your <b>photo</b>. When you save, it is saved in the church database and shows on <b>all phones</b>.'+(rec?'':' Every upload creates a new member in the gallery.')+'</p>'+
+    '<p class="muted">Enter your <b>full name</b> and upload your <b>photo</b>. When you save, Admin checks it first — <b>after Admin approval</b> it shows in the gallery on <b>all phones</b>.'+(rec?'':' Every upload creates a new member in the gallery, once approved.')+'</p>'+
     '<form onsubmit="saveMemberUpload(event)">'+
     '<div style="margin-bottom:12px"><label class="lbl" for="memberFullName">Full Name *</label>'+
     '<input id="memberFullName" type="text" autocomplete="name" placeholder="e.g. Mary Banda" value="'+esc(name)+'"></div>'+
@@ -1225,22 +1266,24 @@ function saveMemberUpload(e){
     if(!rec){ toast('Member not found.','err'); return; }
     if(!memberCanManage(rec)){ toast('Only Admin, or the gadget that uploaded this photo, can edit it.','err',5200); return; }
     rec.name=name; rec.fullName=name; rec.photo=photo; rec.updatedAt=nowStamp(); rec._syncUpdatedAt=Date.now();
+    if(isMgmtAdmin()){ if(!rec.approval) rec.approval='approved'; }
+    else { rec.approval='pending'; rec.status='Pending'; }
     if(!rec._deviceId) rec._deviceId=MGMT_DEVICE_ID;
     persist(); renderAll(); closeModal();
     window.__memberPhotoData=""; window.__memberEditId="";
-    toast('Member updated — changes will show on all phones.','ok',4200);
+    toast(isMgmtAdmin()?'Member updated — changes will show on all phones.':'Saved — your changes are waiting for Admin approval before they show again.','ok',4600);
     mgmtSyncNow('Member');
     return;
   }
   const dup=(db.members||[]).some(function(x){ return memberDisplayName(x).toLowerCase()===name.toLowerCase(); });
   if(dup&&!confirm(name+' is already in the members gallery. Create a new upload with the same name anyway?')) return;
-  const rec={id:uid(),name:name,fullName:name,photo:photo,joined:today(),joinedDate:today(),createdAt:nowStamp(),status:'Active',_deviceId:MGMT_DEVICE_ID,_syncUpdatedAt:Date.now()};
+  const rec={id:uid(),name:name,fullName:name,photo:photo,joined:today(),joinedDate:today(),createdAt:nowStamp(),status:'Pending',approval:'pending',_deviceId:MGMT_DEVICE_ID,_syncUpdatedAt:Date.now()};
   if(!Array.isArray(db.members)) db.members=[];
   db.members.push(rec);
   persist(); renderAll(); closeModal();
   window.__memberPhotoData=""; window.__memberEditId="";
-  toast('Welcome, '+name+'! 🎉 Your photo is saved in the church database and now shows on all phones.','ok',5200);
-  mgmtSyncNow('Member photo');
+  toast('Saved, '+name+'! 🎉 Your photo is saved and is now waiting for Admin approval — it will appear in the gallery on all phones once Admin approves it.','ok',6000);
+  mgmtSyncNow('Member photo (waiting approval)');
 }
 function deleteMemberUpload(id){
   const rec=(db.members||[]).find(function(x){ return x.id===id; });
@@ -1250,6 +1293,49 @@ function deleteMemberUpload(id){
   db.members=db.members.filter(function(x){ return x.id!==id; });
   persist(); renderAll();
   toast('Member deleted — deletion will sync to all devices.','ok',4200);
+  mgmtSyncNow(false);
+}
+
+function memberAdminLogin(){
+  if(isMgmtAdmin()){ renderMembersGallery(); toast('Admin is already logged in on this gadget — approve photos in the list below.','ok',4200); const b=el('membersPending'); if(b) b.scrollIntoView({behavior:'smooth',block:'start'}); return; }
+  modal('<h3 style="padding-right:36px">🔐 Admin — Approve Photos</h3>'+
+    '<p class="muted">Enter password to approve new member photos on this gadget.</p>'+
+    '<form class="form" onsubmit="submitMemberAdmin(event)">'+
+    '<div class="full"><label for="memberAdminPassword">Password</label><input id="memberAdminPassword" type="password" placeholder="Enter password" autocomplete="off"></div>'+
+    '<div class="full actions" style="margin-top:10px"><button class="btn gold" type="submit">Log in as Admin</button>'+
+    '<button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>',true);
+}
+function submitMemberAdmin(e){
+  if(e&&e.preventDefault) e.preventDefault();
+  const input=el("memberAdminPassword"); const val=((input&&input.value)||"").trim();
+  if(mgmtHash(val)===MGMT_ADMIN_HASH){
+    window.__mgmtAdminUnlocked=true;
+    try{ sessionStorage.setItem("jcrgm_mgmt_admin","1"); }catch(err){}
+    closeModal(); renderAll();
+    toast('Admin logged in — new photos waiting for approval are listed on this page.','ok',4600);
+  }else{
+    toast('Incorrect password.','err',3600);
+    if(input){ input.focus(); input.select(); }
+  }
+}
+function approveMemberUpload(id){
+  if(!isMgmtAdmin()){ memberAdminLogin(); return; }
+  const rec=(db.members||[]).find(function(x){ return x.id===id; });
+  if(!rec){ toast('Member not found.','err'); return; }
+  rec.approval='approved'; rec.status='Active'; rec.approvedAt=nowStamp(); rec.approvedBy='Admin';
+  rec._syncUpdatedAt=Date.now();
+  persist(); renderAll();
+  toast(memberDisplayName(rec)+' approved ✓ — now showing in the gallery on all phones.','ok',4600);
+  mgmtSyncNow('Member approved');
+}
+function rejectMemberUpload(id){
+  if(!isMgmtAdmin()){ memberAdminLogin(); return; }
+  const rec=(db.members||[]).find(function(x){ return x.id===id; });
+  if(!rec){ toast('Member not found.','err'); return; }
+  if(!confirm('Reject and delete the upload for '+memberDisplayName(rec)+'? The photo will be removed and will not appear in the gallery.')) return;
+  db.members=db.members.filter(function(x){ return x.id!==id; });
+  persist(); renderAll();
+  toast('Upload rejected and deleted — deletion will sync to all devices.','ok',4400);
   mgmtSyncNow(false);
 }
 
@@ -3928,5 +4014,5 @@ window.addEventListener('error',function(e){ if(e&&e.message&&String(document.lo
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5881283aea5b56c',t:'MTc5NDM0NTMyNA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5881283aea5b56c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58845fbfba6b6da',t:'MTc5NDM0NzQzMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58845fbfba6b6da',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
