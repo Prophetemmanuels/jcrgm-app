@@ -883,11 +883,16 @@ details.sync-setup summary{ cursor:pointer; font-weight:800; color:var(--primary
 details.sync-setup .help{ font-size:13px; color:#475467; line-height:1.5; margin:10px 0; }
 details.sync-setup code{ background:#eef2ff; padding:1px 5px; border-radius:5px; font-size:12px; }
 .sync-small{ font-size:12px; color:var(--muted); margin-top:6px; }
+/* Admin-only visibility: normal (locked) phones only see the header,
+   the password login strip, and the published schedule/duties.
+   All admin sections appear only after the edit password unlocks. */
+body.view-only .admin-only{ display:none !important; }
+body.view-only .main-grid{ grid-template-columns:1fr; }
 @media(max-width:700px){ .sync-row > div{ flex-basis:100%; } }
 
 </style>
 </head>
-<body>
+<body class="view-only">
 
 <!-- =====================================================
      HEADER
@@ -908,9 +913,9 @@ details.sync-setup code{ background:#eef2ff; padding:1px 5px; border-radius:5px;
      CHURCH SYNC — ALL DEVICES
 ===================================================== -->
 <div class="card sync-card no-print">
-    <h2>☁️ Church Sync — All Devices</h2>
+    <h2 class="admin-only">☁️ Church Sync — All Devices</h2>
 
-    <div id="syncStatus" class="sync-status off">
+    <div id="syncStatus" class="sync-status off admin-only">
         <span class="dot amber" id="syncDot"></span>
         <span id="syncStatusText"><b>Local mode:</b> data is saved on this device only. Use Export / Import below to share, or add your Supabase URL + key for automatic sync.</span>
     </div>
@@ -920,12 +925,12 @@ details.sync-setup code{ background:#eef2ff; padding:1px 5px; border-radius:5px;
     </div>
 
     <div class="sync-row">
-        <div>
+        <div class="admin-only">
             <label for="syncCodeInput">Church Sync Code (same on every device)</label>
             <input id="syncCodeInput" type="text" placeholder="e.g. JCRGM-CHURCH" autocomplete="off">
             <div class="sync-small">All devices with the same code see the same schedule.</div>
         </div>
-        <div style="flex:0 0 auto; min-width:120px;">
+        <div class="admin-only" style="flex:0 0 auto; min-width:120px;">
             <label>&nbsp;</label>
             <button class="primary" onclick="saveSyncCode()" style="width:100%">Join / Save Code</button>
         </div>
@@ -941,7 +946,7 @@ details.sync-setup code{ background:#eef2ff; padding:1px 5px; border-radius:5px;
         </div>
     </div>
 
-    <div class="sync-row">
+    <div class="sync-row admin-only">
         <div>
             <label>Share without cloud (works now)</label>
             <div class="actions" style="margin-top:0">
@@ -962,7 +967,7 @@ details.sync-setup code{ background:#eef2ff; padding:1px 5px; border-radius:5px;
         </div>
     </div>
 
-    <details class="sync-setup" id="syncSetupDetails">
+    <details class="sync-setup admin-only" id="syncSetupDetails">
         <summary>⚙️ Automatic Cloud Sync Setup — Supabase (free)</summary>
         <div class="help">
             <b>✅ Your Supabase project is pre-configured in this app</b> (<code>https://yisfzexlbjeoeujvmmno.supabase.co</code>) — every device using this file syncs automatically, no typing needed.<br><br>
@@ -1000,7 +1005,7 @@ details.sync-setup code{ background:#eef2ff; padding:1px 5px; border-radius:5px;
 <!-- =====================================================
      SERVICE TIMES
 ===================================================== -->
-<div class="card">
+<div class="card admin-only">
     <h2>JCRGM Service Times</h2>
 
     <div class="service-times">
@@ -1032,7 +1037,7 @@ details.sync-setup code{ background:#eef2ff; padding:1px 5px; border-radius:5px;
 <!-- =====================================================
      LEFT COLUMN
 ===================================================== -->
-<section>
+<section class="admin-only">
 
     <!-- LEADERS -->
     <div class="card">
@@ -1150,7 +1155,7 @@ details.sync-setup code{ background:#eef2ff; padding:1px 5px; border-radius:5px;
 <main>
 
     <!-- SCHEDULE TOOLS -->
-    <div class="card no-print">
+    <div class="card no-print admin-only">
         <h2>5. Schedule Tools</h2>
 
         <div class="toolbar">
@@ -1181,7 +1186,7 @@ details.sync-setup code{ background:#eef2ff; padding:1px 5px; border-radius:5px;
 
     <div id="summary" class="summary"></div>
 
-    <div id="repeatGuard"></div>
+    <div id="repeatGuard" class="admin-only"></div>
 
     <!-- GENERATED SCHEDULE (this block is what gets printed) -->
     <div class="card print-target">
@@ -1193,7 +1198,7 @@ details.sync-setup code{ background:#eef2ff; padding:1px 5px; border-radius:5px;
 
         <div class="schedule-header no-print">
             <h2>6. Generated Service Schedule</h2>
-            <button class="light" onclick="printSchedule()">Print / Save PDF</button>
+            <button class="light admin-only" onclick="printSchedule()">Print / Save PDF</button>
         </div>
 
         <div id="rotationMap" class="rotation-map no-print"></div>
@@ -1721,6 +1726,8 @@ function lockEditing(){
 }
 function applyEditMode(){
     const unlocked = isUnlocked();
+    document.body.classList.toggle("view-only", !unlocked);
+    document.body.classList.toggle("admin-unlocked", unlocked);
     const banner = document.getElementById("editBanner");
     const unlockBtn = document.getElementById("unlockBtn");
     const lockBtn = document.getElementById("lockBtn");
@@ -1729,7 +1736,7 @@ function applyEditMode(){
         banner.className = "lock-banner " + (unlocked ? "unlocked" : "locked");
         banner.innerHTML = unlocked
             ? "🔓 <b>Editing unlocked</b> on this device. Changes will sync to all devices with code <b>" + escapeHtml(syncConfig.code) + "</b>."
-            : "🔒 <b>View-only mode.</b> Everyone can see the schedule. Enter the edit password to add pastors or generate the schedule.";
+            : "🔒 <b>View-only.</b> The published schedule is below. Admin: enter password to manage the schedule.";
     }
     if(unlockBtn) unlockBtn.style.display = unlocked ? "none" : "";
     if(lockBtn) lockBtn.style.display = unlocked ? "" : "none";
@@ -3232,13 +3239,19 @@ function renderSchedule(){
         renderSundayMatrix();
         renderRepeatGuard();
 
-        box.innerHTML = `
+        box.innerHTML = isUnlocked() ? `
             <div class="empty">
                 Enter your leaders and click <b>Auto Schedule</b> to generate the
                 monthly roster.
                 <br><br>
                 The 1st Sunday goes to Group 1, the 2nd to Group 2, and so on,
                 so no two groups ever collide.
+            </div>
+        ` : `
+            <div class="empty">
+                <b>No schedule published yet.</b>
+                <br><br>
+                Please check back later.
             </div>
         `;
         return;
@@ -3776,5 +3789,5 @@ function init(){
 init();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a556d7432ff4b572',t:'MTc5MzgyOTA5NA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a556d7432ff4b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a586e6abf80bb56c',t:'MTc5NDMzMzA0Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a586e6abf80bb56c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a556d7432ff4b572',t:'MTc5MzgyOTA5NA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a556d7432ff4b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a586f4346bf4b56c',t:'MTc5NDMzMzU5Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a586f4346bf4b56c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
