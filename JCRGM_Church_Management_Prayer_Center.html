@@ -267,6 +267,30 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
 .gates p{margin:0;font-size:14px;font-style:italic;font-weight:600;color:var(--accent-l);line-height:1.5}
 .prayer-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:16px 28px 20px;border-top:1px solid var(--border)}
 .btn.join{background:linear-gradient(90deg,var(--accent),var(--accent-l));padding:12px 18px;color:#241a03;font-weight:800;border-radius:11px}
+/* ===== Prayer Link = the special button to press ===== */
+.prayer-cta{
+  background:linear-gradient(90deg,#b8860b,#f3c969,#d4af37)!important;
+  color:#241a03!important;
+  border:2px solid #ffe89a!important;
+  font-weight:900!important;
+  letter-spacing:.01em;
+  box-shadow:0 10px 24px rgba(212,175,55,.45)!important;
+  animation:prayerPulse 1.5s ease-out infinite;
+}
+.prayer-cta:hover{filter:brightness(1.08);transform:translateY(-1px) scale(1.02)}
+.nav .prayer-link.prayer-cta{color:#241a03!important}
+.prayer-press{
+  margin-left:auto;background:#7f1d1d;color:#fff;border-radius:999px;
+  padding:2px 9px;font-size:10px;font-weight:900;letter-spacing:.07em;white-space:nowrap;
+  animation:prayerBlink 1.1s ease-in-out infinite;
+}
+.btn.join.prayer-cta .prayer-press{margin-left:10px}
+@keyframes prayerPulse{
+  0%{box-shadow:0 0 0 0 rgba(212,175,55,.55),0 10px 24px rgba(212,175,55,.35)!important}
+  70%{box-shadow:0 0 0 16px rgba(212,175,55,0),0 10px 24px rgba(212,175,55,.35)!important}
+  100%{box-shadow:0 0 0 0 rgba(212,175,55,0),0 10px 24px rgba(212,175,55,.35)!important}
+}
+@keyframes prayerBlink{50%{opacity:.45}}
 .prayer-close{position:absolute;top:14px;right:14px;border:0;background:rgba(255,255,255,.15);color:#fff;border-radius:50%;width:34px;height:34px;font-size:18px;z-index:2}
 
 /* ===== responsive ===== */
@@ -359,7 +383,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
     </div>
 
     <div class="nav-sec">Ministry</div>
-    <button type="button" class="prayer-link" data-action="openPrayerLink"><span class="ic">🙏</span> Prayer Link</button>
+    <button type="button" class="prayer-link prayer-cta" data-action="openPrayerLink"><span class="ic">🙏</span> Prayer Link <span class="prayer-press">PRESS</span></button>
 
     <div class="nav-sec">Records</div>
     <button type="button" data-page="admin"><span class="ic">🔐</span> Admin</button>
@@ -393,7 +417,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
         <button class="btn gold" onclick="openAdminGate()">🔐 Admin Consolidated Record</button>
         <button class="btn secondary" onclick="navTo('usherattendance');openUsherAttendance()">+ Ushers Record</button>
         <button class="btn secondary" onclick="navTo('events','forms')">Ceremony Request Form</button>
-        <button class="btn join" onclick="openPrayerLink()">🙏 Join the Prophet's Prayer Link</button>
+        <button class="btn join prayer-cta" onclick="openPrayerLink()">🙏 Join the Prophet's Prayer Link <span class="prayer-press">PRESS</span></button>
       </div>
     </div>
     <div class="grid stats" style="margin-top:16px">
@@ -773,7 +797,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
     </div>
     <div class="prayer-actions">
       <button class="btn secondary" onclick="closePrayerModal()">Not now</button>
-      <button class="btn join" onclick="joinPrayerLink()">Open Prayer Link →</button>
+      <button class="btn join prayer-cta" onclick="joinPrayerLink()">🙏 Open Prayer Link → <span class="prayer-press">PRESS</span></button>
     </div>
   </div>
 </div>
@@ -3730,5 +3754,5 @@ window.addEventListener('error',function(e){ if(e&&e.message&&String(document.lo
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a587d7a7bedeb56f',t:'MTc5NDM0MjkxMw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a587d7a7bedeb56f',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a587e72ef880b578',t:'MTc5NDM0MzU0OQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a587e72ef880b578',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
