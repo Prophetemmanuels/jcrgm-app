@@ -305,6 +305,17 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
 .pending-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;background:#fffbeb;border:1px solid #fde68a;border-radius:11px;padding:10px 13px;margin-top:16px;font-size:13.5px}
 .approve-actions{display:flex;gap:6px;justify-content:center;margin-top:9px;flex-wrap:wrap}
 .member-preview{display:block;margin:0 auto 10px;width:170px;height:170px;object-fit:cover;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.22);background:#eef2f8}
+.crop-wrap{position:relative;width:min(320px,82vw);aspect-ratio:1/1;margin:6px auto;border-radius:14px;overflow:hidden;background:#101d35;touch-action:none;cursor:grab;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.crop-wrap:active{cursor:grabbing}
+.crop-wrap img{position:absolute;left:0;top:0;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
+.crop-grid{position:absolute;inset:0;pointer-events:none;border-radius:14px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.85);
+  background:
+   linear-gradient(to right,transparent calc(33.3% - 1px),rgba(255,255,255,.35) 33.3%,transparent calc(33.3% + 1px)),
+   linear-gradient(to right,transparent calc(66.6% - 1px),rgba(255,255,255,.35) 66.6%,transparent calc(66.6% + 1px)),
+   linear-gradient(to bottom,transparent calc(33.3% - 1px),rgba(255,255,255,.35) 33.3%,transparent calc(33.3% + 1px)),
+   linear-gradient(to bottom,transparent calc(66.6% - 1px),rgba(255,255,255,.35) 66.6%,transparent calc(66.6% + 1px))}
+.crop-controls{display:flex;align-items:center;gap:9px;max-width:340px;margin:9px auto 4px}
+.crop-controls input[type=range]{flex:1;width:auto}
 @media(max-width:600px){
   .members-gallery{grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:12px}
   .member-photo{width:100px;height:100px}
@@ -1212,6 +1223,7 @@ function openMemberUpload(id){
   }
   window.__memberEditId=id||"";
   window.__memberPhotoData=rec?String(rec.photo||""):"";
+  window.__cropImg=null; window.__cropApplied=!!(rec&&rec.photo); window.__crop=null;
   const name=rec?memberDisplayName(rec):"";
   modal('<h3 style="padding-right:36px">'+(rec?'✎ Edit Member':'📸 Become a Member')+'</h3>'+
     '<p class="muted">Enter your <b>full name</b> and upload your <b>photo</b>. When you save, Admin checks it first — <b>after Admin approval</b> it shows in the gallery on <b>all phones</b>.'+(rec?'':' Every upload creates a new member in the gallery, once approved.')+'</p>'+
@@ -1220,8 +1232,21 @@ function openMemberUpload(id){
     '<input id="memberFullName" type="text" autocomplete="name" placeholder="e.g. Mary Banda" value="'+esc(name)+'"></div>'+
     '<div style="margin-bottom:12px"><label class="lbl">Your Photo *</label>'+
     '<img id="memberPhotoPreview" class="member-preview" alt="Your photo preview" src="'+(rec&&rec.photo?esc(rec.photo):"")+'" style="display:'+(rec&&rec.photo?'block':'none')+'">'+
-    '<input id="memberPhotoInput" type="file" accept="image/*" onchange="previewMemberPhoto(this)">'+
-    '<div class="hint">On a phone, tap to take a photo or choose one from your gallery. The photo is resized automatically so it uploads fast.</div></div>'+
+    '<div style="text-align:center"><button class="btn secondary small" type="button" id="memberRecropBtn" onclick="recropMemberPhoto()" style="display:'+(rec&&rec.photo?'inline-flex':'none')+'">✂ Re-crop Photo</button></div>'+
+    '<div class="actions" style="justify-content:center;margin:8px 0 4px">'+
+    '<button class="btn" type="button" onclick="el(\'memberCameraInput\').click()">📷 Capture Photo</button>'+
+    '<button class="btn secondary" type="button" onclick="el(\'memberPhotoInput\').click()">🖼 Upload Photo</button></div>'+
+    '<input id="memberCameraInput" type="file" accept="image/*" capture="user" onchange="previewMemberPhoto(this)" style="display:none">'+
+    '<input id="memberPhotoInput" type="file" accept="image/*" onchange="previewMemberPhoto(this)" style="display:none">'+
+    '<div id="memberCropBox" style="display:none;margin-top:10px">'+
+      '<label class="lbl">✂ Crop your photo</label>'+
+      '<div class="crop-wrap" id="memberCropWrap"><img id="memberCropImg" alt=""><div class="crop-grid"></div></div>'+
+      '<div class="crop-controls"><span aria-hidden="true">🔍</span><input id="memberCropZoom" type="range" min="100" max="300" value="100" oninput="memberCropZoom(this.value)" aria-label="Zoom photo"><span aria-hidden="true">➕</span></div>'+
+      '<div class="hint" style="text-align:center">Drag the photo to position your face in the square, use the slider to zoom. The square is exactly how you will appear in the gallery.</div>'+
+      '<div class="actions" style="justify-content:center;margin-top:9px"><button class="btn success" type="button" onclick="applyMemberCrop()">✂ Crop &amp; Use This Photo</button>'+
+      '<button class="btn secondary" type="button" onclick="cancelMemberCrop()">Cancel</button></div>'+
+    '</div>'+
+    '<div class="hint"><b>Capture Photo</b> opens your camera; <b>Upload Photo</b> chooses from your gallery. Then crop it to fit. The cropped photo is resized automatically so it uploads fast.</div></div>'+
     '<div class="actions" style="margin-top:14px"><button class="btn join prayer-cta" type="submit">💾 '+(rec?'Save Changes':'Save — Show on All Phones')+'</button>'+
     '<button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>',true);
   const inp=el('memberFullName'); if(inp) setTimeout(function(){ inp.focus(); },40);
@@ -1233,25 +1258,111 @@ function previewMemberPhoto(input){
   const reader=new FileReader();
   reader.onload=function(){
     const img=new Image();
-    img.onload=function(){
-      try{
-        const max=480;
-        const scale=Math.min(1,max/Math.max(img.width,img.height));
-        const w=Math.max(1,Math.round(img.width*scale)), h=Math.max(1,Math.round(img.height*scale));
-        const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
-        canvas.getContext('2d').drawImage(img,0,0,w,h);
-        let data=canvas.toDataURL('image/jpeg',0.78), q=0.78;
-        while(data.length>260000&&q>0.45){ q-=0.1; data=canvas.toDataURL('image/jpeg',q); }
-        window.__memberPhotoData=data;
-        const prev=el('memberPhotoPreview'); if(prev){ prev.src=data; prev.style.display='block'; }
-        toast('Photo ready — now press Save.','ok',2600);
-      }catch(e){ toast('That photo could not be read — please try another one.','err',5000); }
-    };
+    img.onload=function(){ window.__cropApplied=false; memberSetupCrop(img); };
     img.onerror=function(){ toast('That photo could not be read — please try another one.','err',5000); };
     img.src=String(reader.result||"");
   };
   reader.onerror=function(){ toast('That photo could not be read — please try another one.','err',5000); };
   reader.readAsDataURL(file);
+  try{ input.value=''; }catch(e){}
+}
+/* ---- square photo cropping: drag to position, slider to zoom ---- */
+function memberCropEls(){ return {box:el('memberCropBox'),wrap:el('memberCropWrap'),img:el('memberCropImg'),zoom:el('memberCropZoom')}; }
+function memberSetupCrop(img){
+  window.__cropImg=img;
+  const els=memberCropEls(); if(!els.box||!els.wrap||!els.img) return;
+  els.box.style.display='block';
+  const prev=el('memberPhotoPreview'); if(prev) prev.style.display='none';
+  const rb=el('memberRecropBtn'); if(rb) rb.style.display='none';
+  els.img.src=img.src;
+  requestAnimationFrame(function(){
+    const W=els.wrap.clientWidth||300;
+    const scale0=Math.max(W/img.naturalWidth,W/img.naturalHeight);
+    window.__crop={W:W,scale0:scale0,zoom:1,scale:scale0,
+      x:(W-img.naturalWidth*scale0)/2,y:(W-img.naturalHeight*scale0)/2};
+    if(els.zoom) els.zoom.value=100;
+    memberInitCropDrag();
+    memberRenderCrop();
+    toast('Crop your photo: drag to position, slide to zoom, then press “Crop & Use This Photo”.','ok',4200);
+  });
+}
+function memberRenderCrop(){
+  const c=window.__crop, img=window.__cropImg, els=memberCropEls();
+  if(!c||!img||!els.img) return;
+  els.img.style.width=(img.naturalWidth*c.scale)+'px';
+  els.img.style.height=(img.naturalHeight*c.scale)+'px';
+  els.img.style.transform='translate('+c.x+'px,'+c.y+'px)';
+}
+function memberClampCrop(){
+  const c=window.__crop, img=window.__cropImg; if(!c||!img) return;
+  const dw=img.naturalWidth*c.scale, dh=img.naturalHeight*c.scale;
+  c.x=dw<=c.W?(c.W-dw)/2:Math.min(0,Math.max(c.W-dw,c.x));
+  c.y=dh<=c.W?(c.W-dh)/2:Math.min(0,Math.max(c.W-dh,c.y));
+}
+function memberCropZoom(v){
+  const c=window.__crop, img=window.__cropImg; if(!c||!img) return;
+  const cx=c.W/2, cy=c.W/2;
+  const px=(cx-c.x)/c.scale, py=(cy-c.y)/c.scale;
+  c.zoom=Math.max(1,Math.min(3,(Number(v)||100)/100));
+  c.scale=c.scale0*c.zoom;
+  c.x=cx-px*c.scale; c.y=cy-py*c.scale;
+  memberClampCrop(); memberRenderCrop();
+}
+function memberInitCropDrag(){
+  const wrap=memberCropEls().wrap;
+  if(!wrap||wrap.__cropInit) return;
+  wrap.__cropInit=true;
+  let drag=null;
+  wrap.addEventListener('pointerdown',function(e){
+    const c=window.__crop; if(!c) return;
+    drag={x:e.clientX,y:e.clientY,ox:c.x,oy:c.y};
+    try{ wrap.setPointerCapture(e.pointerId); }catch(err){}
+    e.preventDefault();
+  });
+  wrap.addEventListener('pointermove',function(e){
+    if(!drag) return;
+    const c=window.__crop; if(!c) return;
+    c.x=drag.ox+(e.clientX-drag.x); c.y=drag.oy+(e.clientY-drag.y);
+    memberClampCrop(); memberRenderCrop();
+  });
+  ['pointerup','pointercancel'].forEach(function(ev){ wrap.addEventListener(ev,function(){ drag=null; }); });
+}
+function applyMemberCrop(){
+  const c=window.__crop, img=window.__cropImg;
+  if(!c||!img){ toast('Choose a photo first.','err',4000); return; }
+  try{
+    const S=480;
+    const canvas=document.createElement('canvas'); canvas.width=S; canvas.height=S;
+    const sx=-c.x/c.scale, sy=-c.y/c.scale, sw=c.W/c.scale, sh=c.W/c.scale;
+    canvas.getContext('2d').drawImage(img,sx,sy,sw,sh,0,0,S,S);
+    let data=canvas.toDataURL('image/jpeg',0.82), q=0.82;
+    while(data.length>260000&&q>0.45){ q-=0.09; data=canvas.toDataURL('image/jpeg',q); }
+    window.__memberPhotoData=data; window.__cropApplied=true;
+    const prev=el('memberPhotoPreview'); if(prev){ prev.src=data; prev.style.display='block'; }
+    const rb=el('memberRecropBtn'); if(rb) rb.style.display='inline-flex';
+    const els=memberCropEls(); if(els.box) els.box.style.display='none';
+    toast('Photo cropped ✓ — now press Save below.','ok',3200);
+  }catch(e){ toast('Cropping failed on this device — please try another photo.','err',5000); }
+}
+function cancelMemberCrop(){
+  const els=memberCropEls(); if(els.box) els.box.style.display='none';
+  if(window.__memberPhotoData){
+    const prev=el('memberPhotoPreview'); if(prev) prev.style.display='block';
+    const rb=el('memberRecropBtn'); if(rb) rb.style.display='inline-flex';
+  }else{
+    window.__cropImg=null; window.__crop=null;
+    const fi=el('memberPhotoInput'); if(fi) fi.value='';
+    const ci=el('memberCameraInput'); if(ci) ci.value='';
+  }
+}
+function recropMemberPhoto(){
+  if(window.__cropImg&&window.__cropImg.src){ window.__cropApplied=false; memberSetupCrop(window.__cropImg); return; }
+  const data=String(window.__memberPhotoData||"");
+  if(!data){ toast('Choose a photo first.','err',4000); return; }
+  const img=new Image();
+  img.onload=function(){ window.__cropApplied=false; memberSetupCrop(img); };
+  img.onerror=function(){ toast('That photo could not be opened for cropping.','err',4500); };
+  img.src=data;
 }
 function saveMemberUpload(e){
   if(e&&e.preventDefault) e.preventDefault();
@@ -1259,6 +1370,7 @@ function saveMemberUpload(e){
   const input=el('memberFullName');
   const name=String((input&&input.value)||"").trim().replace(/\s+/g," ");
   if(name.split(" ").filter(Boolean).length<2){ toast('Please enter your full name (first name and surname).','err',4800); if(input) input.focus(); return; }
+  if(window.__cropImg&&!window.__cropApplied){ toast('Please press “✂ Crop & Use This Photo” first, then Save.','err',5000); const cb=el('memberCropBox'); if(cb) cb.scrollIntoView({behavior:'smooth',block:'center'}); return; }
   const photo=String(window.__memberPhotoData||"");
   if(!photo){ toast('Please upload your photo first.','err',4800); const fi=el('memberPhotoInput'); if(fi) fi.focus(); return; }
   if(id){
@@ -4014,5 +4126,5 @@ window.addEventListener('error',function(e){ if(e&&e.message&&String(document.lo
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58845fbfba6b6da',t:'MTc5NDM0NzQzMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58845fbfba6b6da',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a588592d5eecb572',t:'MTc5NDM0ODIxOA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a588592d5eecb572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
