@@ -80,6 +80,7 @@ footer.foot{text-align:center;color:var(--muted);font-size:11.5px;padding:22px 2
 .tabs button:hover{background:#fff;color:var(--primary)}
 .tabs button[aria-selected="true"]{background:#fff;color:var(--primary);box-shadow:var(--shadow)}
 .tabs button .cnt{background:var(--primary);color:#fff;border-radius:99px;font-size:10.5px;padding:1px 7px;font-weight:800}
+.tabs button .cnt.waitcnt{background:var(--danger)}
 section.card,section.block{scroll-margin-top:calc(var(--top-h) + 16px)}
 
 /* ===== cards & grids ===== */
@@ -641,7 +642,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
 
     <div class="tabs no-print" role="tablist" id="memberTabs" aria-label="Member sections">
       <button type="button" role="tab" data-section="gallery" id="mtab-gallery" aria-controls="mpanel-gallery" aria-selected="true">🖼 Photo Gallery <span class="cnt" id="mtabGalleryCount">0</span></button>
-      <button type="button" role="tab" data-section="departments" id="mtab-departments" aria-controls="mpanel-departments" aria-selected="false">📋 Department Register <span class="cnt" id="mtabDeptCount">0</span></button>
+      <button type="button" role="tab" data-section="departments" id="mtab-departments" aria-controls="mpanel-departments" aria-selected="false">📋 Department Register <span class="cnt" id="mtabDeptCount">0</span> <span class="cnt waitcnt" id="mtabDeptPending" title="Waiting for Admin approval" style="display:none">0</span></button>
     </div>
 
     <!-- tab: photo gallery -->
@@ -678,11 +679,14 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
             <div class="sub muted">Every church department — Praise Team, Women, Youth, Ushering, Choir and all others. Record each member with the <b>days they rehearse / meet</b>, then mark <b>attendance</b>: a <span class="inline-chip g">🟢 green light</span> means present, a <span class="inline-chip r">🔴 red light</span> means absent and an <b>explanation must be recorded</b>.</div></div>
           <div class="actions no-print">
             <button class="btn" type="button" onclick="openDeptPicker()">+ Add Member to a Department</button>
+            <button class="btn secondary" type="button" id="deptAprBtn" onclick="openDeptReview()">🔎 Approvals <span class="cnt waitcnt" id="deptAprCount" style="display:none">0</span></button>
+            <button class="btn secondary" type="button" onclick="deptAdminLogin()">🔐 Admin / Leader</button>
             <button class="btn gold" type="button" onclick="openDeptSettings()">⚙ Departments &amp; Rehearsal Days</button>
+            <button class="btn success" type="button" id="deptAprAll" style="display:none" onclick="approveAllDeptPending()">✓ Approve all waiting</button>
           </div>
         </div>
 
-        <div class="alert blue no-print"><b>How it works:</b> ① Choose a department → ② add its members (also from the photo gallery) → ③ set the days they rehearse → ④ for every meeting, the register shows each expected member on their own meeting day and you light them <b>green (present)</b> or <b>red (absent + reason)</b>. The register then builds <b>consistency</b>, the number of <b>rehearsals missed</b> in each month, and <b>what each department member will minister</b> — automatically.</div>
+        <div class="alert blue no-print"><b>How it works:</b> ① Choose a department → ② add its members (also from the photo gallery) → ③ <b>Admin approves them</b> → ④ set the days they rehearse → ⑤ for every meeting, the register shows each approved member on their own meeting day and you light them <b>green (present)</b> or <b>red (absent + reason)</b>. The register then builds <b>consistency</b>, the number of <b>rehearsals missed</b> in each month, and <b>what each department member will minister</b> — automatically.<br><b>🔐 Approval rule:</b> no member added to any department is counted, marked or rostered until <b>Admin approves</b> the entry.</div>
 
         <div class="form no-print" style="margin-bottom:12px">
           <div><label for="deptSel">Department</label><select id="deptSel" onchange="onDeptPick(this.value)"><option value="">All departments</option></select></div>
@@ -691,6 +695,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
           <div><label for="deptSort">Arrange by</label><select id="deptSort" onchange="renderDeptRegister()"><option value="consistency">Consistency (best first)</option><option value="name">Name A–Z</option><option value="missed">Most rehearsals missed</option><option value="dept">Department</option></select></div>
         </div>
 
+        <div id="deptApprovals"></div>
         <div class="meet-today" id="deptMeetToday" style="display:none"></div>
 
         <div class="dept-bar" aria-live="polite">
@@ -723,6 +728,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
           <tbody id="deptSheetBody"></tbody>
         </table></div>
         <div id="deptSheetDeck" class="dept-deck no-print"></div>
+        <div id="deptSheetNot"></div>
         <div id="deptSheetEmpty"></div>
       </div>
 
@@ -4235,7 +4241,8 @@ function renderDeptDashboard(){
     const date=today();
     const depts=deptAll().filter(function(d){ return deptDaysOf(d).indexOf(deptDow(date))>=0; });
     if(!depts.length){ el2.innerHTML='<p class="muted" style="margin:0">No department meets today. Next meetings are listed in the Department Register.</p>'; return; }
-    el2.innerHTML=depts.map(function(d){
+    const pendingN=(db.deptRegister||[]).filter(deptIsPending).length;
+    el2.innerHTML=(pendingN?'<div class="kpi"><span>⏳ Department members waiting for Admin approval</span><b><span class="inline-chip y">'+pendingN+'</span></b></div>':'')+depts.map(function(d){
       const regs=deptRegs(d.id);
       let pres=0,abs=0,un=0;
       regs.forEach(function(r){ if(!deptExpectedOn(r,date)) return; const st=deptAttStatus(r.id,date); if(st==='present') pres++; else if(st==='absent') abs++; else un++; });
@@ -4264,11 +4271,11 @@ function renderDashboard(){
   set('usherRecordsCount',db.usherAttendance.length);
   set('statOfferingTotal',money(db.usherAttendance.reduce(function(s,x){ return s+num(x.offeringTotal); },0)));
   try{
-    set('dashDeptMembers',(db.deptRegister||[]).length);
+    set('dashDeptMembers',(db.deptRegister||[]).filter(deptIsApproved).length);
     const dateD=today();
     const deptsD=(db.departments||[]).filter(function(d){ return deptDaysOf(d).indexOf(deptDow(dateD))>=0; });
     let presD=0,absD=0,unD=0;
-    (db.deptRegister||[]).forEach(function(r){ if(deptRegDays(r).indexOf(deptDow(dateD))<0) return; const st=deptAttStatus(r.id,dateD); if(st==='present') presD++; else if(st==='absent') absD++; else unD++; });
+    (db.deptRegister||[]).filter(deptIsApproved).forEach(function(r){ if(deptRegDays(r).indexOf(deptDow(dateD))<0) return; const st=deptAttStatus(r.id,dateD); if(st==='present') presD++; else if(st==='absent') absD++; else unD++; });
     set('dashDeptTodayLabel',deptsD.length?deptsD.map(deptName).join(', '):'No department meets today');
     set('dashDeptPresent',presD); set('dashDeptAbsent',absD); set('dashDeptUnmarked',unD);
   }catch(errD){ console.warn('[JCRGM] dept dashboard',errD); }
@@ -4509,10 +4516,34 @@ function deptEnsure(){
 }
 
 /* ---------- register members ---------- */
+/* Every member added to a department must be approved by Admin before they
+   are counted, marked in the register, measured for consistency or placed on
+   the ministry roster. Records saved before this rule existed (no approval
+   field, or approved) are treated as approved. */
+function deptRegState(r){
+  const v=String((r&&r.approval)||'').toLowerCase();
+  return (v==='pending'||v==='rejected')?v:'approved';
+}
+function deptIsApproved(r){ return deptRegState(r)==='approved'; }
+function deptIsPending(r){ return deptRegState(r)==='pending'; }
+function deptIsRejected(r){ return deptRegState(r)==='rejected'; }
 function deptRegs(deptId){
+  const all=(db.deptRegister||[]).filter(deptIsApproved);
+  return deptId?all.filter(function(r){ return String(r.deptId)===String(deptId); }):all;
+}
+function deptRegsAll(deptId){
   const all=db.deptRegister||[];
   return deptId?all.filter(function(r){ return String(r.deptId)===String(deptId); }):all;
 }
+function deptPendingRegs(){ return (db.deptRegister||[]).filter(deptIsPending); }
+function deptRejectedRegs(){ return (db.deptRegister||[]).filter(deptIsRejected); }
+function deptPendingForDept(deptId){ return deptPendingRegs().filter(function(r){ return String(r.deptId)===String(deptId); }); }
+function deptCanManage(){
+  if(isMgmtAdmin()) return true;
+  try{ return sessionStorage.getItem('jcrgm_dept_leader')==='1'; }catch(e){ return false; }
+}
+function deptCanSeePending(r){ return isMgmtAdmin()||deptCanManage()||(r&&r._deviceId&&String(r._deviceId)===String(MGMT_DEVICE_ID)); }
+function deptPendingVisible(){ return deptPendingRegs().filter(deptCanSeePending); }
 function deptRegById(id){ return (db.deptRegister||[]).find(function(r){ return String(r.id)===String(id); })||null; }
 function deptRegName(r){ return String((r&&(r.name||r.fullName))||'').trim()||'Unnamed member'; }
 function deptRegDays(r){
@@ -4537,6 +4568,7 @@ function deptAttOf(regId,date){ return deptAttIndex()[deptAttKey(regId,date)]||n
 function deptAttStatus(regId,date){ const a=deptAttOf(regId,date); return a&&a.status?a.status:'none'; }
 function deptSetAtt(regId,date,status,reason){
   const reg=deptRegById(regId); if(!reg) return null;
+  if(!deptIsApproved(reg)){ toast('This member is still waiting for Admin approval — the register opens for them once Admin approves.','err',5200); return null; }
   const key=deptAttKey(regId,date);
   let a=(db.deptAttendance||[]).find(function(x){ return deptAttKey(x.regId,x.date)===key; });
   if(!a){ a={id:uid(),regId:String(regId),date:String(date),_deviceId:MGMT_DEVICE_ID}; db.deptAttendance.push(a); }
@@ -4660,7 +4692,7 @@ function deptNextSunday(from){
 function deptFilterId(){ const s=el('deptSel'); return s?String(s.value||''):''; }
 function deptSelectedDate(){ const i=el('deptDate'); return (i&&i.value)||today(); }
 function deptHasExpected(date){
-  return (db.deptRegister||[]).some(function(r){ return deptExpectedOn(r,date); });
+  return (db.deptRegister||[]).some(function(r){ return deptIsApproved(r)&&deptExpectedOn(r,date); });
 }
 function deptDefaultDate(){
   if(deptHasExpected(today())) return today();
@@ -4679,7 +4711,7 @@ function deptJumpMeeting(dir){
 function deptRowList(){
   const term=String((el('deptSearch')||{}).value||'').trim().toLowerCase();
   const fid=deptFilterId();
-  let rows=(db.deptRegister||[]).slice();
+  let rows=(db.deptRegister||[]).filter(deptIsApproved);
   if(fid) rows=rows.filter(function(r){ return String(r.deptId)===fid; });
   if(term) rows=rows.filter(function(r){ const d=deptById(r.deptId); return (deptRegName(r)+' '+(d?deptName(d):'')+' '+(r.role||'')).toLowerCase().indexOf(term)>=0; });
   const sort=String((el('deptSort')||{}).value||'consistency');
@@ -4729,8 +4761,13 @@ function renderDeptRegister(){
   deptEnsureSelectors();
   const gal=el('mtabGalleryCount');
   if(gal) gal.textContent=(db.members||[]).filter(function(x){ return memberDisplayName(x)&&x.approval!=='pending'; }).length;
-  const cnt=el('mtabDeptCount'); if(cnt) cnt.textContent=(db.deptRegister||[]).length;
+  const cnt=el('mtabDeptCount'); if(cnt) cnt.textContent=deptRegs().length;
+  const pn=el('mtabDeptPending'); if(pn){ const n=deptPendingRegs().length; pn.textContent=n; pn.style.display=n?'':'none'; }
+  const ac=el('deptAprCount'); if(ac){ const n=deptPendingRegs().length; ac.textContent=n; ac.style.display=n?'':'none'; }
+  const allBtn=el('deptAprAll');
+  if(allBtn) allBtn.style.display=((isMgmtAdmin()||deptCanManage())&&deptPendingRegs().length)?'':'none';
   if(!panel||!panel.classList.contains('active')) return;
+  renderDeptApprovals();
   renderDeptKPIs();
   renderDeptMeetToday();
   renderDeptSheet();
@@ -4740,6 +4777,166 @@ function renderDeptRegister(){
   renderDeptCards();
   renderDeptAbsenceLog();
 }
+function deptAdminLogin(){
+  if(isMgmtAdmin()){
+    toast('Admin is already logged in on this gadget — approve entries in the list below the toolbar.','ok',4200);
+    const box=el('deptApprovals'); if(box&&box.innerHTML.trim()) box.scrollIntoView({behavior:'smooth',block:'start'});
+    return;
+  }
+  modal('<h3 style="padding-right:36px">🔐 Admin — approve department members</h3>'+
+    '<p class="muted">Every person added to a department register must be approved before they are counted, marked present or placed on the ministry roster. Enter the church admin password to approve or reject entries.</p>'+
+    '<form class="form" onsubmit="submitDeptAdmin(event)">'+
+    '<div class="full"><label for="deptAdminPassword">Password</label><input id="deptAdminPassword" type="password" placeholder="Enter password" autocomplete="off"></div>'+
+    '<div class="full actions" style="margin-top:10px"><button class="btn gold" type="submit">Log in as Admin</button>'+
+    '<button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>',true);
+}
+function submitDeptAdmin(e){
+  if(e&&e.preventDefault) e.preventDefault();
+  const input=el('deptAdminPassword'); const val=((input&&input.value)||'').trim();
+  if(mgmtHash(val)===MGMT_ADMIN_HASH){
+    window.__mgmtAdminUnlocked=true;
+    try{ sessionStorage.setItem('jcrgm_mgmt_admin','1'); }catch(err){}
+    closeModal(); renderAll();
+    toast('Admin logged in — approve the department members waiting in the list.','ok',4800);
+  }else{
+    toast('Incorrect password.','err',3600);
+    if(input){ input.focus(); input.select(); }
+  }
+}
+function deptLeaderLogin(){
+  modal('<h3 style="padding-right:36px">🔐 Admin approval needed</h3>'+
+    '<p class="muted">Members added to a department can only be approved by the church Admin. If you are the Admin, log in with the church password. If you are a department leader and the Admin has already opened this gadget, you can approve on their behalf.</p>'+
+    '<form class="form" onsubmit="submitDeptAdmin(event)">'+
+    '<div class="full"><label for="deptAdminPassword">Admin password</label><input id="deptAdminPassword" type="password" placeholder="Enter password" autocomplete="off"></div>'+
+    '<div class="full actions" style="margin-top:10px"><button class="btn gold" type="submit">Log in as Admin</button>'+
+    '<button class="btn secondary" type="button" onclick="closeModal()">Close</button></div></form>',true);
+}
+function deptApprovalChip(r){
+  const st=deptRegState(r);
+  if(st==='pending') return '<span class="st wait">⏳ Waiting for Admin</span>';
+  if(st==='rejected') return '<span class="st off">✗ Rejected</span>';
+  return '<span class="st on">✓ Approved</span>';
+}
+function renderDeptApprovals(){
+  const box=el('deptApprovals'); if(!box) return;
+  const admin=isMgmtAdmin();
+  const canManage=deptCanManage();
+  const pending=deptPendingRegs().filter(deptCanSeePending);
+  const hidden=deptPendingRegs().length-pending.length;
+  const rejected=(admin||canManage)?deptRejectedRegs():[];
+  if(!pending.length&&!rejected.length&&!hidden){ box.innerHTML=''; return; }
+  if(!pending.length&&!rejected.length&&hidden){
+    box.innerHTML='<div class="alert blue no-print" style="margin:14px 0 0"><b>⏳ '+hidden+' department member(s) are waiting for Admin approval.</b> They are not counted on the register, cannot be marked present and are not placed on the ministry roster until the church Admin approves them. Only Admin can review entries added from other phones.</div>';
+    return;
+  }
+  const cards=pending.map(function(r){
+    const d=deptById(r.deptId);
+    const fromHere=r._deviceId&&String(r._deviceId)===String(MGMT_DEVICE_ID);
+    const acts=(admin||canManage)
+      ? '<div class="approve-actions no-print">'+
+          '<button class="btn success small" type="button" onclick="approveDeptReg(\''+esc(r.id)+'\')">✓ Approve — add to the register</button>'+
+          '<button class="btn danger small" type="button" onclick="rejectDeptReg(\''+esc(r.id)+'\')">✗ Reject</button>'+
+          '<button class="btn secondary small" type="button" onclick="openDeptMember(\''+esc(r.id)+'\')">✎ Review / edit</button></div>'
+      : '<div class="member-actions no-print">'+
+          '<button class="btn secondary small" type="button" onclick="openDeptMember(\''+esc(r.id)+'\')">✎ Edit</button>'+
+          '<button class="btn secondary small" type="button" onclick="withdrawDeptReg(\''+esc(r.id)+'\')">Withdraw</button></div>';
+    return '<div class="member-card pending" style="text-align:left;padding:13px">'+
+      '<div style="display:flex;align-items:center;gap:6px">'+deptAvatar(r)+'<b style="color:var(--primary);font-size:13.5px">'+esc(deptRegName(r))+'</b></div>'+
+      '<div class="member-meta" style="margin-top:4px">'+(d?'<span class="inline-chip">'+esc(deptName(d))+'</span>':'')+
+        (r.role?' <span class="inline-chip">'+esc(r.role)+'</span>':'')+'</div>'+
+      '<div class="member-meta" style="margin-top:5px">🗓 '+esc(deptRegDays(r).join(', ')||'department days')+'</div>'+
+      '<div class="member-meta">Added '+esc(r.createdAt||fmtDate(String(r.start||''))||'')+(admin?(fromHere?' • from this gadget':' • from another gadget'):' • by you')+'</div>'+
+      acts+'</div>';
+  }).join('');
+  box.innerHTML='<div class="pending-head no-print"><b>'+(admin?'⏳ Department members waiting for your approval — ':'⏳ Waiting for Admin approval — ')+pending.length+'</b>'+
+    '<span class="muted">'+(admin?'Check each person, then Approve to add them to the '+ 'register (attendance, consistency and the roster open for them), or Reject to refuse the entry.':'They are <b>not</b> on the register yet — no attendance, consistency or roster applies until Admin approves them.')+'</span></div>'+
+    '<div class="ministry-grid" style="margin-top:11px">'+cards+'</div>'+
+    (hidden?'<div class="hint" style="margin-top:9px">+ '+hidden+' more member(s) from other phones are waiting — only Admin can review those.</div>':'')+rejectSummary(rejected);
+  const b1=el('deptAprAll');
+  if(b1) b1.style.display=(admin&&pending.length)?'':'none';
+}
+function rejectSummary(rejected){
+  if(!rejected.length) return '';
+  return '<details class="no-print" style="margin-top:10px"><summary class="muted" style="cursor:pointer;font-size:12.5px">Rejected entries ('+rejected.length+')</summary>'+
+    '<div style="margin-top:8px">'+rejected.map(function(r){
+      const d=deptById(r.deptId);
+      return '<div class="history-row"><span style="flex:1"><b>'+esc(deptRegName(r))+'</b> '+(d?'<span class="inline-chip">'+esc(deptName(d))+'</span>':'')+(r.rejectReason?'<div class="hr">Reason: '+esc(r.rejectReason)+'</div>':'')+'</span>'+
+        '<span class="no-print" style="display:flex;gap:4px"><button class="btn success xs" type="button" onclick="restoreDeptReg(\''+esc(r.id)+'\')">Restore &amp; approve</button>'+
+        '<button class="btn danger xs" type="button" onclick="deleteDeptReg(\''+esc(r.id)+'\')">Delete</button></span></div>';
+    }).join('')+'</div></details>';
+}
+function openDeptReview(){
+  if(!isMgmtAdmin()&&!deptCanManage()){ deptLeaderLogin(); return; }
+  const box=el('deptApprovals');
+  if(box){
+    if(box.innerHTML.trim()) box.scrollIntoView({behavior:'smooth',block:'start'});
+    else toast('No department member is waiting for approval right now.','ok',3600);
+  }
+}
+function approveDeptReg(id){
+  if(!isMgmtAdmin()&&!deptCanManage()){ deptLeaderLogin(); return; }
+  const r=deptRegById(id); if(!r){ toast('Entry not found.','err'); return; }
+  r.approval='approved'; r.status='Approved'; r.approvedAt=nowStamp(); r.approvedBy=isMgmtAdmin()?'Admin':'Department leader'; r.rejectReason='';
+  r._syncUpdatedAt=Date.now(); _deptAttCache=null;
+  deptLegacyFields(deptById(r.deptId));
+  persist(); renderDeptRegister(); try{ renderDashboard(); }catch(e){}
+  toast(deptRegName(r)+' approved ✓ — now on the '+deptName(deptById(r.deptId))+' register.','ok',4600);
+  mgmtSyncNow('Department approval');
+}
+function rejectDeptReg(id){
+  if(!isMgmtAdmin()&&!deptCanManage()){ deptLeaderLogin(); return; }
+  const r=deptRegById(id); if(!r) return;
+  modal('<h3 style="padding-right:36px">✗ Reject — '+esc(deptRegName(r))+'</h3>'+
+    '<p class="muted">'+esc(deptName(deptById(r.deptId)))+'. A rejected entry never enters the register. You can restore it later from <b>Rejected entries</b>.</p>'+
+    '<form onsubmit="saveDeptReject(event,\''+esc(r.id)+'\')">'+
+    '<div><label>Reason (optional)</label><input id="deptRejectReason" placeholder="e.g. not a member of this department" maxlength="140"></div>'+
+    '<div class="actions" style="margin-top:12px"><button class="btn danger" type="submit">Reject entry</button>'+
+    '<button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>',true);
+}
+function saveDeptReject(e,id){
+  if(e&&e.preventDefault) e.preventDefault();
+  const r=deptRegById(id); if(!r) return;
+  r.approval='rejected'; r.status='Rejected'; r.rejectReason=String((el('deptRejectReason')||{}).value||'').trim(); r.rejectedAt=nowStamp(); r.rejectedBy=isMgmtAdmin()?'Admin':'Department leader';
+  r._syncUpdatedAt=Date.now(); _deptAttCache=null;
+  deptLegacyFields(deptById(r.deptId));
+  persist(); renderDeptRegister(); closeModal();
+  toast('Entry rejected — it is kept under “Rejected entries” and never enters the register.','ok',4600);
+  mgmtSyncNow('Department approval');
+}
+function restoreDeptReg(id){
+  if(!isMgmtAdmin()&&!deptCanManage()){ deptLeaderLogin(); return; }
+  const r=deptRegById(id); if(!r) return;
+  r.approval='approved'; r.status='Approved'; r.approvedAt=nowStamp(); r.approvedBy=isMgmtAdmin()?'Admin':'Department leader'; r.rejectReason='';
+  r._syncUpdatedAt=Date.now(); _deptAttCache=null;
+  deptLegacyFields(deptById(r.deptId));
+  persist(); renderDeptRegister();
+  toast(deptRegName(r)+' restored and approved ✓.','ok',3600);
+  mgmtSyncNow('Department approval');
+}
+function withdrawDeptReg(id){
+  const r=deptRegById(id); if(!r) return;
+  if(!deptCanSeePending(r)){ toast('Only the gadget that added this member can withdraw it.','err',4600); return; }
+  if(!confirm('Withdraw the entry for '+deptRegName(r)+'?')) return;
+  db.deptRegister=db.deptRegister.filter(function(x){ return String(x.id)!==String(id); });
+  persist(); renderDeptRegister();
+  toast('Entry withdrawn.','ok',3000);
+  mgmtSyncNow(false);
+}
+function approveAllDeptPending(){
+  if(!isMgmtAdmin()&&!deptCanManage()){ deptLeaderLogin(); return; }
+  const list=deptPendingRegs();
+  if(!list.length){ toast('Nothing is waiting for approval.','ok',3000); return; }
+  if(!confirm('Approve all '+list.length+' waiting member(s) into their department registers?')) return;
+  list.forEach(function(r){
+    r.approval='approved'; r.status='Approved'; r.approvedAt=nowStamp(); r.approvedBy=isMgmtAdmin()?'Admin':'Department leader';
+    r._syncUpdatedAt=Date.now();
+    deptLegacyFields(deptById(r.deptId));
+  });
+  _deptAttCache=null;
+  persist(); renderDeptRegister(); try{ renderDashboard(); }catch(e){}
+  toast(list.length+' member(s) approved ✓ — now on the register.','ok',4200);
+  mgmtSyncNow('Department approval');
+}
 function deptExpectedOn(reg,date){
   const days=deptRegDays(reg);
   return days.indexOf(deptDow(date))>=0;
@@ -4747,7 +4944,7 @@ function deptExpectedOn(reg,date){
 function renderDeptKPIs(){
   const date=deptSelectedDate();
   const fid=deptFilterId();
-  const rows=(db.deptRegister||[]).filter(function(r){ return !fid||String(r.deptId)===fid; });
+  const rows=(db.deptRegister||[]).filter(function(r){ return deptIsApproved(r)&&(!fid||String(r.deptId)===fid); });
   let present=0,absent=0,unmarked=0,consistent=0,missedMonth=0;
   const ym=deptMonthOf(date);
   rows.forEach(function(r){
@@ -4771,13 +4968,38 @@ function renderDeptMeetToday(){
   const fid=deptFilterId();
   const depts=(fid?[deptById(fid)]:deptAll()).filter(Boolean).filter(function(d){ return deptDaysOf(d).indexOf(deptDow(date))>=0; });
   if(!depts.length){ box.style.display='none'; box.innerHTML=''; return; }
-  const count=(db.deptRegister||[]).filter(function(r){ return deptExpectedOn(r,date); }).length;
+  const count=(db.deptRegister||[]).filter(function(r){ return deptIsApproved(r)&&deptExpectedOn(r,date); }).length;
   box.style.display='flex';
   box.innerHTML='<div class="ic">🗓</div><div style="flex:1;min-width:180px"><b>'+esc(deptDateLabel(date))+' — meeting day</b>'+
     '<div class="muted" style="font-size:12.5px">'+esc(depts.map(deptName).join(' • '))+' — '+count+' member(s) expected. Mark each one present (green) or absent (red with a reason).</div></div>'+
     '<button class="btn success small" type="button" onclick="deptSignSheet()">✍ Take register</button>';
 }
 function deptDots(n){ return n>=1?'●'.repeat(Math.min(n,5))+(n>5?'+':''):''; }
+function renderDeptNotInRegister(date){
+  const box=el('deptSheetNot');
+  if(!box) return;
+  const fid=deptFilterId();
+  const notApproved=(db.deptRegister||[]).filter(function(r){ return !deptIsApproved(r)&&(!fid||String(r.deptId)===fid); });
+  const list=notApproved.filter(deptCanSeePending);
+  const hidden=notApproved.length-list.length;
+  if(!list.length&&!hidden){ box.innerHTML=''; return; }
+  if(!list.length&&hidden){
+    box.innerHTML='<div class="alert blue no-print" style="margin:12px 0 0"><b>⏳ '+hidden+' member(s) added from other phones are waiting for Admin approval</b> — they will appear in this register only after the Admin approves them.</div>';
+    return;
+  }
+  box.innerHTML='<div class="pending-head no-print" style="margin-top:12px"><b>⏳ Not in the register yet — '+list.length+'</b>'+
+    '<span class="muted">Waiting for Admin approval. They cannot be marked present, are not counted for consistency and are not placed on the roster until approved.'+(isMgmtAdmin()||deptCanManage()?' Use the <b>Approvals</b> button above.':'')+'</span></div>'+
+    '<div class="ministry-grid" style="margin-top:10px">'+list.map(function(r){
+      const d=deptById(r.deptId);
+      return '<div class="dcard no"><div class="dhead">'+deptAvatar(r)+'<b>'+esc(deptRegName(r))+'</b>'+deptApprovalChip(r)+'</div>'+
+        '<div class="dmeta">'+(d?'<span class="inline-chip">'+esc(deptName(d))+'</span>':'')+(r.role?'<span class="inline-chip">'+esc(r.role)+'</span>':'')+'</div>'+
+        '<div class="dsub">🗓 '+esc(deptRegDays(r).join(', ')||'department days')+' • added '+esc(r.createdAt||'')+'</div>'+
+        '<div class="dactions">'+((isMgmtAdmin()||deptCanManage())
+          ?'<button class="btn success xs" type="button" onclick="approveDeptReg(\''+esc(r.id)+'\')">✓ Approve</button><button class="btn danger xs" type="button" onclick="rejectDeptReg(\''+esc(r.id)+'\')">✗ Reject</button>'
+          :'<button class="btn secondary xs" type="button" onclick="withdrawDeptReg(\''+esc(r.id)+'\')">Withdraw</button>')+
+        '</div></div>';
+    }).join('')+'</div>'+(hidden?'<div class="hint" style="margin-top:8px">+ '+hidden+' more waiting from other phones — only Admin can review those.</div>':'');
+}
 function deptSheetCard(r,date){
   const dept=deptById(r.deptId); const days=deptRegDays(r);
   const expected=days.indexOf(deptDow(date))>=0;
@@ -4816,11 +5038,13 @@ function renderDeptSheet(){
   if(!rows.length){
     body.innerHTML='';
     if(deck) deck.innerHTML='';
-    if(empty) empty.innerHTML='<div class="empty">No department members on the register yet. Press <b>“+ Add Member to a Department”</b> above — or open <b>⚙ Departments &amp; Rehearsal Days</b> to set the days each department meets.</div>';
+    if(empty) empty.innerHTML='<div class="empty">No approved department members on the register yet. Press <b>“+ Add Member to a Department”</b> above — or open <b>⚙ Departments &amp; Rehearsal Days</b> to set the days each department meets.'+((db.deptRegister||[]).length?'<br><b>'+deptPendingRegs().length+'</b> member(s) are waiting for Admin approval below.':'')+'</div>';
+    renderDeptNotInRegister(date);
     return;
   }
   if(empty) empty.innerHTML='';
   if(deck) deck.innerHTML=rows.map(function(r){ return deptSheetCard(r,date); }).join('');
+  renderDeptNotInRegister(date);
   body.innerHTML=rows.map(function(r){
     const dept=deptById(r.deptId); const days=deptRegDays(r);
     const expected=days.indexOf(deptDow(date))>=0;
@@ -5067,7 +5291,7 @@ function saveDeptReason(e,regId,date){
 }
 function deptExpectedRows(date){
   const fid=deptFilterId();
-  return (db.deptRegister||[]).filter(function(r){ return (!fid||String(r.deptId)===fid)&&deptExpectedOn(r,date); });
+  return (db.deptRegister||[]).filter(function(r){ return deptIsApproved(r)&&(!fid||String(r.deptId)===fid)&&deptExpectedOn(r,date); });
 }
 function deptUnmarkedExpected(date){
   return deptExpectedRows(date).filter(function(r){ return deptAttStatus(r.id,date)==='none'; });
@@ -5175,17 +5399,37 @@ function saveDeptMember(e,id){
     memberId:String(window.__deptMemberGal||'')
   };
   let rec=null;
-  if(id){ rec=deptRegById(id); if(!rec){ toast('Member not found on the register.','err'); return; } Object.assign(rec,payload); rec.updatedAt=nowStamp(); rec._syncUpdatedAt=Date.now(); }
-  else{
-    const dup=(db.deptRegister||[]).some(function(x){ return String(x.deptId)===deptId&&deptRegName(x).toLowerCase()===name.toLowerCase(); });
+  if(id){
+    rec=deptRegById(id); if(!rec){ toast('Member not found on the register.','err'); return; }
+    const admin=isMgmtAdmin();
+    if(!admin&&!deptCanManage()&&!deptCanSeePending(rec)){ toast('Only Admin, or the gadget that added this member, can edit it.','err',5200); return; }
+    if(!admin&&!deptCanManage()&&deptIsApproved(rec)){
+      /* the member is already approved: a plain user cannot move or demote them — that goes back to Admin */
+      payload.deptId=rec.deptId; payload.start=rec.start;
+    }
+    Object.assign(rec,payload); rec.updatedAt=nowStamp(); rec._syncUpdatedAt=Date.now();
+    if(!admin&&!deptCanManage()){ rec.approval='pending'; rec.approvedAt=''; rec.approvedBy=''; rec.status='Pending'; }
+  }else{
+    const dup=(db.deptRegister||[]).some(function(x){ return String(x.deptId)===deptId&&deptRegName(x).toLowerCase()===name.toLowerCase()&&!deptIsRejected(x); });
     if(dup){ toast(name+' is already on this department’s register.','err',5200); return; }
     rec=Object.assign({id:uid(),createdAt:nowStamp(),_deviceId:MGMT_DEVICE_ID,_syncUpdatedAt:Date.now()},payload);
+    if(isMgmtAdmin()||deptCanManage()){
+      rec.approval='approved'; rec.status='Approved'; rec.approvedAt=nowStamp(); rec.approvedBy=isMgmtAdmin()?'Admin':'Department leader';
+    }else{
+      rec.approval='pending'; rec.status='Pending';
+    }
     db.deptRegister.push(rec);
   }
   _deptAttCache=null;
   deptLegacyFields(deptById(deptId));
   persist(); renderDeptRegister(); try{ renderDashboard(); }catch(err){} closeModal();
-  toast((id?'Member updated':'Member added')+' — '+name+' on the '+deptName(deptById(deptId))+' register.','ok',4200);
+  if(id){
+    toast('Member updated — '+name+'.','ok',4200);
+  }else if(deptIsApproved(rec)){
+    toast('Member added and approved — '+name+' on the '+deptName(deptById(deptId))+' register.','ok',4200);
+  }else{
+    toast(name+' was submitted to the '+deptName(deptById(deptId))+' register — waiting for Admin approval.','ok',5400);
+  }
   mgmtSyncNow('Department register');
 }
 function deleteDeptReg(id){
@@ -5244,13 +5488,15 @@ function saveDeptPicker(e){
   const ids=Array.prototype.slice.call(qa('#pickList input[type=checkbox]')).filter(function(c){ return c.checked&&!c.disabled; }).map(function(c){ return c.value; });
   if(!ids.length){ toast('Tick at least one member to add.','err',4200); return; }
   deptLegacyFields(dept);
+  const auto=isMgmtAdmin()||deptCanManage();
   ids.forEach(function(mid){
     const m=(db.members||[]).find(function(x){ return String(x.id)===String(mid); });
     if(!m) return;
-    db.deptRegister.push({id:uid(),name:memberDisplayName(m),deptId:deptId,role:role,phone:String(m.phone||''),days:[],start:today(),notes:'',memberId:String(m.id),createdAt:nowStamp(),_deviceId:MGMT_DEVICE_ID,_syncUpdatedAt:Date.now()});
+    db.deptRegister.push({id:uid(),name:memberDisplayName(m),deptId:deptId,role:role,phone:String(m.phone||''),days:[],start:today(),notes:'',memberId:String(m.id),createdAt:nowStamp(),_deviceId:MGMT_DEVICE_ID,_syncUpdatedAt:Date.now(),
+      approval:auto?'approved':'pending',status:auto?'Approved':'Pending',approvedAt:auto?nowStamp():'',approvedBy:auto?(isMgmtAdmin()?'Admin':'Department leader'):''});
   });
   persist(); renderDeptRegister(); closeModal();
-  toast(ids.length+' member(s) added to the '+deptName(dept)+' register. Now set their rehearsal days on the department.','ok',5200);
+  toast(ids.length+' member(s) added to the '+deptName(dept)+' register'+(auto?' and approved.':' — waiting for Admin approval. They join the register once approved.'),'ok',5600);
   mgmtSyncNow('Department register');
 }
 /* ---------- department settings ---------- */
@@ -5295,7 +5541,7 @@ function deptLegacyFields(d){
   if(!d) return d;
   d.department=deptName(d);
   d.day=deptDaysOf(d).join(', ');
-  d.members=deptRegs(d.id).length;
+  d.members=deptRegs(d.id).length; /* approved members only */
   return d;
 }
 function saveDept(e,id){
@@ -5408,8 +5654,8 @@ function clearDeptMinister(regId){
 function deptAutoAssign(){
   const plan=deptPlanDate();
   const fid=deptFilterId();
-  const rows=(db.deptRegister||[]).filter(function(r){ return !fid||String(r.deptId)===fid; });
-  if(!rows.length){ toast('No members on the register to plan.','err'); return; }
+  const rows=deptRegs().filter(function(r){ return !fid||String(r.deptId)===fid; });
+  if(!rows.length){ toast('No approved members on the register to plan.','err'); return; }
   let yes=0,no=0;
   rows.forEach(function(reg){
     const live=deptAutoDecision(reg,plan);
@@ -5424,8 +5670,8 @@ function deptAutoAssign(){
 function openMinisteringPicker(){
   const plan=deptPlanDate();
   const fid=deptFilterId();
-  const rows=(db.deptRegister||[]).filter(function(r){ return !fid||String(r.deptId)===fid; }).sort(function(a,b){ return deptRegName(a).localeCompare(deptRegName(b)); });
-  if(!rows.length){ toast('No department members yet.','err'); return; }
+  const rows=deptRegs().filter(function(r){ return !fid||String(r.deptId)===fid; }).sort(function(a,b){ return deptRegName(a).localeCompare(deptRegName(b)); });
+  if(!rows.length){ toast('No approved department members yet — approve members first.','err'); return; }
   modal('<h3 style="padding-right:36px">🎤 Ministry roster — '+esc(deptDateLabel(plan))+'</h3>'+
     '<p class="muted">Tick who will minister. Leave everyone unticked to let the register decide automatically.</p>'+
     '<form onsubmit="saveMinisteringPicker(event)">'+
@@ -5655,5 +5901,5 @@ window.addEventListener('error',function(e){ if(e&&e.message&&String(document.lo
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58867b058a3b572',t:'MTc5NDM0ODgxMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58867b058a3b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a59c690a5be44bcb',t:'MTc5NDU1ODU4Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a59c690a5be44bcb',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58867b058a3b572',t:'MTc5NDM0ODgxMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58867b058a3b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a59ca8c98f9bd2e1',t:'MTc5NDU2MTE5NA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a59ca8c98f9bd2e1',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
