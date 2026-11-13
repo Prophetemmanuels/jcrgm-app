@@ -326,6 +326,91 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
 }
 .prayer-close{position:absolute;top:14px;right:14px;border:0;background:rgba(255,255,255,.15);color:#fff;border-radius:50%;width:34px;height:34px;font-size:18px;z-index:2}
 
+/* ===== Department register (members tab) ===== */
+.day-chips{display:flex;flex-wrap:wrap;gap:7px}
+.day-chip{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--border);background:#fff;border-radius:99px;padding:7px 12px;font-size:12.5px;font-weight:700;color:#4d5a72;cursor:pointer;user-select:none;transition:.15s}
+.day-chip input{display:none}
+.day-chip:hover{border-color:#b9c8e2}
+.day-chip.on{border-color:var(--primary);background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(23,59,122,.22)}
+.day-chip .tick{font-size:10px;opacity:.85}
+.dept-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:9px;margin:13px 0 4px}
+.dept-pill{background:#f6f8fb;border:1px solid var(--border);border-radius:12px;padding:9px 11px}
+.dept-pill span{display:block;font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.dept-pill b{display:block;font-size:19px;color:var(--primary);margin-top:2px;font-variant-numeric:tabular-nums}
+.reg-lights{display:flex;gap:4px;flex-wrap:wrap;align-items:center;max-width:230px}
+@media(max-width:780px){.sheet-scroll{max-height:none}.reg-lights{max-width:100%}.history-row{gap:5px}}
+.dot-l{width:15px;height:15px;border-radius:50%;display:inline-block;flex:none;border:1px solid rgba(0,0,0,.10)}
+.dot-l.present{background:#16a34a;box-shadow:0 0 0 2px #dcfce7,0 0 7px rgba(22,163,74,.65)}
+.dot-l.absent{background:#d63b2f;box-shadow:0 0 0 2px #fee2e2}
+.dot-l.none{background:#dfe5ee;border:1px dashed #b7c2d2;box-shadow:none}
+.st{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:4px 9px;font-size:11px;font-weight:800;white-space:nowrap}
+.st.on{background:#e4f5ec;color:#0f6c40}
+.st.off{background:#fdecea;color:#98231a}
+.st.mid{background:#fbf3dd;color:#8a6714}
+.st.wait{background:#e8f1ff;color:#173b7a}
+.consistency{display:inline-flex;align-items:center;gap:8px;min-width:112px}
+.consistency .cbar{width:62px;height:8px;border-radius:20px;background:#e6ebf3;overflow:hidden;flex:none}
+.consistency .cbar i{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,#d63b2f,#f59e0b 45%,#16a34a 70%,#0d7a3e)}
+.consistency b{font-size:12px;font-variant-numeric:tabular-nums;color:var(--primary)}
+.sheet-scroll{overflow:auto;border:1px solid var(--border);border-radius:12px;background:#fff;max-height:min(70vh,760px);overscroll-behavior:contain}
+.sheet{border-collapse:separate;border-spacing:0;min-width:0;width:100%}
+.sheet th,.sheet td{padding:7px 8px;font-size:12.5px;vertical-align:middle;border-bottom:1px solid var(--border)}
+.sheet thead th{background:#f6f8fb;position:sticky;top:0;z-index:3;font-size:10px;letter-spacing:.04em}
+.sheet .nm{position:sticky;left:0;background:#fff;z-index:2;min-width:172px;max-width:230px;box-shadow:1px 0 0 var(--border)}
+.sheet thead th.nm{background:#f6f8fb;z-index:4}
+.sheet tbody tr:hover td{background:#fafbfe}
+.sheet tbody tr:hover td.nm{background:#f4f7fd}
+.sheet .mt-cell{text-align:center;min-width:74px}
+.mt{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--border);background:#fff;border-radius:99px;padding:5px 9px;font-size:11.5px;font-weight:800;color:#8a94a6;cursor:pointer;transition:.14s;white-space:nowrap}
+.mt:hover{border-color:#b9c8e2}
+.mt.on{background:#e8f7ee;border-color:#16a34a;color:#0f6c40}
+.mt.on .dot-l{background:#16a34a;box-shadow:0 0 0 2px #bbf7d0,0 0 7px rgba(22,163,74,.7)}
+.mt.off{background:#fdecea;border-color:#e8837a;color:#98231a}
+.mt.off .dot-l{background:#d63b2f;box-shadow:0 0 0 2px #fecaca}
+.mt .dot-l{width:12px;height:12px;border:0}
+.mt-why{display:inline-flex;width:20px;height:20px;border-radius:50%;border:1.5px dashed #c3ccdb;background:#fff;color:#8a94a6;font-size:11px;font-weight:900;align-items:center;justify-content:center;margin-left:3px;cursor:pointer;flex:none}
+.mt-why.has{border-style:solid;border-color:#e8837a;background:#fdecea;color:#98231a}
+.mt-why:hover{transform:scale(1.12)}
+.reason-txt{display:block;font-size:10.5px;color:#98231a;line-height:1.3;margin-top:3px;max-width:120px;white-space:normal}
+.meet-today{background:linear-gradient(135deg,#fbf3dd,#fdf9ee);border:1px solid #efd69b;border-radius:12px;padding:12px 15px;display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin:12px 0}
+.meet-today .ic{width:40px;height:40px;border-radius:11px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;flex:none}
+.meet-today b{color:var(--primary)}
+.dept-card{grid-column:1/-1;border:1px solid var(--border);border-radius:14px;padding:15px;background:linear-gradient(145deg,#fff,#f7f9fc)}
+.dept-card h4{margin:0 0 3px;font-size:15px}
+.dept-card .sub2{font-size:11.5px;color:var(--muted);line-height:1.5}
+.wcard{border:1px solid var(--border);border-radius:13px;padding:12px 14px;background:#fff;display:flex;flex-direction:column;gap:7px}
+.wcard .wtop{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.wcard h5{margin:0;font-size:13.5px;color:var(--primary)}
+.wcard .wd{font-size:11px;color:var(--muted)}
+.wcard .state{font-size:12.5px;font-weight:700;line-height:1.35}
+.wcard .mini{font-size:11px;color:#8a94a6}
+.ministry-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:11px}
+.inline-chip{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:3px 9px;font-size:11px;font-weight:800;background:#eef2f8;color:#3d4b63;white-space:nowrap}
+.inline-chip.g{background:#e4f5ec;color:#0f6c40}.inline-chip.r{background:#fdecea;color:#98231a}.inline-chip.y{background:#fbf3dd;color:#8a6714}
+.history-row{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px}
+.history-row:last-child{border:0}
+.history-row .hd{font-weight:800;color:var(--primary);white-space:nowrap;min-width:78px;font-size:12px}
+.history-row .hr{color:#98231a}
+.chip-wrap{display:flex;flex-wrap:wrap;gap:4px}
+.chip-wrap .inline-chip{font-size:10px;padding:2px 7px}
+.dept-deck{display:none}
+@media(max-width:780px){
+  #deptSheetTable{display:none}
+  .dept-deck{display:grid;gap:10px}
+  .dcard{background:#fff;border:1px solid var(--border);border-radius:13px;padding:11px 12px;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+  .dcard .dhead{display:flex;align-items:center;gap:2px;margin-bottom:7px}
+  .dcard .dhead b{font-size:13.5px}
+  .dcard .dmeta{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+  .dcard .drow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .dcard .drow .mt{font-size:12px;padding:6px 11px}
+  .dcard .dreason{font-size:11.5px;color:#98231a;margin-top:6px;line-height:1.35}
+  .dcard .dsub{font-size:11px;color:#8a94a6;margin-top:6px}
+  .dcard .dactions{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+  .dcard.no{background:#fff8f7;border-color:#f3c9c4}
+}
+.serif{font-family:Georgia,"Times New Roman",serif}
+@media(max-width:700px){.consistency{min-width:0}.consistency .cbar{display:none}.wcard{padding:11px 12px}}
+
 /* ===== responsive ===== */
 @media(max-width:1080px){.two{grid-template-columns:1fr}.catalogue-search-row{grid-template-columns:1fr 1fr}}
 @media(max-width:900px){:root{--nav-w:250px}}
@@ -407,7 +492,11 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
     <button type="button" data-page="usherattendance"><span class="ic">👔</span> Ushers Record</button>
 
     <div class="nav-sec">People</div>
-    <button type="button" data-page="members"><span class="ic">👥</span> Members</button>
+    <button type="button" data-page="members" data-section="gallery" id="membersNavButton" aria-expanded="true"><span class="ic">👥</span> Members <span class="ic caret">⌄</span></button>
+    <div class="events-sub" id="membersSubmenu">
+      <button type="button" class="sub" data-page="members" data-section="gallery"><span class="ic">🖼</span> Photo Gallery</button>
+      <button type="button" class="sub" data-page="members" data-section="departments"><span class="ic">📋</span> Department Register</button>
+    </div>
 
     <div class="nav-sec">Ceremonies</div>
     <button type="button" data-page="events" data-section="calendar" id="eventsNavButton" aria-expanded="false"><span class="ic">📅</span> Ceremonies <span class="ic caret">⌄</span></button>
@@ -473,6 +562,17 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
       </div>
     </div>
     <div class="card" style="margin-top:16px">
+      <div class="section-head"><div><h3 style="margin:0">📋 Department Register — today</h3><div class="sub muted" id="dashDeptTodayLabel">No department meets today</div></div>
+        <div class="actions"><span class="inline-chip">Dept members <b id="dashDeptMembers" style="margin-left:5px">0</b></span>
+          <button class="btn small secondary" onclick="navTo('members','departments')">Open register</button></div></div>
+      <div class="grid stats" style="margin-bottom:6px">
+        <div class="card stat tight"><div class="label">Present today</div><strong id="dashDeptPresent" style="color:var(--success)">0</strong><span class="muted">green lights</span></div>
+        <div class="card stat tight"><div class="label">Absent today</div><strong id="dashDeptAbsent" style="color:var(--danger)">0</strong><span class="muted">explanation recorded</span></div>
+        <div class="card stat tight"><div class="label">Not yet marked</div><strong id="dashDeptUnmarked">0</strong><span class="muted">awaiting register</span></div>
+      </div>
+      <div id="dashDeptToday"></div>
+    </div>
+    <div class="card" style="margin-top:16px">
       <div class="section-head"><div><h3 style="margin:0">Attendance &amp; Total Offering by Service Date</h3><div class="sub muted">Consolidated across all gadgets for each dated service (latest first).</div></div>
         <div class="actions"><button class="btn small gold" onclick="openAdminGate()">🔐 Admin</button><button class="btn small secondary" onclick="navTo('usherattendance')">Ushers Record</button></div></div>
       <div id="dashboardServiceDates"><p class="muted">No ushers records yet.</p></div>
@@ -535,9 +635,17 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
     </div>
   </section>
 
-  <!-- ================= MEMBERS PHOTO GALLERY ================= -->
+  <!-- ================= MEMBERS ================= -->
   <section id="members" class="page" aria-labelledby="membersH">
     <h2 id="membersH" style="position:absolute;left:-9999px">Church Members</h2>
+
+    <div class="tabs no-print" role="tablist" id="memberTabs" aria-label="Member sections">
+      <button type="button" role="tab" data-section="gallery" id="mtab-gallery" aria-controls="mpanel-gallery" aria-selected="true">🖼 Photo Gallery <span class="cnt" id="mtabGalleryCount">0</span></button>
+      <button type="button" role="tab" data-section="departments" id="mtab-departments" aria-controls="mpanel-departments" aria-selected="false">📋 Department Register <span class="cnt" id="mtabDeptCount">0</span></button>
+    </div>
+
+    <!-- tab: photo gallery -->
+    <div class="tabpanel active" id="mpanel-gallery" role="tabpanel" aria-labelledby="mtab-gallery" tabindex="0">
     <div class="card">
       <div class="toolbar">
         <div><h3 style="margin:0">👥 Church Members — Photo Gallery</h3>
@@ -559,6 +667,125 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
       </div>
       <div id="membersGallery" class="members-gallery"></div>
     </div>
+    </div><!-- /mpanel-gallery -->
+
+    <!-- tab: department register (attendance, rehearsal days, consistency) -->
+    <div class="tabpanel" id="mpanel-departments" role="tabpanel" aria-labelledby="mtab-departments" tabindex="0">
+
+      <div class="card">
+        <div class="toolbar">
+          <div><h3 style="margin:0">📋 Department Register</h3>
+            <div class="sub muted">Every church department — Praise Team, Women, Youth, Ushering, Choir and all others. Record each member with the <b>days they rehearse / meet</b>, then mark <b>attendance</b>: a <span class="inline-chip g">🟢 green light</span> means present, a <span class="inline-chip r">🔴 red light</span> means absent and an <b>explanation must be recorded</b>.</div></div>
+          <div class="actions no-print">
+            <button class="btn" type="button" onclick="openDeptPicker()">+ Add Member to a Department</button>
+            <button class="btn gold" type="button" onclick="openDeptSettings()">⚙ Departments &amp; Rehearsal Days</button>
+          </div>
+        </div>
+
+        <div class="alert blue no-print"><b>How it works:</b> ① Choose a department → ② add its members (also from the photo gallery) → ③ set the days they rehearse → ④ for every meeting, the register shows each expected member on their own meeting day and you light them <b>green (present)</b> or <b>red (absent + reason)</b>. The register then builds <b>consistency</b>, the number of <b>rehearsals missed</b> in each month, and <b>what each department member will minister</b> — automatically.</div>
+
+        <div class="form no-print" style="margin-bottom:12px">
+          <div><label for="deptSel">Department</label><select id="deptSel" onchange="onDeptPick(this.value)"><option value="">All departments</option></select></div>
+          <div><label for="deptDate">Meeting date</label><input id="deptDate" type="date" onchange="onDeptDateChange()"></div>
+          <div><label for="deptSearch">Search member</label><input id="deptSearch" placeholder="Member name..." oninput="renderDeptRegister()"></div>
+          <div><label for="deptSort">Arrange by</label><select id="deptSort" onchange="renderDeptRegister()"><option value="consistency">Consistency (best first)</option><option value="name">Name A–Z</option><option value="missed">Most rehearsals missed</option><option value="dept">Department</option></select></div>
+        </div>
+
+        <div class="meet-today" id="deptMeetToday" style="display:none"></div>
+
+        <div class="dept-bar" aria-live="polite">
+          <div class="dept-pill"><span>Departments</span><b id="deptKpiDepts">0</b></div>
+          <div class="dept-pill"><span>Members on register</span><b id="deptKpiMembers">0</b></div>
+          <div class="dept-pill"><span>Present today</span><b id="deptKpiPresent">0</b></div>
+          <div class="dept-pill"><span>Absent today</span><b id="deptKpiAbsent">0</b></div>
+          <div class="dept-pill"><span>Not yet marked</span><b id="deptKpiUnmarked">0</b></div>
+          <div class="dept-pill"><span>Consistent members</span><b id="deptKpiConsistent">0</b></div>
+          <div class="dept-pill"><span>Missed this month</span><b id="deptKpiMissed">0</b></div>
+        </div>
+      </div>
+
+      <!-- attendance register for the selected day -->
+      <div class="card" style="margin-top:16px">
+        <div class="toolbar">
+          <div><h3 style="margin:0">🗓 Meeting register <span class="muted" id="deptSheetDate" style="font-size:13px;font-weight:600"></span></h3>
+            <div class="sub muted" id="deptSheetHint">Each member is listed on their own rehearsal / meeting day. Tap the light to switch present ↔ absent — a reason is required for every absence.</div></div>
+          <div class="actions no-print">
+            <button class="btn secondary small" type="button" onclick="deptSignSheet()">✍ Take register — all present</button>
+            <button class="btn secondary small" type="button" onclick="deptMarkAll(true)">✓ All present</button>
+            <button class="btn secondary small" type="button" onclick="deptMarkAll(false)">✗ All absent</button>
+            <button class="btn secondary small" type="button" onclick="deptJumpMeeting(-1)" title="Jump to the previous meeting day">⏮ Last meeting</button>
+            <button class="btn secondary small" type="button" onclick="deptJumpMeeting(1)" title="Jump to the next meeting day">Next meeting ⏭</button>
+            <button class="btn secondary small" type="button" onclick="printDeptReport('register')">🖨 Register</button>
+          </div>
+        </div>
+        <div class="sheet-scroll"><table class="sheet" id="deptSheetTable">
+          <thead><tr id="deptSheetHead"><th class="nm">Member</th><th>Department</th><th>Rehearsal days</th><th class="mt-cell">Attendance</th><th>Reason if absent</th><th>This month</th><th>Consistency</th><th class="no-print">Actions</th></tr></thead>
+          <tbody id="deptSheetBody"></tbody>
+        </table></div>
+        <div id="deptSheetDeck" class="dept-deck no-print"></div>
+        <div id="deptSheetEmpty"></div>
+      </div>
+
+      <!-- month grid per department -->
+      <div class="card" style="margin-top:16px">
+        <div class="toolbar">
+          <div><h3 style="margin:0">🟢🔴 Attendance record — meeting days of the month</h3>
+            <div class="sub muted">A green light for each meeting attended, a red light for each meeting missed. Red lights carry the recorded explanation.</div></div>
+          <div class="actions no-print"><input id="deptMonth" type="month" style="max-width:190px" onchange="renderDeptRegister()" aria-label="Month"></div>
+        </div>
+        <div id="deptMonthGrid"></div>
+      </div>
+
+      <!-- ministering roster -->
+      <div class="card" style="margin-top:16px">
+        <div class="toolbar">
+          <div><h3 style="margin:0">🎤 Who will minister — following the register</h3>
+            <div class="sub muted">For the next meeting and the coming Sunday, the register itself decides who is <b>confirmed to minister</b> (consistent and present at the last rehearsal) and who is <b>not ministering</b>, with the reason. Admin can still hand-pick roles below.</div></div>
+          <div class="actions no-print">
+            <button class="btn secondary small" type="button" onclick="deptAutoAssign()">⚡ Apply register to roster</button>
+            <button class="btn secondary small" type="button" onclick="openMinisteringPicker()">🎤 Ministry roster</button>
+            <button class="btn secondary small" type="button" onclick="sendDeptReportWhatsApp('ministry')">✆ Send roster</button>
+          </div>
+        </div>
+        <div class="form no-print" style="margin-bottom:12px">
+          <div><label for="minService">Service to plan</label><select id="minService" onchange="renderDeptRegister()"><option value="">Auto (next meeting / Sunday)</option></select></div>
+          <div><label>Confirmation rule</label><div class="hint" style="margin-top:8px">Present at the last rehearsal <b>and</b> consistency of <b id="deptRulePct">70%</b> or more in the last 3 months (<button class="btn ghost xs" type="button" onclick="changeDeptRule()">change</button>).</div></div>
+        </div>
+        <div id="deptMinistry"></div>
+      </div>
+
+      <!-- consistency -->
+      <div class="card" style="margin-top:16px">
+        <div class="toolbar">
+          <div><h3 style="margin:0">📈 Consistency of members</h3>
+            <div class="sub muted">How faithfully each member attends rehearsals and meetings — and how many rehearsals they missed in each month.</div></div>
+          <div class="actions no-print">
+            <button class="btn secondary small" type="button" onclick="exportDeptCSV()">⤓ Export CSV</button>
+            <button class="btn secondary small" type="button" onclick="sendDeptReportWhatsApp('consistency')">✆ Send to WhatsApp</button>
+            <button class="btn secondary small" type="button" onclick="printDeptReport('consistency')">🖨 Print / PDF</button>
+          </div>
+        </div>
+        <div id="deptConsistency"></div>
+      </div>
+
+      <!-- department cards -->
+      <div class="card" style="margin-top:16px">
+        <div class="toolbar">
+          <div><h3 style="margin:0">🏛 Departments &amp; their meeting days</h3>
+            <div class="sub muted">Praise Team, Women, Youth, Ushering, Choir, Elders, Intercessors… — each with its own days of meeting.</div></div>
+          <div class="actions no-print"><button class="btn secondary small" type="button" onclick="openDeptSettings()">⚙ Manage departments</button></div>
+        </div>
+        <div id="deptCards" class="ministry-grid"></div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="toolbar">
+          <div><h3 style="margin:0">🗂 Absence log</h3><div class="sub muted">Every missed meeting with the explanation given, kept neatly for the church office.</div></div>
+        </div>
+        <div id="deptAbsenceLog"></div>
+      </div>
+
+    </div><!-- /mpanel-departments -->
   </section>
 
   <!-- ================= ADMIN CONSOLIDATED ================= -->
@@ -890,10 +1117,10 @@ const KEY='jcrgm_church_center_v2';
 const LEGACY_KEYS=['jcrgm_church_center_v1'];
 function clone(o){ return JSON.parse(JSON.stringify(o)); }
 
-const COLLECTIONS=['members','visitors','attendance','usherAttendance','followups','families','events','ceremonyRegistrations','departments','giving','requests','pastoral','prayerSessions'];
+const COLLECTIONS=['members','visitors','attendance','usherAttendance','followups','families','events','ceremonyRegistrations','departments','deptRegister','deptAttendance','giving','requests','pastoral','prayerSessions'];
 const DEFAULT_DATA={
   members:[],visitors:[],attendance:[],usherAttendance:[],followups:[],families:[],events:[],
-  ceremonyRegistrations:[],departments:[],giving:[],requests:[],pastoral:[],prayerSessions:[],
+  ceremonyRegistrations:[],departments:[],deptRegister:[],deptAttendance:[],giving:[],requests:[],pastoral:[],prayerSessions:[],
   settings:{
     church:'Jesus Christ Redeems Global Ministries', short:'JCRGM', leader:'', venue:'Main Auditorium, Lusaka',
     headUsher:'', address:'', morning:'09:00–12:00', evening:'15:00–18:30', prayer:'21:00–22:30',
@@ -960,7 +1187,7 @@ function save(){ persist(); renderAll(); }
 const MGMT_SB_URL="https://yisfzexlbjeoeujvmmno.supabase.co";
 const MGMT_SB_KEY="sb_publishable_NJvHqe_S_6QxZwQD0THexg_-Za92muj";
 const MGMT_SB_TABLE="jcrgm_mgmt_records";
-const MGMT_SYNC_COLLECTIONS=["usherAttendance","events","ceremonyRegistrations","members"];
+const MGMT_SYNC_COLLECTIONS=["usherAttendance","events","ceremonyRegistrations","members","departments","deptRegister"];
 const MGMT_ADMIN_HASH="a9f2381818523487";
 const MGMT_DEVICE_ID=(function(){ let id=""; try{ id=LS.getItem("jcrgm_mgmt_device_id")||""; if(!id){ id="dev-"+Date.now().toString(36)+Math.random().toString(36).slice(2,8); LS.setItem("jcrgm_mgmt_device_id",id); } }catch(e){ id="dev-local"; } return id; })();
 let mgmtSyncMeta=(function(){ try{ const x=JSON.parse(LS.getItem("jcrgm_mgmt_sync_meta_v1")||"null"); if(x&&x.hashes) return {hashes:x.hashes||{},tombstones:x.tombstones||{},last:Number(x.last||0)}; }catch(e){} return {hashes:{},tombstones:{},last:0}; })();
@@ -1738,39 +1965,54 @@ document.addEventListener('keydown',function(e){
 /* ---------- router: every tab goes exactly where it is meant to ---------- */
 const PAGE_TITLES={dashboard:'Dashboard',members:'Members — Photo Gallery',usherattendance:'Ushers Record',admin:'Admin — Consolidated Church Record',events:'Ceremonies & Events',reports:'Reports & PDF',settings:'Data & Settings'};
 const EVENTS_SECTIONS={calendar:'Ceremony Calendar',forms:'Ceremony Request Form',registry:'Ceremony Register',certificates:'Certificates'};
+const MEMBERS_SECTIONS={gallery:'Photo Gallery',departments:'Department Register'};
 let current={page:'dashboard',section:'calendar'};
 
+function sectionOf(page,section){
+  if(page==='events') return section||'calendar';
+  if(page==='members') return (section==='departments')?'departments':'gallery';
+  return null;
+}
 function navTo(page,section,extra){
   if(page==='admin'&&!isMgmtAdmin()){ openAdminGate(); return; }
   if(!el(page)){ page='dashboard'; }
+  const sec=sectionOf(page,section);
   qa('.page').forEach(function(p){ p.classList.toggle('active',p.id===page); });
-  qa('#mainNav button').forEach(function(b){
-    const match=b.dataset.page===page&&(!b.dataset.section||b.dataset.section===(page==='events'?(section||current.section):''));
-    if(b.dataset.page===page&&!b.dataset.section&&page!=='events') b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
-    if(b.dataset.page===page&&b.dataset.section){ if(match) b.setAttribute('aria-current','true'); else b.removeAttribute('aria-current'); }
+  qa('#mainNav button[data-page]').forEach(function(b){
+    let match=b.dataset.page===page;
+    if(match&&b.dataset.section){
+      if(page==='members') match=b.dataset.section===sec;
+      else if(page==='events') match=b.dataset.section===(sec||'calendar');
+    }
+    b.removeAttribute('aria-current');
+    if(match) b.setAttribute('aria-current',b.dataset.section?'true':'page');
   });
   const parentBtn=el('eventsNavButton');
   if(parentBtn){
-    const on=page==='events';
-    parentBtn.classList.toggle('parent-on',on);
+    parentBtn.classList.toggle('parent-on',page==='events');
     parentBtn.setAttribute('aria-expanded','true');
-    parentBtn.removeAttribute('aria-current');
+  }
+  const mParent=el('membersNavButton');
+  if(mParent){
+    mParent.classList.toggle('parent-on',page==='members');
+    mParent.setAttribute('aria-expanded','true');
   }
   let title=PAGE_TITLES[page]||'Dashboard';
-  if(page==='events'&&section&&EVENTS_SECTIONS[section]) title='Ceremonies — '+EVENTS_SECTIONS[section];
+  if(page==='events'&&EVENTS_SECTIONS[sec]) title='Ceremonies — '+EVENTS_SECTIONS[sec];
+  if(page==='members'&&MEMBERS_SECTIONS[sec]) title='Members — '+MEMBERS_SECTIONS[sec];
   el('pageTitle').textContent=title;
   document.title=(db.settings.short||'JCRGM')+' • '+title;
 
-  if(page==='events') setEventsTab(section||current.section,extra);
-  current={page:page,section:page==='events'?(section||current.section):null};
-  const hash='#'+page+(page==='events'&&current.section?'/'+current.section:'');
+  if(page==='events') setEventsTab(sec,extra);
+  if(page==='members') setMembersTab(sec,extra);
+  current={page:page,section:sec};
+  const hash='#'+page+(current.section?'/'+current.section:'');
   if(location.hash!==hash){ try{ history.replaceState(null,'',hash); }catch(e){ location.hash=hash; } }
   renderAll();
-  const target=(page==='events'&&section&&section!=='calendar')?q('#panel-'+section):el(page);
-  scrollToEl(target);
+  const target=(current.section&&current.section!=='calendar'&&current.section!=='gallery')?q('#'+(page==='events'?'panel-':'mpanel-')+current.section):el(page);
+  scrollToEl(target||el(page));
   closeNav();
   if(target){ target.setAttribute('tabindex','-1'); try{ target.focus({preventScroll:true}); }catch(e){ try{ target.focus(); }catch(e2){} } }
-  const h=el(page).querySelector('h1,h2,h3'); if(h&&!extra){ /* keep focus predictable */ }
 }
 function absTop(node){
   let t=0,n=node;
@@ -1787,6 +2029,16 @@ function scrollToEl(node){
   });
 }
 function prefersReduced(){ try{ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } }
+function setMembersTab(section,extra){
+  section=(section==='departments')?'departments':'gallery';
+  qa('#memberTabs [role=tab]').forEach(function(b){
+    const on=b.dataset.section===section;
+    b.setAttribute('aria-selected',on?'true':'false');
+    b.tabIndex=on?0:-1;
+  });
+  qa('#members .tabpanel').forEach(function(p){ p.classList.toggle('active',p.id==='mpanel-'+section); });
+  current.section=section; /* content is drawn by renderAll() right after */
+}
 function setEventsTab(section,extra){
   section=section||'calendar';
   qa('#eventTabs [role=tab]').forEach(function(b){
@@ -1809,6 +2061,7 @@ function initNav(){
     const b=e.target.closest('button'); if(!b) return;
     if(b.dataset.action==='openPrayerLink'){ openPrayerLink(); closeNav(); return; }
     if(b.id==='eventsNavButton'){ navTo('events','calendar'); return; }
+    if(b.id==='membersNavButton'){ navTo('members','gallery'); return; }
     if(b.dataset.page) navTo(b.dataset.page,b.dataset.section||null);
   });
   nav.addEventListener('keydown',function(e){
@@ -1829,12 +2082,19 @@ function initNav(){
       if(e.key==='ArrowRight'||e.key==='ArrowLeft'){ e.preventDefault(); const n=tabs[(i+(e.key==='ArrowRight'?1:tabs.length-1))%tabs.length]; n.focus(); n.click(); }
     });
   });
+  qa('#memberTabs [role=tab]').forEach(function(b){
+    b.addEventListener('click',function(){ navTo('members',b.dataset.section); scrollToEl(el('memberTabs')); });
+    b.addEventListener('keydown',function(e){
+      const tabs=qa('#memberTabs [role=tab]'); const i=tabs.indexOf(b);
+      if(e.key==='ArrowRight'||e.key==='ArrowLeft'){ e.preventDefault(); const n=tabs[(i+(e.key==='ArrowRight'?1:tabs.length-1))%tabs.length]; n.focus(); n.click(); }
+    });
+  });
   window.addEventListener('hashchange',routeFromHash);
   const back=el('toTop');
   window.addEventListener('scroll',function(){ back.classList.toggle('show',window.pageYOffset>340); },{passive:true});
   back.addEventListener('click',function(){ try{ window.scrollTo({top:0,behavior:prefersReduced()?'auto':'smooth'}); }catch(e){ window.scrollTo(0,0);} });
 }
-function syncHash(){ const hash='#'+current.page+(current.page==='events'&&current.section?'/'+current.section:''); if(location.hash!==hash){ try{ history.replaceState(null,'',hash); }catch(e){} } }
+function syncHash(){ const hash='#'+current.page+(current.section?'/'+current.section:''); if(location.hash!==hash){ try{ history.replaceState(null,'',hash); }catch(e){} } }
 function routeFromHash(){
   const h=(location.hash||'').replace(/^#/,''); if(!h) return;
   const parts=h.split('/');
@@ -3743,6 +4003,10 @@ function fullPackSpec(){
     rows:db.usherAttendance.map(function(x){ return {date:fmtDate(x.date),service:x.service||'—',total:String(num(x.total)),off:money(x.offeringTotal),hu:x.headUsher||x.recordedBy||'—',st:x.status||'Final'}; })});
   if(db.ceremonyRegistrations.length) blocks.push({type:'table',title:'CEREMONY REGISTER',columns:[{l:'Ref',w:70,k:'ref'},{l:'Name',w:100,k:'name'},{l:'Ceremony',w:110,k:'cer'},{l:'Phone',w:60,k:'ph'},{l:'Form',w:90,k:'form'},{l:'Status',w:50,k:'st'}],
     rows:db.ceremonyRegistrations.map(function(r){ return {ref:r.referenceNo||'—',name:r.name||'—',cer:(r.ceremonyName||'—')+' ('+fmtDate(r.ceremonyDate)+')',ph:r.phone||'—',form:(CEREMONY_FORMS[r.formKey]||{}).name||'—',st:r.status||'Registered'}; })});
+  if((db.deptRegister||[]).length) blocks.push({type:'table',title:'DEPARTMENT REGISTER — '+db.deptRegister.length+' member(s)',
+    columns:[{l:'Member',w:80,k:'nm'},{l:'Department',w:70,k:'dp'},{l:'Rehearsal days',w:80,k:'dy'},{l:'Role',w:70,k:'ro'},{l:'Present',w:34,k:'pr'},{l:'Missed',w:32,k:'ab'},{l:'Consistency',w:46,k:'pc'},{l:'Status',w:48,k:'st'}],
+    rows:db.deptRegister.map(function(r){ const p=deptPct3m(r); const lab=deptConsistencyLabel(p.pct,p.marked); const dp=deptById(r.deptId);
+      return {nm:deptRegName(r),dp:dp?deptName(dp):'-',dy:deptRegDays(r).join(', ')||'-',ro:r.role||'-',pr:String(p.present),ab:String(p.absent),pc:(p.pct===null?'-':p.pct+'%'),st:lab.txt}; })});
   if(db.events.length) blocks.push({type:'table',title:'CEREMONY CALENDAR',columns:[{l:'Date',w:56,k:'d'},{l:'Ceremony',w:130,k:'e'},{l:'Time',w:46,k:'t'},{l:'Venue',w:100,k:'v'},{l:'Minister',w:90,k:'l'},{l:'Status',w:50,k:'s'}],
     rows:db.events.map(function(x){ return {d:fmtDate(x.date),e:x.event,t:x.time||'—',v:x.venue||x.location||'—',l:x.leader||'—',s:x.status||'Scheduled'}; })});
   return {title:'FULL CHURCH PACK',subtitle:'All registers currently held on this device',meta:'Generated '+fmtDate(today())+' at '+nowStamp()+'  •  '+(db.settings.church||''),blocks:blocks.length?blocks:[{type:'note',text:'No records have been captured yet on this device.'}]};
@@ -3963,6 +4227,22 @@ function renderPrayer(){
   const d=el('psDate'); if(d&&!d.value) d.value=today();
   renderTable('prayerSessions');
 }
+function renderDeptDashboard(){ 
+  try{
+    const el2=el('dashDeptToday');
+    if(!el2) return;
+    deptEnsure();
+    const date=today();
+    const depts=deptAll().filter(function(d){ return deptDaysOf(d).indexOf(deptDow(date))>=0; });
+    if(!depts.length){ el2.innerHTML='<p class="muted" style="margin:0">No department meets today. Next meetings are listed in the Department Register.</p>'; return; }
+    el2.innerHTML=depts.map(function(d){
+      const regs=deptRegs(d.id);
+      let pres=0,abs=0,un=0;
+      regs.forEach(function(r){ if(!deptExpectedOn(r,date)) return; const st=deptAttStatus(r.id,date); if(st==='present') pres++; else if(st==='absent') abs++; else un++; });
+      return '<div class="kpi"><span><b>'+esc(deptName(d))+'</b> — '+esc(deptDaysOf(d).join(', '))+'</span><b><span class="inline-chip g">'+pres+' present</span> <span class="inline-chip r">'+abs+' absent</span> <span class="inline-chip">'+un+' unmarked</span></b></div>';
+    }).join('');
+  }catch(err){ console.warn('[JCRGM] dept dashboard',err); }
+}
 function renderDashboard(){
   const set=function(id,v){ const e=el(id); if(e) e.textContent=v; };
   set('statMembers',db.members.length);
@@ -3983,6 +4263,16 @@ function renderDashboard(){
   set('consolidatedMeetings',Object.keys(meetingMap).length);
   set('usherRecordsCount',db.usherAttendance.length);
   set('statOfferingTotal',money(db.usherAttendance.reduce(function(s,x){ return s+num(x.offeringTotal); },0)));
+  try{
+    set('dashDeptMembers',(db.deptRegister||[]).length);
+    const dateD=today();
+    const deptsD=(db.departments||[]).filter(function(d){ return deptDaysOf(d).indexOf(deptDow(dateD))>=0; });
+    let presD=0,absD=0,unD=0;
+    (db.deptRegister||[]).forEach(function(r){ if(deptRegDays(r).indexOf(deptDow(dateD))<0) return; const st=deptAttStatus(r.id,dateD); if(st==='present') presD++; else if(st==='absent') absD++; else unD++; });
+    set('dashDeptTodayLabel',deptsD.length?deptsD.map(deptName).join(', '):'No department meets today');
+    set('dashDeptPresent',presD); set('dashDeptAbsent',absD); set('dashDeptUnmarked',unD);
+  }catch(errD){ console.warn('[JCRGM] dept dashboard',errD); }
+  renderDeptDashboard();
   const snap=el('dashboardUsherSnapshot');
   if(snap){
     if(last){
@@ -4134,10 +4424,1165 @@ function clearAllData(){
   persist(); renderAll(); toast('All records cleared. The registers are empty.','ok',4500);
 }
 
+/* =========================================================================
+   DEPARTMENT REGISTER — members of every church department (Praise Team,
+   Women, Youth, Ushering, Choir …), the days they rehearse, attendance with
+   green / red lights, a required explanation for every absence,
+   consistency, missed rehearsals per month and the automatic roster of
+   who will minister.
+   ========================================================================= */
+const DEPT_DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const DEPT_MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DEPT_ABSENCE_REASONS=['Sick / unwell','Work / job duty','School or exams','Travelling / out of town','Family responsibility','Bereavement in the family','Church assignment elsewhere','No transport','Personal reasons','No reason given'];
+const DEPT_ROLES=['Praise & Worship','Backup vocals','Song leader','Keyboard','Guitar','Bass guitar','Drums','Sound / PA','Projection / media','Dance','Scripture reading','Opening prayer','Testimony','Ushering','Welcome / protocol','Intercession','Counselling','Other'];
+const DEPT_SEED=[
+  {id:'dept-praise',  name:'Praise Team',      days:['Tuesday','Saturday'],   time:'18:00–19:30', venue:'Main Auditorium', leader:'', roleName:'Praise & Worship'},
+  {id:'dept-choir',   name:'Choir',            days:['Wednesday'],           time:'18:00–19:30', venue:'Main Auditorium', leader:'', roleName:'Choir ministration'},
+  {id:'dept-women',   name:'Women Ministry',   days:['Thursday'],            time:'17:00–18:30', venue:'Fellowship Hall', leader:'', roleName:'Women ministry'},
+  {id:'dept-youth',   name:'Youth Ministry',   days:['Saturday'],            time:'14:00–16:00', venue:'Youth Hall',      leader:'', roleName:'Youth ministry'},
+  {id:'dept-ushers',  name:'Ushering',         days:['Saturday'],            time:'15:00–16:00', venue:'Main Auditorium', leader:'', roleName:'Ushering'},
+  {id:'dept-protocol',name:'Protocols',        days:['Saturday'],            time:'16:00–17:00', venue:'Main Auditorium', leader:'', roleName:'Protocol'},
+  {id:'dept-interc',  name:'Intercession',     days:['Monday','Thursday'],   time:'18:00–19:00', venue:'Prayer Room',     leader:'', roleName:'Intercession'},
+  {id:'dept-children',name:'Children Ministry',days:['Saturday'],            time:'10:00–12:00', venue:'Children Hall',   leader:'', roleName:'Children ministry'},
+  {id:'dept-men',     name:'Men Ministry',     days:['Friday'],              time:'17:30–19:00', venue:'Fellowship Hall', leader:'', roleName:'Men ministry'},
+  {id:'dept-media',   name:'Sound & Media',    days:['Saturday'],            time:'16:00–17:30', venue:'Media Desk',      leader:'', roleName:'Sound & media'},
+  {id:'dept-evang',   name:'Evangelism',       days:['Saturday'],            time:'09:00–11:00', venue:'Church Grounds',  leader:'', roleName:'Evangelism'},
+  {id:'dept-dance',   name:'Dance / Creative', days:['Tuesday','Saturday'],  time:'17:00–18:00', venue:'Main Auditorium', leader:'', roleName:'Dance ministration'}
+];
+let _deptAttCache=null;
+
+/* ---------- small date helpers (kept local to this module) ---------- */
+function deptYmd(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function deptParse(s){ const p=String(s||'').slice(0,10).split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
+function deptAddDays(s,n){ const d=deptParse(s); d.setDate(d.getDate()+n); return deptYmd(d); }
+function deptDow(s){ const d=deptParse(s); return isNaN(d.getTime())?'':DEPT_DAYS[d.getDay()]; }
+function deptMonthOf(s){ return String(s||'').slice(0,7); }
+function deptMonthLabel(ym){ const p=String(ym||'').split('-'); if(p.length<2) return String(ym||''); return (DEPT_MONTHS[+p[1]-1]||p[1])+' '+p[0]; }
+function deptDateLabel(s){ const d=deptParse(s); if(isNaN(d.getTime())) return String(s||''); return DEPT_DAYS[d.getDay()].slice(0,3)+' '+pad(d.getDate())+' '+DEPT_MONTHS[d.getMonth()]+' '+d.getFullYear(); }
+function deptMonthRange(ym){ const p=String(ym).split('-'); const y=+p[0],m=+p[1]; const last=new Date(y,m,0).getDate(); return {from:y+'-'+pad(m)+'-01',to:y+'-'+pad(m)+'-'+pad(last)}; }
+function deptMonthsBack(n){ const out=[]; const d=new Date(); d.setDate(1); for(let i=n-1;i>=0;i--){ const x=new Date(d.getFullYear(),d.getMonth()-i,1); out.push(x.getFullYear()+'-'+pad(x.getMonth()+1)); } return out; }
+function deptDayName(x){
+  const s=String(x||'').trim().toLowerCase(); if(!s) return '';
+  for(let i=0;i<DEPT_DAYS.length;i++){ const dn=DEPT_DAYS[i].toLowerCase(); if(dn===s||dn.indexOf(s)===0||s.indexOf(dn)===0) return DEPT_DAYS[i]; }
+  return '';
+}
+
+/* ---------- departments ---------- */
+function deptName(d){ return String((d&&(d.name||d.department))||'').trim(); }
+function deptDaysOf(d){
+  let arr=[];
+  if(d){
+    if(Array.isArray(d.days)) arr=d.days.slice();
+    else if(typeof d.days==='string'&&d.days.trim()) arr=d.days.split(/[,/&]+/);
+    else if(d.day) arr=String(d.day).split(/[,/&]+/);
+  }
+  arr=arr.map(deptDayName).filter(Boolean);
+  return arr.filter(function(x,i){ return arr.indexOf(x)===i; });
+}
+function deptSortKey(d){
+  const i=DEPT_SEED.findIndex(function(s){ return s.name.toLowerCase()===deptName(d).toLowerCase(); });
+  return (i<0?99:i)+' '+deptName(d).toLowerCase();
+}
+function deptAll(){
+  if(!Array.isArray(db.departments)) db.departments=[];
+  return db.departments.slice().sort(function(a,b){ return deptSortKey(a).localeCompare(deptSortKey(b)); });
+}
+function deptById(id){ return (db.departments||[]).find(function(d){ return String(d.id)===String(id); })||null; }
+function deptEnsure(){
+  if(!Array.isArray(db.departments)) db.departments=[];
+  if(!Array.isArray(db.deptRegister)) db.deptRegister=[];
+  if(!Array.isArray(db.deptAttendance)) db.deptAttendance=[];
+  let touched=false;
+  db.departments.forEach(function(d){ if(d&&!d.id){ d.id=uid(); touched=true; } if(d&&!d.name&&d.department){ d.name=d.department; touched=true; } });
+  if(!db.settings.deptRulePct){ db.settings.deptRulePct=70; touched=true; }
+  if(!db.settings.deptSeeded){
+    DEPT_SEED.forEach(function(sd){
+      const exists=db.departments.some(function(d){ return deptName(d).toLowerCase()===sd.name.toLowerCase(); });
+      if(!exists) db.departments.push(deptLegacyFields(clone(sd)));
+    });
+    db.settings.deptSeeded=1; touched=true;
+  }
+  db.deptRegister.forEach(function(r){ if(r&&!r.id) r.id=uid(); if(r&&r.days&&!Array.isArray(r.days)) r.days=deptDaysOf({days:r.days}); });
+  if(touched){ try{ persist(); }catch(e){} }
+  _deptAttCache=null;
+  return db;
+}
+
+/* ---------- register members ---------- */
+function deptRegs(deptId){
+  const all=db.deptRegister||[];
+  return deptId?all.filter(function(r){ return String(r.deptId)===String(deptId); }):all;
+}
+function deptRegById(id){ return (db.deptRegister||[]).find(function(r){ return String(r.id)===String(id); })||null; }
+function deptRegName(r){ return String((r&&(r.name||r.fullName))||'').trim()||'Unnamed member'; }
+function deptRegDays(r){
+  const own=(Array.isArray(r&&r.days)?r.days:[]).map(deptDayName).filter(Boolean);
+  if(own.length) return own.filter(function(x,i){ return own.indexOf(x)===i; });
+  return deptDaysOf(deptById(r&&r.deptId));
+}
+function deptRegStart(r){
+  const s=String((r&&(r.start||r.joined||r.createdAt))||'').slice(0,10);
+  return /^\d{4}-\d{2}-\d{2}$/.test(s)?s:today();
+}
+
+/* ---------- attendance ---------- */
+function deptAttKey(regId,date){ return String(regId)+'|'+String(date); }
+function deptAttIndex(){
+  if(_deptAttCache) return _deptAttCache;
+  const m={};
+  (db.deptAttendance||[]).forEach(function(a){ if(a&&a.regId&&a.date) m[deptAttKey(a.regId,a.date)]=a; });
+  _deptAttCache=m; return m;
+}
+function deptAttOf(regId,date){ return deptAttIndex()[deptAttKey(regId,date)]||null; }
+function deptAttStatus(regId,date){ const a=deptAttOf(regId,date); return a&&a.status?a.status:'none'; }
+function deptSetAtt(regId,date,status,reason){
+  const reg=deptRegById(regId); if(!reg) return null;
+  const key=deptAttKey(regId,date);
+  let a=(db.deptAttendance||[]).find(function(x){ return deptAttKey(x.regId,x.date)===key; });
+  if(!a){ a={id:uid(),regId:String(regId),date:String(date),_deviceId:MGMT_DEVICE_ID}; db.deptAttendance.push(a); }
+  a.status=status;
+  a.reason=status==='absent'?String(reason||'').trim():'';
+  a.deptId=String(reg.deptId||'');
+  a.by=isMgmtAdmin()?'Admin':(MGMT_DEVICE_ID?'Register ('+String(MGMT_DEVICE_ID).slice(-4)+')':'Register');
+  a.at=nowStamp(); a._syncUpdatedAt=Date.now();
+  _deptAttCache=null;
+  return a;
+}
+function deptSaveAtt(){ persist(); renderDeptRegister(); try{ renderDashboard(); }catch(e){} mgmtSyncNow(false); }
+
+/* ---------- expected meeting days & statistics ---------- */
+function deptDatesForDays(days,from,to){
+  const out=[];
+  if(!days||!days.length) return out;
+  let d=from, guard=0;
+  while(d<=to&&guard++<800){ if(days.indexOf(deptDow(d))>=0) out.push(d); d=deptAddDays(d,1); }
+  return out;
+}
+function deptExpectedDates(reg,from,to){
+  const days=deptRegDays(reg); if(!days.length) return [];
+  const start=deptRegStart(reg);
+  const f=(from&&from>start)?from:start;
+  if(f>to) return [];
+  return deptDatesForDays(days,f,to);
+}
+function deptStats(reg,from,to){
+  const dates=deptExpectedDates(reg,from,to);
+  let present=0, absent=0, reasons=[];
+  dates.forEach(function(d){
+    const a=deptAttOf(reg.id,d);
+    if(!a) return;
+    if(a.status==='present') present++;
+    else if(a.status==='absent'){ absent++; reasons.push({date:d,reason:a.reason||''}); }
+  });
+  const marked=present+absent;
+  return {dates:dates,expected:dates.length,present:present,absent:absent,marked:marked,
+    pct:marked?Math.round(present*100/marked):null,reasons:reasons};
+}
+function deptPct3m(reg){
+  const to=today(), from=deptAddDays(to,-89);
+  const st=deptStats(reg,from,to);
+  return {pct:st.pct,marked:st.marked,present:st.present,absent:st.absent};
+}
+function deptMonthStats(reg,ym){
+  const r=deptMonthRange(ym); const todayS=today();
+  const to=r.to>todayS?todayS:r.to;
+  return deptStats(reg,r.from,to);
+}
+function deptMissedMonths(reg,n){
+  return deptMonthsBack(n||6).map(function(ym){
+    const st=deptMonthStats(reg,ym);
+    return {ym:ym,label:deptMonthLabel(ym),missed:st.absent,present:st.present,marked:st.marked,expected:st.expected};
+  });
+}
+function deptMissedTotal(reg){ return deptStats(reg,'2000-01-01',today()).absent; }
+function deptLastMeetingDate(reg,before){
+  const dates=deptExpectedDates(reg,deptAddDays(before||today(),-400),before||today());
+  return dates.length?dates[dates.length-1]:'';
+}
+function deptLastMarked(reg,before){
+  const dates=deptExpectedDates(reg,deptAddDays(before||today(),-400),before||today());
+  for(let i=dates.length-1;i>=0;i--){ const a=deptAttOf(reg.id,dates[i]); if(a&&a.status) return dates[i]; }
+  return '';
+}
+function deptNextMeetingDate(reg,from){
+  const days=deptRegDays(reg); if(!days.length) return '';
+  const start=from||today();
+  for(let i=0;i<21;i++){ const d=deptAddDays(start,i); if(days.indexOf(deptDow(d))>=0) return d; }
+  return '';
+}
+function deptConsistencyLabel(pct,marked){
+  if(pct===null||!marked) return {cls:'wait',txt:'New',key:'new'};
+  const rule=num(db.settings.deptRulePct)||70;
+  if(pct>=85) return {cls:'on',txt:'Consistent',key:'consistent'};
+  if(pct>=rule) return {cls:'wait',txt:'Steady',key:'steady'};
+  if(pct>=50) return {cls:'mid',txt:'Irregular',key:'irregular'};
+  return {cls:'off',txt:'At risk',key:'risk'};
+}
+
+/* ---------- who will minister (auto from the register) ---------- */
+function deptAutoDecision(reg,planDate){
+  const dept=deptById(reg.deptId);
+  const role=String(reg.role||(dept&&dept.roleName)||'').trim()||'Ministry';
+  const lastMarked=deptLastMarked(reg,today());
+  const pct=deptPct3m(reg);
+  const rule=num(db.settings.deptRulePct)||70;
+  if(!lastMarked){
+    const nextExpected=deptLastMeetingDate(reg,today());
+    if(!nextExpected) return {ok:true,role:role,why:'New member — no rehearsal has fallen yet',soft:true};
+    return {ok:false,role:role,why:'Last rehearsal ('+fmtDate(nextExpected)+') is not yet marked in the register'};
+  }
+  const a=deptAttOf(reg.id,lastMarked);
+  if(!a||a.status!=='present') return {ok:false,role:role,why:'Missed last rehearsal '+fmtDate(lastMarked)+(a&&a.reason?' — '+a.reason:'')};
+  if(pct.marked&&pct.pct!==null&&pct.pct<rule) return {ok:false,role:role,why:'Present at the last rehearsal, but consistency '+pct.pct+'% is below the '+rule+'% rule'};
+  if(pct.marked>=2&&pct.pct!==null) return {ok:true,role:role,why:'Present at last rehearsal ('+fmtDate(lastMarked)+') • '+pct.pct+'% consistent'};
+  return {ok:true,role:role,why:'Present at last rehearsal ('+fmtDate(lastMarked)+')'};
+}
+function deptMinisterFor(reg,planDate){
+  const live=deptAutoDecision(reg,planDate);
+  const m=reg.minister;
+  if(m&&String(m.date)===String(planDate)&&m.ok!==undefined){
+    return {ok:!!m.ok,role:m.role||live.role,why:m.manual?'Set by Admin':('Register applied '+(m.at||'')),manual:!!m.manual,applied:!m.manual,live:live};
+  }
+  return {ok:live.ok,role:live.role,why:live.why,live:true,manual:false};
+}
+function deptPlanDate(){
+  const v=String((el('minService')||{}).value||'');
+  if(/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+  return deptNextSunday(today());
+}
+function deptNextSunday(from){
+  let d=from||today();
+  for(let i=0;i<8;i++){ if(deptDow(d)==='Sunday') return d; d=deptAddDays(d,1); }
+  return from||today();
+}
+
+/* ---------- filters & selectors ---------- */
+function deptFilterId(){ const s=el('deptSel'); return s?String(s.value||''):''; }
+function deptSelectedDate(){ const i=el('deptDate'); return (i&&i.value)||today(); }
+function deptHasExpected(date){
+  return (db.deptRegister||[]).some(function(r){ return deptExpectedOn(r,date); });
+}
+function deptDefaultDate(){
+  if(deptHasExpected(today())) return today();
+  for(let i=1;i<=14;i++){ const d=deptAddDays(today(),-i); if(deptHasExpected(d)) return d; }
+  for(let i=1;i<=7;i++){ const d=deptAddDays(today(),i); if(deptHasExpected(d)) return d; }
+  return today();
+}
+function deptJumpMeeting(dir){
+  const start=deptSelectedDate();
+  for(let i=1;i<=60;i++){
+    const d=deptAddDays(start,dir*i);
+    if(deptHasExpected(d)){ const inp=el('deptDate'); if(inp) inp.value=d; window.__deptDateTouched=true; renderDeptRegister(); toast('Meeting day: '+deptDateLabel(d)+'.','ok',2400); return; }
+  }
+  toast('No other meeting day found in the next 8 weeks.','err',3600);
+}
+function deptRowList(){
+  const term=String((el('deptSearch')||{}).value||'').trim().toLowerCase();
+  const fid=deptFilterId();
+  let rows=(db.deptRegister||[]).slice();
+  if(fid) rows=rows.filter(function(r){ return String(r.deptId)===fid; });
+  if(term) rows=rows.filter(function(r){ const d=deptById(r.deptId); return (deptRegName(r)+' '+(d?deptName(d):'')+' '+(r.role||'')).toLowerCase().indexOf(term)>=0; });
+  const sort=String((el('deptSort')||{}).value||'consistency');
+  rows.sort(function(a,b){
+    if(sort==='name') return deptRegName(a).localeCompare(deptRegName(b));
+    if(sort==='dept'){ const da=deptById(a.deptId),db2=deptById(b.deptId); return (deptName(da)||'').localeCompare(deptName(db2)||'')||deptRegName(a).localeCompare(deptRegName(b)); }
+    if(sort==='missed') return deptMissedTotal(b)-deptMissedTotal(a)||deptRegName(a).localeCompare(deptRegName(b));
+    const pa=deptPct3m(a),pb=deptPct3m(b);
+    const va=pa.pct===null?-1:pa.pct, vb=pb.pct===null?-1:pb.pct;
+    return vb-va||deptRegName(a).localeCompare(deptRegName(b));
+  });
+  return rows;
+}
+function deptEnsureSelectors(){
+  deptEnsure();
+  const dsel=el('deptSel');
+  if(dsel){
+    const cur=dsel.value||'';
+    dsel.innerHTML='<option value="">All departments</option>'+deptAll().map(function(d){
+      return '<option value="'+esc(d.id)+'">'+esc(deptName(d))+(deptDaysOf(d).length?' — '+esc(deptDaysOf(d).join(', ')):'')+'</option>';
+    }).join('');
+    if(cur&&deptById(cur)) dsel.value=cur;
+  }
+  const di=el('deptDate');
+  if(di&&!di.value) di.value=window.__deptDateTouched?today():deptDefaultDate();
+  const mo=el('deptMonth'); if(mo&&!mo.value) mo.value=today().slice(0,7);
+  const ms=el('minService');
+  if(ms){
+    const cur=ms.value||'';
+    const dates=[];
+    let d=today();
+    for(let i=0;i<28&&dates.length<6;i++){ d=deptAddDays(today(),i); if(deptDow(d)==='Sunday') dates.push(d); }
+    deptAll().forEach(function(x){ const n=deptNextMeetingDate({deptId:x.id,days:deptDaysOf(x)},today()); if(n) dates.push(n); });
+    const uniq=dates.filter(function(x,i){ return dates.indexOf(x)===i; }).sort();
+    ms.innerHTML='<option value="">Auto — next Sunday / next meeting</option>'+uniq.map(function(x){
+      return '<option value="'+esc(x)+'">'+esc(deptDateLabel(x))+'</option>';
+    }).join('');
+    if(cur&&uniq.indexOf(cur)>=0) ms.value=cur; else if(cur){ ms.insertAdjacentHTML('beforeend','<option value="'+esc(cur)+'">'+esc(deptDateLabel(cur))+'</option>'); ms.value=cur; }
+  }
+  const rp=el('deptRulePct'); if(rp) rp.textContent=(num(db.settings.deptRulePct)||70)+'%';
+}
+
+/* ---------- rendering ---------- */
+function renderDeptRegister(){
+  const panel=el('mpanel-departments');
+  deptEnsure();
+  deptEnsureSelectors();
+  const gal=el('mtabGalleryCount');
+  if(gal) gal.textContent=(db.members||[]).filter(function(x){ return memberDisplayName(x)&&x.approval!=='pending'; }).length;
+  const cnt=el('mtabDeptCount'); if(cnt) cnt.textContent=(db.deptRegister||[]).length;
+  if(!panel||!panel.classList.contains('active')) return;
+  renderDeptKPIs();
+  renderDeptMeetToday();
+  renderDeptSheet();
+  renderDeptMonthGrid();
+  renderDeptMinistry();
+  renderDeptConsistency();
+  renderDeptCards();
+  renderDeptAbsenceLog();
+}
+function deptExpectedOn(reg,date){
+  const days=deptRegDays(reg);
+  return days.indexOf(deptDow(date))>=0;
+}
+function renderDeptKPIs(){
+  const date=deptSelectedDate();
+  const fid=deptFilterId();
+  const rows=(db.deptRegister||[]).filter(function(r){ return !fid||String(r.deptId)===fid; });
+  let present=0,absent=0,unmarked=0,consistent=0,missedMonth=0;
+  const ym=deptMonthOf(date);
+  rows.forEach(function(r){
+    if(deptExpectedOn(r,date)){
+      const s=deptAttStatus(r.id,date);
+      if(s==='present') present++; else if(s==='absent') absent++; else unmarked++;
+    }
+    const p=deptPct3m(r); const lab=deptConsistencyLabel(p.pct,p.marked);
+    if(lab.key==='consistent'&&p.marked>=2) consistent++;
+    missedMonth+=deptMonthStats(r,ym).absent;
+  });
+  const set=function(id,v){ const e=el(id); if(e) e.textContent=v; };
+  set('deptKpiDepts',fid?1:deptAll().length);
+  set('deptKpiMembers',rows.length);
+  set('deptKpiPresent',present); set('deptKpiAbsent',absent); set('deptKpiUnmarked',unmarked);
+  set('deptKpiConsistent',consistent); set('deptKpiMissed',missedMonth);
+}
+function renderDeptMeetToday(){
+  const box=el('deptMeetToday'); if(!box) return;
+  const date=deptSelectedDate();
+  const fid=deptFilterId();
+  const depts=(fid?[deptById(fid)]:deptAll()).filter(Boolean).filter(function(d){ return deptDaysOf(d).indexOf(deptDow(date))>=0; });
+  if(!depts.length){ box.style.display='none'; box.innerHTML=''; return; }
+  const count=(db.deptRegister||[]).filter(function(r){ return deptExpectedOn(r,date); }).length;
+  box.style.display='flex';
+  box.innerHTML='<div class="ic">🗓</div><div style="flex:1;min-width:180px"><b>'+esc(deptDateLabel(date))+' — meeting day</b>'+
+    '<div class="muted" style="font-size:12.5px">'+esc(depts.map(deptName).join(' • '))+' — '+count+' member(s) expected. Mark each one present (green) or absent (red with a reason).</div></div>'+
+    '<button class="btn success small" type="button" onclick="deptSignSheet()">✍ Take register</button>';
+}
+function deptDots(n){ return n>=1?'●'.repeat(Math.min(n,5))+(n>5?'+':''):''; }
+function deptSheetCard(r,date){
+  const dept=deptById(r.deptId); const days=deptRegDays(r);
+  const expected=days.indexOf(deptDow(date))>=0;
+  const a=deptAttOf(r.id,date);
+  const st=a&&a.status?a.status:'none';
+  const cls=st==='present'?'on':st==='absent'?'off':'';
+  const label=st==='present'?'Present':st==='absent'?'Absent':'Not marked';
+  const light='<i class="dot-l '+(st==='present'?'present':st==='absent'?'absent':'none')+'"></i>';
+  const p=deptPct3m(r); const lab=deptConsistencyLabel(p.pct,p.marked);
+  const m=deptMonthStats(r,deptMonthOf(date));
+  return '<div class="dcard'+(st==='absent'?' no':'')+'">'+
+    '<div class="dhead">'+deptAvatar(r)+'<b>'+esc(deptRegName(r))+'</b></div>'+
+    '<div class="dmeta">'+(dept?'<span class="inline-chip">'+esc(deptName(dept))+'</span>':'')+
+      (r.role?'<span class="inline-chip">'+esc(r.role)+'</span>':'')+
+      '<span class="inline-chip">'+esc(days.join(' & ')||'no day set')+'</span>'+
+      (expected?'':'<span class="inline-chip y">not a meeting day</span>')+'</div>'+
+    '<div class="drow"><button class="mt '+cls+'" type="button" onclick="deptCycle(\''+esc(r.id)+'\',\''+esc(date)+'\')">'+light+label+'</button>'+
+      '<span class="member-meta" style="margin:0">'+m.present+' / '+(m.present+m.absent)+' this month</span>'+
+      '<span class="st '+lab.cls+'">'+lab.txt+' '+(p.pct===null?'':'· '+p.pct+'%')+'</span></div>'+
+    (st==='absent'?'<div class="dreason">Reason: '+(a.reason?esc(a.reason):'<b>required — tap ✎</b>')+'</div>':'')+
+    '<div class="dactions">'+
+      (st==='absent'?'<button class="btn ghost xs" type="button" onclick="openDeptReason(\''+esc(r.id)+'\',\''+esc(date)+'\')">✎ Write reason</button>':'')+
+      '<button class="btn ghost xs" type="button" onclick="openDeptHistory(\''+esc(r.id)+'\')">🕘 History</button>'+
+      '<button class="btn ghost xs" type="button" onclick="openDeptMember(\''+esc(r.id)+'\')">✎ Edit</button>'+
+    '</div></div>';
+}
+function renderDeptSheet(){
+  const body=el('deptSheetBody'), empty=el('deptSheetEmpty');
+  if(!body) return;
+  const date=deptSelectedDate();
+  const rows=deptRowList();
+  const sh=el('deptSheetDate'); if(sh) sh.textContent='— '+deptDateLabel(date)+' ('+(deptDow(date)||'')+')';
+  const hint=el('deptSheetHint');
+  if(hint) hint.textContent='Each member is listed on their own rehearsal / meeting day'+(fidText())+'. Tap the light to switch present ↔ absent — a reason is required for every absence.';
+  const deck=el('deptSheetDeck');
+  if(!rows.length){
+    body.innerHTML='';
+    if(deck) deck.innerHTML='';
+    if(empty) empty.innerHTML='<div class="empty">No department members on the register yet. Press <b>“+ Add Member to a Department”</b> above — or open <b>⚙ Departments &amp; Rehearsal Days</b> to set the days each department meets.</div>';
+    return;
+  }
+  if(empty) empty.innerHTML='';
+  if(deck) deck.innerHTML=rows.map(function(r){ return deptSheetCard(r,date); }).join('');
+  body.innerHTML=rows.map(function(r){
+    const dept=deptById(r.deptId); const days=deptRegDays(r);
+    const expected=days.indexOf(deptDow(date))>=0;
+    const a=deptAttOf(r.id,date);
+    const st=a&&a.status?a.status:'none';
+    const cls=st==='present'?'on':st==='absent'?'off':'';
+    const label=st==='present'?'Present':st==='absent'?'Absent':'Not marked';
+    const light='<i class="dot-l '+(st==='present'?'present':st==='absent'?'absent':'none')+'"></i>';
+    const attBtn='<button class="mt '+cls+'" type="button" title="'+(expected?'Meeting day for '+deptRegName(r):'Not a meeting day — tap to record an extra meeting')+'" onclick="deptCycle(\''+esc(r.id)+'\',\''+esc(date)+'\')">'+light+label+'</button>';
+    let reason='—';
+    if(st==='absent'){
+      reason=(a.reason?('<span class="reason-txt">'+esc(a.reason)+'</span>'):'<span class="reason-txt"><b>Reason needed</b></span>')+
+        ' '+iBtn('✎','Edit the explanation',"openDeptReason('"+esc(r.id)+"','"+esc(date)+"')");
+    }
+    const m=deptMonthStats(r,deptMonthOf(date));
+    const p=deptPct3m(r); const lab=deptConsistencyLabel(p.pct,p.marked);
+    return '<tr>'+
+      '<td class="nm"><div style="display:flex;align-items:center;gap:0">'+deptAvatar(r)+'<div style="min-width:0"><b>'+esc(deptRegName(r))+'</b>'+(r.role?'<div class="member-meta">'+esc(r.role)+'</div>':'')+(expected?'':'<div class="member-meta" style="color:#8a6714">not a meeting day</div>')+'</div></div></td>'+
+      '<td>'+(dept?'<span class="inline-chip">'+esc(deptName(dept))+'</span>':'—')+'</td>'+
+      '<td><span class="member-meta" style="display:block;margin:0;font-size:11.5px">'+esc(days.join(', ')||'no day set')+'</span></td>'+
+      '<td class="mt-cell">'+attBtn+'</td>'+
+      '<td style="min-width:130px">'+reason+'</td>'+
+      '<td><b>'+m.present+'</b> / '+(m.present+m.absent)+' <span class="member-meta" style="display:inline;margin:0">('+(m.absent?m.absent+' missed':'none missed')+')</span></td>'+
+      '<td><span class="consistency"><span class="cbar"><i style="width:'+(p.pct===null?0:p.pct)+'%"></i></span><b>'+(p.pct===null?'—':p.pct+'%')+'</b></span> <span class="st '+lab.cls+'">'+lab.txt+'</span></td>'+
+      '<td class="no-print"><div class="row-actions">'+
+        iBtn('🕘','Attendance history & audit',"openDeptHistory('"+esc(r.id)+"')")+
+        iBtn('✎','Edit this member',"openDeptMember('"+esc(r.id)+"')")+
+        iBtn('🗑','Remove from the register',"deleteDeptReg('"+esc(r.id)+"')",'danger')+
+      '</div></td></tr>';
+  }).join('');
+}
+function fidText(){
+  const fid=deptFilterId();
+  const d=fid?deptById(fid):null;
+  return d?' for '+deptName(d):'';
+}
+function renderDeptMonthGrid(){
+  const box=el('deptMonthGrid'); if(!box) return;
+  const ym=String((el('deptMonth')||{}).value||today().slice(0,7));
+  const r=deptMonthRange(ym);
+  const fid=deptFilterId();
+  const term=String((el('deptSearch')||{}).value||'').trim().toLowerCase();
+  let depts=(fid?[deptById(fid)]:deptAll()).filter(Boolean);
+  let html='';
+  let shown=0;
+  depts.forEach(function(dept){
+    let regs=deptRegs(dept.id);
+    if(term) regs=regs.filter(function(x){ return deptRegName(x).toLowerCase().indexOf(term)>=0; });
+    if(!regs.length) return;
+    regs=regs.slice().sort(function(a,b){ return deptRegName(a).localeCompare(deptRegName(b)); });
+    const days=deptDaysOf(dept);
+    const dates=deptDatesForDays(days,r.from,r.to).filter(function(d){ return d<=today(); });
+    const rows=regs.map(function(reg){
+      const st=deptMonthStats(reg,ym);
+      const cells=dates.map(function(d){
+        const a=deptAttOf(reg.id,d);
+        const s=a&&a.status?a.status:'none';
+        const tip=deptDateLabel(d)+' — '+(s==='present'?'present':s==='absent'?('absent: '+(a.reason||'no reason recorded')):'not marked');
+        return '<span class="dot-l '+(s==='present'?'present':s==='absent'?'absent':'none')+'" title="'+esc(tip)+'" role="img" aria-label="'+esc(tip)+'" style="cursor:pointer" onclick="deptCycle(\''+esc(reg.id)+'\',\''+esc(d)+'\')"></span>';
+      }).join('');
+      return '<div class="history-row" style="align-items:center;flex-wrap:wrap">'+
+        '<span style="flex:1;min-width:150px"><b>'+esc(deptRegName(reg))+'</b>'+(deptRegDays(reg).join(',')!==days.join(',')?'<span class="member-meta" style="display:inline;margin-left:6px">own days: '+esc(deptRegDays(reg).join(', ')||'—')+'</span>':'')+'</span>'+
+        '<span class="reg-lights">'+(cells||'<span class="muted" style="font-size:11.5px">No meeting day in this month</span>')+'</span>'+
+        '<span class="member-meta" style="margin:0;min-width:104px;text-align:right"><b style="color:#0f6c40">'+st.present+'</b> present • <b style="color:#98231a">'+st.absent+'</b> missed</span>'+
+        '</div>';
+    }).join('');
+    html+='<div class="dept-card" style="margin-top:11px"><div class="wtop" style="display:flex;justify-content:space-between;gap:9px;flex-wrap:wrap"><div><h4>'+esc(deptName(dept))+'</h4><div class="sub2">Meeting days: <b>'+esc(days.join(', ')||'not set')+'</b>'+(dept.time?' • '+esc(dept.time):'')+(dates.length?' • '+dates.length+' meeting(s) in '+deptMonthLabel(ym):'')+'</div></div></div>'+rows+'</div>';
+    shown++;
+  });
+  if(!shown){
+    box.innerHTML='<div class="empty">Nothing to show for '+esc(deptMonthLabel(ym))+' yet. Add members to a department and set its meeting days first.</div>';
+    return;
+  }
+  box.innerHTML='<div class="muted" style="font-size:12px;margin-bottom:4px">🟢 present &nbsp; 🔴 absent (tap any light to correct it) — '+esc(deptMonthLabel(ym))+'</div>'+html;
+}
+function renderDeptMinistry(){
+  const box=el('deptMinistry'); if(!box) return;
+  const plan=deptPlanDate();
+  const fid=deptFilterId();
+  const rule=num(db.settings.deptRulePct)||70;
+  let depts=(fid?[deptById(fid)]:deptAll()).filter(Boolean);
+  let html='', shown=0;
+  const totals={yes:0,no:0};
+  depts.forEach(function(dept){
+    const regs=deptRegs(dept.id).slice().sort(function(a,b){ return deptRegName(a).localeCompare(deptRegName(b)); });
+    if(!regs.length) return;
+    const next=deptNextMeetingDate({deptId:dept.id,days:deptDaysOf(dept)},today());
+    const cards=regs.map(function(reg){
+      const d=deptMinisterFor(reg,plan);
+      if(d.ok) totals.yes++; else totals.no++;
+      return '<div class="wcard">'+
+        '<div class="wtop"><h5>'+esc(deptRegName(reg))+'</h5>'+(d.manual?'<span class="inline-chip y">Admin</span>':d.applied?'<span class="inline-chip">applied</span>':'<span class="inline-chip">live</span>')+'</div>'+
+        '<div class="state" style="color:'+(d.ok?'#0f6c40':'#98231a')+'">'+(d.ok?'✅ Ministering — ':'🚫 Not ministering — ')+esc(d.role)+'</div>'+
+        '<div class="mini">'+esc(d.why)+'</div>'+
+        '<div class="actions"><button class="btn ghost xs" type="button" onclick="openDeptMinister(\''+esc(reg.id)+'\')">Set role / override</button>'+
+        '<button class="btn ghost xs" type="button" onclick="openDeptHistory(\''+esc(reg.id)+'\')">History</button></div>'+
+        '</div>';
+    }).join('');
+    html+='<div class="dept-card" style="margin-top:11px"><div style="display:flex;justify-content:space-between;gap:9px;flex-wrap:wrap;margin-bottom:9px">'+
+      '<div><h4>'+esc(deptName(dept))+'</h4><div class="sub2">Rehearsals: <b>'+esc(deptDaysOf(dept).join(', ')||'not set')+'</b>'+(next?' • next: '+esc(deptDateLabel(next)):'')+'</div></div>'+
+      '<span class="muted" style="font-size:12px">Planning for <b>'+esc(deptDateLabel(plan))+'</b> • rule: present at last rehearsal + '+rule+'% consistent</span></div>'+
+      '<div class="ministry-grid">'+cards+'</div></div>';
+    shown++;
+  });
+  if(!shown){ box.innerHTML='<div class="empty">No department members yet — add members to a department and the roster will build itself from the register.</div>'; return; }
+  box.innerHTML='<div class="alert blue" style="margin-bottom:10px"><b>'+totals.yes+' ministering</b> • <b>'+totals.no+' not ministering</b> for '+esc(deptDateLabel(plan))+'. This follows the register automatically — a member who missed the last rehearsal, or whose consistency is below the rule, is not placed on the roster.</div>'+html;
+}
+function renderDeptConsistency(){
+  const box=el('deptConsistency'); if(!box) return;
+  const rows=deptRowList();
+  if(!rows.length){ box.innerHTML='<div class="empty">No members on the department register yet.</div>'; return; }
+  const months=deptMonthsBack(6);
+  let totalPct=0,counted=0,consistent=0;
+  const body=rows.map(function(r){
+    const dept=deptById(r.deptId);
+    const p=deptPct3m(r); const lab=deptConsistencyLabel(p.pct,p.marked);
+    if(p.pct!==null){ totalPct+=p.pct; counted++; }
+    if(lab.key==='consistent'&&p.marked>=2) consistent++;
+    const mm=deptMissedMonths(r,6);
+    return '<tr>'+
+      '<td><b>'+esc(deptRegName(r))+'</b>'+(r.role?'<div class="member-meta">'+esc(r.role)+'</div>':'')+'</td>'+
+      '<td>'+(dept?'<span class="inline-chip">'+esc(deptName(dept))+'</span>':'—')+'</td>'+
+      '<td style="font-size:11.5px">'+esc(deptRegDays(r).join(', ')||'—')+'</td>'+
+      '<td class="num">'+p.marked+'</td>'+
+      '<td class="num" style="color:#0f6c40;font-weight:800">'+p.present+'</td>'+
+      '<td class="num" style="color:#98231a;font-weight:800">'+p.absent+'</td>'+
+      '<td><span class="consistency"><span class="cbar"><i style="width:'+(p.pct===null?0:p.pct)+'%"></i></span><b>'+(p.pct===null?'—':p.pct+'%')+'</b></span></td>'+
+      '<td class="num"><b style="color:'+(deptMonthStats(r,deptMonthOf(today())).absent?'#98231a':'#0f6c40')+'">'+deptMonthStats(r,deptMonthOf(today())).absent+'</b></td>'+
+      '<td style="font-size:11px;min-width:190px"><div class="chip-wrap">'+mm.map(function(m){
+        return '<span class="inline-chip '+(m.missed?'r':(m.marked?'g':''))+'" title="'+esc(m.label)+': '+m.missed+' missed, '+m.present+' present of '+m.expected+' meeting(s) in the month'+(m.marked?'':' — none marked yet')+'">'+esc(m.label.slice(0,3))+' '+(m.marked?m.missed+'/'+m.expected:'–/–')+'</span>';
+      }).join('')+'</div></td>'+
+      '<td><span class="st '+lab.cls+'">'+lab.txt+'</span></td>'+
+      '<td class="no-print"><div class="row-actions">'+iBtn('🕘','Full attendance history',"openDeptHistory('"+esc(r.id)+"')")+'</div></td>'+
+    '</tr>';
+  }).join('');
+  const avg=counted?Math.round(totalPct/counted):0;
+  box.innerHTML='<div class="dept-bar" style="margin-top:0"><div class="dept-pill"><span>Members judged</span><b>'+counted+'</b></div>'+
+    '<div class="dept-pill"><span>Consistent</span><b>'+consistent+'</b></div>'+
+    '<div class="dept-pill"><span>Average consistency</span><b>'+avg+'%</b></div>'+
+    '<div class="dept-pill"><span>Rule</span><b>'+(num(db.settings.deptRulePct)||70)+'%</b></div></div>'+
+    '<div class="tablewrap compact" style="margin-top:11px"><table class="sheet" style="min-width:940px"><thead><tr>'+
+    '<th class="nm">Member</th><th>Department</th><th>Meeting days</th><th class="num">Marked</th><th class="num">Present</th><th class="num">Absent</th><th>Consistency</th><th class="num">Missed this month</th><th>Missed per month (last 6)</th><th>Status</th><th class="no-print"></th>'+
+    '</tr></thead><tbody>'+body+'</tbody></table></div>'+
+    '<div class="hint">Consistency = meetings attended ÷ meetings marked (last 3 months). “Missed per month” shows rehearsals missed ÷ rehearsals expected in that month.</div>';
+}
+function renderDeptCards(){
+  const box=el('deptCards'); if(!box) return;
+  const depts=deptAll();
+  if(!depts.length){ box.innerHTML='<div class="empty">No departments yet — press “⚙ Manage departments”.</div>'; return; }
+  box.innerHTML=depts.map(function(d){
+    const regs=deptRegs(d.id);
+    const days=deptDaysOf(d);
+    const next=deptNextMeetingDate({deptId:d.id,days:days},today());
+    let pctSum=0,n=0;
+    regs.forEach(function(r){ const p=deptPct3m(r); if(p.pct!==null){ pctSum+=p.pct; n++; } });
+    const avg=n?Math.round(pctSum/n):null;
+    return '<div class="wcard">'+
+      '<div class="wtop"><h5>'+esc(deptName(d))+'</h5><span class="inline-chip">'+regs.length+' member'+(regs.length===1?'':'s')+'</span></div>'+
+      '<div class="wd">🗓 <b>'+esc(days.join(', ')||'no meeting day set')+'</b>'+(d.time?' • '+esc(d.time):'')+(d.venue?'<br>📍 '+esc(d.venue):'')+(d.leader?'<br>👤 '+esc(d.leader):'')+'</div>'+
+      '<div class="mini">'+(next?'Next meeting: '+esc(deptDateLabel(next)):'Set the meeting days to see the next meeting')+'</div>'+
+      '<div class="mini">Average consistency: <b>'+(avg===null?'—':avg+'%')+'</b></div>'+
+      '<div class="actions"><button class="btn ghost xs" type="button" onclick="deptFocus(\''+esc(d.id)+'\')">Open register</button>'+
+      '<button class="btn ghost xs" type="button" onclick="openDeptMember(null,\''+esc(d.id)+'\')">+ Member</button></div>'+
+      '</div>';
+  }).join('');
+}
+function renderDeptAbsenceLog(){
+  const box=el('deptAbsenceLog'); if(!box) return;
+  const fid=deptFilterId();
+  const list=(db.deptAttendance||[]).filter(function(a){ return a&&a.status==='absent'; })
+    .filter(function(a){ const r=deptRegById(a.regId); if(!r) return false; return !fid||String(r.deptId)===fid; })
+    .sort(function(a,b){ return String(b.date||'').localeCompare(String(a.date||'')); }).slice(0,80);
+  if(!list.length){ box.innerHTML='<div class="empty">No absences recorded — every meeting marked so far has been attended. 🎉</div>'; return; }
+  box.innerHTML='<div class="tablewrap compact"><table class="sheet" style="min-width:720px"><thead><tr><th>Date</th><th>Member</th><th>Department</th><th>Explanation recorded</th><th>Recorded</th><th class="no-print"></th></tr></thead><tbody>'+
+    list.map(function(a){
+      const r=deptRegById(a.regId); const d=r?deptById(r.deptId):null;
+      return '<tr><td style="white-space:nowrap"><b>'+esc(fmtDate(a.date))+'</b><div class="member-meta">'+esc(deptDow(a.date)||'')+'</div></td>'+
+        '<td><b>'+esc(r?deptRegName(r):'—')+'</b></td>'+
+        '<td>'+(d?'<span class="inline-chip">'+esc(deptName(d))+'</span>':'—')+'</td>'+
+        '<td>'+(a.reason?esc(a.reason):'<span style="color:#98231a"><b>Reason needed</b></span>')+'</td>'+
+        '<td style="font-size:11.5px">'+esc(a.at||'')+'<div class="member-meta">'+esc(a.by||'')+'</div></td>'+
+        '<td class="no-print"><div class="row-actions">'+iBtn('✎','Edit explanation',"openDeptReason('"+esc(a.regId)+"','"+esc(a.date)+"')")+'</div></td></tr>';
+    }).join('')+'</tbody></table></div>';
+}
+
+/* ---------- attendance actions ---------- */
+function deptAvatar(reg){
+  let photo='';
+  if(reg&&reg.memberId){ const m=(db.members||[]).find(function(x){ return String(x.id)===String(reg.memberId); }); if(m) photo=String(m.photo||''); }
+  if(photo) return '<img src="'+esc(photo)+'" alt="" style="width:26px;height:26px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:7px;box-shadow:0 1px 3px rgba(0,0,0,.25)">';
+  return '<span aria-hidden="true" style="display:inline-flex;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#1f4d8f);color:#fff;align-items:center;justify-content:center;font-size:10px;font-weight:900;vertical-align:middle;margin-right:7px">'+esc(memberInitials(deptRegName(reg)))+'</span>';
+}
+function deptCycle(regId,date){
+  const st=deptAttStatus(regId,date);
+  if(st==='none'){ deptSetAtt(regId,date,'present'); deptSaveAtt(); toast('Marked present 🟢 — the green light is on.','ok',2600); return; }
+  if(st==='present'){ deptSetAtt(regId,date,'absent',''); deptSaveAtt(); openDeptReason(regId,date); return; }
+  deptSetAtt(regId,date,'present'); deptSaveAtt(); toast('Corrected to present 🟢.','ok',2600);
+}
+function openDeptReason(regId,date,next){
+  const reg=deptRegById(regId); if(!reg){ toast('Member not found on the register.','err'); return; }
+  const a=deptAttOf(regId,date)||{};
+  const dept=deptById(reg.deptId);
+  window.__deptReasonNext=next||'';
+  modal('<h3 style="padding-right:36px">🗓 Register — '+esc(deptRegName(reg))+'</h3>'+
+    '<p class="muted">'+esc(dept?deptName(dept):'')+' • '+esc(deptDateLabel(date))+' ('+(deptDow(date)||'')+'). A green light means present. When a member is absent the church must record <b>why</b> they did not attend.</p>'+
+    '<form id="deptReasonForm" onsubmit="saveDeptReason(event,\''+esc(regId)+'\',\''+esc(date)+'\')">'+
+    '<div class="form">'+
+    '<div class="full"><label>Attendance</label><div class="day-chips">'+
+      '<label class="day-chip '+(a.status==='present'?'on':'')+'" id="drChipPresent"><input type="radio" name="drStatus" value="present" '+(a.status==='present'?'checked':'')+' onchange="deptReasonStatus()"> 🟢 Present — attended</label>'+
+      '<label class="day-chip '+(a.status==='absent'?'on':'')+'" id="drChipAbsent"><input type="radio" name="drStatus" value="absent" '+(a.status!=='present'?'checked':'')+' onchange="deptReasonStatus()"> 🔴 Absent — did not attend</label>'+
+    '</div></div>'+
+    '<div class="full" id="drReasonWrap"><label>Explanation for the absence <span class="req">*</span></label>'+
+      '<div class="day-chips" style="margin-bottom:8px">'+DEPT_ABSENCE_REASONS.map(function(x){ return '<button class="day-chip" type="button" onclick="deptFillReason(this,\''+esc(x)+'\')">'+esc(x)+'</button>'; }).join('')+'</div>'+
+      '<textarea id="drReason" placeholder="Write why the member did not attend this meeting...">'+esc(a.reason||'')+'</textarea>'+
+      '<div class="hint">This explanation is stored with the date and appears in the absence log, the member history and the monthly record.</div></div>'+
+    '</div>'+
+    '<div class="full actions" style="margin-top:12px"><button class="btn success" type="submit">Save register entry</button>'+
+    '<button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>',true);
+  deptReasonStatus();
+}
+function deptReasonStatus(){
+  const on=q('#deptReasonForm input[name=drStatus]:checked');
+  const present=on&&on.value==='present';
+  const cp=el('drChipPresent'), ca=el('drChipAbsent'), wrap=el('drReasonWrap');
+  if(cp) cp.classList.toggle('on',present);
+  if(ca) ca.classList.toggle('on',!present);
+  if(wrap) wrap.style.display=present?'none':'';
+}
+function deptFillReason(btn,text){
+  const ta=el('drReason'); if(!ta) return;
+  ta.value=text; ta.focus();
+}
+function saveDeptReason(e,regId,date){
+  if(e&&e.preventDefault) e.preventDefault();
+  const sel=q('#deptReasonForm input[name=drStatus]:checked');
+  const status=sel?sel.value:'absent';
+  const reason=String((el('drReason')||{}).value||'').trim();
+  if(status==='absent'&&reason.length<3){ toast('An explanation is required when a member misses a meeting.','err',5200); const t=el('drReason'); if(t) t.focus(); return; }
+  deptSetAtt(regId,date,status,reason);
+  const next=window.__deptReasonNext||''; window.__deptReasonNext='';
+  deptSaveAtt(); closeModal();
+  toast(status==='present'?'Present 🟢 recorded for '+deptRegName(deptRegById(regId)||{}):'Absent 🔴 recorded with the explanation.','ok',3200);
+  if(next){ const r=deptRegById(next); if(r) setTimeout(function(){ openDeptReason(next,date,''); },260); }
+}
+function deptExpectedRows(date){
+  const fid=deptFilterId();
+  return (db.deptRegister||[]).filter(function(r){ return (!fid||String(r.deptId)===fid)&&deptExpectedOn(r,date); });
+}
+function deptUnmarkedExpected(date){
+  return deptExpectedRows(date).filter(function(r){ return deptAttStatus(r.id,date)==='none'; });
+}
+function deptSignSheet(){
+  const date=deptSelectedDate();
+  const list=deptUnmarkedExpected(date);
+  if(!list.length){ toast('Every member expected on '+fmtDate(date)+' is already marked.','ok',3600); return; }
+  list.forEach(function(r){ deptSetAtt(r.id,date,'present'); });
+  deptSaveAtt();
+  toast('Register taken — '+list.length+' member(s) marked present 🟢 for '+fmtDate(date)+'.','ok',4200);
+}
+function deptMarkAll(present){
+  const date=deptSelectedDate();
+  const list=deptUnmarkedExpected(date);
+  if(!list.length){ toast('Nothing left to mark for '+fmtDate(date)+'.','ok',3200); return; }
+  if(present){ list.forEach(function(r){ deptSetAtt(r.id,date,'present'); }); deptSaveAtt(); toast(list.length+' member(s) marked present 🟢.','ok',3200); return; }
+  modal('<h3 style="padding-right:36px">✗ Mark '+list.length+' member(s) absent</h3>'+
+    '<p class="muted">'+esc(deptDateLabel(date))+' — one explanation will be recorded for all of them. You can edit each member afterwards.</p>'+
+    '<form onsubmit="deptMarkAllAbsent(event,\''+esc(date)+'\')">'+
+    '<div><label>Explanation <span class="req">*</span></label><div class="day-chips" style="margin-bottom:8px">'+DEPT_ABSENCE_REASONS.map(function(x){ return '<button class="day-chip" type="button" onclick="deptFillReason(this,\''+esc(x)+'\')">'+esc(x)+'</button>'; }).join('')+'</div>'+
+    '<textarea id="drReason" placeholder="Why did they not attend?"></textarea></div>'+
+    '<div class="actions" style="margin-top:12px"><button class="btn danger" type="submit">Record absence</button><button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>',true);
+}
+function deptMarkAllAbsent(e,date){
+  if(e&&e.preventDefault) e.preventDefault();
+  const reason=String((el('drReason')||{}).value||'').trim();
+  if(reason.length<3){ toast('Please write the explanation for the absence.','err',4600); return; }
+  const list=deptUnmarkedExpected(date);
+  list.forEach(function(r){ deptSetAtt(r.id,date,'absent',reason); });
+  deptSaveAtt(); closeModal();
+  toast(list.length+' member(s) marked absent 🔴 with the explanation recorded.','ok',3800);
+}
+/* ---------- register member form ---------- */
+function deptDayChips(selected){
+  const sel=(selected||[]).map(deptDayName);
+  return DEPT_DAYS.map(function(d){
+    const on=sel.indexOf(d)>=0;
+    return '<label class="day-chip '+(on?'on':'')+'"><input type="checkbox" value="'+d+'" '+(on?'checked':'')+' onchange="deptChipChange(this)"> '+d+'</label>';
+  }).join('');
+}
+function deptChipChange(cb){
+  const lab=cb&&cb.closest?cb.closest('label'):null;
+  if(lab) lab.classList.toggle('on',!!cb.checked);
+}
+function deptCheckedDays(){
+  const form=el('deptMemberForm'); if(!form) return [];
+  return Array.prototype.slice.call(form.querySelectorAll('.day-chips input[type=checkbox]')).filter(function(c){ return c.checked; }).map(function(c){ return c.value; });
+}
+function deptGalleryOptions(selectedMemberId){
+  const gal=(db.members||[]).filter(function(x){ return memberDisplayName(x)&&x.approval!=='pending'; }).sort(function(a,b){ return memberDisplayName(a).localeCompare(memberDisplayName(b)); });
+  return '<option value="">— choose from the photo gallery —</option>'+gal.map(function(m){
+    return '<option value="'+esc(m.id)+'" '+(String(selectedMemberId||'')===String(m.id)?'selected':'')+'>'+esc(memberDisplayName(m))+'</option>';
+  }).join('');
+}
+function deptPickGalleryMember(sel){
+  const id=String((sel&&sel.value)||'');
+  const nameEl=el('deptMemberName');
+  if(!id){ window.__deptMemberGal=''; return; }
+  const m=(db.members||[]).find(function(x){ return String(x.id)===id; });
+  if(m&&nameEl){ nameEl.value=memberDisplayName(m); window.__deptMemberGal=id; }
+}
+function openDeptMember(id,deptId){
+  deptEnsure();
+  const rec=id?deptRegById(id):null;
+  const preDept=deptId||(rec?rec.deptId:'')||deptFilterId()||((deptAll()[0]||{}).id||'');
+  const dept=deptById(preDept);
+  window.__deptMemberGal=rec?String(rec.memberId||''):'';
+  modal('<h3 style="padding-right:36px">'+(rec?'✎ Edit department member':'👥 Add a member to a department')+'</h3>'+
+    '<p class="muted">A member joins <b>one department</b> here — repeat for every department they serve in (a person can appear in more than one register). Set <b>the days they rehearse</b>: if you leave them blank the member follows the department’s meeting days.</p>'+
+    '<form id="deptMemberForm" novalidate onsubmit="saveDeptMember(event,\''+(rec?esc(rec.id):'')+'\')">'+
+    '<div class="form">'+
+    '<div class="full"><label>From the Members photo gallery (optional)</label><select id="deptMemberGal" onchange="deptPickGalleryMember(this)">'+deptGalleryOptions(rec?rec.memberId:'')+'</select><div class="hint">Choosing a gallery member fills the name and keeps the member linked to their photo.</div></div>'+
+    '<div><label>Full name <span class="req">*</span></label><input id="deptMemberName" value="'+esc(rec?deptRegName(rec):'')+'" placeholder="e.g. Grace Mwila"></div>'+
+    '<div><label>Department <span class="req">*</span></label><select id="deptMemberDept">'+deptAll().map(function(d){
+        return '<option value="'+esc(d.id)+'" '+(String(preDept)===String(d.id)?'selected':'')+'>'+esc(deptName(d))+'</option>';
+      }).join('')+'</select></div>'+
+    '<div><label>What they minister / role</label><input id="deptMemberRole" list="deptRoleList" value="'+esc(rec?(rec.role||''):'')+'" placeholder="'+(dept?esc(dept.roleName||''):'')+'">'+
+      '<datalist id="deptRoleList">'+DEPT_ROLES.map(function(x){ return '<option value="'+esc(x)+'">'; }).join('')+'</datalist>'+
+      '<div class="hint">Used by the roster that shows who will minister and who will not.</div></div>'+
+    '<div><label>Phone / WhatsApp</label><input id="deptMemberPhone" inputmode="tel" value="'+esc(rec?(rec.phone||''):'')+'" placeholder="097..."></div>'+
+    '<div class="full"><label>Rehearsal / meeting days for this member</label><div class="day-chips" id="deptMemberDays">'+deptDayChips(rec?deptRegDays(rec):[])+'</div>'+
+      '<div class="hint">Leave all days blank to follow the department: <b>'+esc(dept?deptDaysOf(dept).join(', ')||'not set':'not set')+'</b>.</div></div>'+
+    '<div><label>On the register since</label><input id="deptMemberStart" type="date" value="'+esc(rec?deptRegStart(rec):today())+'"></div>'+
+    '<div><label>Notes</label><input id="deptMemberNotes" value="'+esc(rec?(rec.notes||''):'')+'" placeholder="Optional"></div>'+
+    '</div>'+
+    '<div class="actions" style="margin-top:13px"><button class="btn success" type="submit">'+(rec?'Save member':'Add to the register')+'</button>'+
+    (rec?'<button class="btn secondary" type="button" onclick="closeModal();openDeptHistory(\''+esc(rec.id)+'\')">Attendance history</button>':'')+
+    '<button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>');
+}
+function saveDeptMember(e,id){
+  if(e&&e.preventDefault) e.preventDefault();
+  const name=String((el('deptMemberName')||{}).value||'').trim().replace(/\s+/g,' ');
+  const deptId=String((el('deptMemberDept')||{}).value||'');
+  if(name.length<2){ toast('Please enter the member’s name.','err',4200); const n=el('deptMemberName'); if(n) n.focus(); return; }
+  if(!deptId||!deptById(deptId)){ toast('Please choose the department.','err',4200); return; }
+  const days=deptCheckedDays();
+  const payload={
+    name:name, deptId:deptId,
+    role:String((el('deptMemberRole')||{}).value||'').trim(),
+    phone:String((el('deptMemberPhone')||{}).value||'').trim(),
+    days:days,
+    start:String((el('deptMemberStart')||{}).value||today()),
+    notes:String((el('deptMemberNotes')||{}).value||'').trim(),
+    memberId:String(window.__deptMemberGal||'')
+  };
+  let rec=null;
+  if(id){ rec=deptRegById(id); if(!rec){ toast('Member not found on the register.','err'); return; } Object.assign(rec,payload); rec.updatedAt=nowStamp(); rec._syncUpdatedAt=Date.now(); }
+  else{
+    const dup=(db.deptRegister||[]).some(function(x){ return String(x.deptId)===deptId&&deptRegName(x).toLowerCase()===name.toLowerCase(); });
+    if(dup){ toast(name+' is already on this department’s register.','err',5200); return; }
+    rec=Object.assign({id:uid(),createdAt:nowStamp(),_deviceId:MGMT_DEVICE_ID,_syncUpdatedAt:Date.now()},payload);
+    db.deptRegister.push(rec);
+  }
+  _deptAttCache=null;
+  deptLegacyFields(deptById(deptId));
+  persist(); renderDeptRegister(); try{ renderDashboard(); }catch(err){} closeModal();
+  toast((id?'Member updated':'Member added')+' — '+name+' on the '+deptName(deptById(deptId))+' register.','ok',4200);
+  mgmtSyncNow('Department register');
+}
+function deleteDeptReg(id){
+  const rec=deptRegById(id); if(!rec){ toast('Member not found.','err'); return; }
+  if(!confirm('Remove '+deptRegName(rec)+' from the department register?\n\nTheir attendance history for this department will also be removed.')) return;
+  db.deptRegister=db.deptRegister.filter(function(x){ return String(x.id)!==String(id); });
+  db.deptAttendance=(db.deptAttendance||[]).filter(function(a){ return String(a.regId)!==String(id); });
+  _deptAttCache=null;
+  (db.departments||[]).forEach(deptLegacyFields);
+  persist(); renderDeptRegister(); try{ renderDashboard(); }catch(e){}
+  toast('Removed from the register — the change syncs to all devices.','ok',3600);
+  mgmtSyncNow(false);
+}
+/* ---------- add several gallery members at once ---------- */
+function openDeptPicker(){
+  deptEnsure();
+  const gal=(db.members||[]).filter(function(x){ return memberDisplayName(x)&&x.approval!=='pending'; }).sort(function(a,b){ return memberDisplayName(a).localeCompare(memberDisplayName(b)); });
+  const pre=deptFilterId()||((deptAll()[0]||{}).id||'');
+  modal('<h3 style="padding-right:36px">➕ Add members to a department</h3>'+
+    '<p class="muted">Pick the department, then tick everyone who serves in it. Members already on that register are shown with a ✓ and are skipped.</p>'+
+    '<form onsubmit="saveDeptPicker(event)">'+
+    '<div class="form"><div><label>Department <span class="req">*</span></label><select id="pickDept" onchange="refreshDeptPickerList()">'+deptAll().map(function(d){
+      return '<option value="'+esc(d.id)+'" '+(String(pre)===String(d.id)?'selected':'')+'>'+esc(deptName(d))+'</option>';
+    }).join('')+'</select></div>'+
+    '<div><label>Role / what they minister</label><input id="pickRole" placeholder="Optional for everyone"></div></div>'+
+    '<div style="margin:13px 0 6px" class="muted"><b>Members from the photo gallery</b> — '+(gal.length?gal.length+' approved member(s) found.':gal.length?'':'The gallery is empty — use “Add a member” instead, or upload members in the Photo Gallery tab.')+'</div>'+
+    '<div id="pickList" style="max-height:290px;overflow:auto;border:1px solid var(--border);border-radius:11px;padding:9px"></div>'+
+    '<div class="actions" style="margin-top:13px"><button class="btn success" type="submit">Add selected members</button>'+
+    '<button class="btn secondary" type="button" onclick="closeModal();openDeptMember(null)">Not in the gallery — add manually</button>'+
+    '<button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>');
+  refreshDeptPickerList();
+}
+function refreshDeptPickerList(){
+  const box=el('pickList'); if(!box) return;
+  const deptId=String((el('pickDept')||{}).value||'');
+  const have={};
+  deptRegs(deptId).forEach(function(r){
+    have[deptRegName(r).toLowerCase()]=true;
+    if(r.memberId) have['m:'+String(r.memberId)]=true;
+  });
+  const gal=(db.members||[]).filter(function(x){ return memberDisplayName(x)&&x.approval!=='pending'; }).sort(function(a,b){ return memberDisplayName(a).localeCompare(memberDisplayName(b)); });
+  if(!gal.length){ box.innerHTML='<div class="empty" style="padding:14px">No approved members in the photo gallery yet. Use <b>“Not in the gallery — add manually”</b> below.</div>'; return; }
+  box.innerHTML=gal.map(function(m){
+    const inReg=have['m:'+String(m.id)]||have[memberDisplayName(m).toLowerCase()];
+    return '<label class="day-chip" style="display:flex;width:100%;border-radius:9px;margin:3px 0;justify-content:flex-start;'+(inReg?'opacity:.55':'')+'">'+
+      '<input type="checkbox" value="'+esc(m.id)+'" '+(inReg?'disabled ':'')+'onchange="deptChipChange(this)">'+
+      esc(memberDisplayName(m))+(inReg?' <span class="member-meta" style="display:inline;margin-left:6px">already on the register</span>':'')+'</label>';
+  }).join('');
+}
+function saveDeptPicker(e){
+  if(e&&e.preventDefault) e.preventDefault();
+  const deptId=String((el('pickDept')||{}).value||'');
+  const dept=deptById(deptId);
+  if(!dept){ toast('Please choose a department.','err'); return; }
+  const role=String((el('pickRole')||{}).value||'').trim()||String(dept.roleName||'');
+  const ids=Array.prototype.slice.call(qa('#pickList input[type=checkbox]')).filter(function(c){ return c.checked&&!c.disabled; }).map(function(c){ return c.value; });
+  if(!ids.length){ toast('Tick at least one member to add.','err',4200); return; }
+  deptLegacyFields(dept);
+  ids.forEach(function(mid){
+    const m=(db.members||[]).find(function(x){ return String(x.id)===String(mid); });
+    if(!m) return;
+    db.deptRegister.push({id:uid(),name:memberDisplayName(m),deptId:deptId,role:role,phone:String(m.phone||''),days:[],start:today(),notes:'',memberId:String(m.id),createdAt:nowStamp(),_deviceId:MGMT_DEVICE_ID,_syncUpdatedAt:Date.now()});
+  });
+  persist(); renderDeptRegister(); closeModal();
+  toast(ids.length+' member(s) added to the '+deptName(dept)+' register. Now set their rehearsal days on the department.','ok',5200);
+  mgmtSyncNow('Department register');
+}
+/* ---------- department settings ---------- */
+function openDeptSettings(){
+  deptEnsure();
+  const rows=deptAll().map(function(d){
+    const n=deptRegs(d.id).length;
+    return '<tr><td><b>'+esc(deptName(d))+'</b>'+(d.roleName?'<div class="member-meta">'+esc(d.roleName)+'</div>':'')+'</td>'+
+      '<td style="font-size:11.5px">'+esc(deptDaysOf(d).join(', ')||'—')+'</td>'+
+      '<td style="font-size:11.5px">'+esc(d.time||'—')+'</td>'+
+      '<td>'+(n?'<span class="inline-chip">'+n+'</span>':'—')+'</td>'+
+      '<td class="no-print"><div class="row-actions">'+iBtn('✎','Edit department',"openDeptEdit('"+esc(d.id)+"')")+
+      iBtn('🗑','Delete department',"deleteDept('"+esc(d.id)+"')",'danger')+'</div></td></tr>';
+  }).join('');
+  modal('<h3 style="padding-right:36px">⚙ Departments &amp; rehearsal days</h3>'+
+    '<p class="muted">Every department of the church — <b>Praise Team, Choir, Women, Youth, Ushering, Protocols, Intercession</b> and any other. Set the days each one meets for rehearsals; those days drive the register, the month grid and the roster.</p>'+
+    '<div class="tablewrap compact"><table class="sheet" style="min-width:0"><thead><tr><th>Department</th><th>Meeting days</th><th>Time</th><th>Members</th><th class="no-print"></th></tr></thead><tbody>'+(rows||'<tr><td colspan="5" class="empty">No departments yet.</td></tr>')+'</tbody></table></div>'+
+    '<div class="actions" style="margin-top:13px"><button class="btn success" type="button" onclick="openDeptEdit(\'\')">+ Add department</button>'+
+    '<button class="btn secondary" type="button" onclick="closeModal()">Done</button></div>');
+}
+function openDeptEdit(id){
+  const d=id?deptById(id):null;
+  modal('<h3 style="padding-right:36px">'+(d?'✎ Edit department':'+ New department')+'</h3>'+
+    '<form id="deptForm" onsubmit="saveDept(event,\''+(d?esc(d.id):'')+'\')">'+
+    '<div class="form">'+
+    '<div class="full"><label>Department name <span class="req">*</span></label><input id="deptName" value="'+esc(d?deptName(d):'')+'" placeholder="e.g. Praise Team"><div class="hint">'+deptAll().slice(0,6).map(function(x){ return esc(deptName(x)); }).join(' • ')+(deptAll().length>6?' • …':'')+'</div></div>'+
+    '<div class="full"><label>Days they meet for rehearsal</label><div class="day-chips" id="deptDaysBox">'+deptDayChips(d?deptDaysOf(d):[])+'</div></div>'+
+    '<div><label>Meeting time</label><input id="deptTime" value="'+esc(d?(d.time||''):'')+'" placeholder="e.g. 18:00–19:30"></div>'+
+    '<div><label>Venue</label><input id="deptVenue" value="'+esc(d?(d.venue||''):'')+'" placeholder="e.g. Main Auditorium"></div>'+
+    '<div><label>Leader</label><input id="deptLeader" value="'+esc(d?(d.leader||''):'')+'" placeholder="Department leader"></div>'+
+    '<div><label>What this department ministers</label><input id="deptRoleName" value="'+esc(d?(d.roleName||''):'')+'" placeholder="e.g. Praise & Worship"></div>'+
+    '<div class="full"><label>Notes</label><input id="deptNotes" value="'+esc(d?(d.notes||''):'')+'" placeholder="Optional"></div>'+
+    '</div>'+
+    '<div class="actions" style="margin-top:13px"><button class="btn success" type="submit">Save department</button>'+
+    '<button class="btn secondary" type="button" onclick="openDeptSettings()">← Back to the list</button></div></form>',true);
+}
+function deptChecked(el2){
+  const box=el(el2); if(!box) return [];
+  return Array.prototype.slice.call(box.querySelectorAll('input[type=checkbox]')).filter(function(c){ return c.checked; }).map(function(c){ return c.value; });
+}
+function deptLegacyFields(d){
+  if(!d) return d;
+  d.department=deptName(d);
+  d.day=deptDaysOf(d).join(', ');
+  d.members=deptRegs(d.id).length;
+  return d;
+}
+function saveDept(e,id){
+  if(e&&e.preventDefault) e.preventDefault();
+  const name=String((el('deptName')||{}).value||'').trim().replace(/\s+/g,' ');
+  if(!name){ toast('Please enter the department name.','err',4200); return; }
+  const days=deptChecked('deptDaysBox');
+  const payload={name:name,days:days,time:String((el('deptTime')||{}).value||'').trim(),venue:String((el('deptVenue')||{}).value||'').trim(),
+    leader:String((el('deptLeader')||{}).value||'').trim(),roleName:String((el('deptRoleName')||{}).value||'').trim(),notes:String((el('deptNotes')||{}).value||'').trim()};
+  if(id){
+    const d=deptById(id); if(!d){ toast('Department not found.','err'); return; }
+    Object.assign(d,payload); d.updatedAt=nowStamp(); deptLegacyFields(d);
+  }else{
+    if(db.departments.some(function(x){ return deptName(x).toLowerCase()===name.toLowerCase(); })){ toast('That department already exists.','err',4600); return; }
+    db.departments.push(deptLegacyFields(Object.assign({id:uid(),createdAt:nowStamp()},payload)));
+  }
+  _deptAttCache=null;
+  persist(); renderDeptRegister(); openDeptSettings();
+  toast('Department saved — '+(days.length?'meeting days: '+days.join(', '):'no meeting day set yet')+'.','ok',4200);
+}
+function deleteDept(id){
+  const d=deptById(id); if(!d) return;
+  const regs=deptRegs(id);
+  if(!confirm('Delete the department “'+deptName(d)+'”?'+(regs.length?'\n\n'+regs.length+' member(s) on its register and their attendance will be removed too.':''))) return;
+  db.departments=db.departments.filter(function(x){ return String(x.id)!==String(id); });
+  const ids={}; regs.forEach(function(r){ ids[String(r.id)]=true; });
+  db.deptRegister=db.deptRegister.filter(function(r){ return !ids[String(r.id)]; });
+  db.deptAttendance=(db.deptAttendance||[]).filter(function(a){ return !ids[String(a.regId)]; });
+  _deptAttCache=null;
+  persist(); renderDeptRegister(); openDeptSettings();
+  toast('Department deleted.','ok',3200);
+}
+/* ---------- history & roster ---------- */
+function openDeptHistory(regId){
+  const reg=deptRegById(regId); if(!reg){ toast('Member not found on the register.','err'); return; }
+  const dept=deptById(reg.deptId);
+  const p=deptPct3m(reg); const lab=deptConsistencyLabel(p.pct,p.marked);
+  const from=deptAddDays(today(),-180);
+  const dates=deptExpectedDates(reg,from,today()).slice().reverse();
+  const lines=dates.map(function(d){
+    const a=deptAttOf(reg.id,d);
+    const s=a&&a.status?a.status:'none';
+    const chip=s==='present'?'<span class="inline-chip g">🟢 Present</span>':s==='absent'?'<span class="inline-chip r">🔴 Absent</span>':'<span class="inline-chip">Not marked</span>';
+    return '<div class="history-row"><span class="hd">'+esc(fmtDate(d))+'<div class="member-meta">'+esc(deptDow(d)||'')+'</div></span>'+
+      '<span style="flex:1">'+chip+(s==='absent'?'<div class="hr">Reason: '+(a.reason?esc(a.reason):'<b>not yet explained</b>')+'</div>':'')+'</span>'+
+      '<span class="no-print" style="display:flex;gap:4px">'+
+        '<button class="btn '+(s==='present'?'success':'ghost')+' xs" type="button" title="Mark present" onclick="deptHistSet(\''+esc(reg.id)+'\',\''+esc(d)+'\',\'present\')">🟢</button>'+
+        '<button class="btn '+(s==='absent'?'danger':'ghost')+' xs" type="button" title="Mark absent (reason required)" onclick="closeModal();openDeptReason(\''+esc(reg.id)+'\',\''+esc(d)+'\')">🔴</button>'+
+      '</span></div>';
+  }).join('');
+  const mm=deptMissedMonths(reg,6);
+  modal('<h3 style="padding-right:36px">'+deptAvatar(reg)+esc(deptRegName(reg))+' — attendance history</h3>'+
+    '<p class="muted">'+esc(dept?deptName(dept):'')+(reg.role?' • '+esc(reg.role):'')+' • Rehearsal days: <b>'+esc(deptRegDays(reg).join(', ')||'—')+'</b></p>'+
+    '<div class="dept-bar"><div class="dept-pill"><span>Consistency (3 months)</span><b>'+(p.pct===null?'—':p.pct+'%')+'</b></div>'+
+    '<div class="dept-pill"><span>Meetings marked</span><b>'+p.marked+'</b></div>'+
+    '<div class="dept-pill"><span>Present</span><b style="color:#0f6c40">'+p.present+'</b></div>'+
+    '<div class="dept-pill"><span>Missed</span><b style="color:#98231a">'+p.absent+'</b></div>'+
+    '<div class="dept-pill"><span>Status</span><b><span class="st '+lab.cls+'">'+lab.txt+'</span></b></div></div>'+
+    '<h4>Rehearsals missed in each month</h4>'+
+    '<div class="tablewrap compact"><table class="sheet" style="min-width:0"><thead><tr><th>Month</th><th class="num">Meetings in month</th><th class="num">Marked</th><th class="num">Present</th><th class="num">Missed</th></tr></thead><tbody>'+
+      mm.map(function(m){ return '<tr><td>'+esc(m.label)+'</td><td class="num">'+m.expected+'</td><td class="num">'+m.marked+'</td><td class="num" style="color:#0f6c40">'+m.present+'</td><td class="num" style="color:'+(m.missed?'#98231a':'#0f6c40')+';font-weight:800">'+m.missed+'</td></tr>'; }).join('')+
+    '</tbody></table></div>'+
+    '<h4>Every meeting (last 6 months)</h4>'+
+    '<div style="max-height:250px;overflow:auto;border:1px solid var(--border);border-radius:11px;padding:4px 12px">'+(lines||'<div class="empty">No meeting day has fallen in the last 6 months for this member.</div>')+'</div>'+
+    '<div class="actions" style="margin-top:13px"><button class="btn secondary" type="button" onclick="closeModal();openDeptMinister(\''+esc(reg.id)+'\')">🎤 Roster</button>'+
+    '<button class="btn secondary" type="button" onclick="closeModal()">Close</button></div>');
+}
+function deptHistSet(regId,date,status){
+  if(status==='absent'){ closeModal(); openDeptReason(regId,date); return; }
+  deptSetAtt(regId,date,'present','');
+  deptSaveAtt();
+  openDeptHistory(regId);
+  toast('Marked present 🟢 for '+fmtDate(date)+'.','ok',2800);
+}
+function openDeptMinister(regId){
+  const reg=deptRegById(regId); if(!reg) return;
+  const plan=deptPlanDate();
+  const d=deptMinisterFor(reg,plan);
+  modal('<h3 style="padding-right:36px">🎤 Roster — '+esc(deptRegName(reg))+'</h3>'+
+    '<p class="muted">The register decides automatically. You can also set it by hand for '+esc(deptDateLabel(plan))+'.</p>'+
+    '<form onsubmit="saveDeptMinister(event,\''+esc(regId)+'\')">'+
+    '<div class="form">'+
+    '<div><label>Service</label><input type="date" id="dmDate" value="'+esc(String((reg.minister||{}).date||plan))+'"></div>'+
+    '<div><label>Ministering?</label><select id="dmOk"><option value="yes" '+(d.ok?'selected':'')+'>Yes — ministering</option><option value="no" '+(!d.ok?'selected':'')+'>No — not ministering</option></select></div>'+
+    '<div><label>Role / what they will minister</label><input id="dmRole" list="deptRoleList2" value="'+esc(d.role||'')+'"><datalist id="deptRoleList2">'+DEPT_ROLES.map(function(x){ return '<option value="'+esc(x)+'">'; }).join('')+'</datalist></div>'+
+    '<div class="full"><div class="alert blue" style="margin:0"><b>Register says:</b> '+(d.ok?'✅ ministering':'🚫 not ministering')+' — '+esc(d.why)+'</div></div>'+
+    '<div class="full"><label>Note (optional)</label><input id="dmNote" value="'+esc((reg.minister||{}).note||'')+'" placeholder="e.g. leading the second song"></div>'+
+    '</div>'+
+    '<div class="actions" style="margin-top:12px"><button class="btn success" type="submit">Save roster entry</button>'+
+    '<button class="btn secondary" type="button" onclick="clearDeptMinister(\''+esc(regId)+'\')">Follow the register automatically</button>'+
+    '<button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>',true);
+}
+function saveDeptMinister(e,regId){
+  if(e&&e.preventDefault) e.preventDefault();
+  const reg=deptRegById(regId); if(!reg) return;
+  const date=String((el('dmDate')||{}).value||deptPlanDate());
+  reg.minister={date:date,ok:String((el('dmOk')||{}).value||'yes')==='yes',role:String((el('dmRole')||{}).value||'').trim(),note:String((el('dmNote')||{}).value||'').trim(),manual:true,at:nowStamp()};
+  reg._syncUpdatedAt=Date.now();
+  persist(); renderDeptRegister(); closeModal();
+  toast('Roster updated for '+fmtDate(date)+'.','ok',3400);
+  mgmtSyncNow(false);
+}
+function clearDeptMinister(regId){
+  const reg=deptRegById(regId); if(!reg) return;
+  delete reg.minister; reg._syncUpdatedAt=Date.now();
+  persist(); renderDeptRegister(); closeModal();
+  toast('This member now follows the register automatically again.','ok',3400);
+  mgmtSyncNow(false);
+}
+function deptAutoAssign(){
+  const plan=deptPlanDate();
+  const fid=deptFilterId();
+  const rows=(db.deptRegister||[]).filter(function(r){ return !fid||String(r.deptId)===fid; });
+  if(!rows.length){ toast('No members on the register to plan.','err'); return; }
+  let yes=0,no=0;
+  rows.forEach(function(reg){
+    const live=deptAutoDecision(reg,plan);
+    if(live.ok) yes++; else no++;
+    reg.minister={date:plan,ok:live.ok,role:live.role,note:'',manual:false,at:nowStamp()};
+    reg._syncUpdatedAt=Date.now();
+  });
+  persist(); renderDeptRegister();
+  toast('Roster built from the register for '+fmtDate(plan)+' — '+yes+' ministering, '+no+' not ministering.','ok',5200);
+  mgmtSyncNow('Roster');
+}
+function openMinisteringPicker(){
+  const plan=deptPlanDate();
+  const fid=deptFilterId();
+  const rows=(db.deptRegister||[]).filter(function(r){ return !fid||String(r.deptId)===fid; }).sort(function(a,b){ return deptRegName(a).localeCompare(deptRegName(b)); });
+  if(!rows.length){ toast('No department members yet.','err'); return; }
+  modal('<h3 style="padding-right:36px">🎤 Ministry roster — '+esc(deptDateLabel(plan))+'</h3>'+
+    '<p class="muted">Tick who will minister. Leave everyone unticked to let the register decide automatically.</p>'+
+    '<form onsubmit="saveMinisteringPicker(event)">'+
+    '<div class="tablewrap compact"><table class="sheet" style="min-width:0"><thead><tr><th>Member</th><th>Department</th><th>Ministering</th><th>Role</th></tr></thead><tbody>'+
+    rows.map(function(r){
+      const d=deptMinisterFor(r,plan);
+      const dept=deptById(r.deptId);
+      return '<tr><td><b>'+esc(deptRegName(r))+'</b></td><td style="font-size:11.5px">'+esc(dept?deptName(dept):'—')+'</td>'+
+        '<td><label class="day-chip '+(d.ok?'on':'')+'"><input type="checkbox" value="'+esc(r.id)+'" '+(d.ok?'checked':'')+' onchange="deptChipChange(this)">Ministering</label></td>'+
+        '<td><input class="mp-role" data-reg="'+esc(r.id)+'" value="'+esc(d.role||'')+'" style="min-width:130px"></td></tr>';
+    }).join('')+'</tbody></table></div>'+
+    '<div class="actions" style="margin-top:12px"><button class="btn success" type="submit">Save roster</button>'+
+    '<button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>');
+}
+function saveMinisteringPicker(e){
+  if(e&&e.preventDefault) e.preventDefault();
+  const plan=deptPlanDate();
+  const boxes=qa('#modalContent input[type=checkbox]');
+  const roles={}; qa('#modalContent .mp-role').forEach(function(i){ roles[i.dataset.reg]=i.value; });
+  boxes.forEach(function(cb){
+    const reg=deptRegById(cb.value); if(!reg) return;
+    reg.minister={date:plan,ok:!!cb.checked,role:String(roles[reg.id]||''),note:'',manual:true,at:nowStamp()};
+    reg._syncUpdatedAt=Date.now();
+  });
+  persist(); renderDeptRegister(); closeModal();
+  toast('Roster saved for '+fmtDate(plan)+'.','ok',3600);
+  mgmtSyncNow('Roster');
+}
+function changeDeptRule(){
+  modal('<h3 style="padding-right:36px">⚙ Consistency rule</h3>'+
+    '<p class="muted">A member goes on the ministry roster when they were <b>present at the last rehearsal</b> and their consistency is at least this percentage. Below it they are listed as <b>not ministering</b>, with the reason.</p>'+
+    '<form onsubmit="saveDeptRule(event)"><div><label>Minimum consistency (%)</label><input id="deptRuleInput" type="number" min="30" max="100" step="5" value="'+(num(db.settings.deptRulePct)||70)+'"></div>'+
+    '<div class="actions" style="margin-top:12px"><button class="btn success" type="submit">Save rule</button><button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>',true);
+}
+function saveDeptRule(e){
+  if(e&&e.preventDefault) e.preventDefault();
+  const v=Math.max(30,Math.min(100,num((el('deptRuleInput')||{}).value)||70));
+  db.settings.deptRulePct=v; persist(); renderDeptRegister(); closeModal();
+  toast('Rule saved — members must be at '+v+'% or more to minister.','ok',3800);
+}
+/* ---------- small wiring helpers ---------- */
+function onDeptPick(id){
+  deptEnsure();
+  const d=id?deptById(id):null;
+  const di=el('deptDate');
+  if(d&&di){
+    const days=deptDaysOf(d);
+    if(days.length&&days.indexOf(deptDow(di.value||today()))<0){
+      const reg={deptId:d.id,days:days,start:deptAddDays(today(),-400)};
+      const last=deptLastMeetingDate(reg,today());
+      if(last) di.value=last;
+    }
+  }
+  renderDeptRegister();
+}
+function onDeptDateChange(){ window.__deptDateTouched=true; renderDeptRegister(); }
+function deptFocus(id){
+  const s=el('deptSel'); if(s){ s.value=id; onDeptPick(id); }
+  const panel=el('mpanel-departments');
+  navTo('members','departments');
+  setTimeout(function(){ const t=el('deptSheetTable')||panel; if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); },120);
+}
+/* ---------- reports ---------- */
+function deptRegisterRowsForReport(){
+  const fid=deptFilterId();
+  const ym=String((el('deptMonth')||{}).value||today().slice(0,7));
+  return {rows:deptRowList(),fid:fid,ym:ym};
+}
+function deptReportText(kind){
+  const {rows,fid,ym}=deptRegisterRowsForReport();
+  const dept=fid?deptById(fid):null;
+  const head=(db.settings.short||'JCRGM').toUpperCase()+' — DEPARTMENT REGISTER'+(dept?' — '+deptName(dept).toUpperCase():'');
+  const L=[head,'Date: '+fmtDate(today()),''];
+  if(kind==='ministry'){
+    const plan=deptPlanDate();
+    L.push('MINISTRY ROSTER — '+fmtDate(plan));
+    rows.forEach(function(r){
+      const d=deptMinisterFor(r,plan); const dp=deptById(r.deptId);
+      L.push((d.ok?'✅ MINISTERING':'🚫 NOT MINISTERING')+' — '+deptRegName(r)+' ('+(dp?deptName(dp):'')+')'+(d.ok?' — '+d.role:'')+'\n     '+d.why);
+    });
+  }else if(kind==='register'){
+    const date=deptSelectedDate();
+    L.push('MEETING REGISTER — '+deptDateLabel(date)+' ('+(deptDow(date)||'')+')','');
+    rows.forEach(function(r){
+      const a=deptAttOf(r.id,date); const s=a&&a.status?a.status:'none';
+      L.push((s==='present'?'🟢 PRESENT':s==='absent'?'🔴 ABSENT':'⚪ NOT MARKED')+' — '+deptRegName(r)+(s==='absent'&&a.reason?' — '+a.reason:''));
+    });
+  }else{
+    L.push('CONSISTENCY — '+(dept?deptName(dept):'all departments'));
+    rows.forEach(function(r){
+      const p=deptPct3m(r); const lab=deptConsistencyLabel(p.pct,p.marked); const dp=deptById(r.deptId);
+      const mm=deptMissedMonths(r,6).map(function(m){ return m.label+' '+m.missed+'/'+m.expected; }).join(', ');
+      L.push('• '+deptRegName(r)+' ('+(dp?deptName(dp):'')+') — '+(p.pct===null?'no meetings marked yet':p.pct+'% ' +lab.txt)+
+        ' | present '+p.present+', absent '+p.absent+' | missed per month: '+deptMissedMonths(r,6).map(function(m){ return m.label+' '+(m.marked?m.missed+'/'+m.expected+' missed':'not marked'); }).join(', '));
+    });
+  }
+  return L.join('\n');
+}
+function sendDeptReportWhatsApp(kind){
+  openWhatsApp(deptReportText(kind||'consistency')+churchFooter());
+}
+function printDeptReport(kind){
+  const date=deptSelectedDate();
+  const ym=String((el('deptMonth')||{}).value||today().slice(0,7));
+  const fid=deptFilterId();
+  const dept=fid?deptById(fid):null;
+  const rows=deptRowList();
+  let html='';
+  if(kind==='register'){
+    html+='<h2>Meeting register — '+esc(deptDateLabel(date))+'</h2><table><thead><tr><th>Member</th><th>Department</th><th>Status</th><th>Explanation</th></tr></thead><tbody>'+
+      rows.filter(function(r){ return deptExpectedOn(r,date); }).map(function(r){
+        const a=deptAttOf(r.id,date); const s=a&&a.status?a.status:'none'; const dp=deptById(r.deptId);
+        return '<tr><td>'+esc(deptRegName(r))+'</td><td>'+esc(dp?deptName(dp):'')+'</td><td>'+(s==='present'?'PRESENT':s==='absent'?'ABSENT':'NOT MARKED')+'</td><td>'+esc((a&&a.reason)||'')+'</td></tr>';
+      }).join('')+'</tbody></table>';
+  }else{
+    html+='<h2>Consistency &amp; rehearsals missed — '+esc(dept?deptName(dept):'all departments')+'</h2>'+
+      '<table><thead><tr><th>Member</th><th>Department</th><th>Meeting days</th><th>Present</th><th>Missed</th><th>Consistency</th><th>Status</th><th>Missed per month (6)</th></tr></thead><tbody>'+
+      rows.map(function(r){
+        const p=deptPct3m(r); const lab=deptConsistencyLabel(p.pct,p.marked); const dp=deptById(r.deptId);
+        return '<tr><td>'+esc(deptRegName(r))+'</td><td>'+esc(dp?deptName(dp):'')+'</td><td>'+esc(deptRegDays(r).join(', '))+'</td><td>'+p.present+'</td><td>'+p.absent+'</td><td>'+(p.pct===null?'—':p.pct+'%')+'</td><td>'+lab.txt+'</td><td>'+deptMissedMonths(r,6).map(function(m){ return esc(m.label)+': '+m.missed+'/'+m.expected; }).join(' · ')+'</td></tr>';
+      }).join('')+'</tbody></table>';
+  }
+  html+='<h2>Month record — '+esc(deptMonthLabel(ym))+'</h2><table><thead><tr><th>Department</th><th>Member</th><th>Meeting days</th><th>Present</th><th>Missed</th></tr></thead><tbody>'+
+    (fid?[deptById(fid)]:deptAll()).filter(Boolean).map(function(d){
+      return deptRegs(d.id).map(function(r){
+        const st=deptMonthStats(r,ym);
+        return '<tr><td>'+esc(deptName(d))+'</td><td>'+esc(deptRegName(r))+'</td><td>'+esc(deptRegDays(r).join(', '))+'</td><td>'+st.present+'</td><td>'+st.absent+'</td></tr>';
+      }).join('');
+    }).join('')+'</tbody></table>';
+  const abs=(db.deptAttendance||[]).filter(function(a){ return a.status==='absent'; }).filter(function(a){ const r=deptRegById(a.regId); return r&&(!fid||String(r.deptId)===fid); });
+  if(abs.length){
+    html+='<h2>Absence log</h2><table><thead><tr><th>Date</th><th>Member</th><th>Explanation</th></tr></thead><tbody>'+
+      abs.sort(function(a,b){ return String(b.date).localeCompare(String(a.date)); }).map(function(a){ const r=deptRegById(a.regId); return '<tr><td>'+esc(fmtDate(a.date))+'</td><td>'+esc(r?deptRegName(r):'')+'</td><td>'+esc(a.reason||'Not explained')+'</td></tr>'; }).join('')+'</tbody></table>';
+  }
+  printHtml('Department Register — '+(dept?deptName(dept):'All departments'),html);
+}
+function exportDeptCSV(){
+  const rows=deptRowList();
+  if(!rows.length){ toast('No department members to export.','err'); return; }
+  const head=['Department','Member','Role','Meeting days','Present','Absent','Consistency %','Status','Missed this month','Missed per month (6)'];
+  const lines=rows.map(function(r){
+    const p=deptPct3m(r); const lab=deptConsistencyLabel(p.pct,p.marked); const dp=deptById(r.deptId);
+    return [deptName(dp),deptRegName(r),r.role||'',deptRegDays(r).join(' / '),p.present,p.absent,(p.pct===null?'':p.pct),lab.txt,deptMonthStats(r,deptMonthOf(today())).absent,deptMissedMonths(r,6).map(function(m){ return m.label+': '+m.missed+'/'+m.expected; }).join(' | ')];
+  });
+  const csv='﻿'+[head].concat(lines).map(function(r){ return r.map(function(v){ return '"'+String(v===undefined||v===null?'':v).replace(/"/g,'""')+'"'; }).join(','); }).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='JCRGM-department-register-'+today()+'.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ try{ URL.revokeObjectURL(a.href); }catch(e){} },900);
+  toast('Department register exported ('+rows.length+' member(s)).','ok',3600);
+}
+
 /* ---------- render everything + boot ---------- */
 function renderAll(){
   renderDashboard();
   renderMembersGallery();
+  renderDeptRegister();
   renderUsherAttendance();
   renderEvents(); renderCeremonyRegistrations(); renderCertificates();
   renderReports();
@@ -4179,6 +5624,7 @@ function boot(){
       const h=document.createElement('div'); h.className='swipe-hint no-print'; h.textContent='↔ Swipe the table sideways to see every column';
       w.parentNode.insertBefore(h,w);
     });
+    deptEnsure();
     renderAll(); injectGenericExports();
     renderSettings();
     startMgmtSync();
@@ -4209,5 +5655,5 @@ window.addEventListener('error',function(e){ if(e&&e.message&&String(document.lo
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58867b058a3b572',t:'MTc5NDM0ODgxMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58867b058a3b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58867b058a3b572',t:'MTc5NDM0ODgxMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58867b058a3b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a59c690a5be44bcb',t:'MTc5NDU1ODU4Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a59c690a5be44bcb',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
