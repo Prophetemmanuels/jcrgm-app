@@ -4546,9 +4546,17 @@ function deptCanSeePending(r){ return isMgmtAdmin()||deptCanManage()||(r&&r._dev
 function deptPendingVisible(){ return deptPendingRegs().filter(deptCanSeePending); }
 function deptRegById(id){ return (db.deptRegister||[]).find(function(r){ return String(r.id)===String(id); })||null; }
 function deptRegName(r){ return String((r&&(r.name||r.fullName))||'').trim()||'Unnamed member'; }
-function deptRegDays(r){
+function deptOwnDays(r){
   const own=(Array.isArray(r&&r.days)?r.days:[]).map(deptDayName).filter(Boolean);
-  if(own.length) return own.filter(function(x,i){ return own.indexOf(x)===i; });
+  return own.filter(function(x,i){ return own.indexOf(x)===i; });
+}
+function deptFollowsDept(r){ return deptOwnDays(r).length===0; }
+function deptRegDays(r){
+  /* A member follows the department's meeting days unless Admin/leader gave
+     them their own days. Editing the department therefore takes effect on the
+     whole register immediately. */
+  const own=deptOwnDays(r);
+  if(own.length) return own;
   return deptDaysOf(deptById(r&&r.deptId));
 }
 function deptRegStart(r){
@@ -5030,10 +5038,13 @@ function renderDeptSheet(){
   const body=el('deptSheetBody'), empty=el('deptSheetEmpty');
   if(!body) return;
   const date=deptSelectedDate();
-  const rows=deptRowList();
+  const all=deptRowList();
+  const expectedRows=all.filter(function(r){ return deptExpectedOn(r,date); });
+  const others=all.filter(function(r){ return !deptExpectedOn(r,date); });
+  const rows=expectedRows.concat(others);
   const sh=el('deptSheetDate'); if(sh) sh.textContent='— '+deptDateLabel(date)+' ('+(deptDow(date)||'')+')';
   const hint=el('deptSheetHint');
-  if(hint) hint.textContent='Each member is listed on their own rehearsal / meeting day'+(fidText())+'. Tap the light to switch present ↔ absent — a reason is required for every absence.';
+  if(hint) hint.innerHTML='<b>'+expectedRows.length+'</b> member(s) meet today on their register days'+(fidText())+(others.length?' — '+others.length+' more do not meet today and are listed after them':'')+'. Tap the light to switch present ↔ absent — a reason is required for every absence.';
   const deck=el('deptSheetDeck');
   if(!rows.length){
     body.innerHTML='';
@@ -5373,8 +5384,10 @@ function openDeptMember(id,deptId){
       '<datalist id="deptRoleList">'+DEPT_ROLES.map(function(x){ return '<option value="'+esc(x)+'">'; }).join('')+'</datalist>'+
       '<div class="hint">Used by the roster that shows who will minister and who will not.</div></div>'+
     '<div><label>Phone / WhatsApp</label><input id="deptMemberPhone" inputmode="tel" value="'+esc(rec?(rec.phone||''):'')+'" placeholder="097..."></div>'+
-    '<div class="full"><label>Rehearsal / meeting days for this member</label><div class="day-chips" id="deptMemberDays">'+deptDayChips(rec?deptRegDays(rec):[])+'</div>'+
-      '<div class="hint">Leave all days blank to follow the department: <b>'+esc(dept?deptDaysOf(dept).join(', ')||'not set':'not set')+'</b>.</div></div>'+
+    '<div class="full"><label>Rehearsal / meeting days for this member</label><div class="day-chips" id="deptMemberDays">'+deptDayChips(rec?deptOwnDays(rec):[])+'</div>'+
+      '<div class="hint" id="deptMemberDaysHint">'+(rec&&deptOwnDays(rec).length
+        ? 'This member has <b>their own days</b> and does not follow the department. Clear every day to follow the department again.'
+        : 'Leave all days blank to <b>follow the department</b>: <b>'+(dept?esc(deptDaysOf(dept).join(', ')||'not set'):'not set')+'</b>. If the department’s days change, this member’s register changes with it.')+'</div></div>'+
     '<div><label>On the register since</label><input id="deptMemberStart" type="date" value="'+esc(rec?deptRegStart(rec):today())+'"></div>'+
     '<div><label>Notes</label><input id="deptMemberNotes" value="'+esc(rec?(rec.notes||''):'')+'" placeholder="Optional"></div>'+
     '</div>'+
@@ -5500,19 +5513,35 @@ function saveDeptPicker(e){
   mgmtSyncNow('Department register');
 }
 /* ---------- department settings ---------- */
+function deptSettingsSummary(id){
+  const d=deptById(id); if(!d) return '';
+  const members=deptRegs(id);
+  const followers=members.filter(deptFollowsDept).length;
+  const own=members.length-followers;
+  const next=deptNextMeetingDate({deptId:id,days:deptDaysOf(d)},today());
+  const dates=deptDatesForDays(deptDaysOf(d),deptMonthRange(today().slice(0,7)).from,today());
+  return '<div class="dept-bar" style="margin:10px 0 0">'+
+    '<div class="dept-pill"><span>Meeting days</span><b style="font-size:13px">'+esc(deptDaysOf(d).join(', ')||'none')+'</b></div>'+
+    '<div class="dept-pill"><span>Next meeting</span><b style="font-size:13px">'+(next?esc(deptDateLabel(next)):'—')+'</b></div>'+
+    '<div class="dept-pill"><span>Follow these days</span><b>'+followers+'</b></div>'+
+    '<div class="dept-pill"><span>Own days</span><b>'+own+'</b></div>'+
+    '<div class="dept-pill"><span>Meetings this month</span><b>'+dates.length+'</b></div></div>';
+}
 function openDeptSettings(){
   deptEnsure();
   const rows=deptAll().map(function(d){
     const n=deptRegs(d.id).length;
+    const own=deptRegs(d.id).filter(function(r){ return !deptFollowsDept(r); }).length;
     return '<tr><td><b>'+esc(deptName(d))+'</b>'+(d.roleName?'<div class="member-meta">'+esc(d.roleName)+'</div>':'')+'</td>'+
-      '<td style="font-size:11.5px">'+esc(deptDaysOf(d).join(', ')||'—')+'</td>'+
+      '<td style="font-size:11.5px">'+esc(deptDaysOf(d).join(', ')||'—')+(own?'<div class="member-meta">'+own+' member(s) with own days</div>':'')+'</td>'+
       '<td style="font-size:11.5px">'+esc(d.time||'—')+'</td>'+
       '<td>'+(n?'<span class="inline-chip">'+n+'</span>':'—')+'</td>'+
       '<td class="no-print"><div class="row-actions">'+iBtn('✎','Edit department',"openDeptEdit('"+esc(d.id)+"')")+
       iBtn('🗑','Delete department',"deleteDept('"+esc(d.id)+"')",'danger')+'</div></td></tr>';
   }).join('');
   modal('<h3 style="padding-right:36px">⚙ Departments &amp; rehearsal days</h3>'+
-    '<p class="muted">Every department of the church — <b>Praise Team, Choir, Women, Youth, Ushering, Protocols, Intercession</b> and any other. Set the days each one meets for rehearsals; those days drive the register, the month grid and the roster.</p>'+
+    '<p class="muted">Every department of the church — <b>Praise Team, Choir, Women, Youth, Ushering, Protocols, Intercession</b> and any other. Set the days each one meets for rehearsals; <b>a change here takes effect immediately</b> in the register, the month record, the KPIs and the ministry roster, for every member who follows the department’s days.</p>'+
+    '<div id="deptApplied" class="alert" style="display:none;background:#e8f7ee;border-color:#b7e4c9;color:#0f6c40"></div>'+
     '<div class="tablewrap compact"><table class="sheet" style="min-width:0"><thead><tr><th>Department</th><th>Meeting days</th><th>Time</th><th>Members</th><th class="no-print"></th></tr></thead><tbody>'+(rows||'<tr><td colspan="5" class="empty">No departments yet.</td></tr>')+'</tbody></table></div>'+
     '<div class="actions" style="margin-top:13px"><button class="btn success" type="button" onclick="openDeptEdit(\'\')">+ Add department</button>'+
     '<button class="btn secondary" type="button" onclick="closeModal()">Done</button></div>');
@@ -5520,10 +5549,12 @@ function openDeptSettings(){
 function openDeptEdit(id){
   const d=id?deptById(id):null;
   modal('<h3 style="padding-right:36px">'+(d?'✎ Edit department':'+ New department')+'</h3>'+
-    '<form id="deptForm" onsubmit="saveDept(event,\''+(d?esc(d.id):'')+'\')">'+
+    '<form id="deptForm" data-id="'+(d?esc(d.id):'')+'" onsubmit="saveDept(event,\''+(d?esc(d.id):'')+'\')">'+
     '<div class="form">'+
     '<div class="full"><label>Department name <span class="req">*</span></label><input id="deptName" value="'+esc(d?deptName(d):'')+'" placeholder="e.g. Praise Team"><div class="hint">'+deptAll().slice(0,6).map(function(x){ return esc(deptName(x)); }).join(' • ')+(deptAll().length>6?' • …':'')+'</div></div>'+
-    '<div class="full"><label>Days they meet for rehearsal</label><div class="day-chips" id="deptDaysBox">'+deptDayChips(d?deptDaysOf(d):[])+'</div></div>'+
+    '<div class="full"><label>Days they meet for rehearsal</label><div class="day-chips" id="deptDaysBox">'+deptDayChips(d?deptDaysOf(d):[])+'</div>'+
+      '<div class="hint">Tick every day this department rehearses or meets. Members who follow the department move with it — no need to edit them one by one.</div>'+
+      '<div id="deptDaysPreview" class="hint"></div></div>'+
     '<div><label>Meeting time</label><input id="deptTime" value="'+esc(d?(d.time||''):'')+'" placeholder="e.g. 18:00–19:30"></div>'+
     '<div><label>Venue</label><input id="deptVenue" value="'+esc(d?(d.venue||''):'')+'" placeholder="e.g. Main Auditorium"></div>'+
     '<div><label>Leader</label><input id="deptLeader" value="'+esc(d?(d.leader||''):'')+'" placeholder="Department leader"></div>'+
@@ -5531,7 +5562,25 @@ function openDeptEdit(id){
     '<div class="full"><label>Notes</label><input id="deptNotes" value="'+esc(d?(d.notes||''):'')+'" placeholder="Optional"></div>'+
     '</div>'+
     '<div class="actions" style="margin-top:13px"><button class="btn success" type="submit">Save department</button>'+
-    '<button class="btn secondary" type="button" onclick="openDeptSettings()">← Back to the list</button></div></form>',true);
+    '<button class="btn secondary" type="button" onclick="openDeptSettings()">← Back to the list</button></div></form>'+(d?deptSettingsSummary(d.id):''),true);
+  qa('#deptDaysBox input').forEach(function(cb){ cb.addEventListener('change',deptDaysPreview); });
+  const t=el('deptTime'); if(t) t.addEventListener('input',deptDaysPreview);
+  deptDaysPreview();
+}
+function deptDaysPreview(){
+  const box=el('deptDaysPreview'); if(!box) return;
+  const form=el('deptForm'); if(!form) return;
+  const id=String(form.getAttribute('data-id')||'');
+  const days=deptChecked('deptDaysBox');
+  const time=String((el('deptTime')||{}).value||'').trim();
+  if(!days.length){ box.innerHTML='⚠ No meeting day ticked — this department will not appear in the daily register.'; return; }
+  const fake={id:id||'preview',days:days};
+  const next=deptNextMeetingDate(fake,today());
+  let n=0;
+  if(id){ n=deptRegs(id).filter(deptFollowsDept).length; }
+  box.innerHTML='📅 On save: <b>'+esc(days.join(', '))+'</b>'+(time?' • 🕒 '+esc(time):'')+
+    ' • next meeting <b>'+(next?esc(deptDateLabel(next)):'—')+'</b>'+
+    (id?' • applies to <b>'+n+'</b> member(s) who follow the department':'');
 }
 function deptChecked(el2){
   const box=el(el2); if(!box) return [];
@@ -5551,17 +5600,53 @@ function saveDept(e,id){
   const days=deptChecked('deptDaysBox');
   const payload={name:name,days:days,time:String((el('deptTime')||{}).value||'').trim(),venue:String((el('deptVenue')||{}).value||'').trim(),
     leader:String((el('deptLeader')||{}).value||'').trim(),roleName:String((el('deptRoleName')||{}).value||'').trim(),notes:String((el('deptNotes')||{}).value||'').trim()};
+  let target=null, oldDays=[], wasNew=false;
   if(id){
-    const d=deptById(id); if(!d){ toast('Department not found.','err'); return; }
-    Object.assign(d,payload); d.updatedAt=nowStamp(); deptLegacyFields(d);
+    target=deptById(id); if(!target){ toast('Department not found.','err'); return; }
+    oldDays=deptDaysOf(target);
+    Object.assign(target,payload); target.updatedAt=nowStamp(); target._syncUpdatedAt=Date.now(); deptLegacyFields(target);
   }else{
     if(db.departments.some(function(x){ return deptName(x).toLowerCase()===name.toLowerCase(); })){ toast('That department already exists.','err',4600); return; }
-    db.departments.push(deptLegacyFields(Object.assign({id:uid(),createdAt:nowStamp()},payload)));
+    target=deptLegacyFields(Object.assign({id:uid(),createdAt:nowStamp(),_syncUpdatedAt:Date.now()},payload));
+    db.departments.push(target); wasNew=true;
   }
-  _deptAttCache=null;
-  persist(); renderDeptRegister(); openDeptSettings();
-  toast('Department saved — '+(days.length?'meeting days: '+days.join(', '):'no meeting day set yet')+'.','ok',4200);
+  deptApplyChanges(target,oldDays,wasNew);
 }
+/* Everything that must follow a department change, in one place. */
+function deptApplyChanges(dept,oldDays,wasNew){
+  _deptAttCache=null;
+  const days=deptDaysOf(dept);
+  const members=deptRegs(dept.id);
+  const followers=members.filter(deptFollowsDept);
+  const own=members.length-followers.length;
+  /* push the change to the whole app straight away */
+  persist();
+  deptEnsureSelectors();          /* chips/dropdowns read the new days */
+  renderDeptRegister();          /* register, month grid, roster, KPIs */
+  try{ renderDashboard(); }catch(e){}
+  try{ renderReports(); }catch(e){}
+  try{ renderMemberDaysSoon(); }catch(e){}
+  try{ mgmtSyncNow('Department days'); }catch(e){}
+  if(el('modal')&&el('modal').classList.contains('show')&&el('deptForm')) openDeptSettings();
+
+  /* show the result where the church can see it */
+  const changed=(!wasNew&&(oldDays.join(',')!==days.join(',')));
+  const box=el('deptApplied');
+  if(box){
+    box.style.display='block';
+    box.innerHTML='<b>✓ Saved and applied to the register.</b><br>'+
+      '📅 Meeting days: <b>'+esc(days.join(', ')||'none set')+'</b>'+(changed?' <span class="muted">(was '+esc(oldDays.join(', ')||'none')+')</span>':'')+
+      (dept.time?' • 🕒 '+esc(dept.time):'')+(dept.venue?' • 📍 '+esc(dept.venue):'')+(dept.leader?' • 👤 '+esc(dept.leader):'')+'<br>'+
+      '<span class="muted">'+followers.length+' member(s) now follow these days'+(own?' • '+own+' member(s) keep their own days':'')+
+      ' • next meeting: <b>'+(deptNextMeetingDate({deptId:dept.id,days:days},today())?esc(deptDateLabel(deptNextMeetingDate({deptId:dept.id,days:days},today()))):'none in the next 3 weeks')+'</b></span>';
+  }
+  if(deptHasExpected(today())&&el('deptDate')&&!window.__deptDateTouched){
+    el('deptDate').value=today();   /* today is a meeting day again — show it */
+    renderDeptRegister();
+  }
+  toast('Department saved ✓ — '+(days.length?'meeting days '+days.join(', '):'no meeting day')+' applied to '+(wasNew?'the new register':(followers.length+' member(s)'))+'.','ok',5200);
+}
+function renderMemberDaysSoon(){ try{ renderMembersGallery(); }catch(e){} }
 function deleteDept(id){
   const d=deptById(id); if(!d) return;
   const regs=deptRegs(id);
@@ -5901,5 +5986,5 @@ window.addEventListener('error',function(e){ if(e&&e.message&&String(document.lo
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58867b058a3b572',t:'MTc5NDM0ODgxMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58867b058a3b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a59ca8c98f9bd2e1',t:'MTc5NDU2MTE5NA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a59ca8c98f9bd2e1',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58867b058a3b572',t:'MTc5NDM0ODgxMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58867b058a3b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a59cf7936c0288d6',t:'MTc5NDU2NDQyMQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a59cf7936c0288d6',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
