@@ -338,6 +338,12 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
 .dept-pill{background:#f6f8fb;border:1px solid var(--border);border-radius:12px;padding:9px 11px}
 .dept-pill span{display:block;font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
 .dept-pill b{display:block;font-size:19px;color:var(--primary);margin-top:2px;font-variant-numeric:tabular-nums}
+.arr{display:inline-flex;align-items:center;gap:4px;border-radius:99px;padding:3px 9px;font-size:11px;font-weight:800;white-space:nowrap;cursor:pointer;border:1px solid transparent}
+.arr.t-ok{background:#e4f5ec;color:#0f6c40;border-color:#b7e4c9}
+.arr.t-late{background:#fbf3dd;color:#8a6714;border-color:#efd69b}
+.arr.t-none{background:#f1f4f9;color:#8a94a6;border-style:dashed;border-color:#c9d2e0}
+.arr.t-abs{background:#fdecea;color:#98231a;border-color:#f3c9c4}
+.arr:hover{filter:brightness(.97)}
 .reg-lights{display:flex;gap:4px;flex-wrap:wrap;align-items:center;max-width:230px}
 @media(max-width:780px){.sheet-scroll{max-height:none}.reg-lights{max-width:100%}.history-row{gap:5px}}
 .dot-l{width:15px;height:15px;border-radius:50%;display:inline-block;flex:none;border:1px solid rgba(0,0,0,.10)}
@@ -570,6 +576,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
         <div class="card stat tight"><div class="label">Present today</div><strong id="dashDeptPresent" style="color:var(--success)">0</strong><span class="muted">green lights</span></div>
         <div class="card stat tight"><div class="label">Absent today</div><strong id="dashDeptAbsent" style="color:var(--danger)">0</strong><span class="muted">explanation recorded</span></div>
         <div class="card stat tight"><div class="label">Not yet marked</div><strong id="dashDeptUnmarked">0</strong><span class="muted">awaiting register</span></div>
+        <div class="card stat tight"><div class="label">Arrived late</div><strong id="dashDeptLate" style="color:#8a6714">0</strong><span class="muted">after meeting start</span></div>
       </div>
       <div id="dashDeptToday"></div>
     </div>
@@ -704,6 +711,8 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
           <div class="dept-pill"><span>Present today</span><b id="deptKpiPresent">0</b></div>
           <div class="dept-pill"><span>Absent today</span><b id="deptKpiAbsent">0</b></div>
           <div class="dept-pill"><span>Not yet marked</span><b id="deptKpiUnmarked">0</b></div>
+          <div class="dept-pill"><span>Arrived late today</span><b id="deptKpiLate">0</b></div>
+          <div class="dept-pill"><span>First arrival</span><b id="deptKpiFirst" style="font-size:16px">—</b></div>
           <div class="dept-pill"><span>Consistent members</span><b id="deptKpiConsistent">0</b></div>
           <div class="dept-pill"><span>Missed this month</span><b id="deptKpiMissed">0</b></div>
         </div>
@@ -724,7 +733,7 @@ td .row-actions{display:flex;gap:5px;flex-wrap:wrap}
           </div>
         </div>
         <div class="sheet-scroll"><table class="sheet" id="deptSheetTable">
-          <thead><tr id="deptSheetHead"><th class="nm">Member</th><th>Department</th><th>Rehearsal days</th><th class="mt-cell">Attendance</th><th>Reason if absent</th><th>This month</th><th>Consistency</th><th class="no-print">Actions</th></tr></thead>
+          <thead><tr id="deptSheetHead"><th class="nm">Member</th><th>Department</th><th>Rehearsal days</th><th class="mt-cell">Attendance</th><th>Arrival time</th><th>Reason if absent</th><th>This month</th><th>Consistency</th><th class="no-print">Actions</th></tr></thead>
           <tbody id="deptSheetBody"></tbody>
         </table></div>
         <div id="deptSheetDeck" class="dept-deck no-print"></div>
@@ -4011,8 +4020,8 @@ function fullPackSpec(){
     rows:db.ceremonyRegistrations.map(function(r){ return {ref:r.referenceNo||'—',name:r.name||'—',cer:(r.ceremonyName||'—')+' ('+fmtDate(r.ceremonyDate)+')',ph:r.phone||'—',form:(CEREMONY_FORMS[r.formKey]||{}).name||'—',st:r.status||'Registered'}; })});
   if((db.deptRegister||[]).length) blocks.push({type:'table',title:'DEPARTMENT REGISTER — '+db.deptRegister.length+' member(s)',
     columns:[{l:'Member',w:80,k:'nm'},{l:'Department',w:70,k:'dp'},{l:'Rehearsal days',w:80,k:'dy'},{l:'Role',w:70,k:'ro'},{l:'Present',w:34,k:'pr'},{l:'Missed',w:32,k:'ab'},{l:'Consistency',w:46,k:'pc'},{l:'Status',w:48,k:'st'}],
-    rows:db.deptRegister.map(function(r){ const p=deptPct3m(r); const lab=deptConsistencyLabel(p.pct,p.marked); const dp=deptById(r.deptId);
-      return {nm:deptRegName(r),dp:dp?deptName(dp):'-',dy:deptRegDays(r).join(', ')||'-',ro:r.role||'-',pr:String(p.present),ab:String(p.absent),pc:(p.pct===null?'-':p.pct+'%'),st:lab.txt}; })});
+    rows:db.deptRegister.filter(deptIsApproved).map(function(r){ const p=deptPct3m(r); const lab=deptConsistencyLabel(p.pct,p.marked); const dp=deptById(r.deptId);
+      return {nm:deptRegName(r),dp:dp?deptName(dp):'-',dy:deptRegDays(r).join(', ')||'-',ro:r.role||'-',pr:String(p.present)+' ('+p.late+' late)',ab:String(p.absent),pc:(p.pct===null?'-':p.pct+'%'),st:lab.txt}; })});
   if(db.events.length) blocks.push({type:'table',title:'CEREMONY CALENDAR',columns:[{l:'Date',w:56,k:'d'},{l:'Ceremony',w:130,k:'e'},{l:'Time',w:46,k:'t'},{l:'Venue',w:100,k:'v'},{l:'Minister',w:90,k:'l'},{l:'Status',w:50,k:'s'}],
     rows:db.events.map(function(x){ return {d:fmtDate(x.date),e:x.event,t:x.time||'—',v:x.venue||x.location||'—',l:x.leader||'—',s:x.status||'Scheduled'}; })});
   return {title:'FULL CHURCH PACK',subtitle:'All registers currently held on this device',meta:'Generated '+fmtDate(today())+' at '+nowStamp()+'  •  '+(db.settings.church||''),blocks:blocks.length?blocks:[{type:'note',text:'No records have been captured yet on this device.'}]};
@@ -4274,10 +4283,10 @@ function renderDashboard(){
     set('dashDeptMembers',(db.deptRegister||[]).filter(deptIsApproved).length);
     const dateD=today();
     const deptsD=(db.departments||[]).filter(function(d){ return deptDaysOf(d).indexOf(deptDow(dateD))>=0; });
-    let presD=0,absD=0,unD=0;
-    (db.deptRegister||[]).filter(deptIsApproved).forEach(function(r){ if(deptRegDays(r).indexOf(deptDow(dateD))<0) return; const st=deptAttStatus(r.id,dateD); if(st==='present') presD++; else if(st==='absent') absD++; else unD++; });
+    let presD=0,absD=0,unD=0,lateD=0;
+    (db.deptRegister||[]).filter(deptIsApproved).forEach(function(r){ if(deptRegDays(r).indexOf(deptDow(dateD))<0) return; const st=deptAttStatus(r.id,dateD); if(st==='present'){ presD++; const li=deptLateInfo(r,dateD); if(li&&li.state==='late') lateD++; } else if(st==='absent') absD++; else unD++; });
     set('dashDeptTodayLabel',deptsD.length?deptsD.map(deptName).join(', '):'No department meets today');
-    set('dashDeptPresent',presD); set('dashDeptAbsent',absD); set('dashDeptUnmarked',unD);
+    set('dashDeptPresent',presD); set('dashDeptAbsent',absD); set('dashDeptUnmarked',unD); set('dashDeptLate',lateD);
   }catch(errD){ console.warn('[JCRGM] dept dashboard',errD); }
   renderDeptDashboard();
   const snap=el('dashboardUsherSnapshot');
@@ -4564,6 +4573,56 @@ function deptRegStart(r){
   return /^\d{4}-\d{2}-\d{2}$/.test(s)?s:today();
 }
 
+/* ---------- arrival time helpers ---------- */
+function deptNowHHMM(){ const d=new Date(); return pad(d.getHours())+':'+pad(d.getMinutes()); }
+function deptToMin(t){
+  if(t===undefined||t===null||t==='') return null;
+  const m=String(t).trim().match(/(\d{1,2})\s*[:.hH]?\s*(\d{2})?/);
+  if(!m) return null;
+  let h=+m[1], mi=+(m[2]||0);
+  if(h>23) return null; if(mi>59) return null;
+  return h*60+mi;
+}
+/* The department's meeting time, e.g. "18:00–19:30" → start 18:00, end 19:30 */
+function deptMeetingTimes(d){
+  const raw=String((d&&d.time)||'');
+  const parts=raw.split(/[–—\-−]|to/i).map(function(x){ return deptToMin(x); }).filter(function(x){ return x!==null; });
+  if(!parts.length) return {start:null,end:null,raw:raw};
+  return {start:parts[0],end:parts.length>1?parts[1]:null,raw:raw};
+}
+function deptGraceMin(){ const g=num(db.settings.deptLateGraceMin); return g>0?g:15; }
+function deptLateInfo(reg,date){
+  const a=deptAttOf(reg.id,date);
+  if(!a||a.status!=='present'||!a.time) return null;
+  /* only judge lateness for meetings on the member's own meeting day */
+  if(!deptExpectedOn(reg,date)) return {time:a.time,state:'extra',label:'extra meeting'};
+  const dept=deptById(reg.deptId);
+  const t=deptMeetingTimes(dept);
+  const arrived=deptToMin(a.time);
+  if(t.start===null||arrived===null) return {time:a.time,state:'ok',label:'arrived '+a.time};
+  const late=arrived-(t.start+deptGraceMin());
+  if(late>0) return {time:a.time,state:'late',mins:late,label:'late by '+late+' min',start:fmtClock(t.start),grace:deptGraceMin()};
+  return {time:a.time,state:'ontime',label:'on time',start:fmtClock(t.start)};
+}
+function fmtClock(mins){
+  if(mins===null||mins===undefined) return '';
+  const h=Math.floor(mins/60)%24, m=mins%60;
+  return pad(h)+':'+pad(m);
+}
+function deptTimeFallback(){
+  /* If the browser cannot show a time picker, allow HH:MM typing instead */
+  const inp=el('drArrivalTime');
+  if(!inp) return;
+  try{
+    inp.type='time';
+    if(inp.type!=='time') inp.type='text';
+  }catch(e){ inp.type='text'; }
+}
+function deptArrivedNow(){
+  const inp=el('drArrivalTime');
+  if(inp){ inp.value=deptNowHHMM(); deptReasonStatus(); }
+}
+
 /* ---------- attendance ---------- */
 function deptAttKey(regId,date){ return String(regId)+'|'+String(date); }
 function deptAttIndex(){
@@ -4574,7 +4633,7 @@ function deptAttIndex(){
 }
 function deptAttOf(regId,date){ return deptAttIndex()[deptAttKey(regId,date)]||null; }
 function deptAttStatus(regId,date){ const a=deptAttOf(regId,date); return a&&a.status?a.status:'none'; }
-function deptSetAtt(regId,date,status,reason){
+function deptSetAtt(regId,date,status,reason,time){
   const reg=deptRegById(regId); if(!reg) return null;
   if(!deptIsApproved(reg)){ toast('This member is still waiting for Admin approval — the register opens for them once Admin approves.','err',5200); return null; }
   const key=deptAttKey(regId,date);
@@ -4582,6 +4641,13 @@ function deptSetAtt(regId,date,status,reason){
   if(!a){ a={id:uid(),regId:String(regId),date:String(date),_deviceId:MGMT_DEVICE_ID}; db.deptAttendance.push(a); }
   a.status=status;
   a.reason=status==='absent'?String(reason||'').trim():'';
+  /* arrival time: the time they arrived at the meeting (HH:MM) */
+  if(status==='present'){
+    if(time!==undefined&&time!==null) a.time=String(time).trim();
+    else if(!a.time) a.time=deptNowHHMM();
+  }else{
+    a.time='';
+  }
   a.deptId=String(reg.deptId||'');
   a.by=isMgmtAdmin()?'Admin':(MGMT_DEVICE_ID?'Register ('+String(MGMT_DEVICE_ID).slice(-4)+')':'Register');
   a.at=nowStamp(); a._syncUpdatedAt=Date.now();
@@ -4607,21 +4673,27 @@ function deptExpectedDates(reg,from,to){
 }
 function deptStats(reg,from,to){
   const dates=deptExpectedDates(reg,from,to);
-  let present=0, absent=0, reasons=[];
+  let present=0, absent=0, late=0, ontime=0, mins=0, noTime=0, reasons=[];
   dates.forEach(function(d){
     const a=deptAttOf(reg.id,d);
     if(!a) return;
-    if(a.status==='present') present++;
+    if(a.status==='present'){
+      present++;
+      const li=deptLateInfo(reg,d);
+      if(li&&li.state==='late'){ late++; mins+=li.mins; }
+      else if(li&&(li.state==='ontime'||li.state==='ok')) ontime++;
+      if(!a.time) noTime++;
+    }
     else if(a.status==='absent'){ absent++; reasons.push({date:d,reason:a.reason||''}); }
   });
   const marked=present+absent;
-  return {dates:dates,expected:dates.length,present:present,absent:absent,marked:marked,
+  return {dates:dates,expected:dates.length,present:present,absent:absent,marked:marked,late:late,ontime:ontime,lateMins:mins,noTime:noTime,
     pct:marked?Math.round(present*100/marked):null,reasons:reasons};
 }
 function deptPct3m(reg){
   const to=today(), from=deptAddDays(to,-89);
   const st=deptStats(reg,from,to);
-  return {pct:st.pct,marked:st.marked,present:st.present,absent:st.absent};
+  return {pct:st.pct,marked:st.marked,present:st.present,absent:st.absent,late:st.late,ontime:st.ontime};
 }
 function deptMonthStats(reg,ym){
   const r=deptMonthRange(ym); const todayS=today();
@@ -4631,7 +4703,7 @@ function deptMonthStats(reg,ym){
 function deptMissedMonths(reg,n){
   return deptMonthsBack(n||6).map(function(ym){
     const st=deptMonthStats(reg,ym);
-    return {ym:ym,label:deptMonthLabel(ym),missed:st.absent,present:st.present,marked:st.marked,expected:st.expected};
+    return {ym:ym,label:deptMonthLabel(ym),missed:st.absent,present:st.present,marked:st.marked,expected:st.expected,late:st.late};
   });
 }
 function deptMissedTotal(reg){ return deptStats(reg,'2000-01-01',today()).absent; }
@@ -4674,7 +4746,9 @@ function deptAutoDecision(reg,planDate){
   const a=deptAttOf(reg.id,lastMarked);
   if(!a||a.status!=='present') return {ok:false,role:role,why:'Missed last rehearsal '+fmtDate(lastMarked)+(a&&a.reason?' — '+a.reason:'')};
   if(pct.marked&&pct.pct!==null&&pct.pct<rule) return {ok:false,role:role,why:'Present at the last rehearsal, but consistency '+pct.pct+'% is below the '+rule+'% rule'};
-  if(pct.marked>=2&&pct.pct!==null) return {ok:true,role:role,why:'Present at last rehearsal ('+fmtDate(lastMarked)+') • '+pct.pct+'% consistent'};
+  const li=deptLateInfo(reg,lastMarked);
+  const lateNote=li&&li.state==='late'?' (arrived '+li.time+', '+li.mins+' min late)':'';
+  if(pct.marked>=2&&pct.pct!==null) return {ok:true,role:role,why:'Present at last rehearsal ('+fmtDate(lastMarked)+lateNote+') • '+pct.pct+'% consistent'};
   return {ok:true,role:role,why:'Present at last rehearsal ('+fmtDate(lastMarked)+')'};
 }
 function deptMinisterFor(reg,planDate){
@@ -4964,7 +5038,20 @@ function renderDeptKPIs(){
     if(lab.key==='consistent'&&p.marked>=2) consistent++;
     missedMonth+=deptMonthStats(r,ym).absent;
   });
+  let lateToday=0; const times=[];
+  rows.forEach(function(r){
+    if(!deptExpectedOn(r,date)) return;
+    const a=deptAttOf(r.id,date);
+    if(a&&a.status==='present'&&a.time){
+      times.push(a.time);
+      const li=deptLateInfo(r,date);
+      if(li&&li.state==='late') lateToday++;
+    }
+  });
+  times.sort();
   const set=function(id,v){ const e=el(id); if(e) e.textContent=v; };
+  set('deptKpiLate',lateToday);
+  set('deptKpiFirst',times.length?times[0]:'—');
   set('deptKpiDepts',fid?1:deptAll().length);
   set('deptKpiMembers',rows.length);
   set('deptKpiPresent',present); set('deptKpiAbsent',absent); set('deptKpiUnmarked',unmarked);
@@ -5008,6 +5095,16 @@ function renderDeptNotInRegister(date){
         '</div></div>';
     }).join('')+'</div>'+(hidden?'<div class="hint" style="margin-top:8px">+ '+hidden+' more waiting from other phones — only Admin can review those.</div>':'');
 }
+function arrivalChip(r,date){
+  const a=deptAttOf(r.id,date);
+  const st=a&&a.status?a.status:'none';
+  if(st==='absent') return '<span class="arr t-abs" title="Absent — no arrival time">🚫</span>';
+  if(st!=='present') return '<span class="arr t-none" onclick="openDeptReason(\''+esc(r.id)+'\',\''+esc(date)+'\')" title="Not marked yet — tap to take the register">＋ time</span>';
+  const li=deptLateInfo(r,date);
+  if(!a.time) return '<span class="arr t-none" onclick="openDeptReason(\''+esc(r.id)+'\',\''+esc(date)+'\')" title="Present but no arrival time recorded — tap to add it">＋ time</span>';
+  if(li&&li.state==='late') return '<span class="arr t-late" onclick="openDeptReason(\''+esc(r.id)+'\',\''+esc(date)+'\')" title="Arrived '+a.time+' — late by '+li.mins+' min (meeting starts '+li.start+', '+li.grace+' min grace)">🕒 '+a.time+' · late '+li.mins+'m</span>';
+  return '<span class="arr t-ok" onclick="openDeptReason(\''+esc(r.id)+'\',\''+esc(date)+'\')" title="Arrived '+a.time+' — '+(li?li.label:'on time')+(li&&li.start?' (meeting starts '+li.start+')':'')+'">🕒 '+a.time+(li&&li.state==='ontime'?' · on time':'')+'</span>';
+}
 function deptSheetCard(r,date){
   const dept=deptById(r.deptId); const days=deptRegDays(r);
   const expected=days.indexOf(deptDow(date))>=0;
@@ -5025,6 +5122,7 @@ function deptSheetCard(r,date){
       '<span class="inline-chip">'+esc(days.join(' & ')||'no day set')+'</span>'+
       (expected?'':'<span class="inline-chip y">not a meeting day</span>')+'</div>'+
     '<div class="drow"><button class="mt '+cls+'" type="button" onclick="deptCycle(\''+esc(r.id)+'\',\''+esc(date)+'\')">'+light+label+'</button>'+
+      arrivalChip(r,date)+
       '<span class="member-meta" style="margin:0">'+m.present+' / '+(m.present+m.absent)+' this month</span>'+
       '<span class="st '+lab.cls+'">'+lab.txt+' '+(p.pct===null?'':'· '+p.pct+'%')+'</span></div>'+
     (st==='absent'?'<div class="dreason">Reason: '+(a.reason?esc(a.reason):'<b>required — tap ✎</b>')+'</div>':'')+
@@ -5077,6 +5175,7 @@ function renderDeptSheet(){
       '<td>'+(dept?'<span class="inline-chip">'+esc(deptName(dept))+'</span>':'—')+'</td>'+
       '<td><span class="member-meta" style="display:block;margin:0;font-size:11.5px">'+esc(days.join(', ')||'no day set')+'</span></td>'+
       '<td class="mt-cell">'+attBtn+'</td>'+
+      '<td>'+arrivalChip(r,date)+'</td>'+
       '<td style="min-width:130px">'+reason+'</td>'+
       '<td><b>'+m.present+'</b> / '+(m.present+m.absent)+' <span class="member-meta" style="display:inline;margin:0">('+(m.absent?m.absent+' missed':'none missed')+')</span></td>'+
       '<td><span class="consistency"><span class="cbar"><i style="width:'+(p.pct===null?0:p.pct)+'%"></i></span><b>'+(p.pct===null?'—':p.pct+'%')+'</b></span> <span class="st '+lab.cls+'">'+lab.txt+'</span></td>'+
@@ -5113,13 +5212,14 @@ function renderDeptMonthGrid(){
       const cells=dates.map(function(d){
         const a=deptAttOf(reg.id,d);
         const s=a&&a.status?a.status:'none';
-        const tip=deptDateLabel(d)+' — '+(s==='present'?'present':s==='absent'?('absent: '+(a.reason||'no reason recorded')):'not marked');
+        const li2=deptLateInfo(reg,d);
+        const tip=deptDateLabel(d)+' — '+(s==='present'?('present'+(a.time?' • arrived '+a.time+(li2&&li2.state==='late'?' (late '+li2.mins+' min)':' (on time)'):' • time not recorded')):s==='absent'?('absent: '+(a.reason||'no reason recorded')):'not marked');
         return '<span class="dot-l '+(s==='present'?'present':s==='absent'?'absent':'none')+'" title="'+esc(tip)+'" role="img" aria-label="'+esc(tip)+'" style="cursor:pointer" onclick="deptCycle(\''+esc(reg.id)+'\',\''+esc(d)+'\')"></span>';
       }).join('');
       return '<div class="history-row" style="align-items:center;flex-wrap:wrap">'+
         '<span style="flex:1;min-width:150px"><b>'+esc(deptRegName(reg))+'</b>'+(deptRegDays(reg).join(',')!==days.join(',')?'<span class="member-meta" style="display:inline;margin-left:6px">own days: '+esc(deptRegDays(reg).join(', ')||'—')+'</span>':'')+'</span>'+
         '<span class="reg-lights">'+(cells||'<span class="muted" style="font-size:11.5px">No meeting day in this month</span>')+'</span>'+
-        '<span class="member-meta" style="margin:0;min-width:104px;text-align:right"><b style="color:#0f6c40">'+st.present+'</b> present • <b style="color:#98231a">'+st.absent+'</b> missed</span>'+
+        '<span class="member-meta" style="margin:0;min-width:104px;text-align:right"><b style="color:#0f6c40">'+st.present+'</b> present'+(st.late?' • <b style="color:#8a6714">'+st.late+'</b> late':'')+' • <b style="color:#98231a">'+st.absent+'</b> missed</span>'+
         '</div>';
     }).join('');
     html+='<div class="dept-card" style="margin-top:11px"><div class="wtop" style="display:flex;justify-content:space-between;gap:9px;flex-wrap:wrap"><div><h4>'+esc(deptName(dept))+'</h4><div class="sub2">Meeting days: <b>'+esc(days.join(', ')||'not set')+'</b>'+(dept.time?' • '+esc(dept.time):'')+(dates.length?' • '+dates.length+' meeting(s) in '+deptMonthLabel(ym):'')+'</div></div></div>'+rows+'</div>';
@@ -5182,6 +5282,7 @@ function renderDeptConsistency(){
       '<td class="num">'+p.marked+'</td>'+
       '<td class="num" style="color:#0f6c40;font-weight:800">'+p.present+'</td>'+
       '<td class="num" style="color:#98231a;font-weight:800">'+p.absent+'</td>'+
+      '<td class="num"><b style="color:'+(p.late?'#8a6714':'#0f6c40')+'">'+p.late+'</b></td>'+
       '<td><span class="consistency"><span class="cbar"><i style="width:'+(p.pct===null?0:p.pct)+'%"></i></span><b>'+(p.pct===null?'—':p.pct+'%')+'</b></span></td>'+
       '<td class="num"><b style="color:'+(deptMonthStats(r,deptMonthOf(today())).absent?'#98231a':'#0f6c40')+'">'+deptMonthStats(r,deptMonthOf(today())).absent+'</b></td>'+
       '<td style="font-size:11px;min-width:190px"><div class="chip-wrap">'+mm.map(function(m){
@@ -5197,7 +5298,7 @@ function renderDeptConsistency(){
     '<div class="dept-pill"><span>Average consistency</span><b>'+avg+'%</b></div>'+
     '<div class="dept-pill"><span>Rule</span><b>'+(num(db.settings.deptRulePct)||70)+'%</b></div></div>'+
     '<div class="tablewrap compact" style="margin-top:11px"><table class="sheet" style="min-width:940px"><thead><tr>'+
-    '<th class="nm">Member</th><th>Department</th><th>Meeting days</th><th class="num">Marked</th><th class="num">Present</th><th class="num">Absent</th><th>Consistency</th><th class="num">Missed this month</th><th>Missed per month (last 6)</th><th>Status</th><th class="no-print"></th>'+
+    '<th class="nm">Member</th><th>Department</th><th>Meeting days</th><th class="num">Marked</th><th class="num">Present</th><th class="num">Absent</th><th class="num">Late (3 m)</th><th>Consistency</th><th class="num">Missed this month</th><th>Missed per month (last 6)</th><th>Status</th><th class="no-print"></th>'+
     '</tr></thead><tbody>'+body+'</tbody></table></div>'+
     '<div class="hint">Consistency = meetings attended ÷ meetings marked (last 3 months). “Missed per month” shows rehearsals missed ÷ rehearsals expected in that month.</div>';
 }
@@ -5250,7 +5351,13 @@ function deptAvatar(reg){
 }
 function deptCycle(regId,date){
   const st=deptAttStatus(regId,date);
-  if(st==='none'){ deptSetAtt(regId,date,'present'); deptSaveAtt(); toast('Marked present 🟢 — the green light is on.','ok',2600); return; }
+  if(st==='none'){
+    deptSetAtt(regId,date,'present');   /* arrival time defaults to this moment */
+    deptSaveAtt();
+    const r=deptRegById(regId); const li=r?deptLateInfo(r,date):null;
+    toast('Present 🟢 — arrived '+((deptAttOf(regId,date)||{}).time||'now')+(li&&li.state==='late'?' (late by '+li.mins+' min)':'')+'. Tap the time chip to adjust.','ok',3600);
+    return;
+  }
   if(st==='present'){ deptSetAtt(regId,date,'absent',''); deptSaveAtt(); openDeptReason(regId,date); return; }
   deptSetAtt(regId,date,'present'); deptSaveAtt(); toast('Corrected to present 🟢.','ok',2600);
 }
@@ -5259,14 +5366,24 @@ function openDeptReason(regId,date,next){
   const a=deptAttOf(regId,date)||{};
   const dept=deptById(reg.deptId);
   window.__deptReasonNext=next||'';
+  window.__deptTimeCtx=deptMeetingTimes(dept);
+  setTimeout(deptTimeFallback,0);
   modal('<h3 style="padding-right:36px">🗓 Register — '+esc(deptRegName(reg))+'</h3>'+
-    '<p class="muted">'+esc(dept?deptName(dept):'')+' • '+esc(deptDateLabel(date))+' ('+(deptDow(date)||'')+'). A green light means present. When a member is absent the church must record <b>why</b> they did not attend.</p>'+
+    '<p class="muted">'+esc(dept?deptName(dept):'')+' • '+esc(deptDateLabel(date))+' ('+(deptDow(date)||'')+')'+
+      (dept&&dept.time?' • meeting time <b>'+esc(dept.time)+'</b>':'')+
+      '. Mark them <b>present</b> and record <b>what time they arrived</b>; when a member is absent the church must record <b>why</b> they did not attend.</p>'+
     '<form id="deptReasonForm" onsubmit="saveDeptReason(event,\''+esc(regId)+'\',\''+esc(date)+'\')">'+
     '<div class="form">'+
     '<div class="full"><label>Attendance</label><div class="day-chips">'+
       '<label class="day-chip '+(a.status==='present'?'on':'')+'" id="drChipPresent"><input type="radio" name="drStatus" value="present" '+(a.status==='present'?'checked':'')+' onchange="deptReasonStatus()"> 🟢 Present — attended</label>'+
       '<label class="day-chip '+(a.status==='absent'?'on':'')+'" id="drChipAbsent"><input type="radio" name="drStatus" value="absent" '+(a.status!=='present'?'checked':'')+' onchange="deptReasonStatus()"> 🔴 Absent — did not attend</label>'+
     '</div></div>'+
+    '<div class="full" id="drTimeWrap"><label for="drArrivalTime">What time did they arrive?</label>'+
+      '<div class="actions" style="flex-wrap:nowrap">'+
+        '<input id="drArrivalTime" type="time" step="60" lang="en-GB" value="'+esc(a.status==='present'&&a.time?a.time:(a.status==='present'?deptNowHHMM():''))+'" style="max-width:160px" oninput="deptReasonStatus()">'+
+        '<button class="btn secondary small" type="button" onclick="deptArrivedNow()">🕒 Now — just arrived</button>'+
+      '</div>'+
+      '<div class="hint" id="drTimeHint"></div></div>'+
     '<div class="full" id="drReasonWrap"><label>Explanation for the absence <span class="req">*</span></label>'+
       '<div class="day-chips" style="margin-bottom:8px">'+DEPT_ABSENCE_REASONS.map(function(x){ return '<button class="day-chip" type="button" onclick="deptFillReason(this,\''+esc(x)+'\')">'+esc(x)+'</button>'; }).join('')+'</div>'+
       '<textarea id="drReason" placeholder="Write why the member did not attend this meeting...">'+esc(a.reason||'')+'</textarea>'+
@@ -5279,10 +5396,27 @@ function openDeptReason(regId,date,next){
 function deptReasonStatus(){
   const on=q('#deptReasonForm input[name=drStatus]:checked');
   const present=on&&on.value==='present';
-  const cp=el('drChipPresent'), ca=el('drChipAbsent'), wrap=el('drReasonWrap');
+  const cp=el('drChipPresent'), ca=el('drChipAbsent'), wrap=el('drReasonWrap'), tw=el('drTimeWrap'), hint=el('drTimeHint');
   if(cp) cp.classList.toggle('on',present);
   if(ca) ca.classList.toggle('on',!present);
   if(wrap) wrap.style.display=present?'none':'';
+  if(tw) tw.style.display=present?'':'none';
+  if(hint&&present){
+    const info=window.__deptTimeCtx||null;
+    if(!info){ hint.textContent='Recorded so the church can see what time the member arrived.'; }
+    else if(info.start===null){
+      hint.innerHTML='This department has no meeting time set — the arrival time is still recorded. Set a meeting time in ⚙ Departments &amp; Rehearsal Days to flag late arrivals automatically.';
+    }else{
+      const t=deptToMin(el('drArrivalTime')?el('drArrivalTime').value:'');
+      const grace=deptGraceMin();
+      if(t===null){ hint.innerHTML='Meeting starts <b>'+esc(fmtClock(info.start))+'</b>'+(info.end?' and ends '+esc(fmtClock(info.end)):'')+' • '+grace+' min grace.'; }
+      else{
+        const late=t-(info.start+grace);
+        hint.innerHTML='Meeting starts <b>'+esc(fmtClock(info.start))+'</b> ('+grace+' min grace) — '+
+          (late>0?'<b style="color:#8a6714">arrived '+late+' min late</b>':'<b style="color:#0f6c40">on time</b>')+'.';
+      }
+    }
+  }
 }
 function deptFillReason(btn,text){
   const ta=el('drReason'); if(!ta) return;
@@ -5293,11 +5427,20 @@ function saveDeptReason(e,regId,date){
   const sel=q('#deptReasonForm input[name=drStatus]:checked');
   const status=sel?sel.value:'absent';
   const reason=String((el('drReason')||{}).value||'').trim();
+  const time=String((el('drArrivalTime')||{}).value||'').trim();
   if(status==='absent'&&reason.length<3){ toast('An explanation is required when a member misses a meeting.','err',5200); const t=el('drReason'); if(t) t.focus(); return; }
-  deptSetAtt(regId,date,status,reason);
+  if(status==='present'&&time&&deptToMin(time)===null){ toast('That arrival time is not valid — use HH:MM, e.g. 18:05.','err',4600); return; }
+  deptSetAtt(regId,date,status,reason,status==='present'?time:'');
   const next=window.__deptReasonNext||''; window.__deptReasonNext='';
+  window.__deptTimeCtx=null;
   deptSaveAtt(); closeModal();
-  toast(status==='present'?'Present 🟢 recorded for '+deptRegName(deptRegById(regId)||{}):'Absent 🔴 recorded with the explanation.','ok',3200);
+  if(status==='present'){
+    const r=deptRegById(regId);
+    const li=r?deptLateInfo(r,date):null;
+    toast('Present 🟢 recorded'+(time?' — arrived '+time:'')+(li&&li.state==='late'?' (late by '+li.mins+' min)':'')+'.','ok',3400);
+  }else{
+    toast('Absent 🔴 recorded with the explanation.','ok',3200);
+  }
   if(next){ const r=deptRegById(next); if(r) setTimeout(function(){ openDeptReason(next,date,''); },260); }
 }
 function deptExpectedRows(date){
@@ -5669,9 +5812,12 @@ function openDeptHistory(regId){
   const lines=dates.map(function(d){
     const a=deptAttOf(reg.id,d);
     const s=a&&a.status?a.status:'none';
+    const li=deptLateInfo(reg,d);
     const chip=s==='present'?'<span class="inline-chip g">🟢 Present</span>':s==='absent'?'<span class="inline-chip r">🔴 Absent</span>':'<span class="inline-chip">Not marked</span>';
     return '<div class="history-row"><span class="hd">'+esc(fmtDate(d))+'<div class="member-meta">'+esc(deptDow(d)||'')+'</div></span>'+
-      '<span style="flex:1">'+chip+(s==='absent'?'<div class="hr">Reason: '+(a.reason?esc(a.reason):'<b>not yet explained</b>')+'</div>':'')+'</span>'+
+      '<span style="flex:1">'+chip+
+        (s==='present'?'<span class="arr '+(a.time?(li&&li.state==='late'?'t-late':'t-ok'):'t-none')+'" style="margin-left:6px;cursor:default">🕒 '+(a.time?esc(a.time)+(li&&li.state==='late'?' · late '+li.mins+'m':' · on time'):'time not recorded')+'</span>':'')+
+        (s==='absent'?'<div class="hr">Reason: '+(a.reason?esc(a.reason):'<b>not yet explained</b>')+'</div>':'')+'</span>'+
       '<span class="no-print" style="display:flex;gap:4px">'+
         '<button class="btn '+(s==='present'?'success':'ghost')+' xs" type="button" title="Mark present" onclick="deptHistSet(\''+esc(reg.id)+'\',\''+esc(d)+'\',\'present\')">🟢</button>'+
         '<button class="btn '+(s==='absent'?'danger':'ghost')+' xs" type="button" title="Mark absent (reason required)" onclick="closeModal();openDeptReason(\''+esc(reg.id)+'\',\''+esc(d)+'\')">🔴</button>'+
@@ -5684,10 +5830,12 @@ function openDeptHistory(regId){
     '<div class="dept-pill"><span>Meetings marked</span><b>'+p.marked+'</b></div>'+
     '<div class="dept-pill"><span>Present</span><b style="color:#0f6c40">'+p.present+'</b></div>'+
     '<div class="dept-pill"><span>Missed</span><b style="color:#98231a">'+p.absent+'</b></div>'+
+    '<div class="dept-pill"><span>Arrived late</span><b style="color:'+(p.late?'#8a6714':'#0f6c40')+'">'+p.late+'</b></div>'+
+    '<div class="dept-pill"><span>On time</span><b style="color:#0f6c40">'+p.ontime+'</b></div>'+
     '<div class="dept-pill"><span>Status</span><b><span class="st '+lab.cls+'">'+lab.txt+'</span></b></div></div>'+
     '<h4>Rehearsals missed in each month</h4>'+
-    '<div class="tablewrap compact"><table class="sheet" style="min-width:0"><thead><tr><th>Month</th><th class="num">Meetings in month</th><th class="num">Marked</th><th class="num">Present</th><th class="num">Missed</th></tr></thead><tbody>'+
-      mm.map(function(m){ return '<tr><td>'+esc(m.label)+'</td><td class="num">'+m.expected+'</td><td class="num">'+m.marked+'</td><td class="num" style="color:#0f6c40">'+m.present+'</td><td class="num" style="color:'+(m.missed?'#98231a':'#0f6c40')+';font-weight:800">'+m.missed+'</td></tr>'; }).join('')+
+    '<div class="tablewrap compact"><table class="sheet" style="min-width:0"><thead><tr><th>Month</th><th class="num">Meetings in month</th><th class="num">Marked</th><th class="num">Present</th><th class="num">Late</th><th class="num">Missed</th></tr></thead><tbody>'+
+      mm.map(function(m){ return '<tr><td>'+esc(m.label)+'</td><td class="num">'+m.expected+'</td><td class="num">'+m.marked+'</td><td class="num" style="color:#0f6c40">'+m.present+'</td><td class="num" style="color:'+(m.late?'#8a6714':'#0f6c40')+'">'+m.late+'</td><td class="num" style="color:'+(m.missed?'#98231a':'#0f6c40')+';font-weight:800">'+m.missed+'</td></tr>'; }).join('')+
     '</tbody></table></div>'+
     '<h4>Every meeting (last 6 months)</h4>'+
     '<div style="max-height:250px;overflow:auto;border:1px solid var(--border);border-radius:11px;padding:4px 12px">'+(lines||'<div class="empty">No meeting day has fallen in the last 6 months for this member.</div>')+'</div>'+
@@ -5786,16 +5934,20 @@ function saveMinisteringPicker(e){
   mgmtSyncNow('Roster');
 }
 function changeDeptRule(){
-  modal('<h3 style="padding-right:36px">⚙ Consistency rule</h3>'+
-    '<p class="muted">A member goes on the ministry roster when they were <b>present at the last rehearsal</b> and their consistency is at least this percentage. Below it they are listed as <b>not ministering</b>, with the reason.</p>'+
-    '<form onsubmit="saveDeptRule(event)"><div><label>Minimum consistency (%)</label><input id="deptRuleInput" type="number" min="30" max="100" step="5" value="'+(num(db.settings.deptRulePct)||70)+'"></div>'+
-    '<div class="actions" style="margin-top:12px"><button class="btn success" type="submit">Save rule</button><button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>',true);
+  modal('<h3 style="padding-right:36px">⚙ Register rules</h3>'+
+    '<p class="muted">A member goes on the ministry roster when they were <b>present at the last rehearsal</b> and their consistency is at least the percentage below. The <b>grace period</b> decides when an arrival counts as late: a member who arrives within the grace minutes after the meeting start is still <b>on time</b>.</p>'+
+    '<form class="form" onsubmit="saveDeptRule(event)">'+
+    '<div><label>Minimum consistency (%)</label><input id="deptRuleInput" type="number" min="30" max="100" step="5" value="'+(num(db.settings.deptRulePct)||70)+'"></div>'+
+    '<div><label>Late after (minutes)</label><input id="deptGraceInput" type="number" min="0" max="120" step="5" value="'+(deptGraceMin())+'"><div class="hint">Counted from the department\u2019s meeting start time.</div></div>'+
+    '<div class="full actions" style="margin-top:12px"><button class="btn success" type="submit">Save rules</button><button class="btn secondary" type="button" onclick="closeModal()">Cancel</button></div></form>',true);
 }
 function saveDeptRule(e){
   if(e&&e.preventDefault) e.preventDefault();
   const v=Math.max(30,Math.min(100,num((el('deptRuleInput')||{}).value)||70));
-  db.settings.deptRulePct=v; persist(); renderDeptRegister(); closeModal();
-  toast('Rule saved — members must be at '+v+'% or more to minister.','ok',3800);
+  const g=Math.max(0,Math.min(120,num((el('deptGraceInput')||{}).value)));
+  db.settings.deptRulePct=v; db.settings.deptLateGraceMin=g;
+  persist(); renderDeptRegister(); closeModal();
+  toast('Rules saved — '+v+'% consistency to minister • late after '+g+' min.','ok',4200);
 }
 /* ---------- small wiring helpers ---------- */
 function onDeptPick(id){
@@ -5842,7 +5994,10 @@ function deptReportText(kind){
     L.push('MEETING REGISTER — '+deptDateLabel(date)+' ('+(deptDow(date)||'')+')','');
     rows.forEach(function(r){
       const a=deptAttOf(r.id,date); const s=a&&a.status?a.status:'none';
-      L.push((s==='present'?'🟢 PRESENT':s==='absent'?'🔴 ABSENT':'⚪ NOT MARKED')+' — '+deptRegName(r)+(s==='absent'&&a.reason?' — '+a.reason:''));
+      const li=deptLateInfo(r,date);
+      L.push((s==='present'?'🟢 PRESENT':s==='absent'?'🔴 ABSENT':'⚪ NOT MARKED')+' — '+deptRegName(r)+
+        (s==='present'?' — arrived '+(a.time||'time not recorded')+(li&&li.state==='late'?' (late '+li.mins+' min)':' (on time)'):'')+
+        (s==='absent'&&a.reason?' — '+a.reason:''));
     });
   }else{
     L.push('CONSISTENCY — '+(dept?deptName(dept):'all departments'));
@@ -5850,7 +6005,8 @@ function deptReportText(kind){
       const p=deptPct3m(r); const lab=deptConsistencyLabel(p.pct,p.marked); const dp=deptById(r.deptId);
       const mm=deptMissedMonths(r,6).map(function(m){ return m.label+' '+m.missed+'/'+m.expected; }).join(', ');
       L.push('• '+deptRegName(r)+' ('+(dp?deptName(dp):'')+') — '+(p.pct===null?'no meetings marked yet':p.pct+'% ' +lab.txt)+
-        ' | present '+p.present+', absent '+p.absent+' | missed per month: '+deptMissedMonths(r,6).map(function(m){ return m.label+' '+(m.marked?m.missed+'/'+m.expected+' missed':'not marked'); }).join(', '));
+        ' | present '+p.present+', late '+p.late+', on time '+p.ontime+', absent '+p.absent+
+        ' | missed per month: '+deptMissedMonths(r,6).map(function(m){ return m.label+' '+(m.marked?m.missed+'/'+m.expected+' missed':'not marked'); }).join(', '));
     });
   }
   return L.join('\n');
@@ -5866,17 +6022,18 @@ function printDeptReport(kind){
   const rows=deptRowList();
   let html='';
   if(kind==='register'){
-    html+='<h2>Meeting register — '+esc(deptDateLabel(date))+'</h2><table><thead><tr><th>Member</th><th>Department</th><th>Status</th><th>Explanation</th></tr></thead><tbody>'+
+    html+='<h2>Meeting register — '+esc(deptDateLabel(date))+'</h2><table><thead><tr><th>Member</th><th>Department</th><th>Meeting days</th><th>Status</th><th>Arrived</th><th>Explanation</th></tr></thead><tbody>'+
       rows.filter(function(r){ return deptExpectedOn(r,date); }).map(function(r){
         const a=deptAttOf(r.id,date); const s=a&&a.status?a.status:'none'; const dp=deptById(r.deptId);
-        return '<tr><td>'+esc(deptRegName(r))+'</td><td>'+esc(dp?deptName(dp):'')+'</td><td>'+(s==='present'?'PRESENT':s==='absent'?'ABSENT':'NOT MARKED')+'</td><td>'+esc((a&&a.reason)||'')+'</td></tr>';
+        const li=deptLateInfo(r,date);
+        return '<tr><td>'+esc(deptRegName(r))+'</td><td>'+esc(dp?deptName(dp):'')+'</td><td>'+esc(deptRegDays(r).join(', '))+'</td><td>'+(s==='present'?'PRESENT':s==='absent'?'ABSENT':'NOT MARKED')+'</td><td>'+(s==='present'?esc((a&&a.time)||'—')+(li&&li.state==='late'?' (late '+li.mins+' min)':' (on time)'):'—')+'</td><td>'+esc((a&&a.reason)||'')+'</td></tr>';
       }).join('')+'</tbody></table>';
   }else{
-    html+='<h2>Consistency &amp; rehearsals missed — '+esc(dept?deptName(dept):'all departments')+'</h2>'+
-      '<table><thead><tr><th>Member</th><th>Department</th><th>Meeting days</th><th>Present</th><th>Missed</th><th>Consistency</th><th>Status</th><th>Missed per month (6)</th></tr></thead><tbody>'+
+    html+='<h2>Consistency, arrivals &amp; rehearsals missed — '+esc(dept?deptName(dept):'all departments')+'</h2>'+
+      '<table><thead><tr><th>Member</th><th>Department</th><th>Meeting days</th><th>Present</th><th>On time</th><th>Late</th><th>Missed</th><th>Consistency</th><th>Status</th><th>Missed per month (6)</th></tr></thead><tbody>'+
       rows.map(function(r){
         const p=deptPct3m(r); const lab=deptConsistencyLabel(p.pct,p.marked); const dp=deptById(r.deptId);
-        return '<tr><td>'+esc(deptRegName(r))+'</td><td>'+esc(dp?deptName(dp):'')+'</td><td>'+esc(deptRegDays(r).join(', '))+'</td><td>'+p.present+'</td><td>'+p.absent+'</td><td>'+(p.pct===null?'—':p.pct+'%')+'</td><td>'+lab.txt+'</td><td>'+deptMissedMonths(r,6).map(function(m){ return esc(m.label)+': '+m.missed+'/'+m.expected; }).join(' · ')+'</td></tr>';
+        return '<tr><td>'+esc(deptRegName(r))+'</td><td>'+esc(dp?deptName(dp):'')+'</td><td>'+esc(deptRegDays(r).join(', '))+'</td><td>'+p.present+'</td><td>'+p.ontime+'</td><td>'+p.late+'</td><td>'+p.absent+'</td><td>'+(p.pct===null?'—':p.pct+'%')+'</td><td>'+lab.txt+'</td><td>'+deptMissedMonths(r,6).map(function(m){ return esc(m.label)+': '+m.missed+'/'+m.expected; }).join(' · ')+'</td></tr>';
       }).join('')+'</tbody></table>';
   }
   html+='<h2>Month record — '+esc(deptMonthLabel(ym))+'</h2><table><thead><tr><th>Department</th><th>Member</th><th>Meeting days</th><th>Present</th><th>Missed</th></tr></thead><tbody>'+
@@ -5896,10 +6053,10 @@ function printDeptReport(kind){
 function exportDeptCSV(){
   const rows=deptRowList();
   if(!rows.length){ toast('No department members to export.','err'); return; }
-  const head=['Department','Member','Role','Meeting days','Present','Absent','Consistency %','Status','Missed this month','Missed per month (6)'];
+  const head=['Department','Member','Role','Meeting days','Present','On time','Late','Absent','Consistency %','Status','Missed this month','Missed per month (6)'];
   const lines=rows.map(function(r){
     const p=deptPct3m(r); const lab=deptConsistencyLabel(p.pct,p.marked); const dp=deptById(r.deptId);
-    return [deptName(dp),deptRegName(r),r.role||'',deptRegDays(r).join(' / '),p.present,p.absent,(p.pct===null?'':p.pct),lab.txt,deptMonthStats(r,deptMonthOf(today())).absent,deptMissedMonths(r,6).map(function(m){ return m.label+': '+m.missed+'/'+m.expected; }).join(' | ')];
+    return [deptName(dp),deptRegName(r),r.role||'',deptRegDays(r).join(' / '),p.present,p.ontime,p.late,p.absent,(p.pct===null?'':p.pct),lab.txt,deptMonthStats(r,deptMonthOf(today())).absent,deptMissedMonths(r,6).map(function(m){ return m.label+': '+m.missed+'/'+m.expected; }).join(' | ')];
   });
   const csv='﻿'+[head].concat(lines).map(function(r){ return r.map(function(v){ return '"'+String(v===undefined||v===null?'':v).replace(/"/g,'""')+'"'; }).join(','); }).join('\r\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
@@ -5986,5 +6143,5 @@ window.addEventListener('error',function(e){ if(e&&e.message&&String(document.lo
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58867b058a3b572',t:'MTc5NDM0ODgxMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58867b058a3b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a59cf7936c0288d6',t:'MTc5NDU2NDQyMQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a59cf7936c0288d6',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3a4dff2feecb56f',t:'MTc4OTI3ODYzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a58867b058a3b572',t:'MTc5NDM0ODgxMg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a58867b058a3b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a59d157f2ca39997',t:'MTc5NDU2NTY0Nw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a59d157f2ca39997',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
