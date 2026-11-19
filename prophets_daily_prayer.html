@@ -690,7 +690,9 @@ footer .fmeta{margin-top:14px;font-size:.76rem;color:rgba(255,255,255,.55)}
 /* ============================ PRINT ============================ */
 
 @media print{
-  @page{margin:14mm}
+  @page{margin:12mm}
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  .tab-content{opacity:1 !important;transform:none !important;visibility:visible !important}
   body{background:#fff !important;font-size:10.5pt}
   .tabbar,.toolbar,.skip-link,.toast,.clockbox,.requests,.p-chev,.tab-hero .when{display:none !important}
   .masthead{padding:12px 0 10px;box-shadow:none}
@@ -1251,7 +1253,7 @@ figure,q,cite{margin:0;padding:0}
           </select>
         </div>
         <button class="btn gold" type="submit">＋ Add request</button>
-        <a class="btn ghost" id="reqMail" href="/cdn-cgi/l/email-protection#d0a0b5b4b1b8aaa5a2bdb9beb9a3a4a2b9b5a390b7bdb1b9bcfeb3bfbd" title="Sends your saved requests and today's progress to the church">✉️ Email the list</a>
+        <a class="btn ghost" id="reqMail" href="/cdn-cgi/l/email-protection#e4948180858c9e9196898d8a8d9790968d8197a48389858d88ca878b89" title="Sends your saved requests and today's progress to the church">✉️ Email the list</a>
       </div>
     </form>
 
@@ -1281,7 +1283,7 @@ figure,q,cite{margin:0;padding:0}
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.2 2.2Z"/></svg>
         WhatsApp +260 97 955 4970
       </a>
-      <a href="/cdn-cgi/l/email-protection#75051011141d0f0007181c1b1c0601071c1006351218141c195b161a18">
+      <a href="/cdn-cgi/l/email-protection#2d5d48494c4557585f404443445e595f44485e6d4a404c4441034e4240">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 6.5 12 13l9-6.5"/></svg>
         <span id="footerEmailText"><span class="__cf_email__" data-cfemail="dcacb9b8bdb4a6a9aeb1b5b2b5afa8aeb5b9af9cbbb1bdb5b0f2bfb3b1">[email&#160;protected]</span></span>
       </a>
@@ -2942,8 +2944,12 @@ function printTab(orderId) {
   });
   document.body.classList.add("print-single");
   window.setTimeout(function () {
-    if (typeof window.print === "function") window.print();
-    else toast("🖨 Printing is unavailable in this view — open the file in a browser to print.");
+    try {
+      if (typeof window.print !== "function") throw new Error("print unavailable");
+      window.print();
+    } catch (error) {
+      toast("🖨 Printing was blocked. Open this file in Chrome and use ⋮ → Print → Save as PDF, or use the ready-made PDF.");
+    }
   }, 120);
 }
 
@@ -2952,10 +2958,23 @@ function printAll() {
   document.querySelectorAll(".tab-content").forEach(function (panel) { panel.classList.remove("only"); });
   document.body.classList.remove("print-single");
   window.setTimeout(function () {
-    if (typeof window.print === "function") window.print();
-    else toast("🖨 Printing is unavailable in this view — open the file in a browser to print.");
+    try {
+      if (typeof window.print !== "function") throw new Error("print unavailable");
+      window.print();
+    } catch (error) {
+      toast("🖨 Printing was blocked. Open this file in Chrome and use ⋮ → Print → Save as PDF, or use the ready-made PDF.");
+    }
   }, 120);
 }
+
+window.addEventListener("beforeprint", function () {
+  PRAYER_ORDERS.forEach(function (order) { setAllOpen(order.id, true); });
+  document.querySelectorAll(".tab-content").forEach(function (panel) {
+    panel.style.animation = "none";
+    panel.style.opacity = "1";
+    panel.style.transform = "none";
+  });
+});
 
 window.addEventListener("afterprint", function () {
   document.body.classList.remove("print-single");
@@ -4750,7 +4769,8 @@ function boot() {
         '<button class="btn ghost small" type="button" onclick="JCRGM.exportPlan()">📄 Export today&rsquo;s plan</button>' +
         '<button class="btn danger small" type="button" onclick="JCRGM.resetAll()">♻️ Reset today</button>' +
         '<span class="spacer"></span>' +
-        '<span class="chip">Today&rsquo;s targets: 5 per order · 25 total</span>';
+        '<span class="chip">Today&rsquo;s targets: 5 per order · 25 total</span>' +
+        '<span class="tool-note">On a phone: open in Chrome, then ⋮ → Print → Save as PDF. If printing fails, use the ready-made PDF instead.</span>';
       document.querySelector(".declarations").before(extra);
     }]
   ];
@@ -4771,5 +4791,5 @@ if (document.readyState === "loading") {
 }
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39d47c409f3b575',t:'MTc4OTE5ODk5Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4523fb63a35b575',t:'MTc5MTA5NjU4OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5cd9d6afb51df88',t:'MTc5NTA3NDUzMQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5cd9d6afb51df88',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
