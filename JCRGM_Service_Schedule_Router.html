@@ -501,6 +501,89 @@ label{
     color:var(--danger);
 }
 
+/* ---------- Guest minister editing (Word Charge & Sermon) ---------- */
+.guest-row{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:4px;
+}
+
+.guest-row input.guest-input{
+    flex:1 1 120px;
+    min-width:100px;
+    padding:5px 7px;
+    border:1px solid #c9d2de;
+    border-radius:6px;
+    font-size:12px;
+    font-family:inherit;
+    background:#fff;
+    color:#1f2937;
+}
+
+.guest-row input.guest-input:focus{
+    outline:none;
+    border-color:var(--primary);
+    box-shadow:0 0 0 2px rgba(23,54,93,.12);
+}
+
+.guest-row .guest-save,
+.guest-row .guest-clear{
+    padding:5px 9px;
+    border-radius:6px;
+    border:1px solid var(--primary);
+    background:var(--primary);
+    color:#fff;
+    font-size:11px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.guest-row .guest-clear{
+    background:#fff;
+    color:var(--primary);
+}
+
+.assignment .guest-name{
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+    flex-wrap:wrap;
+}
+
+.guest-badge{
+    display:inline-block;
+    padding:1px 7px;
+    border-radius:999px;
+    background:#fff3d6;
+    border:1px solid #e8c46a;
+    color:#8a5a00;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    vertical-align:middle;
+}
+
+.guest-badge.is-swap{
+    background:#e8f0ff;
+    border-color:#9fc0f0;
+    color:#1a4d8f;
+}
+
+.guest-hint{
+    font-size:11px;
+    color:var(--muted-dark);
+    margin-top:3px;
+}
+
+@media print{
+    .guest-row{ display:none !important; }
+    .guest-hint{ display:none !important; }
+    .assignment .guest-name{ display:block; }
+}
+
 .shuffle-note{
     background:#f3effc;
     color:#56319a;
@@ -1180,6 +1263,15 @@ body.view-only .fresh-shuffle, body.view-only .shuffle-note{ display:none !impor
 
             <button class="primary" onclick="printSchedule()">Print / Save PDF</button>
             <button class="light" onclick="exportCSV()">Export CSV</button>
+        </div>
+
+        <div class="guest-hint" style="margin-top:12px;padding:10px 12px;background:#fdf7e6;border:1px solid #f0dfae;border-radius:8px;">
+            <b>Guest minister:</b> under each service, the <b>Word Charge</b> and
+            <b>Sermon / Word</b> duties have a name box. Type the guest's name and press
+            <b>Save</b> — the printed schedule, Sunday matrix and CSV then show that minister.
+            If the name typed is <b>already serving another duty in the same service</b>, the two
+            duties are exchanged automatically so nobody holds two duties. <b>Revert</b> puts
+            both names back. Only visible while the panel is unlocked.
         </div>
     </div>
 
@@ -2948,7 +3040,49 @@ function freshShuffle(serviceIndex){
         return;
     }
 
-    service.assignments  = buildAssignments(members, others);
+    /* Guest ministers, manual edits and exchanges survive a shuffle.
+       Both sides of an exchange are carried over, then any overlap the
+       new arrangement creates is repaired so nobody holds two duties. */
+    const preserved = (service.assignments || [])
+        .filter(a => a.edited)
+        .map(a => ({
+            role     : a.role,
+            person   : a.person,
+            guest    : !!a.guest,
+            swapped  : !!a.swapped,
+            original : a.original,
+            editedAt : a.editedAt,
+            swap     : a.swap || null
+        }));
+
+    let rebuilt = buildAssignments(members, others);
+
+    preserved.forEach(saved => {
+        const slot = rebuilt.find(a => a.role === saved.role);
+        if(!slot) return;
+        slot.person     = saved.person;
+        slot.unassigned = (saved.person === "Unassigned");
+        slot.guest      = saved.guest;
+        slot.swapped    = saved.swapped;
+        slot.original   = saved.original;
+        slot.editedAt   = saved.editedAt;
+        slot.edited     = true;
+        if(saved.swap){ slot.swap = saved.swap; } else { delete slot.swap; }
+    });
+
+    /* nobody twice in this service */
+    const keptRoles = new Set(preserved.map(p => p.role));
+    const keptNames = new Set(preserved.map(p => String(p.person).toLowerCase()));
+
+    rebuilt.forEach(a => {
+        if(keptRoles.has(a.role) || a.unassigned) return;
+        if(keptNames.has(String(a.person).toLowerCase())){
+            a.person     = "Unassigned";
+            a.unassigned = true;
+        }
+    });
+
+    service.assignments  = rebuilt;
     service.shuffleCount = Number(service.shuffleCount || 0) + 1;
 
     saveData(false);
@@ -2987,6 +3121,7 @@ function renderRepeatGuard(){
     schedule.forEach(service => {
         service.assignments.forEach(a => {
             if(a.unassigned) return;
+            if(a.edited) return;   /* guest ministers / manual edits are exempt */
             const key = a.person + "||" + a.role;
             (pairs[key] = pairs[key] || []).push(
                 `${service.groupName} · ${formatShort(service.date)} ` +
@@ -3004,6 +3139,7 @@ function renderRepeatGuard(){
         const seen = {};
         service.assignments.forEach(a => {
             if(a.unassigned) return;
+            if(a.edited) return;   /* a guest is not bound by the roster rule */
             seen[a.person] = (seen[a.person] || 0) + 1;
         });
         Object.values(seen).forEach(n => { if(n > 1) doubled += n - 1; });
@@ -3016,7 +3152,9 @@ function renderRepeatGuard(){
 
     /* ---------- 4. registered pastors who never appear ---------- */
     const scheduled = new Set(
-        schedule.flatMap(s => s.assignments.map(a => a.person)).filter(p => p !== "Unassigned")
+        schedule.flatMap(s => s.assignments.flatMap(a =>
+            a.edited && a.original ? [a.person, a.original] : [a.person]
+        )).filter(p => p && p !== "Unassigned")
     );
 
     const missing = people.filter(p => !scheduled.has(p));
@@ -3181,7 +3319,11 @@ function renderSundayMatrix(){
 
             return `<div class="mx-line">
                 <span class="mx-tag">${tag}</span>
-                <span class="${found.unassigned ? "mx-empty" : ""}">${escapeHtml(found.person)}</span>
+                <span class="${found.unassigned ? "mx-empty" : ""}">${escapeHtml(found.person)}${
+                    found.edited ? ` <span class="guest-badge">${
+                        found.swapped ? "Swapped" : (found.guest ? "Guest" : "Edited")
+                    }</span>` : ""
+                }</span>
             </div>`;
         }).filter(Boolean).join("");
 
@@ -3452,11 +3594,21 @@ function renderSchedule(){
                         }
 
                         <div class="assignments">
-                            ${service.assignments.map(assignment => `
+                            ${service.assignments.map((assignment, assignmentIndex) => `
 
                                 <div class="assignment ${assignment.unassigned ? "unassigned" : ""}">
                                     <b>${escapeHtml(assignment.role)}</b>
-                                    ${escapeHtml(assignment.person)}
+                                    <span class="guest-name">
+                                        ${assignment.edited
+                                            ? `<span class="guest-badge ${assignment.swapped ? "is-swap" : ""}">${
+                                                  assignment.swapped ? "Swapped" : (assignment.guest ? "Guest" : "Edited")
+                                              }</span>`
+                                            : ""}
+                                        ${escapeHtml(assignment.person)}
+                                    </span>
+                                    ${isGuestEditableRole(assignment.role) && isUnlocked()
+                                        ? guestEditor(actualIndex, assignmentIndex, assignment)
+                                        : ""}
                                 </div>
 
                             `).join("")}
@@ -3472,6 +3624,276 @@ function renderSchedule(){
 
     renderSundayMatrix();
     renderRepeatGuard();
+}
+
+/* =========================================================
+   GUEST MINISTER OVERRIDE — WORD CHARGE & SERMON
+   ---------------------------------------------------------
+   The router still assigns the regular roster, but a guest
+   minister can be written in by the admin for these two
+   duties only. The roster name is kept in `person` so the
+   assignment can be reverted at any time, and the printed
+   schedule shows the guest's name.
+
+   Each edited assignment carries:
+     edited   : true
+     guest    : true  (a typed guest name, not a roster pick)
+     original : the roster name that was replaced
+========================================================= */
+const GUEST_EDITABLE_ROLES = ["Word Charge","Sermon / Word"];
+
+function isGuestEditableRole(role){
+    return GUEST_EDITABLE_ROLES.includes(role);
+}
+
+function guestEditor(serviceIndex, assignmentIndex, assignment){
+
+    const roster = schedule[serviceIndex]
+        ? (schedule[serviceIndex].groupMembers || people).join("|")
+        : "";
+
+    /* One shared datalist per service keeps the DOM small */
+    const datalist = document.getElementById("guest-roster-" + serviceIndex)
+        ? ""
+        : `<datalist id="guest-roster-${serviceIndex}">
+                ${String(roster).split("|").filter(Boolean).map(name =>
+                    `<option value="${escapeHtml(name)}"></option>`
+                ).join("")}
+            </datalist>`;
+
+    return `
+        <div class="guest-row no-print">
+            <input
+                class="guest-input"
+                type="text"
+                list="guest-roster-${serviceIndex}"
+                value="${escapeHtml(assignment.edited ? assignment.person : "")}"
+                placeholder="Guest minister name"
+                onkeydown="if(event.key==='Enter'){ saveGuestMinister(${serviceIndex},${assignmentIndex},this.value); }"
+            >
+            ${datalist}
+            <button type="button" class="guest-save"
+                onclick="saveGuestMinister(${serviceIndex},${assignmentIndex},this.parentNode.querySelector('.guest-input').value)"
+            >Save</button>
+            ${assignment.edited ? `<button type="button" class="guest-clear"
+                onclick="clearGuestMinister(${serviceIndex},${assignmentIndex})"
+            >Revert</button>` : ""}
+        </div>
+    `;
+}
+
+/* Snapshot helpers so a swap or edit can be undone exactly */
+function assignmentSnapshot(a){
+    return {
+        person   : a ? a.person : "Unassigned",
+        edited   : !!(a && a.edited),
+        guest    : !!(a && a.guest),
+        swapped  : !!(a && a.swapped),
+        original : (a && a.original) ? a.original : null
+    };
+}
+
+function restoreAssignment(a, snap){
+    if(!a || !snap) return;
+    a.person = snap.person;
+    a.edited = !!snap.edited;
+    a.guest  = !!snap.guest;
+    a.unassigned = (snap.person === "Unassigned");
+    if(snap.original){ a.original = snap.original; } else { delete a.original; }
+    if(snap.swapped){ a.swapped = true; } else { delete a.swapped; }
+    if(!a.edited){ delete a.editedAt; delete a.original; delete a.swapped; }
+}
+
+/* The partner of an exchange is found by role, so the link survives
+   a shuffle that reorders or replaces the assignment objects. */
+function swapPartner(service, assignment){
+    if(!service || !assignment || !assignment.swap) return null;
+    return service.assignments.find(a => a.role === assignment.swap.role) || null;
+}
+
+/* Undo a previously made two-way exchange before a new edit is applied */
+function unwindSwap(serviceIndex, assignmentIndex){
+    const service = schedule[serviceIndex];
+    if(!service) return;
+
+    const a = service.assignments[assignmentIndex];
+    if(!a || !a.swap) return;
+
+    const other = swapPartner(service, a);
+
+    restoreAssignment(a, a.swap.mine);
+    if(other) restoreAssignment(other, a.swap.theirs);
+
+    delete a.swap;
+    if(other) delete other.swap;
+}
+
+function saveGuestMinister(serviceIndex, assignmentIndex, rawValue){
+
+    if(!requireEdit()) return;
+
+    const service = schedule[serviceIndex];
+    if(!service) return;
+
+    const assignment = service.assignments[assignmentIndex];
+    if(!assignment) return;
+
+    if(!isGuestEditableRole(assignment.role)){
+        alert("Only Word Charge and Sermon / Word can be edited here.");
+        return;
+    }
+
+    const name = String(rawValue || "").trim();
+
+    if(!name){
+        alert("Type the name of the minister who will handle " + assignment.role + ".");
+        return;
+    }
+
+    /* Nothing changed — leave any existing exchange untouched */
+    if(name.toLowerCase() === String(assignment.person).toLowerCase() && assignment.edited){
+        return;
+    }
+
+    /* A previous exchange must be rolled back first, so saves never stack up */
+    unwindSwap(serviceIndex, assignmentIndex);
+
+    /* Typing the rostered minister back is treated as a revert */
+    if(assignment.original && name.toLowerCase() === assignment.original.toLowerCase()){
+        clearGuestMinister(serviceIndex, assignmentIndex, true);
+        alert(`${assignment.role} returned to the roster: ${assignment.original}.`);
+        return;
+    }
+
+    const roster = service.groupMembers || people;
+
+    const onRoster = roster.some(p => p.toLowerCase() === name.toLowerCase());
+
+    /* ---------- Is this name already serving somewhere else this service? ---------- */
+    let otherIndex = -1;
+
+    service.assignments.forEach((item, index) => {
+        if(index === assignmentIndex) return;
+        if(item.unassigned) return;
+        if(String(item.person).toLowerCase() === name.toLowerCase()){
+            otherIndex = index;
+        }
+    });
+
+    /* Remember the roster minister the first time this duty is edited */
+    if(!assignment.edited){
+        assignment.original = assignment.person;
+    }
+
+    if(otherIndex === -1){
+
+        /* ---------- plain guest entry ---------- */
+        assignment.person     = name;
+        assignment.guest      = !onRoster;
+        assignment.unassigned = false;
+        assignment.edited     = true;
+        assignment.editedAt   = Date.now();
+
+        saveData(false);
+        renderSchedule();
+
+        alert(
+            `Recorded for ${assignment.role} on ${formatDate(service.date)}:\n\n${name}` +
+            (assignment.original ? `\n\nRoster minister was ${assignment.original}.` : "") +
+            `\n\nIt now appears on the printed schedule, the Sunday matrix and the CSV export.`
+        );
+        return;
+    }
+
+    /* ---------- the name is already on duty: exchange the two duties ---------- */
+    const other = service.assignments[otherIndex];
+
+    const mineSnapshot   = assignmentSnapshot(assignment);
+    const theirsSnapshot = assignmentSnapshot(other);
+
+    mineSnapshot.original = assignment.original || assignment.person;
+
+    assignment.person     = name;
+    assignment.guest      = !onRoster;
+    assignment.unassigned = false;
+    assignment.edited     = true;
+    assignment.editedAt   = Date.now();
+
+    other.person     = mineSnapshot.person;
+    other.unassigned = (mineSnapshot.person === "Unassigned");
+    other.edited     = true;
+    other.guest      = !!mineSnapshot.guest;
+    other.swapped    = true;
+    if(mineSnapshot.original){ other.original = mineSnapshot.original; }
+
+    assignment.swap = {
+        role   : other.role,
+        mine   : mineSnapshot,
+        theirs : theirsSnapshot
+    };
+    other.swap = {
+        role   : assignment.role,
+        mine   : theirsSnapshot,
+        theirs : mineSnapshot
+    };
+
+    saveData(false);
+    renderSchedule();
+
+    alert(
+        `Duties exchanged on ${formatDate(service.date)}:\n\n` +
+        `${name}  →  ${assignment.role}\n` +
+        `${mineSnapshot.person}  →  ${other.role}\n\n` +
+        "Nobody is left holding two duties in this service. " +
+        "Use Revert to put both names back."
+    );
+}
+
+function clearGuestMinister(serviceIndex, assignmentIndex, skipConfirm){
+
+    if(!requireEdit()) return;
+
+    const service = schedule[serviceIndex];
+    if(!service) return;
+
+    const assignment = service.assignments[assignmentIndex];
+    if(!assignment || !assignment.edited) return;
+
+    const partner = swapPartner(service, assignment);
+
+    if(!skipConfirm && !confirm(
+        `Revert ${assignment.role} on ${formatDate(service.date)} back to the roster?` +
+        (partner ? `\n\nThis also restores ${partner.role}: ${partner.person}.` : "")
+    )){
+        return;
+    }
+
+    if(assignment.swap){
+
+        restoreAssignment(assignment, assignment.swap.mine);
+        restoreAssignment(partner, assignment.swap.theirs);
+
+        delete assignment.swap;
+        if(partner) delete partner.swap;
+
+    }
+    else{
+        assignment.person     = assignment.original || "Unassigned";
+        assignment.unassigned = (assignment.person === "Unassigned");
+        assignment.guest      = false;
+        assignment.edited     = false;
+        delete assignment.original;
+        delete assignment.editedAt;
+    }
+
+    saveData(false);
+    renderSchedule();
+}
+
+function indexOfRole(serviceIndex, role){
+    const service = schedule[serviceIndex];
+    if(!service) return -1;
+    return service.assignments.findIndex(a => a.role === role);
 }
 
 /* =========================================================
@@ -3583,7 +4005,7 @@ function exportCSV(){
     }
 
     const rows = [[
-        "Date","Day","Service","Time","Group","Serving Order","Responsibility","Assigned Person"
+        "Date","Day","Service","Time","Group","Serving Order","Responsibility","Assigned Person","Minister Type","Roster Minister"
     ]];
 
     schedule.forEach(service => {
@@ -3596,7 +4018,9 @@ function exportCSV(){
                 service.groupName,
                 service.occurrence,
                 assignment.role,
-                assignment.person
+                assignment.person,
+                assignment.edited ? (assignment.guest ? "Guest minister" : "Edited (roster)") : "Roster",
+                assignment.original || ""
             ]);
         });
     });
@@ -3791,5 +4215,5 @@ function init(){
 init();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a556d7432ff4b572',t:'MTc5MzgyOTA5NA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a556d7432ff4b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a587130d0b20b56c',t:'MTc5NDMzNDg2MA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a587130d0b20b56c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a556d7432ff4b572',t:'MTc5MzgyOTA5NA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a556d7432ff4b572',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a587130d0b20b56c',t:'MTc5NDMzNDg2MA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a587130d0b20b56c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5e69ccd1973dfa9',t:'MTc5NTMzNjY0OQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5e69ccd1973dfa9',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
